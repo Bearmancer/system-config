@@ -12,7 +12,9 @@ import requests
 
 from arr_scripts import ArrApp, HOST, get_arr_api_key, get_sab_api_key
 
-GOOGLE_DRIVE_FS_EXE = Path(r"C:\Program Files\Google\Drive File Stream\130.0.2.0\GoogleDriveFS.exe")
+GOOGLE_DRIVE_FS_EXE = Path(
+    r"C:\Program Files\Google\Drive File Stream\130.0.2.0\GoogleDriveFS.exe"
+)
 
 
 def backup_arr_stack() -> list[Path]:
@@ -41,11 +43,15 @@ def backup_arr_stack() -> list[Path]:
         resp.raise_for_status()
         time.sleep(3)
         backups_dir = Path(rf"C:\ProgramData\{app}\Backups\manual")
-        zips = sorted(backups_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True)
+        zips = sorted(
+            backups_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True
+        )
         shutil.copy2(zips[0], configs / f"{app} - {date}.zip")
 
     sab_key = get_sab_api_key()
-    resp = requests.get(f"http://{HOST}:8080/api?mode=config&name=create_backup&apikey={sab_key}&output=json")
+    resp = requests.get(
+        f"http://{HOST}:8080/api?mode=config&name=create_backup&apikey={sab_key}&output=json"
+    )
     resp.raise_for_status()
     sab_backup_path = Path(resp.json()["value"]["message"])
     shutil.copy2(sab_backup_path, configs / f"SABnzbd - {date}.zip")

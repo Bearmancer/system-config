@@ -3,6 +3,7 @@ name: github-create-issue
 description: This skill should be used when opening or filing a GitHub issue — "file an issue", "open a GitHub issue", "report this bug upstream", "create a repo issue" — or after root-causing a bug in a third-party dependency/plugin/CLI that needs tracking upstream on GitHub. Enforces closure triage first (open → comment; stale-bot / regression closure → new issue), then a duplicate search, then a fixed diagnostic-depth bar (exact file:line, quoted source, reproduction, environment, counter-scenarios tried, error text) before filing via `gh` CLI alone.
 version: 0.1.0
 ---
+
 Bug report get ignore or bounce back when claim symptom, no proof show. Skill lock depth at: reviewer must check claim self, run nothing else. Skill refuse file below this bar.
 
 ## Reference bar
@@ -10,6 +11,7 @@ Bug report get ignore or bounce back when claim symptom, no proof show. Skill lo
 Calibrate issue: https://github.com/code-yeongyu/oh-my-openagent/issues/6167
 
 That issue show target depth. Have, in order:
+
 1. Prereq checklist (search duplicate, check latest version, check docs)
 2. One sentence bug describe, name exact mechanism (not just symptom)
 3. Numbered repro step, concrete enough replay word-for-word
@@ -118,9 +120,10 @@ Use `gh` via Bash for all this. No reach for GitHub plugin/MCP server unless use
 **Why plain `gh` enough here:** issue search, issue create, issue comment, PR/issue read — all single `gh` subcommand, plain-text or `--json` output. No multi-step orchestrate, no auth flow beyond `gh auth status`, wrapper add nothing on top.
 
 **When GitHub plugin/MCP actually help instead:**
+
 - Structured JSON schema validate at tool layer (fewer malformed
   `--json`/`--jq` mistake) when chain many GitHub call in one task
-- Cross-cut workflow touch GitHub *and* other system in one
+- Cross-cut workflow touch GitHub _and_ other system in one
   tool-call graph (e.g., agent framework wire issue create into a
   bigger pipeline)
 - Sandbox/restrict env where shell out to `gh` block

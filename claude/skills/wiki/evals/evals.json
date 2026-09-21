@@ -1,23 +1,23 @@
 {
-	"skill_name": "wiki",
-	"evals": [
-		{
-			"id": 0,
-			"prompt": "Add what we just learned about the deploy pipeline to the wiki, then tell me what the wiki already says about auth.",
-			"expected_output": "Ingest with the documented shape: wiki_ingest({ title, content, tags, category }) — one ingest may touch multiple pages. Then query with wiki_query({ query, tags, category }), which returns matching pages with snippets, and the answer is synthesized by the LLM with citations from those results. Notes the hard constraint: no vector embeddings — keyword + tag matching only.",
-			"files": []
-		},
-		{
-			"id": 1,
-			"prompt": "The wiki feels messy after a few weeks of sessions. Check its health.",
-			"expected_output": "Runs wiki_lint() and reports its detections by category: orphan pages, stale content, broken cross-references, oversized pages, structural contradictions. Points at the storage layout: pages .omc/wiki/*.md (markdown with YAML frontmatter), index.md auto-maintained catalog, log.md append-only chronicle; cross-references use [[page-name]] syntax.",
-			"files": []
-		},
-		{
-			"id": 2,
-			"prompt": "How do I add one quick page, list everything, read a single page, and delete an outdated one?",
-			"expected_output": "Names the four operations precisely: wiki_add({ title, content, tags, category }) for a single quick page (simpler than ingest), wiki_list() (reads index.md), wiki_read({ page }), wiki_delete({ page }). Mentions the category set (architecture, decision, pattern, debugging, environment, session-log) and that pages are git-ignored by default, project-local under .omc/wiki/.",
-			"files": []
-		}
-	]
+  "skill_name": "wiki",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Add what we just learned about the deploy pipeline to the wiki, then tell me what the wiki already says about auth.",
+      "expected_output": "Ingest with the documented shape: wiki_ingest({ title, content, tags, category }) — one ingest may touch multiple pages. Then query with wiki_query({ query, tags, category }), which returns matching pages with snippets, and the answer is synthesized by the LLM with citations from those results. Notes the hard constraint: no vector embeddings — keyword + tag matching only.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "The wiki feels messy after a few weeks of sessions. Check its health.",
+      "expected_output": "Runs wiki_lint() and reports its detections by category: orphan pages, stale content, broken cross-references, oversized pages, structural contradictions. Points at the storage layout: pages .omc/wiki/*.md (markdown with YAML frontmatter), index.md auto-maintained catalog, log.md append-only chronicle; cross-references use [[page-name]] syntax.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "How do I add one quick page, list everything, read a single page, and delete an outdated one?",
+      "expected_output": "Names the four operations precisely: wiki_add({ title, content, tags, category }) for a single quick page (simpler than ingest), wiki_list() (reads index.md), wiki_read({ page }), wiki_delete({ page }). Mentions the category set (architecture, decision, pattern, debugging, environment, session-log) and that pages are git-ignored by default, project-local under .omc/wiki/.",
+      "files": []
+    }
+  ]
 }

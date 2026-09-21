@@ -61,7 +61,6 @@ def main():
     if "--outdir" in sys.argv:
         outdir = sys.argv[sys.argv.index("--outdir") + 1]
 
-
     r = run(["yt-dlp", "--no-warnings", "--skip-download", "--print", "%(id)s", url])
     if r.returncode != 0:
         print("yt-dlp failed to resolve the video:\n" + r.stderr)
@@ -86,7 +85,6 @@ def main():
             print(f"cache: warm ({outdir}) - nothing fetched; use --force to refresh")
             report(cached, info_path, vtt, cached.get("chapters") or [])
             return
-
 
     args = ["yt-dlp", "--no-warnings", "--skip-download"]
     args += ["--print", MARKERS[0], "--print", "%(title)s"]
@@ -152,7 +150,6 @@ def main():
     info_path = os.path.join(outdir, "info.json")
     with open(info_path, "w", encoding="utf-8") as fh:
         json.dump(info, fh, ensure_ascii=False, indent=2)
-
 
     args = [
         "yt-dlp",

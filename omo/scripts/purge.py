@@ -28,9 +28,13 @@ def ensure_basedpyright() -> str:
         say("basedpyright missing - installing via uv tool install")
         subprocess.run(["uv", "tool", "install", "basedpyright"])
         if shutil.which("basedpyright") is None:
-            say("ERROR: basedpyright still unavailable after install attempt. Run manually: uv tool install basedpyright")
+            say(
+                "ERROR: basedpyright still unavailable after install attempt. Run manually: uv tool install basedpyright"
+            )
             sys.exit(1)
-    result = subprocess.run(["basedpyright", "--version"], capture_output=True, text=True)
+    result = subprocess.run(
+        ["basedpyright", "--version"], capture_output=True, text=True
+    )
     return result.stdout.strip()
 
 
@@ -45,10 +49,17 @@ def strip_py(path: Path) -> None:
             continue
         prev = sig[i - 1] if i else None
         nxt = sig[i + 1] if i + 1 < len(sig) else None
-        prev_ok = prev is None or prev.type in (tokenize.NEWLINE, tokenize.INDENT, tokenize.DEDENT)
+        prev_ok = prev is None or prev.type in (
+            tokenize.NEWLINE,
+            tokenize.INDENT,
+            tokenize.DEDENT,
+        )
         if prev_ok and nxt is not None and nxt.type == tokenize.NEWLINE:
             after = sig[i + 2] if i + 2 < len(sig) else None
-            if after is not None and after.type in (tokenize.DEDENT, tokenize.ENDMARKER):
+            if after is not None and after.type in (
+                tokenize.DEDENT,
+                tokenize.ENDMARKER,
+            ):
                 continue
             for r in range(t.start[0], t.end[0] + 1):
                 doc_rows.add(r)
@@ -77,7 +88,9 @@ def get_bp_error_map(paths: list[Path]) -> dict[str, int]:
     counts: dict[str, int] = {}
     if not existing:
         return counts
-    result = subprocess.run(["basedpyright", "--outputjson", *existing], capture_output=True, text=True)
+    result = subprocess.run(
+        ["basedpyright", "--outputjson", *existing], capture_output=True, text=True
+    )
     if not result.stdout:
         return counts
     try:
@@ -92,14 +105,18 @@ def get_bp_error_map(paths: list[Path]) -> dict[str, int]:
 
 
 def get_bp_first_message(path: Path) -> str:
-    result = subprocess.run(["basedpyright", "--outputjson", str(path)], capture_output=True, text=True)
+    result = subprocess.run(
+        ["basedpyright", "--outputjson", str(path)], capture_output=True, text=True
+    )
     if not result.stdout:
         return ""
     try:
         data = json.loads(result.stdout)
     except json.JSONDecodeError:
         return ""
-    errors = [d for d in data.get("generalDiagnostics", []) if d.get("severity") == "error"]
+    errors = [
+        d for d in data.get("generalDiagnostics", []) if d.get("severity") == "error"
+    ]
     if errors:
         return errors[0].get("message", "")
     return ""
@@ -151,7 +168,12 @@ def main() -> int:
             Path.home() / ".claude" / "skills" / "learning-course" / "scripts",
             Path.home() / ".claude" / "skills" / "arr-api-reference" / "scripts",
             Path.home() / ".omo" / "scripts",
-            Path.home() / ".config" / "opencode" / "skills" / "caveman-compress" / "scripts",
+            Path.home()
+            / ".config"
+            / "opencode"
+            / "skills"
+            / "caveman-compress"
+            / "scripts",
         ],
     )
     parser.add_argument(
@@ -170,7 +192,9 @@ def main() -> int:
     backup_dir = Path(os.environ["TEMP"]) / "opencode" / f"purge-backup-{stamp}"
     exit_code = 0
 
-    say(f"purge.py  ({'DRY RUN — nothing will change' if args.dry_run else 'live run'})")
+    say(
+        f"purge.py  ({'DRY RUN — nothing will change' if args.dry_run else 'live run'})"
+    )
     say(f"time: {datetime.now():%Y-%m-%d %H:%M:%S}")
 
     head("Linter (hard requirement, auto-install)")
@@ -181,7 +205,9 @@ def main() -> int:
     cont_dir = Path.home() / ".omo" / "run-continuation"
     conts = [f for f in cont_dir.iterdir() if f.is_file()] if cont_dir.exists() else []
     live = max(conts, key=lambda f: f.stat().st_mtime) if conts else None
-    say(f"run-continuations : {len(conts)} file(s); keeping newest as live: {live.name if live else '(none)'}")
+    say(
+        f"run-continuations : {len(conts)} file(s); keeping newest as live: {live.name if live else '(none)'}"
+    )
 
     pycs: list[Path] = []
     for r in args.purge_roots:
@@ -194,16 +220,22 @@ def main() -> int:
     say(f"temp scratch      : {len(tmp_items)} item(s) under {tmp_dir}")
 
     pses_dir = Path.home() / ".omo" / "lsp-pses.log"
-    pses_logs = list(pses_dir.glob("StartEditorServices-*.log")) if pses_dir.exists() else []
+    pses_logs = (
+        list(pses_dir.glob("StartEditorServices-*.log")) if pses_dir.exists() else []
+    )
     say(f"editor-svc logs   : {len(pses_logs)}")
 
     cg_dir = Path.home() / ".omo" / "codegraph"
     cg_dbs = list(cg_dir.rglob("*.db")) if cg_dir.exists() else []
     cg_size = sum(f.stat().st_size for f in cg_dbs)
-    say(f"codegraph DBs     : {len(cg_dbs)} file(s), {cg_size / 1024 / 1024:.1f} MB (opt-in: --include-codegraph-indexes)")
+    say(
+        f"codegraph DBs     : {len(cg_dbs)} file(s), {cg_size / 1024 / 1024:.1f} MB (opt-in: --include-codegraph-indexes)"
+    )
 
     if shutil.which("basedpyright") is None:
-        raise RuntimeError("Linter check failed after install attempt - aborting before any strip.")
+        raise RuntimeError(
+            "Linter check failed after install attempt - aborting before any strip."
+        )
 
     if not args.skip_comments:
         head("Comment strip")
@@ -216,7 +248,9 @@ def main() -> int:
         say(f"script files in scope: {len(targets)} (python {len(targets)})")
 
         if args.dry_run:
-            say("dry run: would strip comments/docstrings from the files above (backup in TEMP, auto-restore on lint failure)")
+            say(
+                "dry run: would strip comments/docstrings from the files above (backup in TEMP, auto-restore on lint failure)"
+            )
         else:
             backup_dir.mkdir(parents=True, exist_ok=True)
             for f in targets:
@@ -239,7 +273,12 @@ def main() -> int:
                 notes.append("basedpyright: per-file baseline diff")
 
             seen: set[Path] = set()
-            bad = [f for f in bad if not (f in seen or seen.add(f))]
+            deduped_bad: list[Path] = []
+            for f in bad:
+                if f not in seen:
+                    seen.add(f)
+                    deduped_bad.append(f)
+            bad = deduped_bad
 
             if bad:
                 for f in bad:
@@ -248,11 +287,17 @@ def main() -> int:
                     detail = get_bp_first_message(f)
                     if not detail:
                         compile_result = subprocess.run(
-                            [sys.executable, "-m", "py_compile", str(f)], capture_output=True, text=True
+                            [sys.executable, "-m", "py_compile", str(f)],
+                            capture_output=True,
+                            text=True,
                         )
-                        detail = (compile_result.stderr or compile_result.stdout).splitlines()[0] if (
-                            compile_result.stderr or compile_result.stdout
-                        ) else ""
+                        detail = (
+                            (
+                                compile_result.stderr or compile_result.stdout
+                            ).splitlines()[0]
+                            if (compile_result.stderr or compile_result.stdout)
+                            else ""
+                        )
                     say(f"RESTORED (lint failed): {f} - {detail}")
                 say(f"backups kept at: {backup_dir}")
                 exit_code = 1
@@ -265,9 +310,13 @@ def main() -> int:
     if not args.skip_artifacts:
         head("Artifact purge")
         if args.dry_run:
-            say("dry run: would purge run-continuations (keep live), pycache, temp scratch, editor-services logs, empty dirs")
+            say(
+                "dry run: would purge run-continuations (keep live), pycache, temp scratch, editor-services logs, empty dirs"
+            )
             if args.include_codegraph_indexes:
-                say(f"dry run: would purge {cg_size / 1024 / 1024:.1f} MB of codegraph DBs")
+                say(
+                    f"dry run: would purge {cg_size / 1024 / 1024:.1f} MB of codegraph DBs"
+                )
         else:
             n = 0
             for c in conts:
@@ -295,7 +344,9 @@ def main() -> int:
             for log in pses_logs:
                 if safe_unlink(log):
                     n += 1
-            say(f"editor-services logs purged: {n} (of {len(pses_logs)} found; locked-by-another-process files skipped)")
+            say(
+                f"editor-services logs purged: {n} (of {len(pses_logs)} found; locked-by-another-process files skipped)"
+            )
 
             n = 0
             for d in find_empty_dirs(args.purge_roots):
@@ -308,13 +359,17 @@ def main() -> int:
                 for db in cg_dbs:
                     if safe_unlink(db):
                         n += 1
-                say(f"codegraph DBs purged: {n} ({cg_size / 1024 / 1024:.1f} MB) — reindex later with codegraph init")
+                say(
+                    f"codegraph DBs purged: {n} ({cg_size / 1024 / 1024:.1f} MB) — reindex later with codegraph init"
+                )
             else:
                 say("codegraph DBs kept (opt-in: --include-codegraph-indexes)")
 
     head("Done")
     say(f"exit code: {exit_code}")
-    say("tips: --dry-run to preview | --skip-comments / --skip-artifacts to scope | --include-codegraph-indexes to reclaim codegraph disk")
+    say(
+        "tips: --dry-run to preview | --skip-comments / --skip-artifacts to scope | --include-codegraph-indexes to reclaim codegraph disk"
+    )
     return exit_code
 
 

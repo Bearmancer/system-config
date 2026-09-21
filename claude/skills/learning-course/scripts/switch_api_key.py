@@ -12,8 +12,18 @@ from dataclasses import dataclass
 from pathlib import Path
 
 SERVICE_CHOICES = [
-    "tavily", "exa", "firecrawl", "dappier", "agentql", "scrapegraph",
-    "context7", "brave", "apify", "brightdata", "browserbase", "all",
+    "tavily",
+    "exa",
+    "firecrawl",
+    "dappier",
+    "agentql",
+    "scrapegraph",
+    "context7",
+    "brave",
+    "apify",
+    "brightdata",
+    "browserbase",
+    "all",
 ]
 
 
@@ -26,15 +36,26 @@ class ServiceInfo:
 SERVICE_MAP: dict[str, ServiceInfo] = {
     "tavily": ServiceInfo("TAVILY_API_KEY", r"^(?P<acct>[A-Z0-9]+)_TAVILY_API_KEY$"),
     "exa": ServiceInfo("EXA_API_KEY", r"^(?P<acct>[A-Z0-9]+)_EXA_API_KEY$"),
-    "firecrawl": ServiceInfo("FIRECRAWL_API_KEY", r"^(?P<acct>[A-Z0-9]+)_(FIRECRAWL|FIRECRAWLER)_API_KEY$"),
+    "firecrawl": ServiceInfo(
+        "FIRECRAWL_API_KEY", r"^(?P<acct>[A-Z0-9]+)_(FIRECRAWL|FIRECRAWLER)_API_KEY$"
+    ),
     "dappier": ServiceInfo("DAPPIER_API_KEY", r"^(?P<acct>[A-Z0-9]+)_DAPPIER_API_KEY$"),
     "agentql": ServiceInfo("AGENTQL_API_KEY", r"^(?P<acct>[A-Z0-9]+)_AGENTQL_API_KEY$"),
-    "scrapegraph": ServiceInfo("SCRAPEGRAPH_API_KEY", r"^(?P<acct>[A-Z0-9]+)_(SCRAPEGRAPH|SCRAPEGRAPHAI)_API_KEY$"),
-    "context7": ServiceInfo("CONTEXT7_API_KEY", r"^(?P<acct>[A-Z0-9]+)_CONTEXT7_API_KEY$"),
+    "scrapegraph": ServiceInfo(
+        "SCRAPEGRAPH_API_KEY",
+        r"^(?P<acct>[A-Z0-9]+)_(SCRAPEGRAPH|SCRAPEGRAPHAI)_API_KEY$",
+    ),
+    "context7": ServiceInfo(
+        "CONTEXT7_API_KEY", r"^(?P<acct>[A-Z0-9]+)_CONTEXT7_API_KEY$"
+    ),
     "brave": ServiceInfo("BRAVE_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BRAVE_API_KEY$"),
     "apify": ServiceInfo("APIFY_TOKEN", r"^(?P<acct>[A-Z0-9]+)_APIFY_TOKEN$"),
-    "brightdata": ServiceInfo("BRIGHTDATA_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BRIGHTDATA_API_KEY$"),
-    "browserbase": ServiceInfo("BROWSERBASE_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BROWSERBASE_API_KEY$"),
+    "brightdata": ServiceInfo(
+        "BRIGHTDATA_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BRIGHTDATA_API_KEY$"
+    ),
+    "browserbase": ServiceInfo(
+        "BROWSERBASE_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BROWSERBASE_API_KEY$"
+    ),
 }
 
 
@@ -49,13 +70,15 @@ def get_dotenv_map(path: Path) -> dict[str, str]:
         if line[0] in "#;":
             continue
         if line.startswith("export "):
-            line = line[len("export "):]
+            line = line[len("export ") :]
         idx = line.find("=")
         if idx < 1:
             continue
         name = line[:idx].strip()
-        val = line[idx + 1:].strip()
-        if len(val) >= 2 and ((val[0] == '"' and val[-1] == '"') or (val[0] == "'" and val[-1] == "'")):
+        val = line[idx + 1 :].strip()
+        if len(val) >= 2 and (
+            (val[0] == '"' and val[-1] == '"') or (val[0] == "'" and val[-1] == "'")
+        ):
             val = val[1:-1].strip()
         if name:
             env_map[name] = val
@@ -108,7 +131,13 @@ def _broadcast_env_change() -> None:
         SMTO_ABORTIFHUNG = 2
         result = ctypes.c_ulong()
         ctypes.windll.user32.SendMessageTimeoutW(
-            HWND_BROADCAST, WM_SETTINGCHANGE, 0, "Environment", SMTO_ABORTIFHUNG, 1000, ctypes.byref(result)
+            HWND_BROADCAST,
+            WM_SETTINGCHANGE,
+            0,
+            "Environment",
+            SMTO_ABORTIFHUNG,
+            1000,
+            ctypes.byref(result),
         )
     except Exception:
         pass
@@ -140,7 +169,9 @@ def show_pool_state(dotenv: dict[str, str], svc: str) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Rotate a masked pool of API keys into a User-scope environment variable.")
+    parser = argparse.ArgumentParser(
+        description="Rotate a masked pool of API keys into a User-scope environment variable."
+    )
     parser.add_argument("--service", required=True, choices=SERVICE_CHOICES)
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--set", dest="set_account", default=None)
@@ -179,7 +210,9 @@ def main() -> None:
             else:
                 target_acct = names[0]
         if target_acct not in pool:
-            raise ValueError(f"account '{target_acct}' not in {args.service} pool: {', '.join(names)}")
+            raise ValueError(
+                f"account '{target_acct}' not in {args.service} pool: {', '.join(names)}"
+            )
 
         target_fp = get_fingerprint(pool[target_acct])
         if active_acct == target_acct:

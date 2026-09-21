@@ -7,14 +7,19 @@
 		<link rel="stylesheet" href="../assets/lesson.css">
 	</head>
 	<body>
+		<p class="home-link"><a href="../../index.html">Home</a></p>
 		<p class="kicker">{{KICKER}}</p>
 		<h1>{{TITLE}}</h1>
 		<p class="surtitle">
-			Chapter {{CHAPTER_N}} of {{CHAPTER_M}} · {{TIME_RANGE}}
+			Chapter {{CHAPTER_N}} of {{CHAPTER_M}}
 		</p>
+		<nav class="top-nav">
+			<a href="../index.html#{{ROW_ID}}">Chapter Index</a>
+			<a href="../reference/glossary.html">Glossary</a>
+		</nav>
 		<p class="meta">{{META_LINE}}</p>
 
-		<h2>1. What the chapter does</h2>
+		<h2>1. Summary</h2>
 		{{LEAD}}
 
 		<h2>2. Cast</h2>
@@ -23,7 +28,7 @@
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Role this chapter</th>
+					<th>Role This Chapter</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,20 +36,16 @@
 			</tbody>
 		</table>
 
-		<h2>3. The narrative</h2>
+		<h2>3. Narrative</h2>
 		{{NARRATIVE}}
 
-		<h2>4. The machinery</h2>
+		<h2>4. Machinery</h2>
 		{{MACHINERY}}
 
 		<footer class="lesson-footer">
 			<nav>
-				<a href="../../index.html">Teach home</a>
 				{{PREV_LINK}} {{NEXT_LINK}}
-				<a href="../index.html#{{ROW_ID}}">Chapter index</a>
-				<a href="../reference/glossary.html">Glossary</a>
 			</nav>
-			<p>{{FOOTER_LINE}}</p>
 		</footer>
 	</body>
 </html>

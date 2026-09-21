@@ -116,7 +116,7 @@ cases.append(
             'See <a href="https://www.rferl.org/example">a</a> and <a href="https://www.rferl.org/example">b</a>; the June runoff result is',
         ),
         "07-ch13-1996.yaml",
-        "link target",
+        "repeat citation",
     )
 )
 

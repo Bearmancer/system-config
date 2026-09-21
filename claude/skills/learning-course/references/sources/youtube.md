@@ -35,7 +35,7 @@ One command does the whole extraction job, and the ranges stay metadata-derived:
 - The boundary check prints per chapter (last cue before the range, first cue after it). Captions lag the visual cut by ~4–6 s, so verify the "first after" cue opens the next chapter and note the lag in the slice header — that note is the honesty of the slice.
 - `slice_chapter.py` covers hand-range overrides only: a chapter boundary the metadata gets wrong and a human re-derives by hand. `extract_chapters.py` shares its collapse implementation (one implementation, imported — see the script header), so both paths collapse rolling-caption duplication the same way.
 
-Batch extraction is safe here because the ranges come from metadata; it is *teaching* that stays one chapter at a time (SKILL.md's one-chapter-per-pass rule is about treatises, not slices).
+Batch extraction is safe here because the ranges come from metadata; it is _teaching_ that stays one chapter at a time (SKILL.md's one-chapter-per-pass rule is about treatises, not slices).
 
 ## Description mining (mandatory)
 

@@ -9,14 +9,10 @@ cast:
   - name: "Boris Yeltsin"
     role: "President; reelected via spin, loans and a ceasefire"
     ref: 8
-essentials:
-  - "The runoff, not the first round, decided the presidency."
-skippables:
-  - "Poll-by-poll colour."
 narrative: |
-  <p>The June runoff result is <strong>confirmed</strong> against the official record beside the quoted wording.</p>
+  <p>The June runoff result is <strong>confirmed</strong> against the <a href="https://www.rferl.org/example">official record</a> beside the quoted wording.</p>
   <blockquote>"We won."</blockquote>
-  <p>The turnout figure stays <strong>unverified</strong> outside the source's account.</p>
+  <p>The turnout figure stays <strong>unverified</strong> outside the source's account, per the same <sup><a href="https://www.rferl.org/example">1</a></sup> report.</p>
 machinery: |
   <p>Loans-for-shares converts political access into ownership.</p>
 sources:

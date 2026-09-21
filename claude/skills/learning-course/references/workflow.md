@@ -84,6 +84,7 @@ lives in YAML.
   pilot yields a per-lesson cost.
 
 ## Verification fan-out pattern
+
 Moved. The tier ladder, parallel-pass contract, pass budget, burn guards, and all source-selection rules (apparatus-first, preference ordering, pairing, advocacy labelling, attribution hygiene) now live in the `rigorous-research` skill; tool selection lives in `web-data-apis`; API-key credit failover is in this skill's own "API key failover" section (SKILL.md), which owns switch_api_key.py. The scholarly-gate exemption — a source carrying its own citation apparatus skips fan-out — is stated in SKILL.md Step 6.
 
 ## Glossary conventions (glossary stays distinct from the cast map)

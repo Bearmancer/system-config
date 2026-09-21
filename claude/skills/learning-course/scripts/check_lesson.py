@@ -22,7 +22,7 @@ CAPS_RUN = re.compile(r"\b(?:[A-Z]{2,}\s+){2,}[A-Z]{2,}\b")
 
 
 def stray_timestamps(html):
-    text = re.sub(r"<[^>]*>", " ", SURTITLE.sub(" ", html))
+    text = re.sub(r"<[^>]*>", " ", html)
     stray = []
     for m in TIMESTAMP.finditer(text):
         tail = text[m.end() : m.end() + 4]
@@ -37,14 +37,12 @@ def check(path):
     html = open(path, encoding="utf-8", errors="replace").read()
     low = html.lower()
 
-
     if QUIZ.search(html):
         issues.append("quiz block present: no quizzes/questionnaires in lessons")
     if "quiz" in low:
         issues.append("'quiz' mentioned: no quizzes/questionnaires in lessons")
     if "ask your teacher" in low or "box-teacher" in low or "your teacher" in low:
         issues.append("teacher reference: lessons carry no teacher apparatus")
-
 
     for phrase in (
         "boundar",
@@ -57,15 +55,18 @@ def check(path):
                 f"boundary narration found: '{phrase}' — lessons never mention boundaries or stop points"
             )
 
-
     if not SURTITLE.search(html):
         issues.append(
-            'missing surtitle: <p class="surtitle">chapter N of M · time range</p> under the H1'
+            'missing surtitle: <p class="surtitle">Chapter N of M</p> under the H1'
         )
     stray = stray_timestamps(html)
     if stray:
-        issues.append(f"timestamps outside the surtitle: {stray[:5]}")
+        issues.append(f"timestamps found (no timestamps anywhere on the page): {stray[:5]}")
 
+    if re.search(r"youtube\.com|youtu\.be", html, re.I):
+        issues.append("YouTube URL present: a YouTube video is never a source")
+    if "canon-checked" in low or "canon checked" in low:
+        issues.append("'canon-checked' wording present: verdicts use confirmed/corrected/etc, not 'canon'")
 
     if "how this treatise was built" in low:
         issues.append("method box: lessons carry no method block")
@@ -74,7 +75,6 @@ def check(path):
     if "next on request" in low:
         issues.append("next-steps line: lessons carry no 'next on request'")
 
-
     if not re.search(r'href="https?://', html):
         issues.append(
             "no hyperlinked sources (each cited source links to its actual page)"
@@ -82,7 +82,6 @@ def check(path):
     bare = re.findall(r"https?://\S+", ANCHOR.sub(" ", html))
     if bare:
         issues.append(f"bare URL text (wrap it in a link): {bare[:3]}")
-
 
     seen_citations = set()
     for m in ANCHOR.finditer(html):
@@ -130,24 +129,23 @@ def check(path):
             "no inline verdicts in narrative (verdict words like confirmed/corrected/unfindable beside the quoted wording)"
         )
 
-
     if "lesson-footer" not in low:
         issues.append("missing lesson footer")
     if not re.search(r'href="[^"]*glossary[^"]*"', low):
         issues.append(
-            "footer/nav: no glossary link (glossary stays distinct from the cast map and sits in the footer)"
+            "top-nav: no glossary link (glossary link sits in the top nav, below the heading)"
+        )
+    if 'href="../../index.html"' not in html:
+        issues.append(
+            'top-nav: no home link (needs href="../../index.html", above the kicker)'
+        )
+    if not re.search(r'href="\.\./index\.html#ch\d+"', html):
+        issues.append(
+            'top-nav: no chapter-index backlink (needs href="../index.html#chN")'
         )
     footer_m = FOOTER_RE.search(html)
     footer_block = footer_m.group(1) if footer_m else ""
     footer_hrefs = HREF.findall(footer_block)
-    if "../../index.html" not in footer_hrefs:
-        issues.append(
-            'footer/nav: no home button (footer needs href="../../index.html")'
-        )
-    if not re.search(r'href="\.\./index\.html#ch\d+"', footer_block):
-        issues.append(
-            'footer/nav: no chapter backlink (footer needs href="../index.html#chN")'
-        )
 
     headings = {int(n) for n in HEADING.findall(html)}
     if headings:
@@ -159,22 +157,25 @@ def check(path):
                     )
 
     base = os.path.dirname(os.path.abspath(path))
-    from collections import Counter
 
-    allowed = Counter(
-        h
-        for h in footer_hrefs
-        if h == "../../index.html" or h.split("#")[0] == "../index.html"
-    )
-    seen_allowed = Counter()
+    home_hrefs = [h for h in HREF.findall(html) if h == "../../index.html"]
+    if len(home_hrefs) > 1:
+        issues.append(
+            f"home link repeated {len(home_hrefs)}x (budget: ../../index.html at most once)"
+        )
+    backlink_hrefs = [
+        h for h in HREF.findall(html) if h.split("#")[0] == "../index.html"
+    ]
+    if len(backlink_hrefs) > 1:
+        issues.append(
+            f"chapter-index link repeated {len(backlink_hrefs)}x (budget: ../index.html* at most once)"
+        )
+
     for href in HREF.findall(html):
         if href.startswith(("http://", "https://", "#", "mailto:", "data:")):
             continue
         if href == "../../index.html" or href.split("#")[0] == "../index.html":
-            if seen_allowed[href] < allowed[href]:
-                seen_allowed[href] += 1
-                continue
-            seen_allowed[href] += 1
+            continue
         target = href.split("#")[0]
         if not target:
             continue

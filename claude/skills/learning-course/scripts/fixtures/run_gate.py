@@ -1,4 +1,3 @@
-
 import argparse
 import os
 import re
@@ -56,10 +55,11 @@ if ph is None:
     fails.append(
         "pass-real-footer.html: footer parse yielded None (regex missed </footer>)"
     )
-elif "../../index.html" not in ph or not re.search(
-    r"\.\./index\.html#ch\d+", " ".join(ph)
-):
-    fails.append(f"pass-real-footer.html: footer hrefs missing nav targets, got {ph}")
+elif "../../index.html" in ph or re.search(r"\.\./index\.html#ch\d+", " ".join(ph)):
+    fails.append(
+        f"pass-real-footer.html: footer should hold only previous/next links "
+        f"(home + chapter-index backlink belong in top-nav), got {ph}"
+    )
 
 nh = footer_hrefs(os.path.join(BASE, "fail-footer-nonav.html"))
 if nh is None:

@@ -28,17 +28,17 @@ $key = ([xml](Get-Content "C:\ProgramData\Sonarr\config.xml")).Config.ApiKey
 
 Auth: header `X-Api-Key: <key>`. Base: `http://<host>:<port>/api/v3`.
 
-| Action                        | Endpoint                     | Body                                         |
-| ----------------------------- | ---------------------------- | -------------------------------------------- |
-| List root folders             | `GET /rootfolder`            | —                                            |
-| Add root folder               | `POST /rootfolder`           | `{"path": "C:\\Media\\Library\\TV"}`         |
-| Remove root folder            | `DELETE /rootfolder/{id}`    | —                                            |
-| List download clients         | `GET /downloadclient`        | —                                            |
-| Get download client templates | `GET /downloadclient/schema` | —                                            |
-| Add download client           | `POST /downloadclient`       | full object from schema, mutated (see below) |
-| Test all download clients     | `POST /downloadclient/testall` | empty body — returns `[{id, isValid, validationFailures}]`; re-`GET /health` after, download-client error should clear with no config edit if outage was process-side |
-| Trigger backup                | `POST /command`              | `{"name": "Backup"}`                         |
-| Re-search one series (clear stale `downloadClientUnavailable` queue) | `POST /command` | `{"name": "SeriesSearch", "seriesId": <id>}` → `queued`; `POST /queue/grab` with `{ids}` 405s, use this instead |
+| Action                                                               | Endpoint                       | Body                                                                                                                                                                  |
+| -------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| List root folders                                                    | `GET /rootfolder`              | —                                                                                                                                                                     |
+| Add root folder                                                      | `POST /rootfolder`             | `{"path": "C:\\Media\\Library\\TV"}`                                                                                                                                  |
+| Remove root folder                                                   | `DELETE /rootfolder/{id}`      | —                                                                                                                                                                     |
+| List download clients                                                | `GET /downloadclient`          | —                                                                                                                                                                     |
+| Get download client templates                                        | `GET /downloadclient/schema`   | —                                                                                                                                                                     |
+| Add download client                                                  | `POST /downloadclient`         | full object from schema, mutated (see below)                                                                                                                          |
+| Test all download clients                                            | `POST /downloadclient/testall` | empty body — returns `[{id, isValid, validationFailures}]`; re-`GET /health` after, download-client error should clear with no config edit if outage was process-side |
+| Trigger backup                                                       | `POST /command`                | `{"name": "Backup"}`                                                                                                                                                  |
+| Re-search one series (clear stale `downloadClientUnavailable` queue) | `POST /command`                | `{"name": "SeriesSearch", "seriesId": <id>}` → `queued`; `POST /queue/grab` with `{ids}` 405s, use this instead                                                       |
 
 Download client add — filter schema to implementation, set fields, POST whole thing:
 
@@ -147,7 +147,7 @@ Auth: **query-string** `apikey=<key>` param, not header. Base: `http://<host>:<p
 
 | Action                 | URL params                                                                                                                                                        |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Get config (a section) | `mode=get_config&section=<misc\|categories>&apikey=...&output=json` → body is `{"config": {"categories": [...]}}` (nested under `config`, not bare array)        |
+| Get config (a section) | `mode=get_config&section=<misc\|categories>&apikey=...&output=json` → body is `{"config": {"categories": [...]}}` (nested under `config`, not bare array)         |
 | Set a misc key         | `mode=set_config&section=misc&keyword=<download_dir\|complete_dir\|dirscan_dir\|...>&value=<val>&apikey=...&output=json`                                          |
 | Set a category's dir   | `mode=set_config&section=categories&keyword=<catname>&dir=<path>&apikey=...&output=json`                                                                          |
 | Delete a category      | `mode=del_config&section=categories&keyword=<catname>&apikey=...&output=json`                                                                                     |
