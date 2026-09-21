@@ -1,7 +1,7 @@
 # agents-config — Agent & Human Shipyard
 
 ## Project conventions
-- Python only (`pathlib` not `os`), no package manager, no app code. See README.md's "Backup mechanism" section for the sync script's name and invocation — don't restate it here.
+- Python only, no package manager, no app code. See README.md's "Backup mechanism" section for the sync script's name and invocation — don't restate it here.
 - Four mirrored folders (`claude/`, `opencode/`, `omo/`, `agents/`) map 1:1 to three local config homes plus the skills.sh install location — see README.md's table for the exact mapping, don't restate it here.
 - Sync direction is one-way: local machine → repo, via `robocopy`. Never edit mirrored files inside this repo expecting them to flow back to the local machine — they don't.
 

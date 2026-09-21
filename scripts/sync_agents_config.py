@@ -27,23 +27,17 @@ def write_log(message: str) -> None:
     print(line)
 
 
-def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, **kwargs)
+def git(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True)
 
 
 def robocopy(source: Path, destination: Path, extra: list[str]) -> None:
     args = ["robocopy", str(source), str(destination), *extra, "/NFL", "/NDL", "/NJH", "/NJS", "/R:1", "/W:1"]
-    result = run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    result = subprocess.run(args, capture_output=True, text=True)
     if result.returncode >= 8:
-        raise RuntimeError(f"robocopy failed with exit {result.returncode} for {source} -> {destination}")
-
-
-def trim_log() -> None:
-    if not LOG_PATH.exists():
-        return
-    lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
-    if len(lines) > LOG_MAX_LINES:
-        LOG_PATH.write_text("\n".join(lines[-LOG_MAX_LINES:]) + "\n", encoding="utf-8")
+        raise RuntimeError(
+            f"robocopy failed with exit {result.returncode} for {source} -> {destination}: {result.stdout}"
+        )
 
 
 def main() -> int:
@@ -57,9 +51,7 @@ def main() -> int:
 
     if not (repo_path / ".git").exists():
         write_log(f"clone missing; cloning {remote_url} -> {repo_path}")
-        result = run(["git", "clone", remote_url, str(repo_path)])
-        if result.returncode != 0:
-            raise RuntimeError("git clone failed")
+        git("clone", remote_url, str(repo_path))
 
     c = Path.home() / ".claude"
     o = Path.home() / ".config" / "opencode"
@@ -88,35 +80,33 @@ def main() -> int:
     robocopy(a, repo_path / "agents", [".skill-lock.json"])
     robocopy(a / "skills", repo_path / "agents" / "skills", ["/MIR", "/XJ"])
 
-    result = run(["git", "add", "-A"], cwd=repo_path)
-    if result.returncode != 0:
-        raise RuntimeError("git add failed")
+    git("add", "-A", cwd=repo_path)
 
-    diff = run(["git", "diff", "--cached", "--quiet"], cwd=repo_path)
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=repo_path)
     if diff.returncode != 0:
         stamp = f"{datetime.now():%Y-%m-%d %H:%M}"
-        commit = run(
-            [
-                "git",
-                "-c", "user.name=Bearmancer",
-                "-c", "user.email=lordlance@outlook.in",
-                "commit", "-m", f"Sync agent config {stamp}",
-            ],
+        git(
+            "-c", "user.name=Bearmancer",
+            "-c", "user.email=lordlance@outlook.in",
+            "commit", "-m", f"Sync agent config {stamp}",
             cwd=repo_path,
-            stdout=subprocess.DEVNULL,
         )
-        if commit.returncode != 0:
-            raise RuntimeError("git commit failed")
-        push = run(["git", "push", "origin", "HEAD"], cwd=repo_path, stdout=subprocess.DEVNULL)
-        if push.returncode != 0:
-            raise RuntimeError("git push failed")
+        git("push", "origin", "HEAD", cwd=repo_path)
         write_log(f"pushed sync commit {stamp}")
     else:
         write_log("no changes")
 
-    trim_log()
+    if LOG_PATH.exists():
+        lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
+        if len(lines) > LOG_MAX_LINES:
+            LOG_PATH.write_text("\n".join(lines[-LOG_MAX_LINES:]) + "\n", encoding="utf-8")
+
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except subprocess.CalledProcessError as e:
+        write_log(f"{' '.join(e.cmd)} failed (exit {e.returncode}): {e.stderr}")
+        sys.exit(1)
