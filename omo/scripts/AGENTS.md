@@ -5,8 +5,8 @@ Scope: config backup ONLY. Teach publish is out of scope, see `C:\Users\Lance\.o
 ## Mechanism
 
 - Weekly task `AgentsConfigSync`, Sundays 20:00, runs the sync script.
-- Runner: `C:\Users\Lance\.local\pwsh\pwsh.exe -NoProfile -ExecutionPolicy Bypass -File` the script below. Runs as Lance.
-- Script lives inside the clone: `C:\Users\Lance\.omo\agents-config\scripts\sync-agents-config.ps1` (79 lines).
+- Runner: `python` the script below. Runs as Lance.
+- Script lives inside the clone: `C:\Users\Lance\.omo\agents-config\scripts\sync_agents_config.py`.
 - Mirror dir `C:\Users\Lance\.omo\agents-config` is a git clone of `Bearmancer/agents-config`. Never write inside the clone except via the script.
 - Full rationale: `C:\Users\Lance\.omo\agents-config\README.md`.
 
@@ -31,7 +31,7 @@ Settings, hooks, plugins, `node_modules`, caches, transcripts, session state, sy
 ## Manual run
 
 ```powershell
-pwsh -NoProfile -File C:\Users\Lance\.omo\agents-config\scripts\sync-agents-config.ps1
+python C:\Users\Lance\.omo\agents-config\scripts\sync_agents_config.py
 ```
 
 ## Restore

@@ -1,15 +1,15 @@
 # agents-config — Agent & Human Shipyard
 
 ## Project conventions
-- PowerShell only (`scripts/sync-agents-config.ps1`), no package manager, no app code.
+- Python only (`scripts/sync_agents_config.py`, `pathlib` not `os`), no package manager, no app code.
 - Four mirrored folders (`claude/`, `opencode/`, `omo/`, `agents/`) map 1:1 to three local config homes plus the skills.sh install location — see README.md's table for the exact mapping, don't restate it here.
 - Sync direction is one-way: local machine → repo, via `robocopy`. Never edit mirrored files inside this repo expecting them to flow back to the local machine — they don't.
 
 ## Architecture principles
 - One-way mirror only: nothing in this repo writes back to `~/.claude`, `~/.config/opencode`, or `~/.omo`. A restore is a separate, currently-manual procedure (see CONTEXT.md: restore procedure).
-- Secrets are out of scope for this repo entirely: no MCP API key is backed up or restored by `sync-agents-config.ps1`. Secret provisioning is a distinct concern (see CONTEXT.md: secret provisioning), tracked on the open ask-navigator map, not solved here.
+- Secrets are out of scope for this repo entirely: no MCP API key is backed up or restored by `sync_agents_config.py`. Secret provisioning is a distinct concern (see CONTEXT.md: secret provisioning), tracked on the open ask-navigator map, not solved here.
 - Whitelist discipline: only named paths in README.md's "What is included" section get mirrored; everything else (caches, node_modules, session/project state, plugins/marketplaces) is excluded on purpose because it's machine-managed or reinstallable.
-- `/MIR`-mirrored subdirectories (e.g. `claude/skills/`) delete extras not present in the source; non-`/MIR` copies (e.g. root instruction files) are additive-only. Know which mode a given robocopy call in `scripts/sync-agents-config.ps1` uses before assuming either behavior.
+- `/MIR`-mirrored subdirectories (e.g. `claude/skills/`) delete extras not present in the source; non-`/MIR` copies (e.g. root instruction files) are additive-only. Know which mode a given robocopy call in `scripts/sync_agents_config.py` uses before assuming either behavior.
 
 ## Standards index (full text in docs/standards/)
 - Architecture: docs/standards/architecture.md

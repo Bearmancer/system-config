@@ -10,4 +10,4 @@ Rule-shaped, checkable writing; every rule carries a "why". Empty sections are l
 (empty — no error-handling surface exists yet; this is a config-mirror repo, not a runtime service)
 
 ## Dependency direction
-- `scripts/sync-agents-config.ps1` only ever reads from local homes and writes into this repo. Why: reversing this without an explicit restore script would silently overwrite a human's live local config from a stale repo snapshot.
+- `scripts/sync_agents_config.py` only ever reads from local homes and writes into this repo. Why: reversing this without an explicit restore script would silently overwrite a human's live local config from a stale repo snapshot.

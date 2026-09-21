@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+"""Weekly backup: mirrors whitelisted local agent config into the repo clone and pushes.
+
+Local files are never modified, moved, or symlinked; the repo receives copies only.
+Whitelist and rationale: see README.md. Excludes (plugins, settings, caches) are absent
+by design.
+"""
+from __future__ import annotations
+
+import argparse
+import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+
+DEFAULT_REPO_PATH = Path.home() / ".omo" / "agents-config"
+DEFAULT_REMOTE_URL = "https://github.com/Bearmancer/agents-config.git"
+LOG_PATH = Path.home() / ".omo" / "agents-config-sync.log"
+LOG_MAX_LINES = 500
+
+
+def write_log(message: str) -> None:
+    line = f"{datetime.now():%Y-%m-%d %H:%M:%S} {message}"
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with LOG_PATH.open("a", encoding="utf-8") as f:
+        f.write(line + "\n")
+    print(line)
+
+
+def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
+    return subprocess.run(cmd, **kwargs)
+
+
+def robocopy(source: Path, destination: Path, extra: list[str]) -> None:
+    args = ["robocopy", str(source), str(destination), *extra, "/NFL", "/NDL", "/NJH", "/NJS", "/R:1", "/W:1"]
+    result = run(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if result.returncode >= 8:
+        raise RuntimeError(f"robocopy failed with exit {result.returncode} for {source} -> {destination}")
+
+
+def trim_log() -> None:
+    if not LOG_PATH.exists():
+        return
+    lines = LOG_PATH.read_text(encoding="utf-8").splitlines()
+    if len(lines) > LOG_MAX_LINES:
+        LOG_PATH.write_text("\n".join(lines[-LOG_MAX_LINES:]) + "\n", encoding="utf-8")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--repo-path", type=Path, default=DEFAULT_REPO_PATH)
+    parser.add_argument("--remote-url", default=DEFAULT_REMOTE_URL)
+    args = parser.parse_args()
+
+    repo_path: Path = args.repo_path
+    remote_url: str = args.remote_url
+
+    if not (repo_path / ".git").exists():
+        write_log(f"clone missing; cloning {remote_url} -> {repo_path}")
+        result = run(["git", "clone", remote_url, str(repo_path)])
+        if result.returncode != 0:
+            raise RuntimeError("git clone failed")
+
+    c = Path.home() / ".claude"
+    o = Path.home() / ".config" / "opencode"
+    m = Path.home() / ".omo"
+    a = Path.home() / ".agents"
+
+    # synced/ and *-workspace excluded: plugin cache + skill-creator eval output, not source material
+    robocopy(c, repo_path / "claude", ["CLAUDE.md", "keybindings.json"])
+    robocopy(c / "skills", repo_path / "claude" / "skills", ["/MIR", "/XJ", "/XD", "synced", "*-workspace"])
+
+    robocopy(o, repo_path / "opencode", ["AGENTS.md", "opencode.jsonc", "tui.json"])
+    robocopy(o / "agents", repo_path / "opencode" / "agents", ["/MIR"])
+    robocopy(o / "commands", repo_path / "opencode" / "commands", ["/MIR"])
+    robocopy(o / "skills", repo_path / "opencode" / "skills", ["/MIR"])
+
+    robocopy(m, repo_path / "omo", ["omo.jsonc"])
+    robocopy(m / "scripts", repo_path / "omo" / "scripts", ["/MIR"])
+
+    # cache/ and codegraph/ excluded: regenerable via yt-dlp / codegraph init, not source material
+    robocopy(m / "ulw-research", repo_path / "omo" / "ulw-research", ["/MIR"])
+    robocopy(m / "teach", repo_path / "omo" / "teach", ["/MIR"])
+    robocopy(m / "plans", repo_path / "omo" / "plans", ["/MIR"])
+    robocopy(m / "notepads", repo_path / "omo" / "notepads", ["/MIR"])
+
+    # /XJ skips junction/symlink-linked skills (plugin installs): reinstallable, not backups
+    robocopy(a, repo_path / "agents", [".skill-lock.json"])
+    robocopy(a / "skills", repo_path / "agents" / "skills", ["/MIR", "/XJ"])
+
+    result = run(["git", "add", "-A"], cwd=repo_path)
+    if result.returncode != 0:
+        raise RuntimeError("git add failed")
+
+    diff = run(["git", "diff", "--cached", "--quiet"], cwd=repo_path)
+    if diff.returncode != 0:
+        stamp = f"{datetime.now():%Y-%m-%d %H:%M}"
+        commit = run(
+            [
+                "git",
+                "-c", "user.name=Bearmancer",
+                "-c", "user.email=lordlance@outlook.in",
+                "commit", "-m", f"Sync agent config {stamp}",
+            ],
+            cwd=repo_path,
+            stdout=subprocess.DEVNULL,
+        )
+        if commit.returncode != 0:
+            raise RuntimeError("git commit failed")
+        push = run(["git", "push", "origin", "HEAD"], cwd=repo_path, stdout=subprocess.DEVNULL)
+        if push.returncode != 0:
+            raise RuntimeError("git push failed")
+        write_log(f"pushed sync commit {stamp}")
+    else:
+        write_log("no changes")
+
+    trim_log()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
