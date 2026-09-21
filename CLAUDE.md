@@ -3,13 +3,13 @@
 ## Project conventions
 - Python only, no package manager, no app code. See README.md's "Backup mechanism" section for the sync script's name and invocation — don't restate it here.
 - Four mirrored folders (`claude/`, `opencode/`, `omo/`, `agents/`) map 1:1 to three local config homes plus the skills.sh install location — see README.md's table for the exact mapping, don't restate it here.
-- Sync direction is one-way: local machine → repo, via `robocopy`. Never edit mirrored files inside this repo expecting them to flow back to the local machine — they don't.
+- Sync direction is one-way: local machine → repo, via the sync script's own mirror logic. Never edit mirrored files inside this repo expecting them to flow back to the local machine — they don't.
 
 ## Architecture principles
 - One-way mirror only: nothing in this repo writes back to `~/.claude`, `~/.config/opencode`, or `~/.omo`. A restore is a separate, currently-manual procedure (see CONTEXT.md: restore procedure).
 - Secrets are out of scope for this repo entirely: no MCP API key is backed up or restored by the sync script. Secret provisioning is a distinct concern (see CONTEXT.md: secret provisioning), tracked on the open ask-navigator map, not solved here.
 - Whitelist discipline: only named paths in README.md's "What is included" section get mirrored; everything else (caches, node_modules, session/project state, plugins/marketplaces) is excluded on purpose because it's machine-managed or reinstallable.
-- `/MIR`-mirrored subdirectories (e.g. `claude/skills/`) delete extras not present in the source; non-`/MIR` copies (e.g. root instruction files) are additive-only. Know which mode a given robocopy call in the sync script uses before assuming either behavior.
+- `mirror_dir`-synced subdirectories (e.g. `claude/skills/`) delete extras not present in the source; `copy_files`-synced files (e.g. root instruction files) are additive-only. Know which function a given sync-script call uses before assuming either behavior.
 
 ## Standards index (full text in docs/standards/)
 - Architecture: docs/standards/architecture.md

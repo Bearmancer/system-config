@@ -7,7 +7,7 @@ documentLanguage: en
 One entry per term: definition, boundaries, one resolved ambiguity. Agents write here the moment a term is settled. Vocabulary here is law for all specs, tickets, and code naming.
 
 ## mirror direction
-- Definition: the direction data flows between this repo and the local machine. Currently one-way only: local → repo, via `robocopy`, on a weekly schedule (`AgentsConfigSync` task) — see README.md's "Backup mechanism" section for the script.
+- Definition: the direction data flows between this repo and the local machine. Currently one-way only: local → repo, on a weekly schedule (`AgentsConfigSync` task) — see README.md's "Backup mechanism" section for the script.
 - Boundary: is a backup mechanism, not a sync mechanism — nothing written into this repo (by a human, an agent, or a PR merge) ever flows back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically.
 - Resolved ambiguity: a root-level `.claude/` or similar dotfile created inside this repo (e.g. by running `omc-setup` here) is NOT part of the mirror — the sync script only ever reads/writes the plain `claude/`, `opencode/`, `omo/`, `agents/` folders (no leading dot). Any dotfile at repo root is an orphan, invisible to the backup/restore system.
 
