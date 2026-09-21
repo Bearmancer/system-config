@@ -11,6 +11,7 @@ except ImportError:
 
 try:
     import tiktoken
+
     _enc = tiktoken.get_encoding("o200k_base")
 except ImportError:
     _enc = None
@@ -54,7 +55,6 @@ def main():
             sys.exit(1)
         print_table([benchmark_pair(orig, comp)])
         return
-
 
     tests_dir = Path(__file__).resolve().parents[3] / "tests" / "caveman-compress"
     if not tests_dir.exists():

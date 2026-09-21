@@ -5,22 +5,73 @@ import re
 from pathlib import Path
 
 
-COMPRESSIBLE_EXTENSIONS = {".md", ".mdc", ".txt", ".markdown", ".rst", ".typ", ".typst", ".tex"}
+COMPRESSIBLE_EXTENSIONS = {
+    ".md",
+    ".mdc",
+    ".txt",
+    ".markdown",
+    ".rst",
+    ".typ",
+    ".typst",
+    ".tex",
+}
 
 
 SKIP_EXTENSIONS = {
-    ".py", ".js", ".ts", ".tsx", ".jsx", ".json", ".yaml", ".yml",
-    ".toml", ".env", ".lock", ".css", ".scss", ".html", ".xml",
-    ".sql", ".sh", ".bash", ".zsh", ".go", ".rs", ".java", ".c",
-    ".cpp", ".h", ".hpp", ".rb", ".php", ".swift", ".kt", ".lua",
-    ".dockerfile", ".makefile", ".csv", ".ini", ".cfg",
+    ".py",
+    ".js",
+    ".ts",
+    ".tsx",
+    ".jsx",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".env",
+    ".lock",
+    ".css",
+    ".scss",
+    ".html",
+    ".xml",
+    ".sql",
+    ".sh",
+    ".bash",
+    ".zsh",
+    ".go",
+    ".rs",
+    ".java",
+    ".c",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".rb",
+    ".php",
+    ".swift",
+    ".kt",
+    ".lua",
+    ".dockerfile",
+    ".makefile",
+    ".csv",
+    ".ini",
+    ".cfg",
 }
 
 
 KNOWN_CODE_FILENAMES = {
-    "dockerfile", "containerfile", "makefile", "gnumakefile", "jenkinsfile",
-    "vagrantfile", "rakefile", "gemfile", "justfile", "procfile", "brewfile",
-    "earthfile", "fastfile", "podfile",
+    "dockerfile",
+    "containerfile",
+    "makefile",
+    "gnumakefile",
+    "jenkinsfile",
+    "vagrantfile",
+    "rakefile",
+    "gemfile",
+    "justfile",
+    "procfile",
+    "brewfile",
+    "earthfile",
+    "fastfile",
+    "podfile",
     "cmakelists.txt",
 }
 
@@ -66,16 +117,17 @@ def _is_yaml_content(lines: list[str]) -> bool:
 def detect_file_type(filepath: Path) -> str:
     ext = filepath.suffix.lower()
 
-
     if filepath.name.lower() in KNOWN_CODE_FILENAMES:
         return "code"
-
 
     if ext in COMPRESSIBLE_EXTENSIONS:
         return "natural_language"
     if ext in SKIP_EXTENSIONS:
-        return "code" if ext not in {".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".env"} else "config"
-
+        return (
+            "code"
+            if ext not in {".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".env"}
+            else "config"
+        )
 
     if not ext:
         try:
@@ -84,7 +136,6 @@ def detect_file_type(filepath: Path) -> str:
             return "unknown"
 
         lines = text.splitlines()[:50]
-
 
         if text.startswith("#!"):
             return "code"

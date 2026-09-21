@@ -2,6 +2,7 @@
 name: rigorous-research
 description: "Tiered, multi-source verification engine: take a list of checkable claims, run a cheap→grounded→contested ladder across the web-data MCP fleet, fan parallel research passes out when the claim list justifies it, and return every claim as claim → verdict → URL → quote. Self-activates whenever a task requires facts to be checked rather than recalled — verifying dates, figures, names, chronology, attributions or contested statements; fact-checking a source; or any request to research something properly, rigorously, or with citations. Does NOT wait for a trigger word: invoke it from other skills and from ordinary requests alike. Routes tool selection through the web-data-apis skill's capability table rather than choosing servers itself."
 ---
+
 # Rigorous Research
 
 Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (OMO) — the only runtime this domain has. No portability guarding, no alternate-host fallback: `team_create`, `team_task_create`, and `skill()` are OMO tools, called directly.

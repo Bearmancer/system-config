@@ -1,4 +1,3 @@
-
 import importlib.util as u
 import re
 import sys
@@ -10,6 +9,8 @@ MIN_OV = 2.0
 
 def load_module():
     spec = u.spec_from_file_location("g", CHECKER)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load spec/loader for {CHECKER}")
     m = u.module_from_spec(spec)
     spec.loader.exec_module(m)
     return m
@@ -50,6 +51,10 @@ def main():
             continue
         svg = re.sub(r"<defs\b.*?</defs>", "", svgs[0], flags=re.S)
         vb = re.search(r'viewBox="([^"]+)"', svgs[0])
+        if vb is None:
+            print(f"ERROR {path}: no viewBox attribute on <svg>")
+            bad += 1
+            continue
         W, H = (float(v) for v in vb.group(1).split()[2:4])
         rects_all = m.load_all_rects(svg)
         boxes = [r for r, is_frame in rects_all if not is_frame]
@@ -62,7 +67,6 @@ def main():
 
         findings = []
 
-
         for i in range(len(labels)):
             for j in range(i + 1, len(labels)):
                 ox, oy = m.rect_overlap(labels[i][0], labels[j][0])
@@ -72,7 +76,6 @@ def main():
                         f"overlap {ox:.0f}x{oy:.0f}px"
                     )
 
-
         for rect, text in labels:
             x0, y0, w, h = rect
             if x0 < -1 or y0 < -1 or x0 + w > W + 1 or y0 + h > H + 1:
@@ -80,7 +83,6 @@ def main():
                     f'B label clipped by canvas: "{text[:34]}" box=({x0:.0f},{y0:.0f},{w:.0f},{h:.0f}) '
                     f"viewBox={W:.0f}x{H:.0f}"
                 )
-
 
         for bi, r in enumerate(boxes):
             pts = []
@@ -102,7 +104,6 @@ def main():
                     f"C isolated node: box at x={r[0]:.0f} y={r[1]:.0f} w={r[2]:.0f} h={r[3]:.0f} "
                     f"(no edge touches it)"
                 )
-
 
         terminals = []
         for tag in raw_lines:

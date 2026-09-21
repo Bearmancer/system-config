@@ -3,6 +3,7 @@ name: arr-api-reference
 description: This skill should be used when the user asks to "wire Sonarr to SABnzbd", "add a Radarr root folder via API", "connect Prowlarr to Sonarr/Radarr", "set SABnzbd category paths", "map Prowlarr download client categories", "add a path to an Emby library", "query Sonarr/Radarr/Prowlarr/SABnzbd/Emby/Bazarr API", "find Emby/Sonarr/Radarr/Prowlarr/SABnzbd/Bazarr logs or config location", "where does Emby store its config/logs", "Emby troubleshooting" (process name, port, autostart mechanism), "wire Bazarr to Sonarr/Radarr", "trigger Bazarr subtitle search", or otherwise configure, locate, or automate the Sonarr/Radarr/Prowlarr/SABnzbd/Emby/Bazarr media stack via their HTTP APIs or on-disk locations instead of their web UIs.
 version: 0.3.0
 ---
+
 Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby all through HTTP APIs — no UI click need. All five have full REST/JSON-RPC-style APIs. Skill write down verified request shapes, auth, gotchas found while drive from PowerShell.
 
 ## Core pattern: schema-then-submit
@@ -146,7 +147,7 @@ don't wrap either as service/task unless ask again.
 ### Current inventory (verified 2026-08-29, post-fix)
 
 | App         | Autostart mechanism                                                                                       | Account                     | Bind                    | Firewall                                                         |
-| ----------- | --------------------------------------------------------------------------------------------------------- | --------------------------- | ------------------------ | ----------------------------------------------------------------- |
+| ----------- | --------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------- | ---------------------------------------------------------------- |
 | Sonarr      | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
 | Radarr      | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
 | Prowlarr    | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
@@ -381,8 +382,8 @@ Sonarr + Radarr for library metadata.
 
 ### Inventory addition (verified 2026-09-06)
 
-| App    | Port | Config                                    | Auth                       |
-| ------ | ---- | ------------------------------------------ | --------------------------- |
+| App    | Port | Config                                     | Auth                      |
+| ------ | ---- | ------------------------------------------ | ------------------------- |
 | Bazarr | 6767 | `C:\ProgramData\Bazarr\config\config.yaml` | `X-API-KEY` or `?apikey=` |
 
 Bazarr autostart mechanism: TBD (not yet confirm as service/task).

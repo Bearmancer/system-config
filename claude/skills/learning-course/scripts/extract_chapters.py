@@ -55,7 +55,9 @@ def default_cache_root():
 def resolve_id(source):
     if re.fullmatch(r"[A-Za-z0-9_-]{11}", source):
         return source
-    r = sc.run(["yt-dlp", "--no-warnings", "--skip-download", "--print", "%(id)s", source])
+    r = sc.run(
+        ["yt-dlp", "--no-warnings", "--skip-download", "--print", "%(id)s", source]
+    )
     if r.returncode != 0:
         print("yt-dlp could not resolve the video:\n" + r.stderr)
         sys.exit(1)

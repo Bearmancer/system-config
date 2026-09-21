@@ -18,10 +18,14 @@ BULLET_REGEX = re.compile(r"^\s*[-*+]\s+", re.MULTILINE)
 LIST_ITEM_REGEX = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s")
 
 
-PATH_REGEX = re.compile(r"(?:\./|\.\./|/|[A-Za-z]:\\)[\w\-/\\\.]+|[\w\-\.]+[/\\][\w\-/\\\.]+")
+PATH_REGEX = re.compile(
+    r"(?:\./|\.\./|/|[A-Za-z]:\\)[\w\-/\\\.]+|[\w\-\.]+[/\\][\w\-/\\\.]+"
+)
 
 
-DEFINITE_PATH_REGEX = re.compile(r"^(?:\./|\.\./|/|[A-Za-z]:\\)|[^/\\]*\.[A-Za-z0-9]{1,8}$")
+DEFINITE_PATH_REGEX = re.compile(
+    r"^(?:\./|\.\./|/|[A-Za-z]:\\)|[^/\\]*\.[A-Za-z0-9]{1,8}$"
+)
 
 
 class ValidationResult:
@@ -80,8 +84,9 @@ def extract_code_blocks(text):
         if closed:
             blocks.append((start, "\n".join(block_lines)))
 
-
-    ordered = sorted(blocks + extract_indented_code_blocks(text), key=lambda pair: pair[0])
+    ordered = sorted(
+        blocks + extract_indented_code_blocks(text), key=lambda pair: pair[0]
+    )
     return [block_text for _, block_text in ordered]
 
 
@@ -117,13 +122,15 @@ def extract_indented_code_blocks(text):
             while i < n and i not in fenced:
                 current = lines[i]
                 if not current.strip():
-
-
                     lookahead = i + 1
                     while lookahead < n and not lines[lookahead].strip():
                         lookahead += 1
-                    if lookahead < n and lookahead not in fenced and \
-                            len(lines[lookahead]) - len(lines[lookahead].lstrip(" \t")) >= 4:
+                    if (
+                        lookahead < n
+                        and lookahead not in fenced
+                        and len(lines[lookahead]) - len(lines[lookahead].lstrip(" \t"))
+                        >= 4
+                    ):
                         run.extend(lines[i:lookahead])
                         i = lookahead
                         continue
@@ -196,7 +203,6 @@ def validate_headings(orig, comp, result):
     h1 = extract_headings(orig)
     h2 = extract_headings(comp)
 
-
     if len(h1) != len(h2):
         result.add_error(f"Heading count mismatch: {len(h1)} vs {len(h2)}")
         return
@@ -208,8 +214,6 @@ def validate_headings(orig, comp, result):
         added = [t for t in t2 if t not in t1]
         result.add_error(f"Heading text/order changed: lost={lost}, added={added}")
     elif h1 != h2:
-
-
         result.add_warning("Heading levels changed")
 
 

@@ -59,10 +59,17 @@ def add_arr_download_client(
     resp = requests.get(f"{base}/downloadclient/schema", headers=headers)
     resp.raise_for_status()
     tmpl = next(
-        (t for t in resp.json() if t["implementation"].casefold() == implementation.casefold()), None
+        (
+            t
+            for t in resp.json()
+            if t["implementation"].casefold() == implementation.casefold()
+        ),
+        None,
     )
     if tmpl is None:
-        raise ValueError(f"No download client implementation named '{implementation}' in {app}'s schema.")
+        raise ValueError(
+            f"No download client implementation named '{implementation}' in {app}'s schema."
+        )
 
     set_arr_field_value(tmpl["fields"], "host", dc_host)
     set_arr_field_value(tmpl["fields"], "port", dc_port)
@@ -101,9 +108,13 @@ def set_prowlarr_category_map(
     if default_category:
         set_arr_field_value(client["fields"], "category", default_category)
 
-    client["categories"] = [{"clientCategory": k, "categories": v} for k, v in mapping.items()]
+    client["categories"] = [
+        {"clientCategory": k, "categories": v} for k, v in mapping.items()
+    ]
 
-    resp = requests.put(f"{base}/downloadclient/{client_id}", headers=headers, json=client)
+    resp = requests.put(
+        f"{base}/downloadclient/{client_id}", headers=headers, json=client
+    )
     resp.raise_for_status()
     return resp.json()
 
@@ -163,7 +174,9 @@ def add_emby_library_path(
     resp = requests.get(f"{emby_base}/Library/VirtualFolders?api_key={api_key}")
     resp.raise_for_status()
     libs = resp.json()
-    target = next((lib for lib in libs if lib["Name"].casefold() == library_name.casefold()), None)
+    target = next(
+        (lib for lib in libs if lib["Name"].casefold() == library_name.casefold()), None
+    )
     if target is None:
         raise ValueError(f"No Emby library named '{library_name}'.")
 

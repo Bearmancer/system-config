@@ -4,7 +4,7 @@ Two cumulative references grow with every course — a roster-index and a timeli
 
 ## Part 0 — Per-chapter cast block & subgraph (in the lesson, every chapter)
 
-Table plus diagram both scope toward *this chapter alone*. That scope keeps duplication low and complexity bounded.
+Table plus diagram both scope toward _this chapter alone_. That scope keeps duplication low and complexity bounded.
 
 ### Cast block (table, mandatory, every lesson)
 

@@ -129,7 +129,9 @@ client = OpenAI(
 
 response = client.chat.completions.create(
     model="brave",
-    messages=[{"role": "user", "content": "How does the James Webb Space Telescope work?"}],
+    messages=[
+        {"role": "user", "content": "How does the James Webb Space Telescope work?"}
+    ],
     stream=False,
 )
 print(response.choices[0].message.content)
@@ -146,9 +148,11 @@ client = OpenAI(
 
 stream = client.chat.completions.create(
     model="brave",
-    messages=[{"role": "user", "content": "What are the current trends in renewable energy?"}],
+    messages=[
+        {"role": "user", "content": "What are the current trends in renewable energy?"}
+    ],
     stream=True,
-    extra_body={"enable_citations": True}
+    extra_body={"enable_citations": True},
 )
 
 for chunk in stream:
@@ -172,8 +176,8 @@ stream = await client.chat.completions.create(
     extra_body={
         "enable_research": True,
         "research_maximum_number_of_iterations": 3,
-        "research_maximum_number_of_seconds": 120
-    }
+        "research_maximum_number_of_seconds": 120,
+    },
 )
 
 async for chunk in stream:

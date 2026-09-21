@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
+# /// script
+# dependencies = ["pyyaml"]
+# ///
 
 import argparse
 import html as html_mod
-import os
 import re
 import sys
 from pathlib import Path
+
+import yaml
 
 SKILL = Path(__file__).resolve().parent.parent
 DEFAULT_STENCIL = SKILL / "assets" / "lesson.stencil.html"
@@ -48,66 +52,13 @@ class StampError(Exception):
     pass
 
 
-def parse_scalar(v):
-    v = v.strip()
-    if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
-        return v[1:-1]
-    if re.fullmatch(r"-?\d+", v):
-        return int(v)
-    return v
-
-
-def parse_yaml(text):
-    data, lines, i = {}, text.splitlines(), 0
-    while i < len(lines):
-        line = lines[i].rstrip()
-        if not line.strip() or line.strip().startswith("#"):
-            i += 1
-            continue
-        m = re.match(r"^([A-Za-z_][A-Za-z0-9_]*):\s*(.*)$", line)
-        if not m:
-            raise StampError(f"unparsable YAML line {i + 1}: {line!r}")
-        key, val = m.group(1), m.group(2).strip()
-        if val == "|":
-            i += 1
-            block = []
-            while i < len(lines) and (
-                not lines[i].strip() or lines[i].startswith("  ")
-            ):
-                block.append(lines[i][2:] if lines[i].startswith("  ") else "")
-                i += 1
-            data[key] = "\n".join(block).rstrip()
-            continue
-        if val:
-            data[key] = parse_scalar(val)
-            i += 1
-            continue
-        items = []
-        i += 1
-        while i < len(lines):
-            l = lines[i]
-            if not l.strip():
-                i += 1
-                continue
-            if l.startswith("  - "):
-                head = l[4:]
-                if re.match(r"^[A-Za-z_][A-Za-z0-9_]*:\s", head):
-                    k, v = head.split(":", 1)
-                    item = {k.strip(): parse_scalar(v)}
-                    i += 1
-                    while i < len(lines) and re.match(
-                        r"^\s{4,}[A-Za-z_][A-Za-z0-9_]*:", lines[i]
-                    ):
-                        k2, v2 = lines[i].strip().split(":", 1)
-                        item[k2.strip()] = parse_scalar(v2)
-                        i += 1
-                    items.append(item)
-                else:
-                    items.append(parse_scalar(head))
-                    i += 1
-                continue
-            break
-        data[key] = items
+def parse_yaml(text: str) -> dict:
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as e:
+        raise StampError(f"unparsable YAML: {e}") from e
+    if not isinstance(data, dict):
+        raise StampError("YAML root must be a mapping (key: value pairs)")
     return data
 
 
@@ -211,6 +162,10 @@ def stamp(yaml_path, lessons_dir, stencil_path):
     for s in sources:
         if not isinstance(s, dict) or not s.get("label") or not s.get("url"):
             raise StampError("sources: every entry needs label and url")
+        if re.search(r"youtube\.com|youtu\.be", s["url"], re.I):
+            raise StampError(
+                "sources: a YouTube URL is not a source — cite the non-YouTube primary"
+            )
 
     check_citation_wrapping(data["narrative"], data["machinery"])
 
@@ -223,7 +178,7 @@ def stamp(yaml_path, lessons_dir, stencil_path):
             raise StampError(f"bare URL in {what}: wrap it in a link")
         if TS.search(textval):
             raise StampError(
-                f"timestamp in {what}: timestamps live in the surtitle only"
+                f"timestamp in {what}: no timestamps anywhere on the page, not even the surtitle"
             )
         for ref in SECTION_REF.findall(textval):
             if not 1 <= int(ref) <= 4:
@@ -271,17 +226,9 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         n = order[idx + 1]
         next_link = f'    <a href="{n}">Next: {html_mod.escape(sibling_title(lessons_dir, n))}</a>'
 
-    mission = lessons_dir.parent / "MISSION.md"
-    course = "Course"
-    if mission.exists():
-        m = re.match(r"#\s+(.+)", mission.read_text(encoding="utf-8", errors="replace"))
-        if m:
-            course = m.group(1).strip()
-
     meta = (
         f'Lesson {lesson_no:02d} · <a href="../reference/cast-map.html">cast map</a> · '
-        f'<a href="../reference/glossary.html">glossary</a> · '
-        f'<a href="../reference/transcripts/{html_mod.escape(str(data["transcript"]))}">transcript slice</a>'
+        f'<a href="../reference/glossary.html">glossary</a>'
     )
     stencil = stencil_path.read_text(encoding="utf-8")
     subs = {
@@ -290,7 +237,6 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         "TITLE": html_mod.escape(str(data["title"])),
         "CHAPTER_N": chapter,
         "CHAPTER_M": int(data["chapters_total"]),
-        "TIME_RANGE": html_mod.escape(str(data["time_range"])),
         "META_LINE": meta,
         "LEAD": f"<p>{html_mod.escape(str(data['lead']))}</p>",
         "SUBGRAPH": subgraph,
@@ -300,7 +246,6 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         "PREV_LINK": prev_link,
         "NEXT_LINK": next_link,
         "ROW_ID": rid,
-        "FOOTER_LINE": f"Workspace: {html_mod.escape(course)} · Lesson {lesson_no:02d} · chapter {chapter} of {int(data['chapters_total'])}",
     }
     rendered = stencil
     for k, v in subs.items():

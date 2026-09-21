@@ -18,6 +18,19 @@ CHAPTER_NUM_PATTERN = re.compile(r"(?i)ch(?:apter)?\.?\s*0*(\d+)")
 LESSON_PATH_PATTERN = re.compile(r"(?i)^[^/]+/lessons/")
 REFERENCE_PATH_PATTERN = re.compile(r"(?i)^[^/]+/reference/")
 COURSE_HOME_TITLE_PATTERN = re.compile(r"(?i)^course home")
+MISSION_PREFIX_PATTERN = re.compile(r"(?i)^mission\s*[:—-]\s*")
+
+CANONICAL_CSS = (
+    Path.home() / ".claude" / "skills" / "learning-course" / "assets" / "lesson.css"
+)
+
+
+def title_case(s: str) -> str:
+    return re.sub(
+        r"[A-Za-z]+(?:'[A-Za-z]+)*",
+        lambda m: m.group(0)[0].upper() + m.group(0)[1:],
+        s,
+    )
 
 
 def get_chapter_row_id(rel_path: str, fallback_num: int) -> str:
@@ -83,21 +96,11 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Course home — {ws_title}</title>
-<style>
-  html {{ background: #fbfaf7; }}
-  body {{ max-width: 46rem; margin: 0 auto; padding: 3.5rem 2.5rem 5rem; color: #201d1a;
-         font-family: "Sitka Text", Constantia, Charter, Georgia, serif; font-size: 18px; line-height: 1.62; }}
-  h1 {{ font-size: 2rem; font-weight: 600; margin: 0 0 .4rem; }}
-  h2 {{ font-size: 1.15rem; margin: 2rem 0 .6rem; }}
-  p.kicker {{ font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
-             text-transform: uppercase; color: #8a5a2b; margin: 0 0 .6rem; }}
-  a {{ color: #8a5a2b; text-decoration: none; border-bottom: 1px solid rgba(138,90,43,.35); }}
-  ul {{ padding-left: 1.2rem; }}
-  li {{ margin: .3rem 0; }}
-</style>
+<link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
-  <p class="kicker">Course home</p>
+  <p class="home-link"><a href="../index.html">Home</a></p>
+  <p class="kicker">Course Home</p>
   <h1>{ws_title}</h1>
   <h2>Chapters</h2>
   <ul>
@@ -117,35 +120,23 @@ def build_top_index_html(rows: str, generated_at: str) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Teaching notes — index</title>
-<style>
-  html {{ background: #fbfaf7; }}
-  body {{ max-width: 46rem; margin: 0 auto; padding: 3.5rem 2.5rem 5rem; color: #201d1a;
-         font-family: "Sitka Text", Constantia, Charter, Georgia, serif; font-size: 18px; line-height: 1.62; }}
-  h1 {{ font-size: 2rem; font-weight: 600; margin: 0 0 .4rem; }}
-  p.kicker {{ font-family: system-ui, sans-serif; font-size: .72rem; letter-spacing: .14em;
-             text-transform: uppercase; color: #8a5a2b; margin: 0 0 .6rem; }}
-  p.meta {{ font-family: system-ui, sans-serif; font-size: .78rem; color: #5a544b; margin: 0 0 2rem; }}
-  table {{ width: 100%; border-collapse: collapse; font-size: .95rem; }}
-  th {{ text-align: left; border-bottom: 1.5px solid #dbd6ca; padding: .4rem .5rem; }}
-  td {{ border-bottom: 1px solid #dbd6ca; padding: .4rem .5rem; vertical-align: top; }}
-  a {{ color: #8a5a2b; text-decoration: none; border-bottom: 1px solid rgba(138,90,43,.35); }}
-  td:last-child {{ white-space: nowrap; color: #5a544b; font-family: system-ui, sans-serif; font-size: .82rem; }}
-</style>
+<title>Index</title>
+<link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
-  <p class="kicker">Teaching notes</p>
-  <h1>Explanations &amp; lessons</h1>
+  <h1>Index</h1>
   <p class="meta">Published from the local teaching workspaces · {generated_at} · pick a book/video, then its chapters</p>
-  <table>
-    <tr><th>Book / video</th><th>Chapters</th></tr>
+  <table class="hub-table">
+    <tr><th>Book / Video</th><th>Chapters</th></tr>
 {rows}
   </table>
 </body>
 </html>"""
 
 
-def build_hub_rows(source: Path, staging: Path, published: list[dict[str, str]]) -> list[dict[str, object]]:
+def build_hub_rows(
+    source: Path, staging: Path, published: list[dict[str, str]]
+) -> list[dict[str, object]]:
     hub_rows: list[dict[str, object]] = []
     for ws in sorted(p for p in source.iterdir() if p.is_dir()):
         ws_pages = [p for p in published if p["workspace"] == ws.name]
@@ -158,11 +149,14 @@ def build_hub_rows(source: Path, staging: Path, published: list[dict[str, str]])
         if mission_path.exists():
             m = MISSION_H1_PATTERN.search(mission_path.read_text(encoding="utf-8"))
             if m:
-                ws_title = m.group(1).strip()
+                ws_title = MISSION_PREFIX_PATTERN.sub("", m.group(1).strip())
 
         existing_home = None
         for p in ws_pages:
-            if COURSE_HOME_TITLE_PATTERN.match(p["title"]) or Path(p["path"]).name.lower() == "index.html":
+            if (
+                COURSE_HOME_TITLE_PATTERN.match(p["title"])
+                or Path(p["path"]).name.lower() == "index.html"
+            ):
                 existing_home = p
                 break
 
@@ -174,21 +168,32 @@ def build_hub_rows(source: Path, staging: Path, published: list[dict[str, str]])
             home_rel_from_root = existing_home["path"]
         else:
             lesson_rows_list: list[str] = []
-            for i, p in enumerate(sorted(lesson_pages, key=lambda p: get_chapter_num(p["title"], p["path"])), start=1):
+            for i, p in enumerate(
+                sorted(
+                    lesson_pages, key=lambda p: get_chapter_num(p["title"], p["path"])
+                ),
+                start=1,
+            ):
                 leaf = p["path"].split("/", 1)[1]
                 row_id = get_chapter_row_id(p["path"], i)
-                lesson_rows_list.append(f'    <li id="{row_id}"><a href="{leaf}">{p["title"]}</a></li>')
+                lesson_rows_list.append(
+                    f'    <li id="{row_id}"><a href="{leaf}">{p["title"]}</a></li>'
+                )
 
             ref_rows_list: list[str] = []
             for p in sorted(ref_pages, key=lambda p: p["path"]):
                 leaf = p["path"].split("/", 1)[1]
                 ref_rows_list.append(f'    <li><a href="{leaf}">{p["title"]}</a></li>')
 
-            home_html = build_home_html(ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list))
+            home_html = build_home_html(
+                ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list)
+            )
             (dest / "index.html").write_text(home_html, encoding="utf-8")
             home_rel_from_root = f"{ws.name}/index.html"
 
-        hub_rows.append({"title": ws_title, "chapters": chapter_count, "link": home_rel_from_root})
+        hub_rows.append(
+            {"title": ws_title, "chapters": chapter_count, "link": home_rel_from_root}
+        )
 
     return hub_rows
 
@@ -197,15 +202,31 @@ def run_checked(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(args, cwd=cwd, capture_output=True, text=True)
 
 
-def publish(staging: Path, repo_name: str, commit_message: str, published_count: int) -> None:
+def publish(
+    staging: Path, repo_name: str, commit_message: str, published_count: int
+) -> None:
     if not (staging / ".git").exists():
-        subprocess.run(["git", "init", "-b", "main"], cwd=staging, capture_output=True, text=True, check=True)
+        subprocess.run(
+            ["git", "init", "-b", "main"],
+            cwd=staging,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
 
-    subprocess.run(["git", "add", "-A"], cwd=staging, capture_output=True, text=True, check=True)
+    subprocess.run(
+        ["git", "add", "-A"], cwd=staging, capture_output=True, text=True, check=True
+    )
 
     status = run_checked(["git", "status", "--porcelain"], staging).stdout
     if status.strip():
-        subprocess.run(["git", "commit", "-m", commit_message], cwd=staging, capture_output=True, text=True, check=True)
+        subprocess.run(
+            ["git", "commit", "-m", commit_message],
+            cwd=staging,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
         print(f"== committed: {commit_message}")
     else:
         print("== no changes to commit")
@@ -214,7 +235,18 @@ def publish(staging: Path, repo_name: str, commit_message: str, published_count:
     if view_result.returncode != 0:
         print(f"== creating repo {repo_name} (public)")
         create_result = run_checked(
-            ["gh", "repo", "create", repo_name, "--public", "--source", str(staging), "--remote", "origin", "--push"],
+            [
+                "gh",
+                "repo",
+                "create",
+                repo_name,
+                "--public",
+                "--source",
+                str(staging),
+                "--remote",
+                "origin",
+                "--push",
+            ],
             staging,
         )
         if create_result.returncode != 0:
@@ -224,10 +256,21 @@ def publish(staging: Path, repo_name: str, commit_message: str, published_count:
     else:
         remotes = run_checked(["git", "remote"], staging).stdout.split()
         if "origin" not in remotes:
-            user = run_checked(["gh", "api", "user", "--jq", ".login"], staging).stdout.strip()
+            user = run_checked(
+                ["gh", "api", "user", "--jq", ".login"], staging
+            ).stdout.strip()
             subprocess.run(
-                ["git", "remote", "add", "origin", f"https://github.com/{user}/{repo_name}.git"],
-                cwd=staging, capture_output=True, text=True, check=True,
+                [
+                    "git",
+                    "remote",
+                    "add",
+                    "origin",
+                    f"https://github.com/{user}/{repo_name}.git",
+                ],
+                cwd=staging,
+                capture_output=True,
+                text=True,
+                check=True,
             )
         push_result = run_checked(["git", "push", "-u", "origin", "main"], staging)
         if push_result.returncode != 0:
@@ -240,7 +283,17 @@ def publish(staging: Path, repo_name: str, commit_message: str, published_count:
 
     print("== enabling Pages (ignored if already on)")
     run_checked(
-        ["gh", "api", "-X", "POST", f"repos/{user}/{repo_name}/pages", "-f", "source[branch]=main", "-f", "source[path]=/"],
+        [
+            "gh",
+            "api",
+            "-X",
+            "POST",
+            f"repos/{user}/{repo_name}/pages",
+            "-f",
+            "source[branch]=main",
+            "-f",
+            "source[path]=/",
+        ],
         staging,
     )
 
@@ -261,6 +314,7 @@ def publish(staging: Path, repo_name: str, commit_message: str, published_count:
         if code == "200":
             break
         import time
+
         time.sleep(15)
 
     if code == "200":
@@ -276,8 +330,14 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-name", default="bearmancer.github.io")
     parser.add_argument("--source", type=Path, default=Path.home() / ".omo" / "teach")
-    parser.add_argument("--staging", type=Path, default=Path.home() / ".omo" / "pages" / "bearmancer.github.io")
-    parser.add_argument("--commit", default=f"Publish teaching docs {datetime.now():%Y-%m-%d %H:%M}")
+    parser.add_argument(
+        "--staging",
+        type=Path,
+        default=Path.home() / ".omo" / "pages" / "bearmancer.github.io",
+    )
+    parser.add_argument(
+        "--commit", default=f"Publish teaching docs {datetime.now():%Y-%m-%d %H:%M}"
+    )
     args = parser.parse_args()
 
     staging: Path = args.staging
@@ -298,10 +358,13 @@ def main() -> None:
 
     (staging / ".nojekyll").touch()
 
+    (staging / "assets").mkdir(exist_ok=True)
+    shutil.copyfile(CANONICAL_CSS, staging / "assets" / "lesson.css")
+
     hub_rows = build_hub_rows(source, staging, published)
 
     rows = "\n".join(
-        f'    <tr><td><a href="{h["link"]}">{h["title"]}</a></td><td>{h["chapters"]}</td></tr>'
+        f'    <tr><td><a href="{h["link"]}">{title_case(str(h["title"]))}</a></td><td>{h["chapters"]}</td></tr>'
         for h in sorted(hub_rows, key=lambda h: str(h["title"]))
     )
     top_index = build_top_index_html(rows, f"{datetime.now():%Y-%m-%d %H:%M}")

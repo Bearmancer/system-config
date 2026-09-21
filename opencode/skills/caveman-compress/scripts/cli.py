@@ -24,10 +24,11 @@ from .detect import detect_file_type, should_compress
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compress a natural-language file with validation and an original backup.")
+    parser = argparse.ArgumentParser(
+        description="Compress a natural-language file with validation and an original backup."
+    )
     parser.add_argument("filepath", type=Path, help="path to the file to compress")
     filepath = parser.parse_args().filepath
-
 
     if not filepath.exists():
         print(f"❌ File not found: {filepath}")
@@ -39,11 +40,9 @@ def main():
 
     filepath = filepath.resolve()
 
-
     file_type = detect_file_type(filepath)
 
     print(f"Detected: {file_type}")
-
 
     if not should_compress(filepath):
         print("Skipping: file is not natural language (code/config)")

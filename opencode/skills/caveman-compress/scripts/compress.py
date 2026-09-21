@@ -33,9 +33,7 @@ for _stream in (sys.stdout, sys.stderr):
 FENCE_LINE_REGEX = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
 
 
-FRONTMATTER_REGEX = re.compile(
-    r"\A(---\r?\n.*?\r?\n---\r?\n)(.*)", re.DOTALL
-)
+FRONTMATTER_REGEX = re.compile(r"\A(---\r?\n.*?\r?\n---\r?\n)(.*)", re.DOTALL)
 
 
 def split_frontmatter(text: str):
@@ -59,21 +57,38 @@ SENSITIVE_BASENAME_REGEX = re.compile(
     r")$"
 )
 
-SENSITIVE_PATH_COMPONENTS = frozenset({
-    ".ssh", ".aws", ".gnupg", ".kube", ".docker",
-    "credential", "credentials", "secret", "secrets",
-})
+SENSITIVE_PATH_COMPONENTS = frozenset(
+    {
+        ".ssh",
+        ".aws",
+        ".gnupg",
+        ".kube",
+        ".docker",
+        "credential",
+        "credentials",
+        "secret",
+        "secrets",
+    }
+)
 
 SENSITIVE_NAME_TOKENS = (
-    "secret", "credential", "password", "passwd",
-    "apikey", "accesskey", "token", "privatekey",
+    "secret",
+    "credential",
+    "password",
+    "passwd",
+    "apikey",
+    "accesskey",
+    "token",
+    "privatekey",
 )
 
 
 def _state_base_dir(kind: str) -> Path:
     if _IS_WINDOWS:
         local_appdata = os.environ.get("LOCALAPPDATA")
-        base = Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
+        base = (
+            Path(local_appdata) if local_appdata else Path.home() / "AppData" / "Local"
+        )
     else:
         xdg = os.environ.get("XDG_DATA_HOME")
         base = Path(xdg) if xdg else Path.home() / ".local" / "share"
@@ -152,12 +167,18 @@ def file_lock(filepath: Path):
                         "it finishes."
                     ) from None
                 if not printed_waiting:
-                    print(f"Waiting for another caveman-compress run to finish with {filepath}...", flush=True)
+                    print(
+                        f"Waiting for another caveman-compress run to finish with {filepath}...",
+                        flush=True,
+                    )
                     printed_waiting = True
                 time.sleep(LOCK_POLL_INTERVAL)
             except OSError as e:
                 if e.errno in (errno.EOPNOTSUPP, errno.ENOSYS):
-                    print(f"⚠️ {lock_dir}'s filesystem doesn't support file locking — proceeding without cross-session coordination.", flush=True)
+                    print(
+                        f"⚠️ {lock_dir}'s filesystem doesn't support file locking — proceeding without cross-session coordination.",
+                        flush=True,
+                    )
                     break
                 raise
         try:
@@ -173,16 +194,13 @@ def is_sensitive_path(filepath: Path) -> bool:
     if SENSITIVE_BASENAME_REGEX.match(name):
         return True
 
-
     normalized_parts = {
         re.sub(r"[_\-\s.]", "", part.lower()) for part in filepath.parts
     }
     if normalized_parts & SENSITIVE_PATH_COMPONENTS:
         return True
     return any(
-        token in part
-        for part in normalized_parts
-        for token in SENSITIVE_NAME_TOKENS
+        token in part for part in normalized_parts for token in SENSITIVE_NAME_TOKENS
     )
 
 
@@ -206,17 +224,19 @@ def strip_llm_wrapper(text: str) -> str:
     if lines[last].strip() != closer.group(1):
         return text
 
-    for line in lines[first + 1:last]:
+    for line in lines[first + 1 : last]:
         inner = FENCE_LINE_REGEX.match(line)
-        if inner and inner.group(1)[0] == marker[0] and len(inner.group(1)) >= len(marker):
+        if (
+            inner
+            and inner.group(1)[0] == marker[0]
+            and len(inner.group(1)) >= len(marker)
+        ):
             return text
-    return "\n".join(lines[first + 1:last])
+    return "\n".join(lines[first + 1 : last])
 
 
 def write_text_atomic(path: Path, text: str, newline: str = "\n") -> None:
     if newline != "\n":
-
-
         text = text.replace("\r\n", "\n").replace("\n", newline)
     write_bytes_atomic(path, text.encode("utf-8"))
 
@@ -266,14 +286,18 @@ def first_nonblank_line(text: str) -> str:
     return ""
 
 
-def _write_target(filepath: Path, text: str | bytes, backup_path: Path, newline: str = "\n") -> None:
+def _write_target(
+    filepath: Path, text: str | bytes, backup_path: Path, newline: str = "\n"
+) -> None:
     try:
         if isinstance(text, bytes):
             write_bytes_atomic(filepath, text)
         else:
             write_text_atomic(filepath, text, newline)
     except Exception:
-        print(f"❌ Write to {filepath} failed. Original preserved at backup: {backup_path}")
+        print(
+            f"❌ Write to {filepath} failed. Original preserved at backup: {backup_path}"
+        )
         raise
 
 
@@ -304,19 +328,26 @@ def call_claude(prompt: str) -> str:
         try:
             import anthropic
 
-            client = anthropic.Anthropic(api_key=api_key, timeout=CLAUDE_CALL_TIMEOUT_SECONDS)
+            client = anthropic.Anthropic(
+                api_key=api_key, timeout=CLAUDE_CALL_TIMEOUT_SECONDS
+            )
             msg = client.messages.create(
                 model=os.environ.get("CAVEMAN_MODEL", "claude-sonnet-4-5"),
                 max_tokens=8192,
                 messages=[{"role": "user", "content": prompt}],
             )
 
-
-            text = next((block.text for block in msg.content if getattr(block, "type", None) == "text"), "")
+            text = next(
+                (
+                    block.text
+                    for block in msg.content
+                    if getattr(block, "type", None) == "text"
+                ),
+                "",
+            )
             return strip_llm_wrapper(text.strip())
         except ImportError:
             pass
-
 
     claude_bin = shutil.which("claude") or "claude"
     try:
@@ -410,7 +441,8 @@ def mask_code_blocks(text: str) -> Tuple[str, List[Tuple[str, str]]]:
         line_without_newline = lines[i].rstrip("\r\n")
         fence = FENCE_OPEN_RE.match(line_without_newline)
         indented = bool(line_without_newline) and (
-            line_without_newline.startswith("    ") or line_without_newline.startswith("\t")
+            line_without_newline.startswith("    ")
+            or line_without_newline.startswith("\t")
         )
         if not fence and not indented:
             out.append(lines[i])
@@ -433,7 +465,11 @@ def mask_code_blocks(text: str) -> Tuple[str, List[Tuple[str, str]]]:
             i += 1
             while i < len(lines):
                 candidate = lines[i].rstrip("\r\n")
-                if not candidate or candidate.startswith("    ") or candidate.startswith("\t"):
+                if (
+                    not candidate
+                    or candidate.startswith("    ")
+                    or candidate.startswith("\t")
+                ):
                     i += 1
                     continue
                 break
@@ -441,7 +477,9 @@ def mask_code_blocks(text: str) -> Tuple[str, List[Tuple[str, str]]]:
         block = "".join(lines[start:i])
         marker = f"{CODE_MARKER_PREFIX}{len(blocks)}_{hashlib.sha256(block.encode('utf-8')).hexdigest()[:16]}@@"
         blocks.append((marker, block))
-        newline = "\r\n" if block.endswith("\r\n") else "\n" if block.endswith("\n") else ""
+        newline = (
+            "\r\n" if block.endswith("\r\n") else "\n" if block.endswith("\n") else ""
+        )
         out.append(marker + newline)
     return "".join(out), blocks
 
@@ -453,7 +491,6 @@ def restore_code_blocks(text: str, blocks: List[Tuple[str, str]]) -> str:
             raise ValueError(
                 f"Claude changed preserved code marker {marker}; refusing to write"
             )
-
 
         if marker + "\r\n" in restored:
             restored = restored.replace(marker + "\r\n", block, 1)
@@ -477,7 +514,6 @@ def compress_file(filepath: Path) -> bool:
     if filepath.stat().st_size > MAX_FILE_SIZE:
         raise ValueError(f"File too large to compress safely (max 500KB): {filepath}")
 
-
     if is_sensitive_path(filepath):
         raise ValueError(
             f"Refusing to compress {filepath}: filename looks sensitive "
@@ -499,7 +535,6 @@ def _compress_file_locked(filepath: Path) -> bool:
 
     original_text, newline, original_raw = read_source(filepath)
 
-
     backup_dir = backup_dir_for(filepath)
     backup_path = backup_dir / (filepath.stem + ".original.md")
 
@@ -507,22 +542,23 @@ def _compress_file_locked(filepath: Path) -> bool:
         print("❌ Refusing to compress: file is empty or whitespace-only.")
         return False
 
-
     if backup_path.exists():
         print(f"⚠️ Backup file already exists: {backup_path}")
         print("The original backup may contain important content.")
-        print("Aborting to prevent data loss. Please remove or rename the backup file if you want to proceed.")
+        print(
+            "Aborting to prevent data loss. Please remove or rename the backup file if you want to proceed."
+        )
         return False
-
 
     frontmatter, body = split_frontmatter(original_text)
     if frontmatter:
-        print(f"Detected YAML frontmatter ({len(frontmatter)} chars) — preserving verbatim")
+        print(
+            f"Detected YAML frontmatter ({len(frontmatter)} chars) — preserving verbatim"
+        )
 
     if not body.strip():
         print("❌ Refusing to compress: body is empty after frontmatter removal.")
         return False
-
 
     print("Compressing with Claude...")
     masked_body, code_blocks = mask_code_blocks(body)
@@ -539,33 +575,34 @@ def _compress_file_locked(filepath: Path) -> bool:
         print("   Original file is untouched (no backup created).")
         return False
 
-
     if compressed_body.strip() == body.strip():
         print("❌ Compression aborted: output is identical to input.")
-        print("   Likely causes: Claude refused, returned the prompt verbatim, or the file is")
-        print("   already in caveman form. Original file is untouched (no backup created).")
+        print(
+            "   Likely causes: Claude refused, returned the prompt verbatim, or the file is"
+        )
+        print(
+            "   already in caveman form. Original file is untouched (no backup created)."
+        )
         return False
-
 
     if not _is_smaller_than_body(compressed_body, body):
         print("   Original file is untouched (no backup created).")
         return False
 
-
     compressed = frontmatter + compressed_body
-
 
     backup_dir.mkdir(parents=True, exist_ok=True)
     write_bytes_atomic(backup_path, original_raw)
     if backup_path.read_bytes() != original_raw:
         print(f"❌ Backup write verification failed: {backup_path}")
-        print("   In-memory original differs from on-disk backup. Aborting before touching the input file.")
+        print(
+            "   In-memory original differs from on-disk backup. Aborting before touching the input file."
+        )
         try:
             backup_path.unlink()
         except OSError:
             pass
         return False
-
 
     staging_path = filepath.with_name(filepath.name + ".caveman-staged")
     for attempt in range(MAX_RETRIES):
@@ -591,22 +628,20 @@ def _compress_file_locked(filepath: Path) -> bool:
             return False
 
         print("Fixing with Claude...")
-        fixed = call_claude(
-            build_fix_prompt(original_text, compressed, result.errors)
-        )
+        fixed = call_claude(build_fix_prompt(original_text, compressed, result.errors))
 
         if fixed is None or not fixed.strip():
             print("❌ Fix attempt aborted: Claude returned an empty response.")
             print("   Skipping this attempt.")
             continue
 
-
         anchor = first_nonblank_line(original_text)
         if anchor.startswith(("---", "#")) and first_nonblank_line(fixed) != anchor:
-            print("❌ Fix attempt aborted: output does not start with the original's first line.")
+            print(
+                "❌ Fix attempt aborted: output does not start with the original's first line."
+            )
             print("   Possible preamble leak. Skipping this attempt.")
             continue
-
 
         _, fixed_body = split_frontmatter(fixed)
         if not _is_smaller_than_body(fixed_body, body):

@@ -74,6 +74,21 @@ h3 {
 	color: var(--ink-soft);
 	margin: 0 0 1.2rem;
 }
+.home-link {
+	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-size: 0.78rem;
+	color: var(--ink-soft);
+	margin: 0 0 1.4rem;
+}
+.top-nav {
+	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-size: 0.8rem;
+	color: var(--ink-soft);
+	margin: 0 0 1.6rem;
+}
+.top-nav a {
+	margin-right: 1rem;
+}
 
 /* Links & text */
 a {
@@ -144,6 +159,27 @@ blockquote cite {
 	border-left: 4px solid #6f8f76;
 }
 
+/* Tables (cast block + reference pages) */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.95rem;
+	margin: 1rem 0 1.6rem;
+}
+th {
+	text-align: left;
+	border-bottom: 1.5px solid var(--rule);
+	padding: 0.4rem 0.5rem;
+	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-size: 0.78rem;
+	font-weight: 600;
+}
+td {
+	border-bottom: 1px solid var(--rule);
+	padding: 0.4rem 0.5rem;
+	vertical-align: top;
+}
+
 /* Timeline */
 .tl {
 	list-style: none;
@@ -164,9 +200,23 @@ blockquote cite {
 	padding-top: 0.15rem;
 }
 
-/* Simple lists with tight spacing */
+/* Lists */
+ul, ol {
+	padding-left: 1.2rem;
+}
+li {
+	margin: 0.3rem 0;
+}
 ul.tight li, ol.tight li {
 	margin: 0.25rem 0;
+}
+
+/* Hub/index pages (chapter tables) */
+.hub-table td:last-child {
+	white-space: nowrap;
+	color: var(--ink-soft);
+	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-size: 0.82rem;
 }
 
 /* Footer */
