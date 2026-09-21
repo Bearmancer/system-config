@@ -1,0 +1,304 @@
+// OMO configuration — MAXIMALIST merge (2026-09-11): disk post-migration detail + baseline opt-in blocks.
+// MERGE PROVENANCE: base = C:\Users\Lance\.omo\omo.jsonc (2026-08-reasoning-unification, 306 lines);
+// added = 14 absent baseline blocks + top-level global pins; changed = 2 values; backup beside this file.
+// IMPORTANT: quit and restart the harness after changing this file —
+// config is loaded once at startup and is NOT hot-reloaded.
+// LAYERING (global-first): top-level keys are the global base every harness
+// inherits. [opencode] holds ONLY opencode-only keys plus true shadows
+// (values that must differ from global). Resolution order per the loader:
+// global base -> [harness] shadow -> profile base -> profile shadow.
+// HEPHAESTUS: intentionally absent from every agents map (operator order beats
+// maximalism; absence is the disable mechanism — never add a stub).
+{
+	// Schema for editor validation and autocomplete. RETAIN: same URL both sources.
+	"$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+	// Named configuration profiles (empty = defaults everywhere). RETAIN: no overlay active.
+	"profiles": {},
+	// Skill allowlist (opencode harness): only these are discoverable/loadable by the agent.
+	// OMO builtin skills are added after this filter, so they stay enabled.
+	// OPENCODE-ONLY scope: keys the runtime rejects anywhere else.
+	"[opencode]": {
+		"$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json",
+		"agents": {
+			"hephaestus": {
+				"disable": true
+			},
+			"oracle": {
+				"model": "opencode-go/deepseek-v4.1-flash",
+				"reasoning": "max",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"librarian": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"explore": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"multimodal-looker": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"prometheus": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"metis": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"momus": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"atlas": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"sisyphus-junior": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"sisyphus": {
+				"model": "opencode-go/muse-spark-1.3-contributor",
+				"reasoning": "xhigh",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"general": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"build": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			}
+		},
+		"categories": {
+			"visual-engineering": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"ultrabrain": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"deep": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"artistry": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"quick": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"unspecified-low": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"unspecified-high": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			},
+			"writing": {
+				"model": "opencode/muse-spark-1.3-contributor-free",
+				"reasoning": "medium",
+				"fallback_models": [
+					{
+						"model": "opencode-go/muse-spark-1.3-contributor",
+						"reasoning": "high"
+					}
+				]
+			}
+		},
+		"team_mode": {
+			"enabled": true,
+			"tmux_visualization": true,
+			"max_parallel_members": 8,
+			"max_members": 8,
+			"base_dir": ".claude",
+			"max_member_turns": 500,
+			"max_messages_per_run": 10000,
+			"max_wall_clock_minutes": 120,
+			"mailbox_poll_interval_ms": 3000,
+			"message_payload_max_bytes": 32768,
+			"recipient_unread_max_bytes": 262144
+		},
+		"git_master": {
+			"commit_footer": true,
+			"include_co_authored_by": true,
+			"git_env_prefix": "GIT_MASTER=1"
+		},
+		"hashline_edit": false,
+		"model_fallback": true,
+		"auto_update": true,
+		"goal": {
+			"enabled": false,
+			"auto_start": false,
+			"default_max_iterations": 100
+		},
+		"claude_code": {
+			"plugins": false
+		},
+		"disabled_providers": ["Anthropic"],
+		"keyword_detector": {
+			"enabled_expansions": ["hyperplan", "hyperplan-ultrawork", "team", "ultrawork"]
+		},
+		"monitor": {
+			"enabled": true,
+			"live_mode_enabled": true,
+			"max_monitors_per_session": 16,
+			"max_runtime_ms": 1800000,
+			"batch_max_lines": 50,
+			"batch_max_bytes": 16384,
+			"flush_interval_ms": 1000,
+			"ring_max_lines": 1000,
+			"line_max_bytes": 8192,
+			"pattern_max_length": 512
+		},
+		"notification": {
+			"force_enable": true
+		},
+		"babysitting": {
+			"timeout_ms": 120000
+		},
+		"runtime_fallback": true,
+		"model_capabilities": {
+			"enabled": true,
+			"auto_refresh_on_start": true
+		},
+		"sisyphus_agent": {
+			"disabled": false,
+			"default_builder_enabled": true,
+			"planner_enabled": true,
+			"tdd": true
+		},
+		"start_work": {
+			"auto_commit": true
+		},
+		"experimental": {
+			"task_system": false,
+			"safe_hook_creation": true,
+			"hashline_edit": true,
+			"model_fallback_title": true,
+			"disable_omo_env": false,
+			"disable_live_parent_wake_routing": false
+		}
+	},
+	"_migrations": ["2026-08-reasoning-unification"]
+}

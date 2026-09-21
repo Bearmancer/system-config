@@ -1,0 +1,58 @@
+kicker: "Control: Story Explained"
+title: "Ending"
+chapter: 13
+chapters_total: 13
+time_range: "43:22–44:22"
+transcript: "ending-43m22s-44m22s.md"
+lead: "Jesse turns the projector off, loses her brother to a coma, keeps the chair, and inherits a lockdown with no end date."
+cast:
+  - name: "Jesse Faden"
+    role: "Accepts the Directorship for real this time"
+    ref: 2
+  - name: "Dylan Faden"
+    role: "Cleansed of the Hiss; does not wake"
+    ref: 10
+  - name: "The Board"
+    role: "Keeps its Director; keeps its secrets"
+    ref: 5
+  - name: "Polaris"
+    role: "Found inside Jesse after Hedron's fall"
+    ref: 8
+  - name: "The Hiss"
+    role: "Beaten back, not beaten; the lockdown holds"
+    ref: 8
+  - name: "Casper Darling"
+    role: "Absent from the victory he engineered"
+    ref: 11
+  - name: "Emily Pope"
+    role: "Stays to run the long cleanup"
+    ref: 7
+essentials:
+  - "The projector goes dark and Dylan is cleansed into a coma."
+  - "Jesse accepts the Director's seat without conditions."
+  - "The lockdown holds until the remaining Hiss dies."
+skippables:
+  - "Post-credit cleanup missions."
+  - "DLC hooks beyond one line each."
+narrative: |
+  <p>The climax runs through the Astral Plane: Dylan tries to hand the Board's seat to the Hiss, Jesse pulls him back, and the projector goes dark. That sequence is <strong>confirmed</strong> in <a href="https://www.ign.com/articles/2019/09/19/controls-ending-explained-in-depth-answers-for-all-your-questions">the ending breakdown</a>, which also confirms the price and the aftermath: Dylan comatose, Jesse seated, and the lockdown still in force.</p>
+  <p>The false defeat first: Jesse falls, the credits roll early, and she wakes a bureaucrat in a Hiss dream. The despair is <strong>corrected</strong> by the Oceanview return, where Polaris turns out to have ridden inside her all along. The dream-office beat is <strong>confirmed</strong> in the same breakdown.</p>
+  <p>The last word belongs to the music:</p>
+  <blockquote>"Take Control."</blockquote>
+  <p>The Old Gods of Asgard track that carries the maze run shares its name with the final mission, both <strong>confirmed</strong> in the mission list and the collectible files. Whether Dylan ever wakes stays <strong>unverified</strong> in the base game, and the expansions pick up the chair, not the coma.</p>
+machinery: |
+  <p>The ending machine is a fake-out with a receipt. The false credits spend Jesse's defeat, then the motel scene refunds it with interest.</p>
+  <p>What remains is maintenance: a Director, a lockdown, and a House still humming with the unconverted.</p>
+sources:
+  - label: "IGN ending explained"
+    url: "https://www.ign.com/articles/2019/09/19/controls-ending-explained-in-depth-answers-for-all-your-questions"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki final mission Take Control"
+    url: "https://control.fandom.com/wiki/Take_Control"
+    note: "accessed 2026-09-21"
+  - label: "Wikipedia Control overview"
+    url: "https://en.wikipedia.org/wiki/Control_(video_game)"
+    note: "accessed 2026-09-21"
+  - label: "Epic Control mysterious retrospective"
+    url: "https://store.epicgames.com/news/control-is-still-remedy-s-most-mysterious-game?lang=en-US"
+    note: "accessed 2026-09-21"

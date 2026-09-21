@@ -1,0 +1,9 @@
+# Position advanced to chapter 4; "treatise" depth + diagram requirement; verification finds the unsupported claims
+
+Status: active
+
+The user asked for chapter 4 as a **"specific treatise"** and, in the same request, for a **diagrammatic explanation of all players with coloured relationship lines + legend** — both delivered (lesson 0002 + `reference/cast-map.html`). Two things to carry forward: **(1) depth preference** — "treatise" means exhaustive prose treatment, not a summary, with the claim-vs-record split expanded per chapter; **(2) the diagram is a standing artifact** — it evolves per chapter ("as of chapter N"), with a fixed colour/line taxonomy and a complete legend every time. The chapter-4 verification also changed how to phrase rigor: three of the video's most vivid chapter-4 claims (Yager job-hunting by 1967, the Hansen loan, the Renard duplication story) are **unfindable in the accessible record**, and two more (DeVos sponsoring Hansen; "Betty Joe Renfro") were corrections — so future lessons must keep unsupported claims visible as "the video's account", never smoothed into fact. Auto-open after page updates was reconfirmed in use, and the user has now asked for that behaviour (plus publishing and the diagram conventions) to be captured in a reusable skill.
+
+Evidence: the chapter-4 request wording ("treatise", "colored lines + legend"), the two verification passes (results summarised in lesson 0002 §10 and RESOURCES), and the follow-up instruction to encode auto-open/publish/diagram behaviour into a skill.
+
+Implications: chapter 5+ lessons keep the treatise template (sections 1–9 pattern, fact-check box, 3 quizzes, method box, auto-open); the cast map is updated each chapter with new players rather than rebuilt; verification passes fire per chapter as a standing step, with unfindables logged to RESOURCES gaps.

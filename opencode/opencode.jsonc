@@ -1,0 +1,318 @@
+{
+	"plugin": [
+		"@slkiser/opencode-quota",
+		"oh-my-openagent@latest",
+		"./plugins/caveman/plugin.js"
+	],
+	"$schema": "https://opencode.ai/config.json",
+	"shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
+	"lsp": {
+		"biome": {
+			"disabled": true
+		},
+		"typescript": {
+			"disabled": true
+		},
+		"csharp": {
+			"disabled": true
+		},
+		"pyright": {
+			"disabled": true
+		},
+		"bash": {
+			"disabled": true
+		},
+		"bash-ls": {
+			"disabled": true
+		},
+		"global-shell": {
+			"command": [
+				"cmd",
+				"/c",
+				"bash-language-server",
+				"start"
+			],
+			"extensions": [
+				".sh",
+				".bash"
+			]
+		},
+		"powershell": {
+			"command": [
+				"pwsh",
+				"-NoLogo",
+				"-NoProfile",
+				"-Command",
+				"Import-Module PowerShellEditorServices; Start-EditorServices -HostName opencode -HostProfileId opencode -HostVersion 1.0.0 -BundledModulesPath 'C:/Users/Lance/Documents/PowerShell/Modules' -LogPath 'C:/Users/Lance/.omo/lsp-pses.log' -LogLevel Normal -SessionDetailsPath 'C:/Users/Lance/.omo/lsp-pses-session.json' -Stdio"
+			],
+			"extensions": [
+				".ps1",
+				".psm1",
+				".psd1"
+			]
+		},
+		"python": {
+			"command": [
+				"basedpyright-langserver",
+				"--stdio"
+			],
+			"extensions": [
+				".py",
+				".pyi"
+			]
+		},
+		"global-csharp": {
+			"command": [
+				"cmd",
+				"/c",
+				"roslyn-language-server",
+				"--stdio",
+				"--autoLoadProjects"
+			],
+			"extensions": [
+				".cs",
+				".csx"
+			]
+		},
+		"global-json-schema": {
+			"command": [
+				"cmd",
+				"/c",
+				"vscode-json-language-server",
+				"--stdio"
+			],
+			"extensions": [
+				".json",
+				".jsonc"
+			],
+			"initialization": {
+				"json": {
+					"validate": {
+						"enable": true
+					}
+				}
+			}
+		},
+		"global-biome-code": {
+			"command": [
+				"cmd",
+				"/c",
+				"biome",
+				"lsp-proxy",
+				"--stdio"
+			],
+			"extensions": [
+				".js",
+				".jsx",
+				".ts",
+				".tsx",
+				".mjs",
+				".cjs",
+				".mts",
+				".cts"
+			]
+		}
+	},
+	"permission": {
+		"bash": {
+			"git reflog *": "ask",
+			"git rebase*": "deny",
+			"git pull *--rebase*": "deny",
+			"git pull -r*": "deny",
+			"git pull * -r*": "deny",
+			"git reset *--hard*": "deny",
+			"git clean*": "deny",
+			"git restore*": "deny",
+			"git checkout -B*": "deny",
+			"git checkout -f*": "deny",
+			"git checkout * -f*": "deny",
+			"git checkout *--force*": "deny",
+			"git checkout *-- *": "deny",
+			"git checkout .": "deny",
+			"git checkout * .": "deny",
+			"git switch -C*": "deny",
+			"git switch -f*": "deny",
+			"git switch * -f*": "deny",
+			"git switch *--force*": "deny",
+			"git switch *--discard-changes*": "deny",
+			"git tag -d*": "deny",
+			"git tag -f*": "deny",
+			"git tag --delete*": "deny",
+			"git stash drop*": "deny",
+			"git stash clear*": "deny",
+			"git reflog delete*": "deny",
+			"git reflog expire*": "deny",
+			"git filter-branch*": "deny",
+			"git update-ref*": "deny",
+			"git gc *--prune*": "deny",
+			"git prune*": "deny"
+		}
+	},
+	"disabled_providers": [
+		"Anthropic"
+	],
+	"model": "opencode-go/muse-spark-1.3-contributor#xhigh",
+	"small_model": "opencode-go/muse-spark-1.3-contributor",
+	"mcp": {
+		"firefox-devtools": {
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"@mozilla/firefox-devtools-mcp@latest",
+				"--profile-path",
+				"C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile",
+				"--firefox-path",
+				"C:/Program Files/Mozilla Firefox/firefox.exe",
+				"--viewport",
+				"1280x720",
+				"--tool-preset",
+				"all"
+			],
+			"enabled": false
+		},
+		"codegraph": {
+			"type": "local",
+			"command": [
+				"codegraph",
+				"serve",
+				"--mcp"
+			],
+			"enabled": true
+		},
+		"exa": {
+			"type": "remote",
+			"url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+			"enabled": true
+		},
+		"microsoft-learn": {
+			"type": "remote",
+			"url": "https://learn.microsoft.com/api/mcp",
+			"enabled": true
+		},
+		"azure-mcp": {
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"@azure/mcp@latest",
+				"server",
+				"start"
+			],
+			"enabled": false
+		},
+		"firecrawl": {
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"firecrawl-mcp"
+			],
+			"environment": {
+				"FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}"
+			},
+			"enabled": true
+		},
+		"agentql": {
+			"type": "local",
+			"command": ["cmd", "/c", "npx", "-y", "agentql-mcp"],
+			"environment": {
+				"AGENTQL_API_KEY": "{env:AGENTQL_API_KEY}"
+			},
+			"enabled": false
+		},
+		"dappier": {
+			"type": "local",
+			"command": ["uvx", "--with", "mcp<2", "dappier-mcp"],
+			"environment": {
+				"DAPPIER_API_KEY": "{env:DAPPIER_API_KEY}"
+			},
+			"enabled": true
+		},
+		"scrapegraph": {
+			"type": "local",
+			"command": ["uvx", "scrapegraph-mcp"],
+			"environment": {
+				"SGAI_API_KEY": "{env:SCRAPEGRAPH_API_KEY}"
+			},
+			"enabled": true
+		},
+		"tavily": {
+			"type": "remote",
+			"url": "https://mcp.tavily.com/mcp/",
+			"headers": {
+				"Authorization": "Bearer {env:TAVILY_API_KEY}"
+			},
+			"enabled": true
+		},
+		"context7": {
+			"type": "remote",
+			"url": "https://mcp.context7.com/mcp",
+			"headers": {
+				"Authorization": "Bearer {env:CONTEXT7_API_KEY}"
+			},
+			"enabled": true
+		},
+		"browserbase": {
+			"type": "remote",
+			"url": "https://mcp.browserbase.com/mcp?browserbaseApiKey={env:BROWSERBASE_API_KEY}",
+			"enabled": true
+		},
+		"brightdata": {
+			"type": "remote",
+			"url": "https://mcp.brightdata.com/sse?token={env:BRIGHTDATA_API_KEY}",
+			"enabled": true
+		},
+		"apify": {
+			"type": "remote",
+			"url": "https://mcp.apify.com",
+			"headers": {
+				"Authorization": "Bearer {env:APIFY_TOKEN}"
+			},
+			"enabled": true
+		},
+		"brave": {
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"@brave/brave-search-mcp-server",
+				"--transport",
+				"stdio"
+			],
+			"environment": {
+				"BRAVE_API_KEY": "{env:BRAVE_API_KEY}"
+			},
+			"enabled": false
+		}
+	},
+	"autoupdate": true,
+	"experimental": {
+		"batch_tool": true,
+		"continue_loop_on_deny": true,
+		"disable_paste_summary": true
+	},
+	"tool_output": {
+		"max_lines": 2000,
+		"max_bytes": 204800
+	},
+	"formatter": true,
+	"layout": "stretch",
+	"agent": {
+		"build": {
+			"model": "opencode-go/muse-spark-1.3-contributor#xhigh",
+			"variant": "xhigh"
+		}
+	},
+	"provider": {
+		"opencode-go": {}
+	}
+}

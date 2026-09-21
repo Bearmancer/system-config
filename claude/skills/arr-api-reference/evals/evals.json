@@ -1,0 +1,23 @@
+{
+  "skill_name": "arr-api-reference",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Emby: I called POST /Library/VirtualFolders/Paths?name=Home%20videos&path=D:\\Media and got HTTP 500 'Unrecognized Guid format'. What's wrong, and what's the exact corrected call?",
+      "expected_output": "Cause: the endpoint has no name-based lookup — it calls GetItemById on whatever id is passed, so name= throws 'Unrecognized Guid format' (HTTP 500). Fix: resolve the library's Guid (32-hex, from GET /Library/VirtualFolders — not the decimal ItemId) and call .../Paths?id=<Guid>&path=<path>&refreshLibrary=true. May note auth (api_key query param or X-Emby-Token header) and that embyserver.txt carries the real stack trace.",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "Sonarr downloads complete but land in SABnzbd's default folder instead of my 'TV' category. Where do I look, and what's the likely cause?",
+      "expected_output": "Category-string chain: SABnzbd force-lowercases category identifiers (TV -> tv), Sonarr's download-client tvCategory must equal the stored lowercase string, and Prowlarr's clientCategory mapping lives on a separate top-level categories field (not .fields). Mismatch fails silently — no error anywhere, the job just lands at the default/wrong category, so re-reading config is not enough; check the SABnzbd history entry's category and storage path (or Find-ArrJob) for where it actually landed.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Where does Emby keep logs and config, what process and port does it run on, and how do I get an API key?",
+      "expected_output": "Logs: %AppData%\\Emby-Server\\programdata\\logs\\embyserver.txt; config: %AppData%\\Emby-Server\\programdata\\config\\ (system.xml; no API key is stored on disk). Process EmbyServer plus the embytray helper; default port 8096. API key: mint in Dashboard -> Advanced -> API Keys, or trade credentials via POST /Users/AuthenticateByName. Tail the log on a 500 instead of guessing request shape.",
+      "files": []
+    }
+  ]
+}

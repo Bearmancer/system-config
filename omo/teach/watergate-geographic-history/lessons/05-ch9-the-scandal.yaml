@@ -1,0 +1,101 @@
+kicker: "Watergate: A Geographic History"
+title: "The Scandal"
+chapter: 9
+chapters_total: 12
+time_range: "1:42:48–1:55:01"
+transcript: "the-scandal-1h42m48s-1h55m01s.md"
+lead: "The burglary becomes a scandal. A landslide re-election makes the break-in look pointless, a garage source and a newsroom turn money scraps into headlines, four investigations close in at once, a Saturday-night firing makes removal thinkable, a vice president is traded for probation, and a tapes fight Nixon loses one appeal at a time."
+cast:
+  - name: "Richard Nixon"
+    role: "Re-elected in a 49-state landslide; orders the special prosecutor fired over the tapes subpoena; fights the tapes through edited transcripts toward the final court"
+    ref: 8
+  - name: "George McGovern"
+    role: "1972 Democratic nominee; anti-war appeal never broadens; carries only Massachusetts and the District of Columbia"
+  - name: "Bob Woodward"
+    role: "Washington Post reporter; meets the garage source; with Bernstein covers the money trail to the re-election committee"
+  - name: "W. Mark Felt"
+    role: "FBI deputy director; the garage source called Deep Throat; identity kept secret until 2005"
+  - name: "Archibald Cox"
+    role: "Special prosecutor; subpoenas the tapes; fired in the Saturday Night Massacre"
+  - name: "Elliot Richardson"
+    role: "Attorney general; refuses the order to fire Cox and resigns"
+  - name: "Spiro Agnew"
+    role: "Vice president; Maryland bribery past surfaces; pleads no contest to tax evasion and resigns"
+  - name: "Gerald Ford"
+    role: "Michigan congressman; nominated under the 25th Amendment and confirmed that December; succession insurance while removal talk grows"
+    ref: 10
+essentials:
+  - "The 1972 landslide voided the motive."
+  - "Four fronts closed in from mid-1972 on: press, special prosecutor, courts, televised hearings."
+  - "The Saturday Night Massacre inverted the stakes: from that evening removal was probably inevitable."
+  - "Agnew fell first and Ford filled the gap under the 25th Amendment."
+skippables:
+  - "Miami convention-hall travelogue and the unrun entrapment scheme."
+  - "The Amway and Ford aside, which the video parks outside its scope."
+  - "Late-presidency mood portrait: taught as the video telling, not record."
+narrative: |
+  <p>The chapter opens at the Miami Beach hall that hosted both 1972 conventions and Nixon's 1968 acceptance, a backdrop <strong>confirmed</strong> against the convention record in the <a href="https://en.wikipedia.org/wiki/1972_Republican_National_Convention">1972 Republican convention record</a>. The Liddy entrapment scheme for that hall never ran. The point is proportion: McGovern, hurt by the Eagleton hospitalization revelations and the switch to Shriver, never threatened Nixon, and progress in the Paris talks drained his anti-war edge. The video's extra claim that Eagleton threatened McGovern to stay on the ticket is <strong>allegation</strong>: taught as the video telling, no second witness located.</p>
+  <blockquote><p>One of the great ironies of Watergate is that it was done in part to disrupt Nixon's political opponents, the Democrats. But in reality, Nixon had very little to fear from the 1972 Democratic nominee.</p><cite>— the video on motive versus result</cite></blockquote>
+  <p>The result is <strong>confirmed</strong> against the official tally: 49 states for Nixon, with only Massachusetts and the District of Columbia for McGovern (see the <a href="https://www.archives.gov/electoral-college/1972">National Archives tally</a>). No headquarters secret could have been worth the risk. Then geography takes over: the Arlington garage where the source met Woodward, the flower-pot signal story, the since-demolished Post headquarters where the money trail to the Committee to Re-elect the President was assembled. The flower-pot signal and the demolition dating stay <strong>unverified</strong> beyond the video telling.</p>
+  <p>The source unmasking is <strong>confirmed</strong>: deputy FBI chief W. Mark Felt, secret until 2005 (see the <a href="https://www.washingtonpost.com/archive/politics/2005/06/01/fbis-no-2-was-deep-throat/f36a09f3-7eba-497d-8b86-005431f93345/">Post confirmation</a>). <strong>Correction:</strong> the garage line about following the money was never said there; it was invented for the screenplay. The video warns that the detective frame misleads: reporters plus prosecutors assembling clues is compelling but incomplete, and institutions, not reporters alone, cornered the presidency.</p>
+  <p>Four investigations pressed from mid-1972: the press, special prosecutor Cox, courts moving up the burglars chain, and the summer hearings on television. The chapter declines to chronicle each, and so does this lesson. The tapes subpoena forced the crisis, and the sequence is <strong>confirmed</strong> against the <a href="https://millercenter.org/node/69231">Miller Center account</a>: Nixon ordered Richardson to fire Cox, Richardson quit, Ruckelshaus quit, Bork complied. <strong>Correction:</strong> the video line on Bork's later failed high-court bid compresses history; the nomination came a decade later and the Senate rejected it.</p>
+  <blockquote><p>Really, from that point on, Nixon's removal from office one way or another was probably inevitable. It took about 10 more months.</p><cite>— the video on the Massacre meaning</cite></blockquote>
+  <p>Jaworski then subpoenaed the tapes first thing, and removal talk went mainstream. Parallel ran the Agnew fall, <strong>confirmed</strong> in the <a href="https://www.nytimes.com/1973/10/11/archives/judge-orders-fine-3-years-probation-tells-court-income-was-taxable.html">contemporary press report</a>: bribery and kickback money from the Maryland years, negotiated into a no-contest plea on one tax count and resignation with probation rather than prison. The motel-room negotiation detail stays <strong>unverified</strong> here beyond the video telling. Ford, the affable Michigan congressman, filled the vacancy under the never-before-used amendment, <strong>confirmed</strong> against the <a href="https://www.nytimes.com/1973/12/07/archives/ford-sworn-as-vice-president-after-house-approves-38735-he-vows.html">contemporary press report</a> on the confirmation votes.</p>
+  <p>By spring of the next year the tapes fight narrowed to edited transcripts that omitted the June 23 conversation, a dodge neither Congress nor the prosecutor accepted, leaving the highest court as the last refuge while Nixon toured abroad and withdrew to the coastal compounds. Whether paper would satisfy anyone is the fight the next chapter inherits. The summit routing through Moscow, Minsk, and the Crimean coast and the health-and-drinking portrait stay <strong>unverified</strong> beyond the video telling, as does the Amway label the video parks outside its scope. The chapter closes on a Washington power restaurant mid-sentence into the next act: the back-room conversations of the endgame still offstage, and who the confirmed successor protects still unanswered.</p>
+machinery: |
+  <p>The mechanism is convergence with succession insurance. No single investigator reaches the presidency; four institutions subpoena, try, broadcast, and print until the cover story needs simultaneous defense on every front, with the tapes at the center of all four. The Massacre looks like strength and functions as accelerant: each firing advertises what is being hidden.</p>
+  <p>Meanwhile the Agnew-to-Ford swap shows the machinery defending itself: with removal suddenly conceivable, the system first secures a confirmable successor so the presidency can change hands without a vacuum. The tapes endgame then becomes pure attrition: privilege claims denied, transcripts rejected, one court left to try.</p>
+  <p>Map key: blue marks legal pressure, red removal pressure, green source guidance; scope is chapter-9 on-stage ties only.</p>
+subgraph: |
+  <svg viewBox="0 0 900 260" width="100%" role="img" aria-label="Chapter 9 subgraph: tapes subpoena, removal pressure, source guidance">
+  <defs>
+  <marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"></path></marker>
+  <marker id="ah-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#b3261e"></path></marker>
+  <marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"></path></marker>
+  </defs>
+  <rect x="20" y="30" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="85" y="52" font-size="13" text-anchor="middle" fill="#201d1a">Cox</text>
+  <text x="85" y="68" font-size="11" text-anchor="middle" fill="#5a544b">prosecutor</text>
+  <rect x="270" y="30" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="335" y="52" font-size="13" text-anchor="middle" fill="#201d1a">Nixon</text>
+  <text x="335" y="68" font-size="11" text-anchor="middle" fill="#5a544b">president</text>
+  <rect x="500" y="30" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="565" y="52" font-size="13" text-anchor="middle" fill="#201d1a">Richardson</text>
+  <text x="565" y="68" font-size="11" text-anchor="middle" fill="#5a544b">refuses, resigns</text>
+  <rect x="730" y="30" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="795" y="52" font-size="13" text-anchor="middle" fill="#201d1a">Bork</text>
+  <text x="795" y="68" font-size="11" text-anchor="middle" fill="#5a544b">dismisses Cox</text>
+  <rect x="270" y="180" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="335" y="202" font-size="13" text-anchor="middle" fill="#201d1a">Felt</text>
+  <text x="335" y="218" font-size="11" text-anchor="middle" fill="#5a544b">guides reporter</text>
+  <rect x="500" y="180" width="130" height="52" fill="#fff" stroke="#5a544b" stroke-width="1.5"></rect>
+  <text x="565" y="202" font-size="13" text-anchor="middle" fill="#201d1a">Woodward</text>
+  <text x="565" y="218" font-size="11" text-anchor="middle" fill="#5a544b">meets source</text>
+  <line x1="150" y1="56" x2="270" y2="56" stroke="#1f5fa8" stroke-width="2.2" marker-end="url(#ah-blue)"></line>
+  <text x="210" y="44" font-size="11" text-anchor="middle" fill="#1f5fa8">subpoenas</text>
+  <line x1="400" y1="56" x2="500" y2="56" stroke="#b3261e" stroke-width="2.2" marker-end="url(#ah-red)"></line>
+  <text x="450" y="44" font-size="11" text-anchor="middle" fill="#b3261e">orders firing</text>
+  <line x1="400" y1="206" x2="500" y2="206" stroke="#1a7f37" stroke-width="2.2" marker-end="url(#ah-green)"></line>
+  <text x="450" y="194" font-size="11" text-anchor="middle" fill="#1a7f37">guides</text>
+  <path d="M795,82 V130 H85 V90" fill="none" stroke="#b3261e" stroke-width="2.2" marker-end="url(#ah-red)"></path>
+  <text x="440" y="120" font-size="11" text-anchor="middle" fill="#b3261e">dismisses</text>
+  </svg>
+sources:
+  - label: "1972 Republican convention record"
+    url: "https://en.wikipedia.org/wiki/1972_Republican_National_Convention"
+    note: "Miami hall backdrop"
+  - label: "National Archives tally"
+    url: "https://www.archives.gov/electoral-college/1972"
+    note: "49 states, Massachusetts and DC only"
+  - label: "Post confirmation"
+    url: "https://www.washingtonpost.com/archive/politics/2005/06/01/fbis-no-2-was-deep-throat/f36a09f3-7eba-497d-8b86-005431f93345/"
+    note: "Felt as the garage source"
+  - label: "Miller Center account"
+    url: "https://millercenter.org/node/69231"
+    note: "Massacre sequence"
+  - label: "Contemporary press report"
+    url: "https://www.nytimes.com/1973/10/11/archives/judge-orders-fine-3-years-probation-tells-court-income-was-taxable.html"
+    note: "Agnew plea and resignation"
+  - label: "Contemporary press report"
+    url: "https://www.nytimes.com/1973/12/07/archives/ford-sworn-as-vice-president-after-house-approves-38735-he-vows.html"
+    note: "Ford confirmation votes"
