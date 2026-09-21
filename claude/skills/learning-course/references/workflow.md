@@ -36,7 +36,7 @@
   `--chapters all` is the default; narrow to a subset only for a re-run or a targeted pass. Ranges come from the video's own `info.json` metadata, so hand-typed ranges stay override-only.
 - **Corrections log**: recurring garble patterns for this source (ASR mangling, OCR artifacts) and the canonical forms they resolve to.
 - **Quirks**: caption lag, missing captions, edition/translation notes, machine-specific findings.
-- **Queue & status**: what's done (with date + fact-check headline) and which chapters are skippable.
+- **Queue & status**: what's done (with date + fact-check headline) and what's still queued.
 
 ## MISSION.md (provisional pattern)
 
@@ -48,17 +48,7 @@ Keep to a screen: Why (the user's real goal, best guess), Success looks like, Co
 
 ## The treatise (per-chapter lesson structure)
 
-Page head: kicker (series name) → H1 (chapter title) → **surtitle** — small text under the title, `Chapter N of M · <time range>`; this is the page's **only** place for timestamps — → meta line (`Lesson NN` + links: cast map · glossary · transcript slice).
-
-Numbered sections, in this order (adapt; keep ~8–10 sections):
-
-1. What the chapter does — lead paragraph, the chapter's argument.
-2. **Cast block** — info-only table of who's on stage this chapter: 5–12 rows, columns **Name | Role this chapter**. New player = full role line. Returning player = fresh role line for this chapter ending in its "(chapter N)" link to the lesson that holds the full entry; that chapter number is absolute. No "first appears" column, no continuity claims. The full-course roster lives at `reference/cast-map.html`.
-3. **What matters — and what you can skip** — 2–4 essentials for the mission, then the parts that can be skimmed or were abstracted away. This block is the user's explicit anti-OCD ask; include it in every chapter.
-4. The narrative — following the chapter, its own quotes in blockquotes (post-corrections), with inline verdicts beside the quoted wording in prose: source wording in quotes, record verdict inline next to it (confirmed / corrected / unfindable, in the sentence — never a separate box). **ADD-friendly**: short sentences, pointer lists, one idea per paragraph; quotes may run long, prose may not.
-5. The machinery — what the chapter establishes structurally (the mechanism at work: a relationship, a method, an institution — whatever the chapter's own throughline is; frame it in the chapter's own terms).
-6. The Sources block — the per-chapter Sources block: every checked claim's hyperlinked citations live here, each as a hyperlink to the actual page (no bare URLs, no unlinked citations). Max-twice hyperlink rule: each link target appears at most twice per page, once in context and once in the Sources block. Corrections already stated as inline verdicts in the narrative point here; unfindables read "the source's account, unverified" in narrative and land in RESOURCES Gaps too. RESOURCES stays split-source retained until migration.
-7. Footer — navigation only: course home · previous lesson · next lesson · glossary. Nothing after the footer and nothing else in the tail: no method box, no "ask your teacher" box, no primary-source paragraph, no next-steps block, no anchors line, and no quizzes/questionnaires anywhere on the page.
+Page structure, casing, citation, and timestamp rules: `references/page-design.md` (the single style doc). Content-field contract: `references/lesson-schema.md`.
 
 ## The stencil (stamp-only lesson writing)
 
@@ -106,7 +96,7 @@ Terse status/pointers; the substance lives in the pages. Report as short lines: 
 ## Standing behaviours
 
 - **Subagent-first.** Chapter production and the verification passes run as subagent tasks; the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
-- **Gates scale with the artifact.** (1) `check_lesson.py` on any lesson written or changed → exit 0 (no quizzes/questionnaires; no boundary narration; timestamps surtitle-only; hyperlinked sources with no bare URLs; max-twice hyperlink rule; no teacher/method/primary-source tail blocks; links and assets resolve; dangling section references). (2) `check_map_geometry.py` on any SVG visual changed → exit 0 (edges through boxes, box overlaps including a node drawn inside another node, merged arrowheads, labels covering a box they do not belong to; label-on-line warnings reviewed and fixed when they matter) — and after editing the checker itself, re-run it on `evals/fixtures/geom-fixture.html`, which must report exactly one box overlap and one label-on-box. (3) A screenshot of any changed visual, looked at — keep the window height ≤2400, quote the `--window-size` value, verify the PNG is not a 756x488 fallback, and use iframe bands for long pages (details in `references/diagram-spec.md`). Each gate exists because a defect class shipped past the others: stray timestamps, edges through boxes, merged arrowheads, caption overflow, wrong cross-reference targets.
+- **Gates scale with the artifact.** (1) `check_lesson.py` on any lesson written or changed → exit 0 (no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; hyperlinked sources with no bare URLs; max-twice hyperlink rule; no teacher/method/primary-source tail blocks; links and assets resolve; dangling section references). (2) `check_map_geometry.py` on any SVG visual changed → exit 0 (edges through boxes, box overlaps including a node drawn inside another node, merged arrowheads, labels covering a box they do not belong to; label-on-line warnings reviewed and fixed when they matter) — and after editing the checker itself, re-run it on `evals/fixtures/geom-fixture.html`, which must report exactly one box overlap and one label-on-box. (3) A screenshot of any changed visual, looked at — keep the window height ≤2400, quote the `--window-size` value, verify the PNG is not a 756x488 fallback, and use iframe bands for long pages (details in `references/diagram-spec.md`). Each gate exists because a defect class shipped past the others: stray timestamps, edges through boxes, merged arrowheads, caption overflow, wrong cross-reference targets.
 - **Auto-open** every newly written/updated page (`Start-Process <file>`).
 - **Publish** when a teaching task completes (`~/.omo/scripts/publish_teach.py`), probe new URLs for 200, and on later visits verify the live bytes alongside the status code. Report without queued-next lines.
 - **Stay at the user's chapter position.** Teach chapter-and-earlier facts only — as internal discipline; the page itself never narrates the boundary.

@@ -15,118 +15,7 @@ If the user names a banned work as a style reference ("I like Rach 2, what next?
 
 ## Ban list
 
-Skip every composer below unless the user names it explicitly. Two origins, same rule: **user** = the user named this composer directly; **default** = accepted into the ban automatically because it sits in the same overplayed tier, listed here with the reason. Era bans (below the table) carry no exceptions.
-
-| Composer                    | Origin                 | Reason                                       |
-| --------------------------- | ---------------------- | -------------------------------------------- |
-| Rachmaninoff                | user                   | —                                            |
-| Beethoven                   | user                   | —                                            |
-| Brahms                      | user                   | —                                            |
-| Mendelssohn                 | user                   | —                                            |
-| Bruch                       | user                   | —                                            |
-| Mozart                      | user                   | —                                            |
-| Haydn                       | user                   | —                                            |
-| Bruckner                    | user                   | —                                            |
-| Mahler                      | user                   | —                                            |
-| Schubert                    | user                   | —                                            |
-| Schumann                    | user                   | —                                            |
-| Stravinsky                  | user                   | —                                            |
-| Tchaikovsky                 | user                   | —                                            |
-| Ravel                       | user                   | —                                            |
-| Debussy                     | user                   | —                                            |
-| Richard Strauss             | user                   | —                                            |
-| Johann Strauss I            | user                   | —                                            |
-| Johann Strauss II           | user                   | —                                            |
-| Eduard Strauss              | user                   | —                                            |
-| Josef Strauss               | user                   | —                                            |
-| Wagner                      | user                   | —                                            |
-| Prokofiev                   | user                   | —                                            |
-| Scriabin                    | user                   | —                                            |
-| Wetz                        | user                   | —                                            |
-| Tyberg                      | user                   | —                                            |
-| Shostakovich                | user                   | —                                            |
-| Sibelius                    | user                   | —                                            |
-| Sousa                       | user                   | —                                            |
-| Walton                      | user                   | —                                            |
-| Vaughan Williams (RWV)      | user                   | —                                            |
-| Suppe                       | user                   | —                                            |
-| Offenbach                   | user                   | —                                            |
-| Verdi                       | user                   | —                                            |
-| Rossini                     | user                   | —                                            |
-| Liszt                       | user                   | —                                            |
-| Weingartner                 | user                   | —                                            |
-| Korngold (Erich Wolfgang)   | user, added 2026-09-20 | F-sharp symphony over-recommended            |
-| Bax (Arnold)                | user, added 2026-09-20 | lush circuit                                 |
-| Enescu (George)             | user, added 2026-09-20 | 55-min staple                                |
-| Stenhammar (Wilhelm)        | user, added 2026-09-20 | over-recommended Swedish                     |
-| Atterberg (Kurt)            | user, added 2026-09-20 | same Swedish lush circuit                    |
-| Schmidt (Franz)             | user, added 2026-09-20 | requiem staple                               |
-| Rott (Hans)                 | user, added 2026-09-20 | Mahler-feeder staple                         |
-| Marx (Joseph)               | user, added 2026-09-20 | overpushed                                   |
-| Dvorak                      | default                | symphonies/concertos ubiquitous              |
-| Grieg                       | default                | Peer Gynt / Piano Concerto everywhere        |
-| Chopin                      | default                | piano canon, over-referenced                 |
-| Bach (J.S.)                 | default                | explicit Baroque anchor                      |
-| Handel                      | default                | explicit Baroque anchor                      |
-| Vivaldi                     | default                | Four Seasons fatigue                         |
-| Pachelbel                   | default                | Canon fatigue                                |
-| Saint-Saens                 | default                | Organ Symphony / Carnival overplayed         |
-| Bizet                       | default                | Carmen / L'Arlesienne overplayed             |
-| Puccini                     | default                | opera canon bleeds into concerts             |
-| Mussorgsky                  | default                | Pictures / Night on Bald Mountain overplayed |
-| Rimsky-Korsakov             | default                | Scheherazade overplayed                      |
-| Khachaturian                | default                | Sabre Dance fatigue                          |
-| Holst                       | default                | Planets overplayed                           |
-| Elgar                       | default                | Enigma / Pomp overplayed                     |
-| Copland                     | default                | Fanfare / Appalachian overplayed             |
-| Gershwin                    | default                | Rhapsody in Blue overplayed                  |
-| Orff                        | default                | Carmina Burana overplayed                    |
-| Smetana                     | default                | Ma vlast overplayed                          |
-| Gounod                      | default                | Faust / Ave Maria overplayed                 |
-| Berlioz                     | default                | Symphonie fantastique fatigue                |
-| Weber (Carl Maria von)      | default                | Freischutz / Oberon overture staple          |
-| Borodin                     | default                | Polovtsian Dances everywhere                 |
-| Glinka                      | default                | Ruslan overture anchor                       |
-| Glazunov                    | default                | ballets / violin concerto staple             |
-| Kabalevsky                  | default                | youth concerto circuit                       |
-| Bartok                      | default                | Concerto for Orchestra saturation            |
-| Kodaly                      | default                | Hary Janos / Galanta staple                  |
-| Janacek                     | default                | Sinfonietta everywhere                       |
-| Nielsen                     | default                | Sym 4/5 over-recommended Scandinavian        |
-| Respighi                    | default                | Pines / Fountains overplayed                 |
-| Faure                       | default                | Pavane / Requiem fatigue                     |
-| Dukas                       | default                | Sorcerer Apprentice one-work fatigue         |
-| Chabrier                    | default                | Espana encore                                |
-| Massenet                    | default                | Meditation bleed                             |
-| Delibes                     | default                | Coppelia / Sylvia ballet staple              |
-| Lehar                       | default                | Merry Widow operetta staple                  |
-| Barber                      | default                | Adagio single-work fatigue                   |
-| Bernstein                   | default                | Candide / West Side bleed                    |
-| Rodrigo                     | default                | Aranjuez guitar-concerto monopoly            |
-| Suk (Josef)                 | default                | Asrael circuit                               |
-| Myaskovsky (Nikolai)        | default                | Sym 6 circuit                                |
-| Alfven (Hugo)               | default                | Swedish lush staple                          |
-| Fibich (Zdenek)             | default                | Czech sym staple                             |
-| Novak (Vitezslav)           | default                | Czech late-romantic staple                   |
-| Dohnanyi (Erno)             | default                | Sym 1/2 staple                               |
-| Draeseke (Felix)            | default                | Tragica circuit                              |
-| Goldmark (Karl)             | default                | Rustic Wedding staple                        |
-| Magnard (Alberic)           | default                | French sym staple                            |
-| Ropartz (Guy)               | default                | French sym staple                            |
-| d'Indy (Vincent)            | default                | French sym staple                            |
-| Chausson (Ernest)           | default                | Bb sym staple                                |
-| Balakirev (Mily)            | default                | Islamey bleed                                |
-| Lyapunov (Sergei)           | default                | Sym 2 staple                                 |
-| Taneyev (Sergei)            | default                | C minor staple                               |
-| Kalinnikov (Vasily)         | default                | Sym 1 staple                                 |
-| Gliere (Reinhold)           | default                | Ilya overpushed                              |
-| Bantock (Granville)         | default                | Hebridean staple                             |
-| Parry (Hubert)              | default                | English sym staple                           |
-| Stanford (Charles Villiers) | default                | Irish sym staple                             |
-
-Era bans: all Medieval, all Baroque. No exceptions.
-
-Walton appears once in the table; a duplicate request for it is collapsed to this single entry.
+Full composer list, origins, reasons, era bans, and exclusion-specific edge cases (explicit-unban compliance, era-override handling, arrangement-loophole rule): `references/exclusions.md`. Read it before any recommendation pass — skip every composer it lists unless the user names that composer explicitly.
 
 ## Priority order
 
@@ -151,18 +40,12 @@ The keyword controls depth, not taste — it never lifts a ban.
 2. Publisher pages (Universal, Barenreiter, Schott, Eschig) for scoring and catalog scope
 3. Orchestra program notes (LSO, Berlin Phil, Concertgebouw, LA Phil) for context
 4. Labels with deep catalog: Chandos, Hyperion, BIS, Naxos, CPO, Capriccio
-5. For release/discography lookups (catalog numbers, pressing detail): `web-data-apis` skill's `references/music-search.md` — MusicBrainz → Discogs → Presto Classical → label website. Same banned-streaming-services rule applies here: never Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz.
+5. For release/discography lookups (catalog numbers, pressing detail, "every recording of this work"): `web-data-apis` skill's `references/music-search.md` — MusicBrainz/Discogs are entry points to trace, not the answer; verify each candidate back to its underlying session before counting it as distinct from a repress. Same banned-streaming-services rule applies here: never Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz.
 6. Streaming / YouTube only for a listen pointer, never for facts
 
 If sources conflict on dates, prefer the catalog entry. State the conflict in one line.
 
 ## Timing verification (mandatory)
-
-Past failures that made this mandatory (2026-09-20):
-
-- Louis Glass Sym 5 Op57 stated as 60 min with finale chorus. Correct per label range: 35-40 min, orchestra only, no chorus. Raiskin 35:36, Todorov 41:37.
-- Paderewski Polonia stated as a flat 75. Correct: 74:13 complete Maksymiuk vs 63:39 cut DUX Boguszewski (24:37+14:32+24:38). The 75 figure is the uncut ideal — state range and cut status.
-- Tournemire Sym 7 stated ~90 from a single forum line. Correct: Bartholomee recording, movement stems ~14:22+15:55+15:07+~15+15:44 ≈ 75 total; 90 is only an upper bound. Forum-only numbers are banned as a timing source. (The original correction used a streaming service's track-length display as the stem source — streaming services are now banned as a source per `web-data-apis`'s `references/music-search.md`; re-verify this figure via MusicBrainz/Discogs/Presto/label before citing it again.)
 
 Rules for every duration stated:
 
@@ -211,8 +94,6 @@ Output: chamber explicitly requested, so the chamber lane is allowed this turn. 
 
 ## Edge cases
 
-- User explicitly requests a banned composer: comply for that composer only, keep the rest of the ban list active.
-- User requests Baroque/Medieval: remind them the era ban is active and ask for an explicit override. Never comply silently.
 - User requests vocal/choral: comply, prefer choral, flag the soloist fallback only if forced into it.
 - Request scope is unclear: default to orchestral, post-1750, non-chamber, non-vocal.
-- Never recommend an arrangement of a banned work as a loophole (e.g. a Liszt piano transcription of a Beethoven symphony) — banned material stays banned regardless of arranger.
+- Exclusion-specific edge cases (banned-composer override, era-ban override, arrangement loophole): `references/exclusions.md`.

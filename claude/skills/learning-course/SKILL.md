@@ -9,6 +9,8 @@ Turn one long source into a per-chapter course. User walks sequentially across s
 
 Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable-model-invocation: true` in both installed copies) and cannot be called from here, so there is no precedence relationship to resolve. This skill owns its own pedagogy, workspace layout, acquisition, slicing, corrections, verification, visuals, publishing, and auto-open.
 
+**Workspace/cache paths.** Reference files reference `~/.omo/teach/` and `~/.omo/cache/learning-course/` paths — these apply when running under OpenCode + OMO. Under Claude Code, use an equivalent local workspace directory (e.g. in the project root or `~/.claude/`) since `~/.omo/` won't exist; one workspace per source, same layout.
+
 ## Standing expectations
 
 1. **Full treatise per chapter.** One chapter per page; later pages lean on earlier ones.
@@ -21,10 +23,6 @@ Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable
 8. **Source apparatus mined.** Descriptions, bibliographies, footnotes seed RESOURCES + verification targets (Step 1).
 9. **Inline verdicts in narrative.** Source wording in quotes; record verdict inline beside it in prose; citations are inline hyperlinks only — no Sources block.
 10. **Numbering.** Lesson files carry a 2-digit lesson number (`01-`); chapter labels are absolute ("chapter 7 of 12") and never derived from lesson order.
-
-## Orchestration: subagent-first
-
-Chapter production + verification passes run as subagents (1 chapter worker + 1-2 research passes per chapter, parallel). Orchestrator coordinates, merges, runs mechanical gates, reports. Inline work stays mechanical: check script, one-line fix, file copy.
 
 ## What one completed chapter produces
 
@@ -58,16 +56,13 @@ ASR/OCR pass before quoting: candidate list from metadata + glossary + domain; l
 
 Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`. Shape lives in `assets/lesson.stencil.html`; content in the lesson YAML (`references/lesson-schema.md`); contract + row-id rule in `references/stencil-contract.md`; full style doc in `references/page-design.md`. One HTML page per chapter per `references/workflow.md` treatise structure. Head order: home link (small text, above the kicker), kicker (series name), H1 (chapter title), surtitle (small text: "Chapter N of M" — no time range, no timestamp anywhere on the page), top nav (chapter index + glossary, below the surtitle), meta line (Lesson NN + cast map / glossary).
 
-- **ADD-friendly narrative.** Short sentences, pointer lists, one idea per paragraph; quotes may run long, prose may not.
 - **Cast block, each chapter.** On-stage table, 5-12 rows, columns Name | Role this chapter. New player: full role line. Returning player: fresh role line ending in its "(chapter N)" link to the lesson holding the full entry. No "first appears" column or label. Spec: `references/diagram-spec.md`.
 - **Chapter subgraph, each chapter with active ties.** Small inline SVG scoped to this chapter's on-stage nodes + active edges; colour-only edges; complete legend. Solo-narration chapter without active ties carries a one-line scope line in place of art. Spec: `references/diagram-spec.md`.
-- **No quizzes, no questionnaires, no teacher apparatus.** No question-and-answer widgets, no retrieval checks, no "ask your teacher" box — the page teaches and stops.
-- **Page tail**: footer only — previous lesson, next lesson. Home, chapter index, and glossary live in the top nav, not the footer. No method/teacher/primary-source/next-steps blocks, no reader questions, no boundary narration.
 - **Chat**: status + short pointers; substance in HTML; no closing questions, no "what's next".
 
 ### Step 6: Verify (source-type gate, set at Step 0/1, logged in NOTES.md)
 
-Fan-out required for this source type → extract the chapter's checkable claims (dates, figures, names, spellings, chronology, attributions), then call `skill(name="rigorous-research")` with that claim list; it owns the tier ladder, the parallel passes, the routing, and the burn guards.
+Fan-out required for this source type → extract the chapter's checkable claims (dates, figures, names, spellings, chronology, attributions), then load the rigorous-research skill (`skill(name="rigorous-research")` in OpenCode, or via the `Skill` tool with `skill: "rigorous-research"` in Claude Code) with that claim list; it owns the tier ladder, the parallel passes, the routing, and the burn guards.
 Scholarly gate: source carrying its own apparatus suffices: scholarly books/papers (footnotes, source notes, credentialed press) and video with published citations (e.g. Munger video description citations) skip fan-out; quote + cite that apparatus. Reader-flagged surprising/contested/load-bearing claims get a targeted check as an explicit ask.
 Lecture notes / uncited articles: no default bias toward any source type — judge by the source's own apparatus (citations present, credentialed author, published record) on its own merits.
 Integrate the returned verdicts: corrections land as inline verdicts in the narrative, cited inline (first mention = full hyperlink, repeats = superscript-that-is-itself-a-hyperlink — no Sources block, no footer); unfindables go to RESOURCES Gaps and appear visibly in the lesson ("the source's account, unverified"); source wording in quotes, record verdict beside it.
@@ -98,9 +93,6 @@ In-lesson cast block (info-only roster of this chapter) + subgraph (this chapter
 - **No record sections.** No "Open threads" sections or phrasing anywhere on lesson pages, no standalone record sections; record verdicts live inline in narrative prose beside quoted source wording, citations only as inline hyperlinks/superscripts, never a separate block (gate: `check_lesson.py` scans "Open threads").
 - **YouTube URL ban, absolute.** No YouTube URL appears anywhere in a chapter's rendered output — full stop, no exception clause. YouTube/transcript slices stay secondary in sourcing; every chapter needs >= 1 non-YouTube primary, cited by its own URL, never the video's.
 - **Position holds.** Sequential walk; chapter-and-earlier facts in prose. Internal discipline only — pages never narrate boundaries, stop points, or method.
-- **No timestamps anywhere on the page.** Not even the surtitle.
-- **Numbering**: lessons 2-digit; chapters absolute.
-- **Links**: cite sources as hyperlinks to the actual page. First mention = full inline hyperlink. Every repeat of the same source = a superscript character that is itself a live hyperlink (`<sup><a href="...">n</a></sup>`) — never a bare marker, never unlinked. No footer, no Sources block, no bibliography section anywhere. Gate: `check_lesson.py` flags any heading matching `/sources|references|bibliography/i` and any `<sup>` not wrapped in `<a>`.
 - **Casing**: headings and labels (h1, h2, box titles, kicker) use Title Case; body prose uses sentence case; no `text-transform: uppercase` anywhere (lesson pages or index/hub pages). Retroactive — applies to all 40 published lessons, not just new ones. `assets/lesson.css`'s `.kicker` rule (and every workspace's copy of it) had this CSS property removed once — a stylesheet fix, not an ongoing gate, since the underlying HTML text was never literally uppercase. Gate: `check_lesson.py` flags any run of 3+ consecutive ALL-CAPS words typed directly into lesson content (2+ letters each — lone acronyms like "FBI" are exempt).
 - **Files**: HTML for lessons + reference; `.md` for admin (MISSION / NOTES / RESOURCES / learning-records) + transcript slices. RESOURCES stays as split-source retained until migration. YouTube handling stays inside this skill per `references/sources/youtube.md`.
 - **One workspace per source.** Slug from topic.
@@ -126,14 +118,15 @@ Controls: `--list` peeks pool + active account (no write); `--service all --list
 - Dappier, AgentQL, ScrapeGraphAI — keyed and wired, but see their own skills (`web-data-apis`; ScrapeGraphAI also has `just-scrape`) rather than this section for usage detail.
 - Context7, Brave, Apify, Bright Data, Browserbase were added to the pool 2026-09-20 — confirmed monthly-recurring free tiers (1,000 calls/mo, $5/mo, $5/mo, 5,000 credits/mo, 60 browser-min/mo respectively).
 
-**Where the tools live.** This skill runs under OpenCode + OMO, which reads `.claude/skills/` directly. The web-data MCP fleet is wired in `~/.config/opencode/opencode.jsonc` and is callable in-session. The companion tool skills the router names live under `~/.agents/skills/` and `~/.config/opencode/skills/`. Verification passes run in this runtime — never handed off to a different host or runtime. Handing a pass to another skill or to team members within this runtime is normal and expected.
+**Where the tools live.** Under OpenCode + OMO: skill config reads `.claude/skills/` directly; the web-data MCP fleet is wired in `~/.config/opencode/opencode.jsonc`; companion tool skills live under `~/.agents/skills/` and `~/.config/opencode/skills/`. Under Claude Code: check available_skills/MCP listing for the web-data MCP fleet and companion skills wired in this session (do not assume the OpenCode paths above apply). Verification passes run in their runtime only — never handed off to a different host or runtime. Handing a pass to another skill or to team members within the same runtime is normal and expected.
 
 ## Bundled resources
 
 - `scripts/switch_api_key.py`: masked multi-account API-key failover for research tools (no key material in output; see API key failover).
 - `scripts/fetch_video.py`: yt-dlp wrapper: info.json (description + chapters) + en captions.
-- `scripts/slice_chapter.py`: per-chapter VTT slicing with rolling-caption collapse + boundary report.
-- `scripts/check_lesson.py`: no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; sources hyperlinked (no bare URLs); link targets at most twice per page; no teacher/method/primary-source tail blocks; relative links and assets resolve; section references; run before opening lesson.
+- `scripts/extract_chapters.py`: default Step-2 segmentation — derives ranges from `info.json`'s own chapter metadata; `--dry-run` previews, `--list` prints table.
+- `scripts/slice_chapter.py`: hand-range overrides only (not the default) — per-chapter VTT slicing with rolling-caption collapse + boundary report.
+- `scripts/check_lesson.py`: no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; sources hyperlinked (no bare URLs); link targets at most twice per page; no teacher/method/primary-source tail blocks; relative links and assets resolve; section references; run before opening lesson. Flags any heading matching `/sources|references|bibliography/i` and any `<sup>` not wrapped in `<a>` (repeat citations must be a live superscript link, never a bare marker).
 - `scripts/stamp_lesson.py`: stamp a lesson HTML from its YAML content + the stencil (stdlib, fails closed, repo paths only, diff stat); pair with `scripts/fixtures/stencil/run_stencil_tests.py` (stamped golden passes the gate; corrupt variants fail) and `run_parity_test.py` (row-id parity with the publisher).
 - `scripts/check_map_geometry.py`: edge/box/label defects (edges through boxes, overlaps incl. node inside node, merged arrowheads, labels covering boxes); run before opening or publishing SVG visual.
 - `evals/fixtures/geom-fixture.html`: checker regression fixture: must report exactly one node-inside-node plus one label-on-box, everything else clean.

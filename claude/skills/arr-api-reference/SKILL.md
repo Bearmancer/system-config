@@ -54,6 +54,10 @@ namespace enforce this — convention only, must verify by hand:
 Mismatch anywhere in chain fail silent — download finish, just land
 wrong (or default) category/folder, no error show anywhere. Always
 verify end-to-end with real (or old) job, not just re-read config back.
+`python scripts/verify_category_wiring.py` cross-checks the whole
+chain in one call (SAB category list vs Sonarr/Radarr download-client
+category vs Prowlarr mapping) — run it after any category or
+download-client edit, don't just hand-read four configs.
 
 Staging dir mirror by protocol, not by app: `C:\Media\Usenet\TV`
 (SABnzbd) and `C:\Media\Torrent\TV` (qBittorrent) both feed same
@@ -71,18 +75,7 @@ auth, own id quirk:
   Keys, or trade username/password for session token via `POST
   /Users/AuthenticateByName`. Don't hunt `system.xml` for it — not
   there.
-- **Two id field per library, only one work.** `GET
-  /Library/VirtualFolders` give back each library with both `ItemId`
-  (short decimal string, e.g. `"45267"`) and `Guid` (32-char hex, no
-  dash, e.g. `"de1bd066d4ed4e20a426feafdfc10c5f"`). Only `Guid` real
-  item id Emby innards can read.
-- **Add path to existing library need `id`, not `name`.** `POST
-  /Library/VirtualFolders/Paths?id=<Guid>&path=<path>` correct way.
-  Send `name=<library name>` instead (look like should work, other
-  Emby-adjacent tool accept name-based lookup) throw
-  `System.FormatException: Unrecognized Guid format` HTTP 500 —
-  handler always call `GetItemById` on whatever given, no name
-  fallback. Body content no matter; pure query-string call.
+- **Add path to existing library needs `id` (the `Guid` field), not `name` or `ItemId`** — sending `name=` throws `System.FormatException: Unrecognized Guid format` HTTP 500. Full trace + field detail: `references/api-reference.md`.
 - **Auth take two way:** query param `?api_key=<key>` or header
   `X-Emby-Token: <key>` — both work same, no preference.
 
@@ -108,55 +101,12 @@ live even mid-download. Single `Rename-Item` sometimes no-op on
 case-only change — see [[shell-gotchas]] for two-step
 temp-name workaround.
 
-## Boot-time bind race (Sonarr/Radarr/Prowlarr/SABnzbd)
+## Boot-time bind race, autostart inventory, stale-queue triage
 
-All 4 app `host`/`BindAddress` used be hardcode to this machine
-Tailscale IP (`100.86.121.94`). At boot, Windows start each Automatic
-service before `tailscaled` finish reconnect and re-assign that
-IP — bind fail with `SocketException 10049` (WSAEADDRNOTAVAIL, not
-port-in-use), service die. `sc.exe config <Name> depend= Tailscale`
-only wait for Tailscale _service_ report Running, not for IP actually
-exist — not enough alone.
-
-Fixed 2026-08-29: `BindAddress`/`host` change to wildcard (`*` for
-Sonarr/Radarr/Prowlarr config.xml, `0.0.0.0` for SABnzbd's
-`sabnzbd.ini`) — app now bind instant no matter Tailscale timing, also
-work on `localhost` this machine (no work before). Reachability lock
-down instead by Windows Firewall: existing
-`NzbDrone`/`SABnzbd`/`SABnzbd-console` inbound rule scope
-`RemoteAddress = 100.64.0.0/10` (Tailscale CGNAT range, match SAB own
-`local_ranges` setting) — default-deny handle rest, no need explicit
-block rule. `depend=Tailscale` + `sc.exe failure ...
-actions= restart/30000/restart/60000/restart/120000` keep as harmless
-extra safety on top.
-
-SABnzbd itself have no Windows Service via installer by default — it
-ship one native (pywin32 `ServiceFramework` in `SABnzbd.py`, verb
-`install|update|remove|start|stop|restart`), but install command
-wrong-detect non-interactive/session-0 shell, refuse
-(`StartServiceCtrlDispatcher` error) — work around with `sc.exe create`
-direct plus write `-f <inifile>` command line into
-`HKLM\SYSTEM\CurrentControlSet\services\SABnzbd\CommandLine`
-(REG_MULTI_SZ) same way installer `set_serv_parms` would do.
-
-qBittorrent have no headless/service mode (GUI-only Qt binary, no
-`-nox` build this machine) — can't run as Session-0 service like other
-four. On purpose manual-start (user decide 2026-08-29), same as Emby —
-don't wrap either as service/task unless ask again.
-
-### Current inventory (verified 2026-08-29, post-fix)
-
-| App         | Autostart mechanism                                                                                       | Account                     | Bind                    | Firewall                                                         |
-| ----------- | --------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------- | ---------------------------------------------------------------- |
-| Sonarr      | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| Radarr      | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| Prowlarr    | native Windows Service, Auto                                                                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| SABnzbd     | native Windows Service, Auto (`sc create`, not installer)                                                 | `LocalSystem`               | `0.0.0.0` (sabnzbd.ini) | `SABnzbd`/`SABnzbd-console` rules, `RemoteAddress=100.64.0.0/10` |
-| qBittorrent | manual only, no service/task                                                                              | —                           | n/a                     | n/a                                                              |
-| Emby        | login Startup-folder shortcut (`%AppData%\Microsoft\Windows\Start Menu\Programs\Startup\Emby Server.lnk`) | current user                | n/a                     | n/a                                                              |
-
-No arr-related Scheduled Task. Servy (`C:\Program Files\Servy`) manage
-only `ClaudeRemoteControl` — unrelated, not use for any above.
+Dated incident records (boot-time bind race fix, per-app autostart
+mechanism table, SABnzbd duplicate-process outage, stale-queue
+recovery) live in `references/incidents.md` — read before touching
+service config or debugging a stuck queue.
 
 Before edit any live config here again: run `backup-arr`.
 
@@ -225,48 +175,6 @@ same release map to only 2 real SAB job (1 `Downloading`, 1
 Resume real one, stale ref drop on re-poll by itself, don't chase
 them.
 
-## Allowed Hosts (Sonarr General setting)
-
-Empty `allowedHosts` raise `AllowedHostsCheck` warning in
-`/api/v3/health`. Set via same host resource as login (id always
-`1`): `GET /api/v3/config/host`, change only `allowedHosts`,
-`PUT` whole object to `/api/v3/config/host/1` with `password`
-untouched (hash-compare rule same as username change above).
-Verified value this machine (2026-09-19):
-`localhost,127.0.0.1,100.86.121.94,lance,lance.tail2e6179.ts.net`
-(hostname + MagicDNS from `tailscale status`, SAB `host_whitelist`
-tail domain `*.tail2e6179.ts.net` confirm suffix). After PUT,
-re-`GET` show value back, `GET /health` empty, and probe health
-through Tailscale IP (`http://100.86.121.94:8989/api/v3/health`)
-to prove not lock out before close.
-
-## Login username/password (WebUI, not API key)
-
-Separate from `ApiKey` in config.xml. Sonarr/Radarr/Prowlarr keep this
-in internal SQLite `Users` table, not config.xml — expose via `GET/PUT
-/api/v3/config/host` (`/api/v1` for Prowlarr), field
-`username`/`password`/`passwordConfirmation`.
-
-- **Sonarr/Radarr/Prowlarr force-lowercase username server-side**
-  no matter what you send (`user.Username =
-  username.ToLowerInvariant()` in `UserService.Upsert`) — send
-  `"Lance"` quiet-store `"lance"`. qBittorrent's `web_ui_username`
-  preference no lowercase — case you send is case it keep.
-- **Change username without touch password:** `GET
-  /api/v3/config/host` first, change only `username` in object come
-  back, `PUT` whole thing back with `password` untouched (still the
-  hash `GET` gave). Backend compare `resource.Password` to stored hash
-  byte-for-byte; equal mean "unchanged," skip re-hash. Send plaintext
-  password there instead, double-hash it, break login.
-- **qBittorrent:** `POST /api/v2/app/setPreferences` with body
-  `json={"web_ui_username":"<name>"}` (URL-encoded).
-- **SABnzbd:** WebUI username/password live under `[misc]` in
-  `sabnzbd.ini`, separate from `[[servers]]` block — those per-provider
-  Usenet account login, not local app credential; never mix up two.
-- **Emby:** no username/password to rotate through this pipeline —
-  auth is per-user-account through own `/Users` system, unrelated to
-  arr-stack login idea.
-
 ## Verifying, not assuming
 
 After any config mutation, re-`GET` check the real value come back —
@@ -303,6 +211,13 @@ already handle include dedupe/mutation gotcha above:
   (resolve name → `Guid` inside, caller never touch id gotcha
   above).
 
+- **`scripts/verify_category_wiring.py`** — standalone, no import
+  anything else need except `arr_scripts` (same dir). Cross-check SAB
+  category list against Sonarr/Radarr download-client category and
+  Prowlarr's mapping, print every mismatch, exit 1 if any found. Run
+  after any category or download-client edit — this is the check
+  prose alone can't enforce (see "Category wiring" section above).
+
 - **`scripts/backup_arr_stack.py`** — standalone, no import
   anything else need. `backup_arr_stack()` trigger backup on all 4 app
   - zip qBittorrent config dir (no backup API exist for it), rename
@@ -318,75 +233,16 @@ already handle include dedupe/mutation gotcha above:
     re-date with old content). Check each timestamp after run, don't
     trust "no red text".
 
-## Orchestration
-
-Live-stack work mostly read-only and easy go wrong quiet-like. When host session orchestrate, spawn worker to run API call and catch raw response — keep orchestrator out of request loop. Verify pass (category chain really end where should?) is own subagent task with exact GETs to run and expect field to quote. Never fake a call by hand: run the real one, or say plain you did not.
-
 ## Finishing an edit to this skill
 
 `~/.claude/skills/arr-api-reference/` is source of truth. The `agents-config` repo mirror it: after edit, run the sync script (`agents-config` repo's README.md, "Backup mechanism" section) to commit and push change. Before touch live app config, run `backup-arr`.
 
 ## Bazarr — subtitle manager, separate API quirks
 
-Bazarr connect to Sonarr + Radarr to manage subtitle. Port `6767`,
-config at `C:\ProgramData\Bazarr\config\config.yaml`, API key in
-`general.apikey` field of that file. Auth: header `X-API-KEY: <key>`
-OR query `?apikey=<key>` OR form field `apikey`.
-
-**`/system/settings` hide from swagger on purpose** — it exist
-but give back `null` from swagger path list. Only `GET` and `POST`
-register; `PUT`/`PATCH` give 405.
-
-**Big gotcha: POST body must be `application/x-www-form-urlencoded`
-(form), not JSON.** Handler read `request.form` — send JSON body
-get quiet-ignore, setting no save. Earlier try with
-`ConvertTo-Json` body all fail for this reason.
-
-Field name pattern: `settings-<section>-<key>` (partial update OK —
-only key you give get write).
-
-### Wire Bazarr → Sonarr + Radarr
-
-```powershell
-$h = @{"X-API-KEY"="<bazarr-apikey>"}
-$b = @{
-    "settings-general-use_sonarr" = "true"
-    "settings-sonarr-ip"          = "127.0.0.1"
-    "settings-sonarr-port"        = "8989"
-    "settings-sonarr-base_url"    = "/"
-    "settings-sonarr-ssl"         = "false"
-    "settings-sonarr-apikey"      = "<sonarr-apikey>"
-    "settings-general-use_radarr" = "true"
-    "settings-radarr-ip"          = "127.0.0.1"
-    "settings-radarr-port"        = "7878"
-    "settings-radarr-base_url"    = "/"
-    "settings-radarr-ssl"         = "false"
-    "settings-radarr-apikey"      = "<radarr-apikey>"
-}
-Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:6767/api/system/settings" -Headers $h -Body $b -ContentType "application/x-www-form-urlencoded"
-# expect 204 No Content; 406 + message on validation fail
-# verify:
-$v = Invoke-RestMethod -Headers $h "http://127.0.0.1:6767/api/system/settings"
-"use_sonarr: $($v.general.use_sonarr), key set: $($v.sonarr.apikey.Length -gt 0)"
-"use_radarr: $($v.general.use_radarr), key set: $($v.radarr.apikey.Length -gt 0)"
-```
-
-No restart need — `save_settings()` call `sonarr_signalr_client.restart()`
-and `radarr_signalr_client.restart()` inside. Full service restart
-only at `POST /api/system?action=restart` (also hide from swagger).
-
-Bazarr **not** connect to Prowlarr or Emby — those not
-Bazarr integration target. Prowlarr feed Sonarr/Radarr (download
-source); Emby is playback front-end. Bazarr only talk
-Sonarr + Radarr for library metadata.
-
-### Inventory addition (verified 2026-09-06)
-
-| App    | Port | Config                                     | Auth                      |
-| ------ | ---- | ------------------------------------------ | ------------------------- |
-| Bazarr | 6767 | `C:\ProgramData\Bazarr\config\config.yaml` | `X-API-KEY` or `?apikey=` |
-
-Bazarr autostart mechanism: TBD (not yet confirm as service/task).
+Bazarr connect to Sonarr + Radarr to manage subtitle, separate auth
+and form-encoded (not JSON) POST body. Full endpoint detail, wiring
+script, and gotchas: `references/api-reference.md`. Autostart
+mechanism still TBD — see `references/incidents.md`.
 
 ## Additional Resources
 

@@ -58,8 +58,9 @@ before debugging a shell error from scratch.
   terminal does — each call can reset to the tool's default dir. Do not
   rely on a prior `cd`; use `git -C <dir> <cmd>` (or an absolute path
   per-command) instead of `cd dir && cmd`.
-- Clone-to-temp for research/verification: see CLAUDE.md's "Research
-  clones stay in temp" rule.
+- Clone-to-temp for research/verification: see CLAUDE.md's
+  `<ai_artifacts>` rule — temp files, including clone repos, go through
+  `mktemp`.
 - Use `jaq` for JSON on this box — same CLI/filter syntax as `jq`,
   stricter parsing that catches bad escapes. Both `jaq` and `jq` reject
   trailing commas; see JSON parsers below for comma-tolerant paths.
@@ -130,11 +131,8 @@ before debugging a shell error from scratch.
 
 ## Quoting layers, strict parsers, in-process writes
 
-- Single-quoted PS is literal: single `\s` + plain `"`, never `\\s` / `\"`.
-- Repeated escaping misses → script file: `Write` .ps1 with literal pattern, invoke `pwsh -NoProfile -File "C:/path/s.ps1"`.
-- Strict JSON parsers reject trailing commas: `jaq`, `jq`, `ConvertFrom-Json`. Tolerant path is pwsh plus dotnet: `[System.Text.Json]` with `AllowTrailingCommas` and `JsonCommentHandling.Skip`, mutate via `JsonNode` — no regex surgery.
+- Tolerant path for trailing commas that `jaq`/`jq`/`ConvertFrom-Json` all reject: pwsh plus dotnet `[System.Text.Json]` with `AllowTrailingCommas` and `JsonCommentHandling.Skip`, mutate via `JsonNode` — no regex surgery.
 - No `json5`/`commentjson` Python libs, no `gojq`/`yq`/`dasel` on box. Fallback stays `sd`-strip of `,\s*}` / `,\s*]` → `jaq`.
-- Bash `>` redirect risks line endings. Stay in-process: `Get-Content -LiteralPath $P -Raw` → `[System.IO.File]::WriteAllText` (or `Set-Content -NoNewline`).
 - `rg -c` on zero matches prints nothing, exit 1. Reads as crash, means success. Confirm via `Read`/`grep` tool.
 - Read `$LASTEXITCODE` after native CLIs: parse/count failures surface there, not stdout.
 - `gh api` sub-issue endpoint (`/issues/{n}/sub_issues`) requires the
@@ -147,10 +145,6 @@ before debugging a shell error from scratch.
 - Never `-replace` with a bool pattern (`$T.Contains(x)` coerces to `"True"`, deletes every `true` in memory).
 - Python `re` replacement: raw-string `\"` writes literal backslashes. Use plain `"` in replacement.
 - Check indent via `repr()` before whitespace-sensitive edits.
-
-## Orchestration
-
-This skill is knowledge, not a workflow: it loads into whatever session or subagent needs it. When a host session orchestrates, the real reproduction and the fix verification belong to the worker actually running the commands — never re-simulate a command by hand in the orchestrator; quoting bugs only show live. Long or repetitive verification loops (a repro matrix across shells, repeated round-trips) go to a spawned subagent with the exact commands and expected outputs.
 
 ## Reference
 

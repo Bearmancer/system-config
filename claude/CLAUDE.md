@@ -127,6 +127,10 @@ Compression, rewrites (incl. PS1→Python), lint/format passes: user-created con
 Caveman-compression (any mode) on AI-consumed instruction files (SKILL.md, CLAUDE.md, AGENTS.md): keep text only if removing it changes model behavior (a rule becomes ambiguous, ambiguity resolves the wrong way). Narrative/historical/motivational "why" that doesn't change what the model does next: delete unconditionally, regardless of resulting length either direction.
 </content_provenance>
 
+<no_comments>
+Never add a comment that restates what identifiers/structure already say. Keep or add one only for a hidden constraint or gotcha the code can't show and that isn't already documented at that exact call site elsewhere (SKILL.md/CLAUDE.md cover project/skill-level intent, not point-of-use — a script read in isolation, e.g. via grep, won't have loaded them). Purge restating comments when editing a file in scope (user-created code only — see `content_provenance`); keep gotcha comments.
+</no_comments>
+
 <auto_purge>
 Task done: auto-purge artifacts created, not deliverables: state tracking, temp files, plugin temp files, scratch dirs, run logs, duplicate trees, stale backups. Purge at task end, never mid-task (running work needs state), never before evidence review. Report purged paths + count delta. Keep only what user asked keep: deliverables, plans, retained evidence.
 </auto_purge>

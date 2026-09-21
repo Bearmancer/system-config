@@ -5,7 +5,7 @@ description: "Tiered, multi-source verification engine: take a list of checkable
 
 # Rigorous Research
 
-Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (OMO) — the only runtime this domain has. No portability guarding, no alternate-host fallback: `team_create`, `team_task_create`, and `skill()` are OMO tools, called directly.
+Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (OMO) — the only runtime this domain has. No portability guarding, no alternate-host fallback: `skill()` is an OMO tool, called directly.
 
 ## Input contract
 
@@ -23,21 +23,9 @@ Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (
 
 Output shape per claim: `claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote`. Loop until every claim resolves; stop after 5 passes and mark whatever remains plainly unverified — a claim with no witness stays unverified. Coordinate passes so each claim is searched once.
 
-This path runs unconditionally, regardless of `team_mode.enabled` — see the gating note under "Fan-out threshold" below.
+## Scaling beyond 2 passes
 
-## Fan-out threshold
-
-Default to **2 parallel passes** — the existing upper bound. Escalate to a full worker-per-axis fan-out only when the claim list splits into **3 or more distinct source territories** (e.g. court records / contemporaneous press / scholarship), or when 2 passes have not resolved every claim by **pass 3 of the 5-pass budget**. Below that, 2 passes is the correct answer and spinning up a team is waste.
-
-**`team_mode.enabled` gates only the escalation above this threshold; the default 1-2 pass path below it runs unconditionally.**
-
-## Fan-out contract — the gated escalation
-
-When the fan-out threshold above is crossed, call `team_create`, then `team_task_create` once per claim cluster or source territory — one member per axis, never two members on the same angle. Call them directly: these are OMO tools, unconditionally available, and they require no trigger keyword from the user. Do not wait for the user to type "team mode".
-
-The only gate is `team_mode.enabled` in `~/.omo/omo.jsonc`. If it is false, **report the fan-out as blocked and stop escalating** — do not substitute another orchestration mechanism. The default pass path above is unaffected and continues to run.
-
-Members research their axis and report. No member stands up its own team, loads this skill, or fans out further.
+Default to **2 parallel passes** — the existing upper bound. A claim list large enough to need more than that (3+ distinct source territories, e.g. court records / contemporaneous press / scholarship, or unresolved claims by pass 3 of the 5-pass budget) is an orchestration decision for the calling session, not this skill: hand it the claim list, the source ordering below, and the output format, split by axis, one worker per axis. This skill states what to research and how to verify it; how many workers carry that out is the caller's call.
 
 ## Source selection and handling
 
@@ -55,7 +43,7 @@ Map before crawl with an explicit limit; never `raw_content` at scale; never req
 
 ## Tool routing — pointer only
 
-Do not choose servers here. Call `skill(name="web-data-apis")` and pick from its capability table, citing the row you used.
+Do not choose servers here. Load the web-data-apis skill (`skill(name="web-data-apis")` in OpenCode, or via the `Skill` tool with `skill: "web-data-apis"` in Claude Code) and pick from its capability table, citing the row you used.
 
 ## Failover — pointer only
 

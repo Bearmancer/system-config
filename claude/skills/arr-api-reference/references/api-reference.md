@@ -4,13 +4,14 @@ All endpoints verified working real instances. Auth key each app own config file
 
 ## Auth key locations
 
-| App      | Config file                                                                                 | Key path           |
-| -------- | ------------------------------------------------------------------------------------------- | ------------------ |
-| Sonarr   | `<AppData>\Sonarr\config.xml`                                                               | `<Config><ApiKey>` |
-| Radarr   | `<AppData>\Radarr\config.xml`                                                               | `<Config><ApiKey>` |
-| Prowlarr | `<AppData>\Prowlarr\config.xml`                                                             | `<Config><ApiKey>` |
-| SABnzbd  | `<UserAppData>\Local\sabnzbd\sabnzbd.ini`                                                   | `[misc] api_key =` |
-| Emby     | none on disk — mint in Dashboard → Advanced → API Keys, or `POST /Users/AuthenticateByName` | n/a                |
+| App      | Config file                                | Key path            |
+| -------- | -------------------------------------------- | -------------------- |
+| Sonarr   | `<AppData>\Sonarr\config.xml`                | `<Config><ApiKey>` |
+| Radarr   | `<AppData>\Radarr\config.xml`                | `<Config><ApiKey>` |
+| Prowlarr | `<AppData>\Prowlarr\config.xml`              | `<Config><ApiKey>` |
+| SABnzbd  | `<UserAppData>\Local\sabnzbd\sabnzbd.ini`    | `[misc] api_key =` |
+
+Emby: no key on disk. Mint one in Dashboard → Advanced → API Keys, or trade username/password for a session token via `POST /Users/AuthenticateByName`.
 
 PowerShell one-liner XML-based ones:
 
@@ -20,7 +21,15 @@ $key = ([xml](Get-Content "C:\ProgramData\Sonarr\config.xml")).Config.ApiKey
 
 ## Host config (login, launch-browser, etc.)
 
-`GET`/`PUT /api/v3/config/host` (`/api/v1` for Prowlarr) — id always `1`. Covers `bindAddress`, `port`, `authenticationMethod`, `username`/`password`/`passwordConfirmation`, `launchBrowser`, more. `launchBrowser: true` opens browser tab each startup — set `false` stop that. See skill "Login username/password" section, safe username-change pattern (don't touch `password` unless actually changing it).
+`GET`/`PUT /api/v3/config/host` (`/api/v1` for Prowlarr) — id always `1`. Covers `bindAddress`, `port`, `authenticationMethod`, `username`/`password`/`passwordConfirmation`, `launchBrowser`, more. `launchBrowser: true` opens browser tab each startup — set `false` stop that.
+
+Sonarr/Radarr/Prowlarr force-lowercase `username` server-side no matter what you send (`user.Username = username.ToLowerInvariant()` in `UserService.Upsert`) — send `"Lance"`, it quiet-stores `"lance"`. qBittorrent's `web_ui_username` preference doesn't lowercase — case you send is case it keeps.
+
+**Change username without touching password:** `GET /api/v3/config/host` first, change only `username` in the object that comes back, `PUT` the whole thing back with `password` untouched (still the hash `GET` gave). Backend compares `resource.Password` to the stored hash byte-for-byte; equal means "unchanged," skip re-hash. Send the plaintext password instead and it double-hashes it, breaking login.
+
+- **qBittorrent:** `POST /api/v2/app/setPreferences` with body `json={"web_ui_username":"<name>"}` (URL-encoded).
+- **SABnzbd:** WebUI username/password live under `[misc]` in `sabnzbd.ini`, separate from `[[servers]]` block — those are per-provider Usenet account logins, not the local app credential; never mix up the two.
+- **Emby:** no username/password to rotate through this pipeline — auth is per-user-account through its own `/Users` system, unrelated to the arr-stack login idea.
 
 `allowedHosts` (same resource): comma-separated `localhost,127.0.0.1,100.86.121.94,lance,lance.tail2e6179.ts.net` verified 2026-09-19 — `PUT` whole object to `/config/host/1`, re-`GET` confirm, probe `/health` via Tailscale IP to prove no lockout.
 
@@ -195,3 +204,63 @@ Stop-Process -Name Radarr -Force   # match actual running name — Radarr vs Rad
 ```
 
 Config-file edits (`config.xml`, `sabnzbd.ini`) made while app running get overwritten next write/exit — stop process first, edit, restart. API-driven changes (everything above) need no restart or stop.
+
+## Bazarr — subtitle manager, separate API quirks
+
+Bazarr connect to Sonarr + Radarr to manage subtitle. Port `6767`,
+config at `C:\ProgramData\Bazarr\config\config.yaml`, API key in
+`general.apikey` field of that file. Auth: header `X-API-KEY: <key>`
+OR query `?apikey=<key>` OR form field `apikey`.
+
+**`/system/settings` hide from swagger on purpose** — it exist
+but give back `null` from swagger path list. Only `GET` and `POST`
+register; `PUT`/`PATCH` give 405.
+
+**Big gotcha: POST body must be `application/x-www-form-urlencoded`
+(form), not JSON.** Handler read `request.form` — send JSON body
+get quiet-ignore, setting no save. Earlier try with
+`ConvertTo-Json` body all fail for this reason.
+
+Field name pattern: `settings-<section>-<key>` (partial update OK —
+only key you give get write).
+
+### Wire Bazarr → Sonarr + Radarr
+
+```powershell
+$h = @{"X-API-KEY"="<bazarr-apikey>"}
+$b = @{
+    "settings-general-use_sonarr" = "true"
+    "settings-sonarr-ip"          = "127.0.0.1"
+    "settings-sonarr-port"        = "8989"
+    "settings-sonarr-base_url"    = "/"
+    "settings-sonarr-ssl"         = "false"
+    "settings-sonarr-apikey"      = "<sonarr-apikey>"
+    "settings-general-use_radarr" = "true"
+    "settings-radarr-ip"          = "127.0.0.1"
+    "settings-radarr-port"        = "7878"
+    "settings-radarr-base_url"    = "/"
+    "settings-radarr-ssl"         = "false"
+    "settings-radarr-apikey"      = "<radarr-apikey>"
+}
+Invoke-RestMethod -Method Post -Uri "http://127.0.0.1:6767/api/system/settings" -Headers $h -Body $b -ContentType "application/x-www-form-urlencoded"
+# expect 204 No Content; 406 + message on validation fail
+# verify:
+$v = Invoke-RestMethod -Headers $h "http://127.0.0.1:6767/api/system/settings"
+"use_sonarr: $($v.general.use_sonarr), key set: $($v.sonarr.apikey.Length -gt 0)"
+"use_radarr: $($v.general.use_radarr), key set: $($v.radarr.apikey.Length -gt 0)"
+```
+
+No restart need — `save_settings()` call `sonarr_signalr_client.restart()`
+and `radarr_signalr_client.restart()` inside. Full service restart
+only at `POST /api/system?action=restart` (also hide from swagger).
+
+Bazarr **not** connect to Prowlarr or Emby — those not
+Bazarr integration target. Prowlarr feed Sonarr/Radarr (download
+source); Emby is playback front-end. Bazarr only talk
+Sonarr + Radarr for library metadata.
+
+### Inventory (verified 2026-09-06)
+
+| App    | Port | Config                                     | Auth                      |
+| ------ | ---- | ------------------------------------------ | ------------------------- |
+| Bazarr | 6767 | `C:\ProgramData\Bazarr\config\config.yaml` | `X-API-KEY` or `?apikey=` |
