@@ -8,17 +8,7 @@ Bug report get ignore or bounce back when claim symptom, no proof show. Skill lo
 
 ## Reference bar
 
-Calibrate issue: https://github.com/code-yeongyu/oh-my-openagent/issues/6167
-
-That issue show target depth. Have, in order:
-
-1. Prereq checklist (search duplicate, check latest version, check docs)
-2. One sentence bug describe, name exact mechanism (not just symptom)
-3. Numbered repro step, concrete enough replay word-for-word
-4. Expect vs actual behavior, state separate
-5. Tool/doctor output paste verbatim
-6. Error log / probe output show actual divergent value side by side
-   (e.g. `file:///c:/...` vs `file:///C:/...`), not paraphrase
+Calibrate issue: https://github.com/code-yeongyu/oh-my-openagent/issues/6167 — match its depth. Structure to match: Procedure step 3 below.
 
 ## Closure triage — do first, always
 
@@ -109,24 +99,8 @@ node --version; npm --version; bun --version
 
 After file, hand full list of post (issue numbers + comment IDs) to fresh agent with instruct to **independently** re-read each post from GitHub, check every claim against machine and source, flag anything unverified, mis-stated, or contradict. Fix or delete flagged item. Never self-certify.
 
-## Orchestration
-
-Drafting session orchestrate: closure triage, duplicate search, and body draft belong to one worker that can run `gh`; **independent re-audit** go to separate subagent handed only post list (issue numbers + comment ids) and instruct to re-check every claim from GitHub — never back to session that write posts. One context must not both author and certify same issue.
-
 ## gh CLI only — no GitHub plugin/MCP needed
 
 Use `gh` via Bash for all this. No reach for GitHub plugin/MCP server unless user have one enable and ask specific.
 
-**Why plain `gh` enough here:** issue search, issue create, issue comment, PR/issue read — all single `gh` subcommand, plain-text or `--json` output. No multi-step orchestrate, no auth flow beyond `gh auth status`, wrapper add nothing on top.
-
-**When GitHub plugin/MCP actually help instead:**
-
-- Structured JSON schema validate at tool layer (fewer malformed
-  `--json`/`--jq` mistake) when chain many GitHub call in one task
-- Cross-cut workflow touch GitHub _and_ other system in one
-  tool-call graph (e.g., agent framework wire issue create into a
-  bigger pipeline)
-- Sandbox/restrict env where shell out to `gh` block
-  by policy but MCP tool call allowlist
-
-None apply here for file one well-evidence issue — that a `gh` one-liner, plugin add dependency and permission surface for zero behavior gain here.
+**Why plain `gh` enough here:** issue search, issue create, issue comment, PR/issue read — all single `gh` subcommand, plain-text or `--json` output. No multi-step orchestrate, no auth flow beyond `gh auth status`, wrapper add nothing on top. A GitHub plugin/MCP server adds dependency and permission surface for zero behavior gain on this task shape.

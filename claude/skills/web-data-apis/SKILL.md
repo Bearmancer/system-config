@@ -7,6 +7,8 @@ description: "Capability audit + house rules for the web-data MCP fleet wired in
 
 MCP servers only — no vendor ships an OpenCode skill, plugin, or agent for these. Tools auto-expose to every agent; nothing else to install.
 
+**Model under Claude Code:** run this skill's work (capability lookup, server selection, query dispatch) on Haiku 4.5 exclusively — it's a lookup-table decision, not a reasoning task, and doesn't need a bigger model. Under OpenCode, model routing is handled by `omo` config instead — don't override it here.
+
 ## Capability audit — pick by capability, not by habit
 
 | Server               | Capability tags                                                                                     | Use when                                                                                                             |
@@ -44,7 +46,7 @@ MCP servers only — no vendor ships an OpenCode skill, plugin, or agent for the
 - ScrapeGraphAI `credits` doubles as the connection/auth smoke test for that server.
 - Context7 (library/API doc lookup) is out of scope for course fact-checking — it serves coding tasks only.
 
-## Fleet (wiring/ops — keyed subset only; the capability table above covers all 15)
+## Fleet (wiring/ops — keyed subset only; the capability table above covers all 14)
 
 | Server        | Config entry  | Key env var (in OpenCode)                          | Pool service name | Tools                                                                    |
 | ------------- | ------------- | -------------------------------------------------- | ----------------- | ------------------------------------------------------------------------ |
@@ -59,14 +61,14 @@ Dappier and ScrapeGraphAI run via `uvx` (Python); AgentQL via `cmd /c npx -y` (N
 
 ## Music search
 
-Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? Source priority + banned streaming services: `references/music-search.md`. Never cite Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz as a source — see that file for why and for the MusicBrainz → Discogs → Presto Classical → label-website order.
+Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? One query, one source is not an answer — `references/music-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session (reissues/represses aren't new recordings), and duration verification. Never cite Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz as a source.
 
 ## Companion tool skills
 
 The house rules above route to dedicated skills for some servers. Split across two roots — check both, neither is stale:
 
 - `~/.agents/skills/`: `bright-data-mcp`, `scrape`, `browser`, `apify-ultimate-scraper`, `context7`, `just-scrape`
-- `~/.config/opencode/skills/`: `web-search`, `answers`, `news-search`, `images-search`, `videos-search`, `suggest`, `spellcheck`, `local-place-search`, `local-pois`, `local-descriptions`, `bx`, `bx-search`, `llm-context` (Brave-backed skills)
+- `~/.config/opencode/skills/`: `web-search`, `answers`, `news-search`, `images-search`, `videos-search`, `suggest`, `spellcheck`, `local-place-search`, `local-pois`, `local-descriptions`, `bx`, `bx-search`, `llm-context` (Brave-backed skills — OpenCode only; under Claude Code, equivalent capability comes from MCP servers configured in the session)
 
 ## Keys + credit failover
 

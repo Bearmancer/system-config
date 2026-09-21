@@ -2,10 +2,6 @@
 
 One visual language for every page this skill produces: lesson pages, `reference/*.html`, and the publish-generated hub/index pages. `stencil-contract.md` freezes the mechanical owner table (rule → template/gate); this doc is the rationale + rendered example behind it, and the place typography/color/casing decisions live once instead of scattered across `lesson.css`, the stencil, and `SKILL.md`.
 
-## Why one doc
-
-Before this file existed, the same decisions were stated three times — in `lesson.css` comments, in `stencil-contract.md`'s owner table, and in `SKILL.md`'s prose — and drifted out of sync with each other (surtitle timestamps and footer contents were each described two different ways in two files at once). One home per decision; the other docs link here instead of restating.
-
 ## Page structure (top to bottom)
 
 Fixed by `assets/lesson.stencil.html`; identical on every lesson page.
