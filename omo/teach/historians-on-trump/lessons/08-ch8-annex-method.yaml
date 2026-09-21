@@ -1,0 +1,46 @@
+kicker: "Historians on Trump"
+title: "Annex and Method: What Stays Out, How the Instruments Differ"
+chapter: 8
+chapters_total: 8
+time_range: "Sec 8 of 8 · 2021–2026"
+transcript: "sec8-annex-method.md"
+lead: "Three asked-about actions stay out of the fact record while the ranking instruments get compared side by side; use this lesson as skimmable reference."
+cast:
+  - name: "A1 Fed firing"
+    role: "Unresolved; NYT-asked framing only, no fact claim"
+  - name: "A2 Drug-boats action"
+    role: "Unresolved; NYT-asked framing only, no fact claim"
+  - name: "A3 J6 pardons"
+    role: "Unresolved; NYT-asked framing only, no fact claim"
+  - name: "Beschloss long transcript"
+    role: "Never located; shorts substitute"
+  - name: "Goodwin Morning Joe"
+    role: "Appearance proved; transcript absent"
+  - name: "C-SPAN 2025"
+    role: "Postponed; no data"
+  - name: "Meacham book scope"
+    role: "544pp proved; TOC absent"
+  - name: "C-SPAN 2021 instrument"
+    role: "Method anchor; 142 raters on a ten-trait scale"
+    ref: 3
+  - name: "PGP and Siena instruments"
+    role: "Method anchors; last at 10.92 and third-worst split"
+    ref: 4
+narrative: |
+  <p>The report holds three asked-about actions inside a framing-only rule <!-- unmapped tags [C4][O1]: no corresponding source in this lesson's YAML — flagged for review, not guessed -->, and that barred status is <strong>confirmed</strong> against the annex verdict beside the quoted rule.</p>
+  <blockquote>"cite NYT-asked framing only … with no fact claim"</blockquote>
+  <p>The Siena overall-last memory is <strong>corrected</strong> to third-worst with category-last standing <!-- unmapped tags [C7][O22]: no Siena source listed in this lesson's YAML -->, while the Rice Heritage hit stays excluded as support, per the <a href="https://transcripts.cnn.com/">CNN transcripts archive</a>.</p>
+  <p>C-SPAN 2025 stays postponed with no data <!-- unmapped tag [O28] -->, the Beschloss long transcript <!-- unmapped tag [O8] --> and the Goodwin Morning Joe transcript <!-- unmapped tag [O31] --> stay <strong>unfindable</strong>, and the Naftali day-one primary travels with its PBS corroboration <!-- STRAY CONTENT FLAG: tags [C9][O13] and the Naftali/PBS reference below appear to belong to a different lesson's topic (historians-on-trump ch7), not this lesson's annex/method subject — flagged for human review, not silently removed -->, all of it <strong>unverified</strong> as fact beyond the stated framing.</p>
+machinery: |
+  <p>Method comparison lines up the instruments: <a href="https://www.c-span.org/presidentsurvey2021/">C-SPAN survey hub</a> with 142 raters on a ten-trait scale, the 2024 greatness project with 154 usable replies from 525 invited per the <a href="https://www.cambridge.org/core/journals/ps-political-science-and-politics">PS journal page</a>, and Siena 2022 with its split verdict <!-- unmapped tags [C7][O22]: no Siena source listed -->; the 228-versus-58 count stays a qualified RollCall tally <!-- STRAY CONTENT FLAG: tags [C10][O21] and this RollCall line appear to belong to a different lesson's topic (historians-on-trump ch7), not this lesson's annex/method subject — flagged for human review, not silently removed -->.</p>
+  <p>Annex discipline keeps barred items visible but inert: named, framed as asked, per the same <sup><a href="https://transcripts.cnn.com/">1</a></sup> archive, and never carried into any verdict sentence.</p>
+sources:
+  - label: "C-SPAN survey hub"
+    url: "https://www.c-span.org/presidentsurvey2021/"
+    note: "instrument reference; 142 raters per record verdict [C5]"
+  - label: "PS journal page"
+    url: "https://www.cambridge.org/core/journals/ps-political-science-and-politics"
+    note: "PGP peer-review layer per record verdict [C6]"
+  - label: "CNN transcripts archive"
+    url: "https://transcripts.cnn.com/"
+    note: "context archive; context only, never primary [O18]"

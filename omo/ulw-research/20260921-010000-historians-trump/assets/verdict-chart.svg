@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420" role="img" aria-labelledby="vt vtd">
+<title id="vt">Rankings verdict chart: Trump bottom tier across three series</title>
+<desc id="vtd">Bar comparison of C-SPAN 2021 score 312, PGP 2024 score 10.92, Siena 2022 category-last. Legend below explains color and status codes.</desc>
+<rect width="760" height="420" fill="#faf8f2"/>
+<text x="24" y="36" font-family="Georgia,serif" font-size="20" fill="#1c1a16">Rankings verdict: bottom tier converges</text>
+<text x="24" y="58" font-family="system-ui,sans-serif" font-size="12" fill="#6b6459">C-SPAN 2021 41st/44 score 312 [C5] — PGP 2024 last 10.92 [C6] — Siena 2022 category-last, overall third-worst [C7]</text>
+<g font-family="system-ui,sans-serif" font-size="12">
+<text x="24" y="110" fill="#1c1a16">C-SPAN Trump 312</text>
+<rect x="200" y="92" width="312" height="22" fill="#8c2f1b"/>
+<text x="518" y="109" fill="#6b6459">41st of 44, n=142</text>
+<text x="24" y="150" fill="#1c1a16">PGP Trump 10.92</text>
+<rect x="200" y="132" width="109" height="22" fill="#1d4e5f"/>
+<text x="315" y="149" fill="#6b6459">last, n=154/525; Biden 62.66; Lincoln 95.03</text>
+<text x="24" y="190" fill="#1c1a16">PGP Lincoln 95.03</text>
+<rect x="200" y="172" width="480" height="22" fill="#3d392f"/>
+<text x="24" y="230" fill="#1c1a16">Siena integrity</text>
+<rect x="200" y="212" width="60" height="22" fill="#b98a2f"/>
+<text x="266" y="229" fill="#6b6459">category-last; overall third-worst, n=141</text>
+<text x="24" y="270" fill="#1c1a16">2018 anchor</text>
+<rect x="200" y="252" width="245" height="22" fill="#9aa5a8"/>
+<text x="451" y="269" fill="#6b6459">Trump displaces Buchanan as last; Buchanan 245 (2017)</text>
+</g>
+<g font-family="system-ui,sans-serif" font-size="11">
+<rect x="24" y="300" width="716" height="96" fill="#ffffff" stroke="#e2dccf"/>
+<text x="36" y="320" font-weight="bold" fill="#1c1a16">Legend (complete)</text>
+<rect x="36" y="330" width="14" height="10" fill="#8c2f1b"/><text x="54" y="339" fill="#3d392f">rust = C-SPAN score, supported [C5]</text>
+<rect x="280" y="330" width="14" height="10" fill="#1d4e5f"/><text x="298" y="339" fill="#3d392f">teal = PGP score, supported [C6]</text>
+<rect x="520" y="330" width="14" height="10" fill="#3d392f"/><text x="538" y="339" fill="#3d392f">ink = PGP top anchor (Lincoln)</text>
+<rect x="36" y="350" width="14" height="10" fill="#b98a2f"/><text x="54" y="359" fill="#3d392f">ochre = Siena category-last, partial-split [C7]</text>
+<rect x="280" y="350" width="14" height="10" fill="#9aa5a8"/><text x="298" y="359" fill="#3d392f">grey = 2018 anchor, supported [C10b]</text>
+<text x="36" y="380" fill="#6b6459">Bar length = score within its own series only; do not compare lengths across series. n = usable respondents.</text>
+</g>
+</svg>

@@ -1,0 +1,53 @@
+kicker: "Control: Story Explained"
+title: "Bureau history"
+chapter: 4
+chapters_total: 13
+time_range: "21:24–25:02"
+transcript: "the-history-of-the-bureau-21m24s-25m02s.md"
+lead: "Before Jesse, the Bureau spent decades binding strange objects, losing Directors to power, and writing rules it could not always follow."
+cast:
+  - name: "Theodore Ash"
+    role: "First Director; set the Bureau's early shape"
+  - name: "Broderick Northmoor"
+    role: "Later Director; grew too powerful and was contained"
+  - name: "Zachariah Trench"
+    role: "Followed Northmoor; fell to the Hiss first"
+    ref: 2
+  - name: "Jesse Faden"
+    role: "Heir to every unresolved Directorship"
+    ref: 2
+  - name: "The Board"
+    role: "Chose each Director and outlasted all of them"
+    ref: 5
+  - name: "Casper Darling"
+    role: "Inherited the research apparatus the Directors built"
+    ref: 11
+  - name: "Ahti"
+    role: "Predates every org chart shown"
+    ref: 12
+essentials:
+  - "The Bureau formed around the Oldest House after its mid-century discovery."
+  - "Northmoor's accumulated power forced his containment; Trench followed him into the chair."
+  - "The Prime Candidate Program hunted successors long before Jesse arrived."
+skippables:
+  - "Full director chronology with dates."
+  - "Collectible file numbers behind each claim."
+narrative: |
+  <p>The Bureau's own files date the Oldest House discovery to the nineteen-sixties, and the agency grew up around the building rather than the other way round. That founding order is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Federal_Bureau_of_Control">the Bureau page</a>, while exact dates stay <strong>unverified</strong> in this pass.</p>
+  <p>Northmoor is the cautionary tale the Bureau keeps locked up: a Director whose paranatural strength outgrew the chair until containment became the only option. The containment itself is <strong>confirmed</strong> in the canon summaries, and Dylan's later comparison to Northmoor shows the Bureau still measures candidates against him.</p>
+  <p>Trench's end replays the pattern from inside:</p>
+  <blockquote>"You are a worm through time."</blockquote>
+  <p>The chant is <strong>confirmed</strong> as the Hiss voice Trench carries onto the Hotline tapes, which is why his gunshot opens the game but does not end his influence. The Bureau history chapter of <a href="https://en.wikipedia.org/wiki/Control_(video_game)">the overview record</a> follows the same chain from discovery through Jesse's appointment.</p>
+machinery: |
+  <p>Director succession is the Bureau's core machine. The Board appoints, the Service Weapon binds, and the Prime Candidate Program keeps spares.</p>
+  <p>Every spare the program raised is someone Jesse later has to answer for, which is why the program gets a chapter of its own.</p>
+sources:
+  - label: "Control Wiki Bureau page"
+    url: "https://control.fandom.com/wiki/Federal_Bureau_of_Control"
+    note: "accessed 2026-09-21"
+  - label: "Wikipedia Control overview"
+    url: "https://en.wikipedia.org/wiki/Control_(video_game)"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Northmoor page"
+    url: "https://control.fandom.com/wiki/Broderick_Northmoor"
+    note: "accessed 2026-09-21"

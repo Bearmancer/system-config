@@ -1,0 +1,52 @@
+kicker: "Control: Story Explained"
+title: "Ordinary AWE"
+chapter: 6
+chapters_total: 13
+time_range: "26:39–29:13"
+transcript: "ordinary-awe-26m39s-29m13s.md"
+lead: "Years before the Bureau knew her name, Jesse and Dylan found a projector in a dump and opened doors that swallowed their town."
+cast:
+  - name: "Jesse Faden"
+    role: "Burned the slides and fled; the Bureau watched her after"
+    ref: 2
+  - name: "Dylan Faden"
+    role: "Taken with the projector; raised as P6"
+    ref: 10
+  - name: "Polaris"
+    role: "Reached through and bonded with Jesse"
+    ref: 8
+  - name: "Zachariah Trench"
+    role: "Ordered the Ordinary response and kept a slide"
+    ref: 4
+  - name: "Casper Darling"
+    role: "Studied the recovered projector for years"
+    ref: 11
+  - name: "Emily Pope"
+    role: "Later reconstructs the case from files"
+    ref: 7
+essentials:
+  - "The dump projector and its slides opened Slidescape-36 over Ordinary."
+  - "The Bureau took Dylan and the projector while Jesse escaped."
+  - "Burned-slide tallies differ between accounts, so both are given unsettled."
+skippables:
+  - "Ordinary citizen names beyond the siblings."
+  - "Dump-site trivia and slide-number lore."
+narrative: |
+  <p>Children find a projector in a landfill, slides go in, and an Altered World Event erases the adults. The case name itself is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Ordinary_AWE">the Ordinary AWE page</a>, and the Bureau's arrival, seizing Dylan and the projector while Jesse runs, is <strong>confirmed</strong> in the plot record.</p>
+  <p>Jesse's counter-move is the fire:</p>
+  <blockquote>"She burned the slides."</blockquote>
+  <p>That she destroyed slides is <strong>confirmed</strong>. How many existed, how many burned, and how many survived is where the accounts split: the video's tally and <a href="https://control.fandom.com/wiki/Slide_Projector">the projector page's</a> tally do not match, so this lesson repeats the split and leaves it <strong>unverified</strong> rather than crowning a winner.</p>
+  <p>One point survives the dispute intact and is <strong>confirmed</strong>: at least one burned slide reached Trench's hands, and that slide became the Hiss road in.</p>
+machinery: |
+  <p>Slides are addresses. Each one points the projector at a dimension, and Slidescape-36 is the address everything later depends on.</p>
+  <p>Burning a slide closes its address, which is why the surviving burned slide matters more than the destroyed ones.</p>
+sources:
+  - label: "Control Wiki Ordinary AWE page"
+    url: "https://control.fandom.com/wiki/Ordinary_AWE"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Slide Projector page"
+    url: "https://control.fandom.com/wiki/Slide_Projector"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki AWE page"
+    url: "https://control.fandom.com/wiki/Altered_World_Event"
+    note: "accessed 2026-09-21"

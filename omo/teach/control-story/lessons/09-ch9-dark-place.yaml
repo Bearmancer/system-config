@@ -1,0 +1,54 @@
+kicker: "Control: Story Explained"
+title: "The Dark Place"
+chapter: 9
+chapters_total: 13
+time_range: "33:06–38:22"
+transcript: "the-dark-place-33m06s-38m22s.md"
+lead: "The sealed Investigations Sector keeps the Bureau's Bright Falls files, where a missing writer's darkness merged with the Hiss into something worse."
+cast:
+  - name: "Jesse Faden"
+    role: "Reopens the sealed sector on Wake's call"
+    ref: 2
+  - name: "Alan Wake"
+    role: "Missing writer signaling from the Dark Place"
+  - name: "Emil Hartman"
+    role: "Psychiatrist turned monster; the Third Thing's core"
+  - name: "The Dark Presence"
+    role: "Cauldron Lake darkness wearing Hartman"
+  - name: "Thomas Zane"
+    role: "Diver-poet tied to Wake's escape attempts"
+  - name: "Emily Pope"
+    role: "Reads the Bright Falls files with Jesse"
+    ref: 7
+  - name: "The Board"
+    role: "Watches a crossover it did not arrange"
+    ref: 5
+  - name: "Casper Darling"
+    role: "His sealed archives hold the AWE cases"
+    ref: 11
+essentials:
+  - "The AWE expansion opens the sealed Investigations Sector."
+  - "Hartman plus Darkness plus Hiss makes the Third Thing."
+  - "Wake's messages point Jesse at the Dark Place and a future date."
+skippables:
+  - "Surge weapon-form statistics."
+  - "Arcade-cabinet boss replays."
+narrative: |
+  <p>The sector was sealed after its AWE work went wrong, and Jesse pries it open following visions of Wake. That setup is <strong>confirmed</strong> in <a href="https://www.gamespot.com/reviews/control-awe-dlc-review-haunted-oldest-house/1900-6417549">the AWE review</a>, which names Hartman, consumed by darkness and worsened by Hiss interference, as the horror at its center.</p>
+  <p>Wake's own warning about his double survives in the coverage:</p>
+  <blockquote>"He's out there."</blockquote>
+  <p>The line is <strong>confirmed</strong> in <a href="https://www.gamespot.com/articles/what-controls-awe-dlc-tells-us-about-alan-wakes-story/1100-6481849">the AWE story piece</a>, which also confirms the sting: Langston flags the event date as years in the future, grooming Jesse for a Bright Falls trip that has not happened yet.</p>
+  <p>The crossover status is <strong>confirmed</strong> at the top: the AWE expansion is the first formal event of the shared universe, per the studio's own statement. Whether Wake authored any of Jesse's story stays <strong>unverified</strong>, and the coverage treats it as tease rather than fact.</p>
+machinery: |
+  <p>Light is the combat verb here. Hartman cannot be hurt in darkness, so lamps and flares become weapons and the sector reads as horror rather than shooter.</p>
+  <p>The Investigations Sector itself is an archive machine: every AWE case Jesse replays is a file the Bureau closed too early.</p>
+sources:
+  - label: "GameSpot AWE DLC review"
+    url: "https://www.gamespot.com/reviews/control-awe-dlc-review-haunted-oldest-house/1900-6417549"
+    note: "accessed 2026-09-21"
+  - label: "GameSpot AWE Alan Wake story piece"
+    url: "https://www.gamespot.com/articles/what-controls-awe-dlc-tells-us-about-alan-wakes-story/1100-6481849"
+    note: "accessed 2026-09-21"
+  - label: "Epic RCU connected-universe piece"
+    url: "https://store.epicgames.com/news/connecting-the-dots-of-alan-wake-and-control-s-connected-universe?lang=en-US"
+    note: "accessed 2026-09-21"

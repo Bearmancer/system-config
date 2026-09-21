@@ -1,0 +1,25 @@
+kicker: "Test Course"
+title: "1996"
+chapter: 13
+chapters_total: 18
+time_range: "1:55:38–2:08:19"
+transcript: "1996-1h55m38s-2h08m19s.md"
+lead: "The hinge year: Yeltsin climbs back from single digits while Sobchak loses Petersburg."
+cast:
+  - name: "Boris Yeltsin"
+    role: "President; reelected via spin, loans and a ceasefire"
+    ref: 8
+essentials:
+  - "The runoff, not the first round, decided the presidency."
+skippables:
+  - "Poll-by-poll colour."
+narrative: |
+  <p>The June runoff result is <strong>confirmed</strong> against the official record beside the quoted wording.</p>
+  <blockquote>"We won."</blockquote>
+  <p>The turnout figure stays <strong>unverified</strong> outside the source's account.</p>
+machinery: |
+  <p>Loans-for-shares converts political access into ownership.</p>
+sources:
+  - label: "RFE/RL report"
+    url: "https://www.rferl.org/example"
+    note: "accessed 2026-09-21"
