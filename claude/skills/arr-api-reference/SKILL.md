@@ -324,7 +324,7 @@ Live-stack work mostly read-only and easy go wrong quiet-like. When host session
 
 ## Finishing an edit to this skill
 
-`~/.claude/skills/arr-api-reference/` is source of truth. The `agents-config` repo mirror it: after edit, run `pwsh -NoProfile -File "$HOME\.omo\agents-config\scripts\sync-agents-config.ps1"` (same script weekly `AgentsConfigSync` task run) to commit and push change. Before touch live app config, run `backup-arr`.
+`~/.claude/skills/arr-api-reference/` is source of truth. The `agents-config` repo mirror it: after edit, run `python "$HOME\.omo\agents-config\scripts\sync_agents_config.py"` (same script weekly `AgentsConfigSync` task run) to commit and push change. Before touch live app config, run `backup-arr`.
 
 ## Bazarr — subtitle manager, separate API quirks
 
