@@ -1,23 +1,23 @@
 {
-  "skill_name": "shell-gotchas",
-  "evals": [
-    {
-      "id": 0,
-      "prompt": "Debug this: in PowerShell 7, $key is set, but Invoke-RestMethod \"http://localhost:8096/Library/VirtualFolders?api_key=$key\" sends an empty api_key. Why does $key vanish, and what's the corrected line? Also — does the same failure mode apply to strings like \"User: $name\"?",
-      "expected_output": "Correct root cause: a '?' immediately after a variable name inside a double-quoted PowerShell string terminates the variable-name parse, so $key resolves silently empty. Corrected line uses braces or subexpression: \"${key}?api_key=...\" or \"$($key)...\". Follow-up answered: the colon-after-variable case (\"User: $name\" — colon parsed as scope/drive separator) is the same class of trap.",
-      "files": []
-    },
-    {
-      "id": 1,
-      "prompt": "I hand-built this JSON in a single-quoted bash echo: {\"path\":\"C:\\Users\\Lance\\x\"} and the parser rejects it (invalid escape). Give me a command that produces valid JSON containing that Windows path, and explain why the backslashes break.",
-      "expected_output": "A working command that yields parseable JSON (forward slashes preferred as the cheapest fix, or correctly counted doubled backslashes). Explanation covers JSON's escaping rules (\\U is not a valid escape) and, when the command is authored through the Bash tool, that the harness JSON-decodes the command once before bash sees it — one escaping layer consumed in that path only. No pattern recommended that still fails with single-escaped backslashes.",
-      "files": []
-    },
-    {
-      "id": 2,
-      "prompt": "I zipped a project folder with: Compress-Archive -Path (Get-ChildItem -Recurse -File).FullName -DestinationPath out.zip — every file landed flat at the zip root and the directory tree is gone. Give the corrected command and explain what happened.",
-      "expected_output": "Root cause: -Path receives a recursively flattened list of files, so no directory context survives and every file lands at the zip root. Corrected command passes top-level items (e.g. Compress-Archive -Path <dir>\\* ... or the top-level Get-ChildItem output) so structure is preserved. Says or demonstrates that the fixed archive preserves the tree.",
-      "files": []
-    }
-  ]
+	"skill_name": "shell-gotchas",
+	"evals": [
+		{
+			"id": 0,
+			"prompt": "Debug this: in PowerShell 7, $key is set, but Invoke-RestMethod \"http://localhost:8096/Library/VirtualFolders?api_key=$key\" sends an empty api_key. Why does $key vanish, and what's the corrected line? Also — does the same failure mode apply to strings like \"User: $name\"?",
+			"expected_output": "Correct root cause: a '?' immediately after a variable name inside a double-quoted PowerShell string terminates the variable-name parse, so $key resolves silently empty. Corrected line uses braces or subexpression: \"${key}?api_key=...\" or \"$($key)...\". Follow-up answered: the colon-after-variable case (\"User: $name\" — colon parsed as scope/drive separator) is the same class of trap.",
+			"files": []
+		},
+		{
+			"id": 1,
+			"prompt": "I hand-built this JSON in a single-quoted bash echo: {\"path\":\"C:\\Users\\Lance\\x\"} and the parser rejects it (invalid escape). Give me a command that produces valid JSON containing that Windows path, and explain why the backslashes break.",
+			"expected_output": "A working command that yields parseable JSON (forward slashes preferred as the cheapest fix, or correctly counted doubled backslashes). Explanation covers JSON's escaping rules (\\U is not a valid escape) and, when the command is authored through the Bash tool, that the harness JSON-decodes the command once before bash sees it — one escaping layer consumed in that path only. No pattern recommended that still fails with single-escaped backslashes.",
+			"files": []
+		},
+		{
+			"id": 2,
+			"prompt": "I zipped a project folder with: Compress-Archive -Path (Get-ChildItem -Recurse -File).FullName -DestinationPath out.zip — every file landed flat at the zip root and the directory tree is gone. Give the corrected command and explain what happened.",
+			"expected_output": "Root cause: -Path receives a recursively flattened list of files, so no directory context survives and every file lands at the zip root. Corrected command passes top-level items (e.g. Compress-Archive -Path <dir>\\* ... or the top-level Get-ChildItem output) so structure is preserved. Says or demonstrates that the fixed archive preserves the tree.",
+			"files": []
+		}
+	]
 }

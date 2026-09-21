@@ -1,61 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{PAGE_TITLE}}</title>
-<link rel="stylesheet" href="../assets/lesson.css">
-</head>
-<body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{PAGE_TITLE}}</title>
+		<link rel="stylesheet" href="../assets/lesson.css">
+	</head>
+	<body>
+		<p class="kicker">{{KICKER}}</p>
+		<h1>{{TITLE}}</h1>
+		<p class="surtitle">
+			Chapter {{CHAPTER_N}} of {{CHAPTER_M}} · {{TIME_RANGE}}
+		</p>
+		<p class="meta">{{META_LINE}}</p>
 
-<p class="kicker">{{KICKER}}</p>
-<h1>{{TITLE}}</h1>
-<p class="surtitle">Chapter {{CHAPTER_N}} of {{CHAPTER_M}} · {{TIME_RANGE}}</p>
-<p class="meta">{{META_LINE}}</p>
+		<h2>1. What the chapter does</h2>
+		{{LEAD}}
 
-<h2>1. What the chapter does</h2>
-{{LEAD}}
+		<h2>2. Cast</h2>
+		{{SUBGRAPH}}
+		<table class="cast">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Role this chapter</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{CAST_ROWS}}
+			</tbody>
+		</table>
 
-<h2>2. Cast</h2>
-{{SUBGRAPH}}
-<table class="cast">
-<thead><tr><th>Name</th><th>Role this chapter</th></tr></thead>
-<tbody>
-{{CAST_ROWS}}
-</tbody>
-</table>
+		<h2>3. What matters — and what you can skip</h2>
+		<p><strong>Keep these essentials:</strong></p>
+		<ul class="tight">
+			{{ESSENTIALS}}
+		</ul>
+		<p><strong>Can be skimmed:</strong></p>
+		<ul class="tight">
+			{{SKIPPABLES}}
+		</ul>
 
-<h2>3. What matters — and what you can skip</h2>
-<p><strong>Keep these essentials:</strong></p>
-<ul class="tight">
-{{ESSENTIALS}}
-</ul>
-<p><strong>Can be skimmed:</strong></p>
-<ul class="tight">
-{{SKIPPABLES}}
-</ul>
+		<h2>4. The narrative</h2>
+		{{NARRATIVE}}
 
-<h2>4. The narrative</h2>
-{{NARRATIVE}}
+		<h2>5. The machinery</h2>
+		{{MACHINERY}}
 
-<h2>5. The machinery</h2>
-{{MACHINERY}}
+		<h2>6. Sources</h2>
+		<ul class="sources">
+			{{SOURCES}}
+		</ul>
 
-<h2>6. Sources</h2>
-<ul class="sources">
-{{SOURCES}}
-</ul>
-
-<footer class="lesson-footer">
-  <nav>
-    <a href="../../index.html">Teach home</a>
-{{PREV_LINK}}
-{{NEXT_LINK}}
-    <a href="../index.html#{{ROW_ID}}">Chapter index</a>
-    <a href="../reference/glossary.html">Glossary</a>
-  </nav>
-  <p>{{FOOTER_LINE}}</p>
-</footer>
-
-</body>
+		<footer class="lesson-footer">
+			<nav>
+				<a href="../../index.html">Teach home</a>
+				{{PREV_LINK}} {{NEXT_LINK}}
+				<a href="../index.html#{{ROW_ID}}">Chapter index</a>
+				<a href="../reference/glossary.html">Glossary</a>
+			</nav>
+			<p>{{FOOTER_LINE}}</p>
+		</footer>
+	</body>
 </html>
