@@ -83,5 +83,5 @@ Era bans: all Medieval, all Baroque. No exceptions.
 ## Exclusion edge cases
 
 - User explicitly requests a banned composer: comply for that composer only, keep the rest of the ban list active.
-- User requests Baroque/Medieval: remind them the era ban is active and ask for an explicit override. Never comply silently.
+- User requests Baroque/Medieval: state the era ban is active and decline. No override exists for era bans.
 - Never recommend an arrangement of a banned work as a loophole — banned material stays banned regardless of arranger.

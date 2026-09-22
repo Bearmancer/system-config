@@ -129,7 +129,7 @@ before debugging a shell error from scratch.
   real `dprint fmt`, twice, after every escaping theory checked out in
   isolated bash tests but still broke live.
 
-## Quoting layers, strict parsers, in-process writes
+## Additional edge cases (quoting, parsers, in-process writes)
 
 - Tolerant path for trailing commas that `jaq`/`jq`/`ConvertFrom-Json` all reject: pwsh plus dotnet `[System.Text.Json]` with `AllowTrailingCommas` and `JsonCommentHandling.Skip`, mutate via `JsonNode` — no regex surgery.
 - No `json5`/`commentjson` Python libs, no `gojq`/`yq`/`dasel` on box. Fallback stays `sd`-strip of `,\s*}` / `,\s*]` → `jaq`.

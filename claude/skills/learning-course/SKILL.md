@@ -84,7 +84,10 @@ In-lesson cast block (info-only roster of this chapter) + subgraph (this chapter
 - **Course level**: NOTES.md + check-ins track progress across chapters.
 - **Chapter level**: every lesson is core content only — no essentials/skippable split, no "what can be skimmed" paragraph, no partial-read framing of any kind.
 - **Process level**: chat states which standard steps applied this pass and the headline result.
-- **Gates scale with artifact.** `check_lesson.py` on each lesson written or changed; `check_map_geometry.py` on each SVG visual changed; screenshot pass on each visual changed. Gates run on changed files.
+
+## Verification gates
+
+Gates scale with artifact: `check_lesson.py` on each lesson written or changed; `check_map_geometry.py` on each SVG visual changed; screenshot pass on each visual changed. Gates run on changed files.
 
 ## Rules
 

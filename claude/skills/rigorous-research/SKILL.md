@@ -17,7 +17,7 @@ Tiered, multi-source claim verification. Invoke via the `rigorous-research` skil
 - **Tier 1 (grounded):** search-then-extract on selected URLs, `maxAge` 0 / refresh only stale, full markdown, query-reranked.
 - **Tier 2 (contested):** 2+ independent domains + a primary source + counter-search + `observed_at`/`valid_at`; code-verify behavior claims; unresolved/refuted claims go to an annex, never into the synthesis.
 
-## Pass protocol — the ungated default
+## Pass protocol
 
 1-2 parallel research passes via research subagents. Each pass receives: the claim list, the source ordering defined below (see "Source selection and handling"), and the required output format.
 
@@ -25,7 +25,7 @@ Output shape per claim: `claim → verdict (confirmed / partially correct / wron
 
 **Looping on request.** When the caller asks for another pass on claims already run through this skill, the response opens with the exhausted-resources list for those claims: every domain, source, and tool already queried, per claim, before any new pass starts. The new pass targets sources outside that list; querying an already-exhausted source again is not a new pass. The exhausted-resources list stays in the output alongside the claim → verdict → URL → quote table, not folded into it.
 
-## Scaling beyond 2 passes
+### Scaling beyond 2 passes
 
 Default to **2 parallel passes** — the existing upper bound. A claim list large enough to need more than that (3+ distinct source territories, e.g. court records / contemporaneous press / scholarship, or unresolved claims by pass 3 of the 5-pass budget) is an orchestration decision for the calling session, not this skill: hand it the claim list, the source ordering below, and the output format, split by axis, one worker per axis. This skill states what to research and how to verify it; how many workers carry that out is the caller's call.
 

@@ -15,9 +15,9 @@ Never recommend a banned composer unless the user explicitly names it to unban i
 
 If the user names a banned work as a style reference ("I like Rach 2, what next?"), use it as an anchor only, never as a pick. State the anchor once — "Anchor: [banned work] -> deep-cut works below" — then drop it.
 
-## Ban list
+## Ban list — see `references/exclusions.md`
 
-Full composer list, origins, reasons, era bans, and exclusion-specific edge cases (explicit-unban compliance, era-override handling, arrangement-loophole rule): `references/exclusions.md`. Read it before any recommendation pass — skip every composer it lists unless the user names that composer explicitly.
+Full composer list, origins, reasons, era bans, and exclusion-specific edge cases (explicit-unban compliance, arrangement-loophole rule) live there, not here. Read it before any recommendation pass — skip every composer it lists unless the user names that composer explicitly.
 
 ## Priority order
 
@@ -31,7 +31,7 @@ Why: the user wants orchestral discovery. Chamber and vocal picks flood the answ
 
 Two modes, same ban list and priority order in both:
 
-- Keyword `ulw-research` present: run a full research pass. Follow the source order below. Verify composer dates, era, output types. Return an evidence-backed shortlist.
+- Keyword `ulw-research` present: run a full research pass. Follow the source order below — self-contained, classical-domain-specific, doesn't invoke the `rigorous-research` skill. Verify composer dates, era, output types. Return an evidence-backed shortlist.
 - Keyword absent: answer from knowledge directly. No web calls required unless a composer detail is uncertain.
 
 The keyword controls depth, not taste — it never lifts a ban.
@@ -51,7 +51,7 @@ If sources conflict on dates, prefer the catalog entry. State the conflict in on
 
 Rules for every duration stated:
 
-1. Cite the publisher-stated duration (if any) plus two independent label track totals (Naxos / CPO / Chandos / Hyperion / BIS / Discogs / Presto — see `references/discography-search.md` for source handling). Give the movement breakdown with the sum. Example: Glass 5 CPO 35:20 = 10:28 + 6:42 + 5:50 + 12:20.
+1. Cite the publisher-stated duration (if any) plus two independent label track totals (Naxos / CPO / Chandos / Hyperion / BIS / Discogs / Presto). Give the movement breakdown with the sum. Example: Glass 5 CPO 35:20 = 10:28 + 6:42 + 5:50 + 12:20.
 2. Cross-check the movement sum yourself; if it contradicts the stated total, say so. Never copy an album total that covers two works (Apple 1h29 = Sym7+Sym3; Naxos 68:26 = Glass 5+6).
 3. Flag complete-vs-cut for any work with known cuts. Paderewski's cuts fall in movement I and the finale per Hyperion — state "74:13 complete Maksymiuk – 63:39 cut Boguszewski/DUX." Never collapse to one number.
 4. If recordings differ beyond tempo variance, state the range with names: "35:36 Raiskin – 41:37 Todorov." Never collapse to a memory number.
@@ -98,4 +98,5 @@ Output: chamber explicitly requested, so the chamber lane is allowed this turn. 
 
 - User requests vocal/choral: comply, prefer choral, flag the soloist fallback only if forced into it.
 - Request scope is unclear: default to orchestral, post-1750, non-chamber, non-vocal.
+- Pre-1750, non-Baroque/Medieval (e.g. Renaissance): not banned, just outside default scope — an explicit request for it is honored, same as chamber/vocal.
 - Exclusion-specific edge cases (banned-composer override, era-ban override, arrangement loophole): `references/exclusions.md`.
