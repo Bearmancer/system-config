@@ -6,6 +6,8 @@ version: 0.3.0
 
 Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby all through HTTP APIs — no UI click need. All five have full REST/JSON-RPC-style APIs. Skill write down verified request shapes, auth, gotchas found while drive from PowerShell.
 
+**Scope.** Owns wiring/config/query for this five-app media stack (plus Bazarr) via their own APIs or on-disk locations only. General HTTP/API debugging outside this stack, general PowerShell foot-guns, and web research/fact-checking route to `shell-gotchas` and `rigorous-research`/`web-data-apis` respectively — not here.
+
 ## Core pattern: schema-then-submit
 
 Sonarr, Radarr, Prowlarr same mutation pattern for anything pluggable (download clients, applications, indexers, notifications):

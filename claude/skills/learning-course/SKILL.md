@@ -13,6 +13,8 @@ Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable
 
 ## Standing expectations
 
+Content-shape properties every finished lesson page must have, regardless of when it's written or restamped. `## Rules` below covers session-to-session process constraints instead — how the work gets done, not what the page looks like.
+
 1. **Full treatise per chapter.** One chapter per page; later pages lean on earlier ones.
 2. **Slim page tail.** No timestamps anywhere on the page, not even the surtitle. The footer carries only previous/next lesson; home link, chapter index, and glossary live in the top nav below the heading. No method box, no "ask your teacher" box, no primary-source block, no next-steps section, no boundary narration, no questions aimed at the reader — and no quizzes or questionnaires anywhere on the page.
 3. **ADD-friendly prose, enforced not aspired.** Sentences under ~25-30 words. One idea per paragraph, pointer lists over prose walls. Cut any rhetorical aside that carries no new information. Quotes may run long; narrative prose never does. Applies to every lesson written or restamped from this point forward — not retroactive to the 40 already published, whose existing voice stays untouched. No automated check exists for this (sentence-length/rhetorical judgment isn't mechanically gateable without high false-positive risk) — that does not make it optional. Every lesson gets this applied at write time, full stop.
