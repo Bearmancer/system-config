@@ -59,16 +59,16 @@ MCP servers only — no vendor ships an OpenCode skill, plugin, or agent for the
 
 Dappier and ScrapeGraphAI run via `uvx` (Python); AgentQL via `cmd /c npx -y` (Node, Windows shim). First `uvx` launch per package pays a cold-start install: `~4s`.
 
-## Music search
-
-Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? `deep-cut-classical` skill's `references/discography-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session, duration verification, and citation sources — genre-agnostic, reusable by any music task.
-
 ## Companion tool skills
 
 The house rules above route to dedicated skills for some servers. Split across two roots — check both, neither is stale:
 
 - `~/.agents/skills/`: `bright-data-mcp`, `scrape`, `browser`, `apify-ultimate-scraper`, `context7`, `just-scrape`
 - `~/.config/opencode/skills/`: `web-search`, `answers`, `news-search`, `images-search`, `videos-search`, `suggest`, `spellcheck`, `local-place-search`, `local-pois`, `local-descriptions`, `bx`, `bx-search`, `llm-context` (Brave-backed skills — OpenCode only; under Claude Code, equivalent capability comes from MCP servers configured in the session)
+
+## Related skills
+
+Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? `deep-cut-classical` skill's `references/discography-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session, duration verification, and citation sources — genre-agnostic, reusable by any music task.
 
 ## Keys + credit failover (11 keyed services)
 

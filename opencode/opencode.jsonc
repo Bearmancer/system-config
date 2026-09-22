@@ -43,7 +43,7 @@
 				"-NoLogo",
 				"-NoProfile",
 				"-Command",
-				"Import-Module PowerShellEditorServices; Start-EditorServices -HostName opencode -HostProfileId opencode -HostVersion 1.0.0 -BundledModulesPath 'C:/Users/Lance/Documents/PowerShell/Modules' -LogPath 'C:/Users/Lance/.omo/lsp-pses.log' -LogLevel Normal -SessionDetailsPath 'C:/Users/Lance/.omo/lsp-pses-session.json' -Stdio",
+				"Import-Module PowerShellEditorServices; Start-EditorServices -HostName opencode -HostProfileId opencode -HostVersion 1.0.0 -BundledModulesPath 'C:/Users/Lance/Documents/PowerShell/Modules' -LogPath 'C:/Users/Lance/.omo/lsp-pses.log/powershell.log' -LogLevel Normal -SessionDetailsPath 'C:/Users/Lance/.omo/lsp-pses-session.json' -Stdio",
 			],
 			"extensions": [
 				".ps1",
@@ -185,6 +185,9 @@
 		"exa": {
 			"type": "remote",
 			"url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+			"headers": {
+				"Authorization": "Bearer {env:EXA_API_KEY}",
+			},
 			"enabled": true,
 		},
 		"microsoft-learn": {
@@ -266,12 +269,12 @@
 		},
 		"brightdata": {
 			"type": "remote",
-			"url": "https://mcp.brightdata.com/sse?token={env:BRIGHTDATA_API_KEY}",
+			"url": "https://mcp.brightdata.com/mcp?token={env:BRIGHTDATA_API_KEY}",
 			"enabled": true,
 		},
 		"apify": {
 			"type": "remote",
-			"url": "https://mcp.apify.com",
+			"url": "https://mcp.apify.com/",
 			"headers": {
 				"Authorization": "Bearer {env:APIFY_TOKEN}",
 			},
