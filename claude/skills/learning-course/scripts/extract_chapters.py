@@ -162,6 +162,12 @@ def main():
     os.makedirs(dest, exist_ok=True)
     adopt_legacy(vid, dest)
     fetch(a.source, dest, a.force)
+    vtt_path = os.path.join(dest, "subs.en.vtt")
+    if not os.path.exists(vtt_path):
+        print(
+            "This video has NO captions - nothing to derive. Ask the user how to segment."
+        )
+        sys.exit(2)
     info, chapters = load_chapters(dest)
 
     if a.list or a.dry_run:
@@ -181,7 +187,7 @@ def main():
 
     outdir = a.out or os.path.join(dest, "transcripts")
     os.makedirs(outdir, exist_ok=True)
-    cues = sc.collapse(sc.load_cues(os.path.join(dest, "subs.en.vtt")))
+    cues = sc.collapse(sc.load_cues(vtt_path))
 
     for i in idx:
         ch = chapters[i]

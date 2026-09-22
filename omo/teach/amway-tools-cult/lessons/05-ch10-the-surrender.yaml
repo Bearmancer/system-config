@@ -1,0 +1,145 @@
+kicker: "The Tools Cult"
+title: "The Surrender"
+chapter: 10
+chapters_total: 12
+time_range: "1:25:50–1:30:19"
+transcript: "the-surrender-1h25m50s-1h30m19s.md"
+lead: "Five years after the Miami Showdown, Amway's own co-founder takes the witness stand and admits the tools abuses were never fixed. The video's argument: this was not failure but surrender. Enforcing the January 1983 pledges cost the corporation hundreds of millions in volume. The kingpins' tape-fed downlines were too large a share of Amway's income to lose. So the only course left was to back off, issue warnings it never followed through on, and hope the FTC never renewed its assault. If you are lost in this chapter, hold three things: what DeVos admits under oath, what the numbers say the surrender cost and saved, and what the video can only infer about the decision itself."
+cast:
+  - name: "The suing distributors (collective)"
+    role: "Distributors suing former uplines and Amway in the late-1980s wave; no individual plaintiff is named in the chapter"
+  - name: "? Unnamed examining counsel"
+    role: "Questions DeVos about the tools abuses and the Ten Points; the video quotes the Q&A without naming the lawyer or the case"
+  - name: "Bill Britt"
+    role: "Invoked alongside Yager as the tools business's manufacturing half — full entry in Lesson 02 (chapter 4)"
+  - name: "Dexter Yager"
+    role: "Invoked as the archetypal tools kingpin whose downlines feed Amway's income (chapter 4)"
+  - name: "George H. W. Bush"
+    role: "Elected president in 1988 with Wead's and distributors' help — full entry in the course glossary (the Bush family)"
+  - name: "Doug Wead"
+    role: "Yager's protégé, here as Bush's liaison to the Christian right (chapter 4)"
+  - name: "Rich DeVos"
+    role: "Amway co-founder; on the stand in 1988 he admits the abuses persist and the pledges were never enforced (chapter 7)"
+subgraph: |
+  <svg viewBox="0 0 900 560" width="100%" role="img" aria-label="Chapter 10 relationship subgraph" style="font-family:'Segoe UI',system-ui,sans-serif;background:#fdfcf9;">
+    <defs>
+      <marker id="sg-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
+      <marker id="sg-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7a3fa0"/></marker>
+      <marker id="sg-copper" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#8f3d00"/></marker>
+      <marker id="sg-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0e7c7b"/></marker>
+      <marker id="sg-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b3261e"/></marker>
+      <marker id="sg-navy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#17365e"/></marker>
+      <marker id="sg-olive" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#677500"/></marker>
+      <marker id="sg-charcoal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f2b26"/></marker>
+      <marker id="sg-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+    </defs>
+    <rect x="40" y="40" width="190" height="56" rx="8" fill="#f2efe4" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="52" y="61" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">Amway Corporation</text>
+    <text x="52" y="77" font-size="11" fill="#5a544b" text-anchor="start">the suits' company</text>
+    <rect x="40" y="150" width="190" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="52" y="171" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">Rich DeVos</text>
+    <text x="52" y="187" font-size="11" fill="#5a544b" text-anchor="start">co-founder, on the stand</text>
+    <rect x="620" y="40" width="200" height="60" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="632" y="61" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">The tools kingpins</text>
+    <text x="632" y="77" font-size="11" fill="#5a544b" text-anchor="start">Yager, Britt and the rest</text>
+    <rect x="620" y="150" width="200" height="60" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="632" y="171" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">Suing distributors</text>
+    <text x="632" y="187" font-size="11" fill="#5a544b" text-anchor="start">lawsuits pile up, late 1980s</text>
+    <rect x="40" y="360" width="190" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="52" y="381" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">Doug Wead</text>
+    <text x="52" y="397" font-size="11" fill="#5a544b" text-anchor="start">protégé turned Bush aide</text>
+    <rect x="350" y="360" width="180" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="362" y="381" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">George H. W. Bush</text>
+    <text x="362" y="397" font-size="11" fill="#5a544b" text-anchor="start">elected 1988</text>
+    <rect x="620" y="360" width="200" height="56" rx="8" fill="#f2efe4" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="632" y="381" font-size="12.5" font-weight="600" fill="#201d1a" text-anchor="start">FTC</text>
+    <text x="632" y="397" font-size="11" fill="#5a544b" text-anchor="start">sword of Damocles</text>
+    <line x1="130" y1="146" x2="130" y2="100" stroke="#1a7f37" stroke-width="2.2" marker-end="url(#sg-green)"/>
+    <text x="138" y="128" font-size="11" text-anchor="start" fill="#1a7f37">co-founded 1959</text>
+    <line x1="616" y1="70" x2="234" y2="70" stroke="#7a3fa0" stroke-width="2.2" marker-end="url(#sg-purple)"/>
+    <text x="350" y="62" font-size="11" text-anchor="start" fill="#7a3fa0">downline volume feeds Amway</text>
+    <line x1="234" y1="170" x2="616" y2="170" stroke="#8f3d00" stroke-width="2.2" marker-end="url(#sg-copper)"/>
+    <text x="350" y="163" font-size="11" text-anchor="start" fill="#8f3d00">warnings, not enforced</text>
+    <line x1="234" y1="195" x2="616" y2="195" stroke="#0e7c7b" stroke-width="2.2" marker-end="url(#sg-teal)"/>
+    <text x="350" y="188" font-size="11" text-anchor="start" fill="#0e7c7b">sworn Q and A, April 1988</text>
+    <line x1="720" y1="146" x2="720" y2="104" stroke="#b3261e" stroke-width="2.2" marker-end="url(#sg-red)"/>
+    <text x="728" y="130" font-size="11" text-anchor="start" fill="#b3261e">distributors sue</text>
+    <line x1="234" y1="388" x2="346" y2="388" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="238" y="381" font-size="11" text-anchor="start" fill="#677500">campaign conduit</text>
+    <polyline points="820,388 865,388 865,30 130,30 130,36" fill="none" stroke="#17365e" stroke-width="2.2" marker-end="url(#sg-navy)"/>
+    <text x="500" y="23" font-size="11" text-anchor="start" fill="#17365e">the assault not renewed</text>
+    <polyline points="234,90 262,90 262,260 656,260 656,214" fill="none" stroke="#2f2b26" stroke-width="2.2" marker-end="url(#sg-charcoal)"/>
+    <text x="300" y="253" font-size="11" text-anchor="start" fill="#2f2b26">backs off after Miami</text>
+    <polyline points="140,356 140,240 560,240 560,70 616,70" fill="none" stroke="#1f5fa8" stroke-width="2.2" marker-end="url(#sg-blue)"/>
+    <text x="470" y="150" font-size="11" text-anchor="start" fill="#1f5fa8">Yager's protégé</text>
+  </svg>
+narrative: |
+  <p><strong>2. The surrender: what the chapter says</strong></p>
+  <p>The chapter opens in 1988 and frames the year as a hinge. It lists Hansen's climate testimony, pop-culture markers, and Bush's election "with generous help of Doug Wead and numerous Amway distributors" — then turns to DeVos on the witness stand. Lawsuits "against Amway and the tools cult kingpins were beginning to pile up."</p>
+  <p>The video sorts these lawsuits two ways. Most, it says, "were filed by Amway distributors who sued their former uplines to try to get into the tools cult business, to break into that walled garden." Some "were from former distributors who felt they'd been cheated by the kingpins in one way or another, or who blamed the Amway Corporation for not reigning them in." The first sorting is the video's account — and the record corrects it for the 1980s (see the fact-check box below).</p>
+  <p>DeVos, the video says, "testified in one of these cases" — "from the sources, it's unclear exactly which one." The Q&amp;A follows. The lesson quotes it here in the transcript's verbatim wording (the CMU archive's <em>setzer.htm</em>), with the video's small paraphrase differences noted beside the quotes in the fact-check box:</p>
+  <blockquote>
+    <p>"those abuses continued to this day. There are a variety of people who complain to me continually about some of those abuses. So, that's an ongoing challenge that the organization faces. I said to some of our staff there that I thought it would cost us a few hundred million dollars in volume. I think I said 300 million as we went through a correction phase. I think we lost upward of $300 million in volume as we tried to go through this adjustment period."</p>
+    <em>— Rich DeVos, sworn Q&amp;A, April 1988, on "the area of the tools abuses" addressed at the Miami meeting</em>
+  </blockquote>
+  <p>The lawyer then asks whether DeVos has "deviated from that position" — the position taken "in the early part of 1983" — "with respect to your 10 points and the subject matter contained therein." The "Ten Points" are the January 1983 pledges from the <em>Directly Speaking</em> tape (the Diamond Bulletin, February 1983), already verified in this workspace. DeVos's answer:</p>
+  <blockquote>
+    <p>"we dealt with it the way we did… we never pursued it to its ultimate goal of really nailing anything down. In the meantime, the volume came down, and we started to work at trying to hold the business together, but the problem persisted in any case."</p>
+    <em>— Rich DeVos, sworn Q&amp;A, April 1988 (ellipses mark joined excerpts; full wording in the fact-check box)</em>
+  </blockquote>
+  <p>"This is all we really know about Amway's surrender," the video says — then it zooms out to the macro reading. The Amway Corporation, it argues, "realized that a significant portion of their income came from the downlines of the tools kingpins, all of those distributors hooked on tapes and rallies faithfully buying LOC and SA8 soap." Revenues "were already declining in 1982 and 1983" (the record narrows this: fiscal-1983 down versus 1982 — see the fact-check box).</p>
+  <p>Amway "provoked a conflict with the kingpins who thought that the company was trying to horn in on the tools cult business." Faced with a backlash at the Miami showdown, "a decision was made at the highest level to back off, maybe to issue a few warnings here and there, but not really to follow through with them."</p>
+  <p>The company "was already bleeding two to 300 million dollars from what little they did try to do." Evidently, the video says, "the suits decided that they couldn't risk heavier losses."</p>
+  <p>Then the FTC thread: "that sword of Damocles that hung forever over this entire ecosystem of grift." Amway, the video says, "decided that they simply had to hope for the best, hope that the FTC wouldn't renew the assault and go after the pyramid scheme run by the kingpins." The gamble "was probably reasonable when it was made in 1983, and certainly proved so over the succeeding decades."</p>
+  <p>Corporation and kingpins grew wealthier and more politically powerful. They "insulate[d] themselves pretty effectively from another assault by the government," and advanced "the broader political and ideological project that the entire Amway universe was, at least in part, created to build." The chapter's last line turns the page: "we do have to turn to that story next before we conclude."</p>
+  <p><strong>4. What the record shows — checking chapter 10's claims</strong></p>
+
+    Fact-check — verified against court records, the CMU transcript archive, press, and agency files
+    <ul>
+      <li><strong>CONFIRMED — the DeVos 1988 testimony, and the case is identified.</strong> <em>Rick Setzer and Sue Lynn Setzer v. Amway Corp., Richard M. DeVos and Jay Van Andel</em>, U.S. District Court for the District of South Carolina, Greenville Division, filed 17 July 1986, Case No. 6&#58;86-1898-3; trial April 1988. The video says the case is unclear from its sources; the record identifies it. Plaintiff Rick Setzer was a Triple Diamond suing over interference with his tools business. Per the same critic-hosted page, some counts were dismissed and the Setzers were awarded a judgment of $160,938.72. Verbatim quotes from the <a href="https://www.cs.cmu.edu/~dst/Amway/AUS/setzer.htm">CMU archive (<em>setzer.htm</em>)</a>: "those abuses continued to this day"; "I think we lost upward of $300 million in volume as we tried to go through this adjustment period"; "we dealt with it the way we did… we never pursued it to its ultimate goal of really nailing anything down". Note the video's paraphrase renders the first as "those abuses continue to this day." Mark the host as critic-hosted and advocacy; the Q&amp;A text itself is a court transcript excerpt.</li>
+      <li><strong>CONFIRMED — the "Ten Points" are the January 1983 pledges.</strong> The lawyer's "10 points" are the pledges from the <em>Directly Speaking</em> tape (Diamond Bulletin, February 1983) — already verified in this workspace (<a href="../lessons/04-ch9-the-miami-showdown.html">Lesson 04</a>).</li>
+      <li><strong>CORRECTION — the lawsuit wave.</strong> <em>Cairns et al. v. Amway</em>, S.D. Ohio, 1984: 79 distributors from five states; settled out of court. Their grievance was being coerced into buying motivational materials — distributors suing over forced tools spending. The video's line that most suits were distributors trying to get <em>into</em> the tools business is unsupported for the 1980s. The break-in fights (Nitro/Pro Net, 1997; <em>Netco v. Dunn</em>, 2006) belong to the 1990s–2000s instead. A second 1990s data point on kingpin-scale tools income: <em>Brig and Lita Hart v. Amway</em>, M.D. Fla., Case 97-349-CIV-J-20B, filed 8 April 1997. Paragraph 57 pleads, "on information and belief", that "over 70% of Yager's Amway-related income" came from tools, at "$40,000,000.00 per year in gross income". That is a pleading, not a finding — read it as what the plaintiffs alleged, not what a court held.</li>
+      <li><strong>CONFIRMED with figures — the revenue decline.</strong> Fiscal-1983 revenues were $1.13bn, down $70m from $1.2bn (<a href="https://www.nytimes.com/1983/11/21/business/amway-sales-fall.html">NYT, 21 November 1983</a>); 230 layoffs (<a href="https://www.upi.com/Archives/1983/11/19/Amway-announces-layoffs-blames-economy/1919438066000">UPI, 19 November 1983</a>). Amway blamed the economy and the strong dollar, and conceded the Canada case "has not helped our business." Canada: Amway pleaded guilty 10 November 1983 and was fined $25m over 1965–80 customs undervaluation (<a href="https://www.upi.com/Archives/1983/11/10/Amway-Corp-and-Amway-Canada-Ltd-were-fined-25/6324437288400/">UPI, 10 November 1983</a>). Two adjustments to the video's wording: "declining in 1982 and 1983" overstates the record, which shows only fiscal-1983 down versus 1982. And the "$300m" figure is DeVos's own sworn estimate, not an audited loss. Use $1.2bn as the base year (not the critic mirror's $1.5bn).</li>
+      <li><strong>CONFIRMED — Bush 1988 and Wead.</strong> Wead was Vice-President Bush's liaison to the Christian right and campaigned with George W. Bush (<a href="https://www.pbs.org/wgbh/frontline/wgbh/pages/frontline/shows/choice2000/bush/wead.html">PBS Frontline</a>); the <a href="https://www.bush41library.gov/digital-research-room/finding-aid/foia/records-doug-wead-special-assistant-president-public-liaison">Bush 41 Library finding aid</a> lists him as Special Assistant for Public Liaison and liaison to the evangelical community, with 1985–86 strategy papers. No count of Amway distributors working or donating was found — "numerous distributors" stays the video's account.</li>
+      <li><strong>CONFIRMED for the pre-1990 window, then superseded — "insulated from another government assault."</strong> The only pre-1990 follow-up found is a 1986 consent decree: $100,000 over 1983 newspaper ads violating the earnings-disclosure order (monthly income $67; Ruby Bonus $288 average; <a href="https://www.upi.com/Archives/1986/05/19/Amway-agrees-to-pay-100000-fine/6466516859200/">UPI, 19 May 1986</a>). The FTC's 1983 annual report shows no Amway/tools action. Then, on 17 September 2026, <a href="https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-takes-historic-action-against-multilevel-marketing-operator-amway-unfair-and-deceptive-business">the FTC and Washington State filed against Amway, World Wide Group and Leadership Team Development</a>. The filing proposes a $225m settlement (W.D. Wash., 2&#58;26-cv-03474) — the first FTC action charging the Approved Provider/BSM training system as unfair and deceptive. That filing postdates the video; cite it as filed and proposed allegations, not a decided verdict.</li>
+      <li><strong>LABELLED — the video's synthesis is the video's macro reading.</strong> "A significant portion of income came from the kingpins' downlines"; "a decision was made at the highest level to back off"; "hope the FTC wouldn't renew" — each is the video's inference from the admission plus the numbers, stated here as the video's words, not the record's.</li>
+    </ul>
+machinery: |
+  <p><strong>1. What matters — and what you can skip</strong></p>
+  <p><strong>Keep these four essentials:</strong></p>
+  <ol>
+    <li><strong>The admission.</strong> Under oath, DeVos says the tools abuses addressed at Miami "continued to this day." He says the correction cost "upward of $300 million in volume." And he says the corporation "never pursued it to its ultimate goal of really nailing anything down." That is the chapter's title made literal: the surrender, in the founder's own sworn words.</li>
+    <li><strong>The case behind the Q&amp;A.</strong> The video says its sources leave the case unclear. The record identifies it: <em>Rick Setzer and Sue Lynn Setzer v. Amway Corp., Richard M. DeVos and Jay Van Andel</em>, filed 17 July 1986 in Greenville, South Carolina, tried April 1988. Plaintiff Rick Setzer was a Triple Diamond suing over interference with his tools business. Read the quotes as a court transcript excerpt on a critic-hosted page, not as the video's paraphrase.</li>
+    <li><strong>The economics of backing off.</strong> Fiscal-1983 revenue fell to $1.13bn from $1.2bn (down $70m), with 230 layoffs. Amway blamed the economy and the strong dollar, and conceded the Canada case "has not helped our business." The "$300m" figure is DeVos's sworn estimate of volume lost in the adjustment — not an audited figure.</li>
+    <li><strong>The video's macro reading, labelled as such.</strong> Kingpin downlines were too large a share of Amway's income to lose; warnings continued but enforcement stopped; the company gambled the FTC would not renew its assault. Every clause of that synthesis is the video's inference — the chapter's own evidence for it is the admission plus the numbers.</li>
+  </ol>
+  <p><strong>What can be skimmed:</strong> the 1988 scene-setting montage (Hansen's testimony, <em>Cocktail</em>, Metallica) is period colour — one read is enough. The Bush–Wead thread belongs mostly to the next chapter. Note here only that Wead was Bush's liaison to the Christian right, and that the video credits "numerous Amway distributors" with 1988 campaign help. The post-1990 regulatory coda (the 1986 consent decree, the 2026 filing) sits in the fact-check box — it bounds the video's "insulated" claim rather than advancing the chapter's argument.</p>
+  <p><strong>3. The machinery: what the chapter establishes structurally</strong></p>
+  <ul>
+    <li><strong>Dependence as surrender.</strong> The two-pyramid model from <a href="../lessons/03-ch7-the-battle-with-amway.html">Lesson 03</a> gets its price tag: the corporation cannot discipline the tools business because the tools business's downlines are its own volume. Enforcement bleeds $300m; non-enforcement keeps the soap moving.</li>
+    <li><strong>Warnings without follow-through as policy.</strong> DeVos's formula was "we did put some people under notice," then "re-education," but never "nailing anything down." That is the surrender's operating manual: visible compliance gestures, no terminal action. The <a href="../reference/mlm-economics.html">economics explainer</a> carries the companion mechanics.</li>
+    <li><strong>The regulator as calculated risk.</strong> The FTC moves from tripwire (the Miami chapter's "reasonably related" test) to wager: a hoped-for non-renewal. The chapter treats deterrence as something Amway priced rather than obeyed.</li>
+    <li><strong>Wealth into insulation.</strong> The closing move converts money and political power into a shield — effective, in the video's telling, "over the succeeding decades." The fact-check box bounds that claim at both ends: the 1986 consent decree inside the window, the September 2026 filing after it.</li>
+  </ul>
+  <ul>
+    <li><strong>Who decided, and where is the paper?</strong> "A decision was made at the highest level to back off" — the chapter names no decider, cites no memo, and offers only the DeVos Q&amp;A as evidence. The decision itself stays the video's inference.</li>
+    <li><strong>How large was the tools-fed share, exactly?</strong> "A significant portion of their income" is never quantified in the chapter; DeVos's $300m is volume lost in correction, not a measure of tools dependence.</li>
+    <li><strong>The political project, still to come.</strong> "The broader political and ideological project that the entire Amway universe was, at least in part, created to build" is named but not told — "we do have to turn to that story next before we conclude."</li>
+  </ul>
+sources:
+  - label: "CMU archive (setzer.htm)"
+    url: "https://www.cs.cmu.edu/~dst/Amway/AUS/setzer.htm"
+  - label: "NYT, 21 November 1983"
+    url: "https://www.nytimes.com/1983/11/21/business/amway-sales-fall.html"
+  - label: "UPI, 19 November 1983"
+    url: "https://www.upi.com/Archives/1983/11/19/Amway-announces-layoffs-blames-economy/1919438066000"
+  - label: "UPI, 10 November 1983"
+    url: "https://www.upi.com/Archives/1983/11/10/Amway-Corp-and-Amway-Canada-Ltd-were-fined-25/6324437288400/"
+  - label: "PBS Frontline"
+    url: "https://www.pbs.org/wgbh/frontline/wgbh/pages/frontline/shows/choice2000/bush/wead.html"
+  - label: "Bush 41 Library finding aid"
+    url: "https://www.bush41library.gov/digital-research-room/finding-aid/foia/records-doug-wead-special-assistant-president-public-liaison"
+  - label: "UPI, 19 May 1986"
+    url: "https://www.upi.com/Archives/1986/05/19/Amway-agrees-to-pay-100000-fine/6466516859200/"
+  - label: "the FTC and Washington State filed against Amway, World Wide Group and Leadership Team Development"
+    url: "https://www.ftc.gov/news-events/news/press-releases/2026/09/ftc-takes-historic-action-against-multilevel-marketing-operator-amway-unfair-and-deceptive-business"

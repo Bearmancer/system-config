@@ -1,0 +1,174 @@
+kicker: "Political Economy Spectrum · US Variants"
+title: "Left, Right, Center to DSA"
+chapter: 1
+chapters_total: 1
+time_range: "research-synthesis"
+transcript: "wave-1-us-synthesis.md + wave-2-four-axes.md + wave-3-leads.md"
+lead: "One seating split still sorts American politics. This chapter builds the map from that split. It clears each confusion term by term, then applies the tools to DSA."
+cast:
+  - name: "Left"
+    role: "Equality pole; houses progressivism and socialism"
+  - name: "Right"
+    role: "Hierarchy pole; defends order and tradition"
+  - name: "Center"
+    role: "Situational middle; decides elections"
+  - name: "Conservatism (US)"
+    role: "Order pole in American dress; small state, markets, faith, force"
+  - name: "Liberalism"
+    role: "Broad tradition; classical limits the state, modern uses it"
+  - name: "Libertarianism"
+    role: "Liberty-first creed; rejects state paternalism"
+  - name: "Neoliberalism"
+    role: "Political project; expands markets through state power"
+  - name: "Neoclassical Economics"
+    role: "Analytical school; marginalist efficiency logic"
+  - name: "Progressivism"
+    role: "American reform path; effective freedom via the state"
+  - name: "Democratic Socialism"
+    role: "Replace capitalism through democracy; DSA home"
+  - name: "Social Democracy"
+    role: "Reform capitalism; Nordic welfare model"
+  - name: "DSA"
+    role: "Mass US socialist organization; runs on the Democratic ballot"
+subgraph: |
+  <svg viewBox="0 0 520 320" width="100%" role="img" aria-label="Spectrum relations">
+  <rect x="10" y="20" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="85" y="47" text-anchor="middle" font-size="13">Left</text>
+  <rect x="180" y="20" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="255" y="47" text-anchor="middle" font-size="13">Center</text>
+  <rect x="350" y="20" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="425" y="47" text-anchor="middle" font-size="13">Right</text>
+  <rect x="10" y="130" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="85" y="157" text-anchor="middle" font-size="13">Progressivism</text>
+  <rect x="180" y="130" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="255" y="157" text-anchor="middle" font-size="12">Social Democracy</text>
+  <rect x="350" y="130" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="425" y="157" text-anchor="middle" font-size="13">Neoliberalism</text>
+  <rect x="10" y="240" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="85" y="259" text-anchor="middle" font-size="12">Democratic</text>
+  <text x="85" y="274" text-anchor="middle" font-size="12">Socialism</text>
+  <rect x="180" y="240" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="255" y="267" text-anchor="middle" font-size="13">DSA</text>
+  <rect x="350" y="240" width="150" height="44" rx="6" fill="#fbfaf7" stroke="#201d1a"/>
+  <text x="425" y="259" text-anchor="middle" font-size="12">Neoclassical</text>
+  <text x="425" y="274" text-anchor="middle" font-size="12">Economics</text>
+  <line x1="85" y1="64" x2="85" y2="130" stroke="#8a5a2b" stroke-width="2"/>
+  <line x1="85" y1="174" x2="85" y2="240" stroke="#4a6fa5" stroke-width="2"/>
+  <line x1="160" y1="262" x2="180" y2="262" stroke="#4a6fa5" stroke-width="2"/>
+  <line x1="255" y1="240" x2="255" y2="174" stroke="#6f8f76" stroke-width="2"/>
+  <line x1="425" y1="64" x2="425" y2="130" stroke="#8a5a2b" stroke-width="2"/>
+  <line x1="425" y1="240" x2="425" y2="174" stroke="#4a6fa5" stroke-width="2"/>
+  <text x="10" y="310" font-size="12">Legend:</text>
+  <circle cx="80" cy="306" r="5" fill="#8a5a2b"/><text x="90" y="310" font-size="12">hosts</text>
+  <circle cx="150" cy="306" r="5" fill="#6f8f76"/><text x="160" y="310" font-size="12">contests</text>
+  <circle cx="240" cy="306" r="5" fill="#4a6fa5"/><text x="250" y="310" font-size="12">extends</text>
+  </svg>
+narrative: |
+  <p><strong>The seating.</strong> France called the Estates-General in 1789. The Third Estate broke away and formed the National Assembly at Versailles. Supporters of revolution sat to the left of the presiding chair. Supporters of the king sat to the right (<a href="https://www.britannica.com/topic/political-spectrum">Britannica</a>).</p>
+  <blockquote>"those who were loyal to religion and the king took up positions to the right of the chair"</blockquote>
+  <p>Baron de Gauville wrote that line. The wording is confirmed against the record.<sup><a href="https://www.britannica.com/topic/political-spectrum">1</a></sup> Left became the party of movement and equality. Right became the party of order and hierarchy. The labels spread across the 1800s and hardened by the early 1900s (<a href="https://time.com/5673239/left-right-politics-origins">TIME</a>).</p>
+  <p><strong>The tool.</strong> Read every position on two axes. Economics runs from equality to hierarchy. Authority runs from libertarian to authoritarian (<a href="https://en.wikipedia.org/wiki/Political_spectrum">Political Spectrum</a>). One axis misleads: a left-libertarian and a left-authoritarian share little beyond the label left. The center is positional. It moves as the poles move. Liberalism sits left or right by context, which is why Americans confuse it.</p>
+  <p><strong>The American translation.</strong> The split reads as progressivism versus conservatism. The dividing line is the role of government. Liberals use active government to cut inequality and expand health, schooling, and rights. Conservatives prefer small government, markets, faith, and force. Gallup 2024 found 37 percent conservative, 34 percent moderate, 25 percent liberal (<a href="https://news.gallup.com/poll/655190/political-parties-historically-polarized-ideologically.aspx">Gallup</a>). PRRI 2025 found a similar public at 38, 35, and 27 (<a href="https://prri.org/spotlight/young-americans-partisanship-and-ideology-updated-numbers-from-the-2025-prri-american-values-atlas/">PRRI</a>). Party sorting hit records in the Gallup tables, confirmed against them<sup><a href="https://news.gallup.com/poll/655190/political-parties-historically-polarized-ideologically.aspx">1</a></sup>: 77 percent of Republicans conservative and 55 percent of Democrats liberal, and independents peaking at 51 percent in June. Parties are coalitions, not ideologies. Each houses several of the schools below.</p>
+  <p><strong>The moving middle.</strong> Moderates keep growing as a label. PRRI traces them from 28 percent in 2013 to 35 percent in 2024, confirmed against its trend tables.<sup><a href="https://prri.org/spotlight/young-americans-partisanship-and-ideology-updated-numbers-from-the-2025-prri-american-values-atlas/">1</a></sup> College once predicted Republican support. It now predicts Democratic support, clear by 2008. The diploma divide holds for White voters, confirmed by Shepherd's CES analysis (<a href="https://www.uakron.edu/bliss/docs/2025-State-of-the-Parties/shepherd-sop25-paper.pdf">Shepherd</a>). Pew finds no meaningful Hispanic gap and overwhelming Black Democratic support either way (<a href="https://www.pewresearch.org/politics/2024/04/09/partisanship-by-race-ethnicity-and-education/">Pew</a>). A Hispanic gap opened in 2020 through 2022 and closed by 2024, confirmed with that caveat against the same comparison.<sup><a href="https://www.uakron.edu/bliss/docs/2025-State-of-the-Parties/shepherd-sop25-paper.pdf">1</a></sup></p>
+  <p><strong>Confusion one: liberalism.</strong> Classical liberals limit the state to protect autonomy. Modern American liberals use the state for equality, sitting center-left (<a href="https://en.wikipedia.org/wiki/Classical_liberalism">Classical Liberalism</a>). Same word, opposite instructions for the state. Read the country before reading the word: in Europe liberal still means market-friendly, while in America it means state-active.</p>
+  <p><strong>Confusion two, part one: libertarianism.</strong> Libertarianism puts liberty first and rejects state paternalism over personal choice (<a href="https://www.cato.org/about/mission-vision-principles">Cato Mission</a>). Its party runs its own presidential ticket. In 2024 the Libertarian convention needed seven ballots: Chase Oliver beat none-of-the-above 497 to 300, a defeat for the Mises Caucus candidate (<a href="https://www.cnn.com/2024/05/26/politics/libertarian-nominee-chase-oliver">CNN</a>). A creed that prizes exit still struggles to hold its own coalition together.</p>
+  <p><strong>Confusion two, part two: neoliberalism.</strong> Neoliberalism reorganizes state power to expand markets (<a href="https://nakedkeynesianism.substack.com/p/neoliberalism-classical-liberalism">Naked Keynesianism</a>). It uses the state that libertarianism distrusts. All neoliberals reason with neoclassical tools. The reverse is false: many neoclassical economists defend market-failure policy. The Smith rhetoric covers marginalist math, confirmed against the same distinction.<sup><a href="https://nakedkeynesianism.substack.com/p/neoliberalism-classical-liberalism">1</a></sup></p>
+  <p><strong>The project history.</strong> The 1938 Lippmann colloquium seeded the project, and the Mont Pelerin Society formed in 1947 (<a href="https://www.tandfonline.com/doi/full/10.1080/00131857.2021.1951704">Taylor and Francis</a>). Austrian, Freiburg, and Chicago economists supplied the program: monetarism, deregulation, market primacy (<a href="https://en.wikipedia.org/wiki/Neoliberalism">Neoliberalism</a>). Thatcher and Reagan carried it into government across the 1980s. Williamson codified ten policy rules in 1989, and Washington institutions spread them through structural adjustment, confirmed against the same history.<sup><a href="https://en.wikipedia.org/wiki/Neoliberalism">1</a></sup></p>
+  <p><strong>Confusion three, part one: progressivism.</strong> Progressivism seeks progress beyond the status quo toward just conditions (<a href="https://www.americanprogress.org/article/the-progressive-intellectual-tradition-in-america">Center for American Progress</a>). It rose against industrial misery between 1890 and 1920, steering between European socialism and hands-off conservatism.<sup><a href="https://www.americanprogress.org/article/the-progressive-intellectual-tradition-in-america">1</a></sup> Its line runs from the Square Deal and New Freedom through the New Deal, the 1956 Highway Act, and the Great Society to the Green New Deal. Later stops include the CFPB, Dodd-Frank, Medicare for All, Occupy, and the 50501 protests. Modern faces include Warren the progressive capitalist alongside Sanders, Ocasio-Cortez, and Mamdani on the democratic-socialist side (<a href="https://www.britannica.com/topic/Progressivism-in-the-21st-century">Britannica, 21st-century progressivism</a>). Warren brands as economic patriot while Sanders claims internationalism (<a href="https://www.cfr.org/articles/how-do-warrens-and-sanderss-progressive-foreign-policy-visions-stack">Council on Foreign Relations</a>).</p>
+  <p><strong>Confusion three, part two: three left words.</strong> Keep these apart:</p>
+  <ul><li><strong>Social democracy</strong> keeps capitalism and adds safety nets. <strong>Democratic socialism</strong> replaces capitalism with worker and community ownership (<a href="https://goodparty.org/blog/article/social-democracy-vs-democratic-socialism">Good Party</a>). Reform versus transform. DSA's own big-tent definition blurs this line in practice (<a href="https://www.dsausa.org/about-us/history">DSA History</a>).</li><li><strong>The Nordic model</strong> is a mixed market plus universal welfare, born of a 1930s farmer-worker compromise (<a href="https://en.wikipedia.org/wiki/Nordic_model">Nordic Model</a>). Sweden grew fastest before welfare arrived, and markets still drive the region. Norway runs more state ownership through oil wealth, confirmed against the same account.<sup><a href="https://en.wikipedia.org/wiki/Nordic_model">1</a></sup> The record corrects the common error: this is social democracy working, not socialism installed. Critics from the market side agree and claim the proof (<a href="https://mises.org/power-market/nordic-model-isnt-socialist-democratic-socialists-claim">Mises</a>).</li></ul>
+  <p><strong>Attachments, not ideologies.</strong> Populism is a thin frame of pure people versus corrupt elite. It needs a host, left or right (<a href="https://amc.sas.upenn.edu/cas-mudde-populism-twenty-first-century">Mudde</a>). Trump pairs it with nationalism. Sanders pairs it with socialism. The two share anti-corporate anger and oppose each other on pluralism, confirmed by how each names its elite.<sup><a href="https://amc.sas.upenn.edu/cas-mudde-populism-twenty-first-century">1</a></sup> Fusionism married libertarian means to traditionalist ends in Meyer's 1962 In Defense of Freedom and powered the Reagan coalition (<a href="https://www.nationalreview.com/2026/09/where-has-conservatism-been-and-where-is-it-going">National Review</a>). Its founding paper was the Sharon Statement, drafted by Evans and adopted by some 90 students at Buckley's Connecticut home in September 1960 (<a href="https://en.wikipedia.org/wiki/Sharon_Statement">Sharon Statement</a>). The marriage now strains: national conservatism wants a virtue-state with managed markets (<a href="https://nationalconservatism.org/national-conservatism-a-statement-of-principles/">NatCon Statement</a>), while freedom conservatism keeps liberty indivisible with free trade (<a href="https://www.freedomconservatism.org/p/freedom-conservatism-a-statement">FreeCon Statement</a>).</p>
+  <p><strong>Worked example: DSA.</strong> Apply the three tests from the next section. Two axes: left on economics, libertarian-leaning on authority. Reform test: transform, so democratic socialist, not social democratic. Host test: none needed, since democratic socialism is already a full ideology. The organization merged from two groups in 1982 and stayed multi-tendency.<sup><a href="https://www.dsausa.org/about-us/history">1</a></sup> It held near 5,000 for decades, surged past 79,000 in 2021, and fell to 51,000 by October 2024 (<a href="https://democraticleft.dsausa.org/2025/02/27/state-of-dsa-part-one-welcome-to-dsa">State of DSA</a>). It then climbed to 92,912 by December 2025 (<a href="https://www.cityandstateny.com/politics/2026/01/dsas-membership-nearly-doubled-start-mamdani-campaign/410966">City and State</a>) and hit 120,000 in July 2026, passing the 1912 Socialist Party peak under Debs (<a href="https://www.dsausa.org/news/jul2026_npc_newsletter/">DSA NPC Newsletter</a>). Counts stay date-pinned, since they move with campaigns, confirmed against the first-party record.<sup><a href="https://www.dsausa.org/news/jul2026_npc_newsletter/">1</a></sup> It runs candidates on the Democratic ballot to build independent power, with about 250 members and endorsees in office across 40 states (<a href="https://civicintelligence.news/politics/dsa-newfound-power-platform">Civic Intelligence</a>).</p>
+machinery: |
+  <p>Three tests place any position. Each test returns one label. Run all three before naming anything.</p>
+  <p><strong>Two-axis test.</strong> Score economics from equality to hierarchy. Score authority from libertarian to authoritarian. DSA lands left-libertarian. A police-state nationalist lands right-authoritarian. A Nordic social democrat lands left of center and near the libertarian middle.</p>
+  <p><strong>Reform test.</strong> Ask what it does with capitalism. Safety nets on a kept market mean social democrat. Worker ownership replacing the market means democratic socialist. The Nordic model keeps the market, so it passes as the first no matter how large its welfare state grows.</p>
+  <p><strong>Host test.</strong> Ask whether the label can stand alone. Populism never travels alone. Name its host: nationalism on the right, socialism on the left. Fusionism fails this test in the other direction: it is a full coalition, which is why its factions now write rival statements.</p>
+sources:
+  - label: "Britannica, political spectrum"
+    url: "https://www.britannica.com/topic/political-spectrum"
+    note: "1789 origin; equality vs hierarchy"
+  - label: "TIME, origins of left and right"
+    url: "https://time.com/5673239/left-right-politics-origins"
+    note: "Rosenfeld and Higonnet on literal seating"
+  - label: "Wikipedia, political spectrum"
+    url: "https://en.wikipedia.org/wiki/Political_spectrum"
+    note: "compass and two-axis models"
+  - label: "Gallup 2024 ideology"
+    url: "https://news.gallup.com/poll/655190/political-parties-historically-polarized-ideologically.aspx"
+    note: "37/34/25; party sorting records"
+  - label: "PRRI 2025 Values Atlas"
+    url: "https://prri.org/spotlight/young-americans-partisanship-and-ideology-updated-numbers-from-the-2025-prri-american-values-atlas/"
+    note: "38/35/27; moderates 28 to 35 since 2013"
+  - label: "Shepherd on working-class realignment"
+    url: "https://www.uakron.edu/bliss/docs/2025-State-of-the-Parties/shepherd-sop25-paper.pdf"
+    note: "diploma divide White voters only"
+  - label: "Pew partisanship by race and education"
+    url: "https://www.pewresearch.org/politics/2024/04/09/partisanship-by-race-ethnicity-and-education/"
+    note: "education gaps by race, April 2024"
+  - label: "Wikipedia, classical liberalism"
+    url: "https://en.wikipedia.org/wiki/Classical_liberalism"
+    note: "classical vs modern liberal distinction"
+  - label: "Cato mission"
+    url: "https://www.cato.org/about/mission-vision-principles"
+    note: "liberty, limited government, free markets, peace"
+  - label: "CNN on 2024 Libertarian convention"
+    url: "https://www.cnn.com/2024/05/26/politics/libertarian-nominee-chase-oliver"
+    note: "Oliver over NOTA; Mises Caucus defeat"
+  - label: "Naked Keynesianism"
+    url: "https://nakedkeynesianism.substack.com/p/neoliberalism-classical-liberalism"
+    note: "neoliberal vs neoclassical distinction"
+  - label: "Taylor and Francis, early neoliberalism"
+    url: "https://www.tandfonline.com/doi/full/10.1080/00131857.2021.1951704"
+    note: "Lippmann 1938; MPS 1947"
+  - label: "Wikipedia, neoliberalism"
+    url: "https://en.wikipedia.org/wiki/Neoliberalism"
+    note: "Chicago School; Thatcher-Reagan; Washington Consensus"
+  - label: "Center for American Progress"
+    url: "https://www.americanprogress.org/article/the-progressive-intellectual-tradition-in-america"
+    note: "progressivism as new liberalism"
+  - label: "Britannica, 21st-century progressivism"
+    url: "https://www.britannica.com/topic/Progressivism-in-the-21st-century"
+    note: "Sanders, Warren, Ocasio-Cortez, Mamdani"
+  - label: "CFR on Warren and Sanders"
+    url: "https://www.cfr.org/articles/how-do-warrens-and-sanderss-progressive-foreign-policy-visions-stack"
+    note: "economic patriot vs internationalist"
+  - label: "Good Party, socdem vs demsoc"
+    url: "https://goodparty.org/blog/article/social-democracy-vs-democratic-socialism"
+    note: "reform vs transform"
+  - label: "Wikipedia, Nordic model"
+    url: "https://en.wikipedia.org/wiki/Nordic_model"
+    note: "mixed market plus universal welfare; Norway exception"
+  - label: "Mises on the Nordic model"
+    url: "https://mises.org/power-market/nordic-model-isnt-socialist-democratic-socialists-claim"
+    note: "pre-welfare growth; market drivers"
+  - label: "Mudde on populism, UPenn"
+    url: "https://amc.sas.upenn.edu/cas-mudde-populism-twenty-first-century"
+    note: "thin-centered ideology definition"
+  - label: "National Review on fusionism"
+    url: "https://www.nationalreview.com/2026/09/where-has-conservatism-been-and-where-is-it-going"
+    note: "Meyer 1962; Reagan coalition"
+  - label: "Wikipedia, Sharon Statement"
+    url: "https://en.wikipedia.org/wiki/Sharon_Statement"
+    note: "Evans 1960; YAF founding; fusionism expression"
+  - label: "NatCon Statement of Principles"
+    url: "https://nationalconservatism.org/national-conservatism-a-statement-of-principles/"
+    note: "nation-first; managed markets; 2022"
+  - label: "FreeCon Statement of Principles"
+    url: "https://www.freedomconservatism.org/p/freedom-conservatism-a-statement"
+    note: "liberty indivisible; free trade; 2023"
+  - label: "DSA history"
+    url: "https://www.dsausa.org/about-us/history"
+    note: "1982 merger; multi-tendency"
+  - label: "State of DSA"
+    url: "https://democraticleft.dsausa.org/2025/02/27/state-of-dsa-part-one-welcome-to-dsa"
+    note: "surge, peak, decline figures"
+  - label: "City and State on DSA growth"
+    url: "https://www.cityandstateny.com/politics/2026/01/dsas-membership-nearly-doubled-start-mamdani-campaign/410966"
+    note: "92,912 by December 2025"
+  - label: "DSA NPC newsletter, July 2026"
+    url: "https://www.dsausa.org/news/jul2026_npc_newsletter/"
+    note: "120,000 record; passes 1912 SPA peak"
+  - label: "Civic Intelligence on DSA platform"
+    url: "https://civicintelligence.news/politics/dsa-newfound-power-platform"
+    note: "~250 in office across 40 states"

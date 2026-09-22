@@ -9,7 +9,7 @@ Turn one long source into a per-chapter course. User walks sequentially across s
 
 Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable-model-invocation: true` in both installed copies) and cannot be called from here, so there is no precedence relationship to resolve. This skill owns its own pedagogy, workspace layout, acquisition, slicing, corrections, verification, visuals, publishing, and auto-open.
 
-**Workspace/cache paths.** Reference files reference `~/.omo/teach/` and `~/.omo/cache/learning-course/` paths — these apply when running under OpenCode + OMO. Under Claude Code, use an equivalent local workspace directory (e.g. in the project root or `~/.claude/`) since `~/.omo/` won't exist; one workspace per source, same layout.
+**Workspace/cache paths.** Reference files reference `~/.omo/teach/` and `~/.omo/cache/learning-course/` paths — these apply when running under OpenCode + OMO. Under Claude Code, use an equivalent local workspace directory (e.g. in the project root or `~/.claude/`) — a machine with both runtimes installed has `~/.omo/` present, but this skill's own workspace under Claude Code stays separate from OMO's; one workspace per source, same layout.
 
 ## Standing expectations
 
@@ -62,7 +62,7 @@ Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/N
 
 ### Step 6: Verify (source-type gate, set at Step 0/1, logged in NOTES.md)
 
-Fan-out required for this source type → extract the chapter's checkable claims (dates, figures, names, spellings, chronology, attributions), then load the rigorous-research skill (`skill(name="rigorous-research")` in OpenCode, or via the `Skill` tool with `skill: "rigorous-research"` in Claude Code) with that claim list; it owns the tier ladder, the parallel passes, the routing, and the burn guards.
+Fan-out required for this source type → extract the chapter's checkable claims (dates, figures, names, spellings, chronology, attributions), then load the `rigorous-research` skill with that claim list; it owns the tier ladder, the parallel passes, the routing, and the burn guards.
 Scholarly gate: source carrying its own apparatus suffices: scholarly books/papers (footnotes, source notes, credentialed press) and video with published citations (e.g. Munger video description citations) skip fan-out; quote + cite that apparatus. Reader-flagged surprising/contested/load-bearing claims get a targeted check as an explicit ask.
 Lecture notes / uncited articles: no default bias toward any source type — judge by the source's own apparatus (citations present, credentialed author, published record) on its own merits.
 Integrate the returned verdicts: corrections land as inline verdicts in the narrative, cited inline (first mention = full hyperlink, repeats = superscript-that-is-itself-a-hyperlink — no Sources block, no footer); unfindables go to RESOURCES Gaps and appear visibly in the lesson ("the source's account, unverified"); source wording in quotes, record verdict beside it.
@@ -98,27 +98,9 @@ In-lesson cast block (info-only roster of this chapter) + subgraph (this chapter
 - **One workspace per source.** Slug from topic.
 - **Windows host**: `Start-Process` opens files; `pwsh` runs scripts.
 
-## API key failover (11 keyed services)
+## API key failover — pointer only
 
-Research-tool account pools live in `~/.secrets/.env`. **Never read that file — no Read, no cat, no rg, not even for variable names. `scripts/switch_api_key.py` is its only sanctioned reader**, and it prints nothing but account names + sha256 fingerprints; key material never enters chat, logs, or context.
-
-Trigger: a research call fails on credit/quota exhaustion — Tavily usage limit, Firecrawl insufficient credits / 402, Exa credits exhausted, key suddenly 401s after working earlier. Transient rate limit: retry once first; rotate only on credit/quota/payment/auth signatures.
-
-Rotate (exact order):
-
-1. Run: `python <skill>/scripts/switch_api_key.py --service <tavily|exa|firecrawl|dappier|agentql|scrapegraph|context7|brave|apify|brightdata|browserbase> --next`
-2. Report the script's output line to the user verbatim (already masked).
-3. Tell the user to **restart OpenCode** — MCP servers read env at startup only.
-4. **HARD STOP.** No retries with the old key, no further tool calls, no carrying on the remaining work this session. Resume after restart.
-
-Controls: `--list` peeks pool + active account (no write); `--service all --list` covers every supported service; `--set <ACCOUNT>` pins one; `--next --dry-run` previews. Pointer = the User-scope env var (`TAVILY_API_KEY`, `EXA_API_KEY`, `FIRECRAWL_API_KEY`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `APIFY_TOKEN`, `BRIGHTDATA_API_KEY`, `BROWSERBASE_API_KEY`); OpenCode's `{env:...}` references resolve against it. If any other loader re-imports `.env` wholesale, rerun the script.
-
-**Not in the failover pool, by design:**
-
-- Dappier, AgentQL, ScrapeGraphAI — keyed and wired, but see their own skills (`web-data-apis`; ScrapeGraphAI also has `just-scrape`) rather than this section for usage detail.
-- Context7, Brave, Apify, Bright Data, Browserbase were added to the pool 2026-09-20 — confirmed monthly-recurring free tiers (1,000 calls/mo, $5/mo, $5/mo, 5,000 credits/mo, 60 browser-min/mo respectively).
-
-**Where the tools live.** Under OpenCode + OMO: skill config reads `.claude/skills/` directly; the web-data MCP fleet is wired in `~/.config/opencode/opencode.jsonc`; companion tool skills live under `~/.agents/skills/` and `~/.config/opencode/skills/`. Under Claude Code: check available_skills/MCP listing for the web-data MCP fleet and companion skills wired in this session (do not assume the OpenCode paths above apply). Verification passes run in their runtime only — never handed off to a different host or runtime. Handing a pass to another skill or to team members within the same runtime is normal and expected.
+Credit/quota exhaustion on any research call (Tavily, Firecrawl, Exa, or any pooled service): rotation mechanics, the hard-stop rule, and the never-read-`~/.secrets/.env` prohibition live in `web-data-apis` skill's "API key failover" section — it governs the whole pooled fleet, not just this skill's own calls. Consult it there, not restated here. The sanctioned rotation script (`switch_api_key.py`) is bundled physically in this skill's `scripts/` (see Bundled resources below); `web-data-apis` invokes it by that path.
 
 ## Bundled resources
 

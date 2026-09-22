@@ -1,0 +1,175 @@
+kicker: "The Tools Cult — chapter 4 of 12"
+title: "Britt & Yager Found The Tools Cult"
+chapter: 4
+chapters_total: 12
+time_range: "0:27:17–0:37:27"
+transcript: "britt-yager-27m17s-37m27s.md"
+lead: "This is the founding chapter: the moment the story stops being about soap. Two Amway distributors sit in a Miami hotel coffee shop and hear a pitch to go into the tape business. Yager says no. Britt says yes. Everything the rest of the video is about flows from that fork. The chapter's quiet bombshell is why the pitch existed at all: by the mid-1960s the Amway plan was already running out of money for the people at the bottom of it."
+cast:
+  - name: "Norman Vincent Peale"
+    role: "Preacher in whose New York congregation sat the Trump family; same self-help wave"
+  - name: "Dale Carnegie"
+    role: "Author of How to Win Friends and Influence People; same self-help wave the tools recycled"
+  - name: "Napoleon Hill"
+    role: "Author of Think and Grow Rich (1937); Nightingale's inspiration, later atop the Amway reading list"
+  - name: "Earl Nightingale"
+    role: "Author of \"The Strangest Secret\" (1956); his record reaches Yager mid-1960s"
+  - name: "Doug Wead"
+    role: "Tools kingpin; source of the founding account"
+  - name: "? The nameless young man"
+    role: "Unidentified; pitches the $50,000 tape-plant investment at the Fontainebleau coffee shop (Wead's account)"
+  - name: "Dominic Conigliaro"
+    role: "Yager's downline; sponsors Britt into Amway in 1970 (spelling varies in the record)"
+  - name: "Fred Hanson"
+    role: "Original Amway distributor; possibly the man who lent Yager the Nightingale record (unverified) — the blog also settles the spelling: Hanson, not Hansen"
+  - name: "Tony Renard"
+    role: "Sponsored by Yager (Fall 1966); buys a tape recorder, begins duplicating tapes — identity resolved via Wead's 2009 blog post: a piano player in Schenectady, 1966, reel-to-reel bought from Dexter for $46.75; wife Sue"
+  - name: "Bill Britt"
+    role: "New Amway distributor (1970); later the tape business's manufacturing half"
+  - name: "Birdie Yager"
+    role: "Dexter's wife; moves with him to Charlotte, four children then"
+  - name: "Dexter Yager"
+    role: "Early Amway distributor (1964); later the tape business's distribution half"
+subgraph: |
+  <svg viewBox="0 0 980 500" width="100%" role="img" aria-label="Chapter 4 relationship subgraph" style="font-family:'Segoe UI',system-ui,sans-serif;background:#fdfcf9;">
+    <defs>
+      <marker id="sg-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1f5fa8"/></marker>
+      <marker id="sg-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7a3fa0"/></marker>
+      <marker id="sg-brown" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b4a1f"/></marker>
+      <marker id="sg-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c07a00"/></marker>
+      <marker id="sg-magenta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c2185b"/></marker>
+      <marker id="sg-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0e7c7b"/></marker>
+      <marker id="sg-grey" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6f6a60"/></marker>
+    </defs>
+    <rect x="20" y="40" width="150" height="48" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="32" y="61" font-size="12.5" font-weight="600" fill="#201d1a">Dominic Conigliaro</text>
+    <text x="32" y="77" font-size="10" fill="#8a8578">Britt's sponsor</text>
+    <rect x="250" y="40" width="170" height="48" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="262" y="61" font-size="12.5" font-weight="600" fill="#201d1a">Bill Britt</text>
+    <text x="262" y="77" font-size="11" fill="#5a544b">joined Amway 1970</text>
+    <rect x="490" y="40" width="220" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.4"/>
+    <text x="502" y="61" font-size="12.5" font-weight="600" fill="#201d1a">Dexter Yager</text>
+    <text x="502" y="77" font-size="11" fill="#5a544b">Amway 1964 · Charlotte 1969</text>
+    <rect x="750" y="40" width="170" height="48" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="762" y="61" font-size="12.5" font-weight="600" fill="#201d1a">Birdie Yager</text>
+    <text x="762" y="77" font-size="11" fill="#5a544b">wife · four children</text>
+    <rect x="20" y="180" width="170" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="32" y="201" font-size="12.5" font-weight="600" fill="#201d1a">Tony Renard</text>
+    <text x="32" y="217" font-size="11" fill="#5a544b">sponsored Fall 1966</text>
+    <rect x="260" y="180" width="180" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="272" y="201" font-size="12.5" font-weight="600" fill="#201d1a">Earl Nightingale</text>
+    <text x="272" y="217" font-size="11" fill="#5a544b">"The Strangest Secret"</text>
+    <rect x="500" y="180" width="170" height="48" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="512" y="201" font-size="12.5" font-weight="600" fill="#201d1a">Napoleon Hill</text>
+    <text x="512" y="217" font-size="11" fill="#5a544b">Think and Grow Rich</text>
+    <rect x="730" y="180" width="160" height="48" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="742" y="201" font-size="12.5" font-weight="600" fill="#201d1a">Fred Hanson</text>
+    <text x="742" y="217" font-size="11" fill="#5a544b">early distributor</text>
+    <rect x="740" y="300" width="190" height="56" rx="8" fill="#eceae2" stroke="#6f6a60" stroke-width="1.2"/>
+    <text x="752" y="321" font-size="12" font-weight="600" fill="#5a544b">? Nameless young man</text>
+    <text x="752" y="338" font-size="11" fill="#8a8578">the $50k pitch</text>
+    <rect x="740" y="420" width="170" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="752" y="441" font-size="12.5" font-weight="600" fill="#201d1a">Doug Wead</text>
+    <text x="752" y="457" font-size="11" fill="#5a544b">tells founding story</text>
+    <line x1="170" y1="64" x2="250" y2="64" stroke="#1f5fa8" stroke-width="2.2" marker-end="url(#sg-blue)"/>
+    <text x="172" y="55" font-size="11" text-anchor="start" fill="#1f5fa8">sponsored 1970</text>
+    <polyline points="590,40 590,15 105,15 105,40" fill="none" stroke="#1f5fa8" stroke-width="2.2" marker-end="url(#sg-blue)"/>
+    <text x="320" y="11" font-size="11" text-anchor="start" fill="#1f5fa8">sponsored</text>
+    <polyline points="560,96 560,140 105,140 105,180" fill="none" stroke="#1f5fa8" stroke-width="2.2" marker-end="url(#sg-blue)"/>
+    <text x="250" y="132" font-size="11" text-anchor="start" fill="#1f5fa8">sponsored Fall 1966</text>
+    <polyline points="190,208 240,208 240,120 560,120 560,96" fill="none" stroke="#7a3fa0" stroke-width="2.2" marker-end="url(#sg-purple)"/>
+    <text x="300" y="112" font-size="11" text-anchor="start" fill="#7a3fa0">tapes into downline</text>
+    <line x1="500" y1="204" x2="440" y2="204" stroke="#c07a00" stroke-width="2.2" marker-end="url(#sg-amber)"/>
+    <text x="442" y="196" font-size="11" text-anchor="start" fill="#c07a00">inspired</text>
+    <line x1="350" y1="180" x2="520" y2="96" stroke="#c07a00" stroke-width="2.2" marker-end="url(#sg-amber)"/>
+    <text x="455" y="165" font-size="11" text-anchor="start" fill="#c07a00">the record</text>
+    <line x1="810" y1="180" x2="710" y2="74" stroke="#6f6a60" stroke-width="2.2" marker-end="url(#sg-grey)"/>
+    <text x="560" y="152" font-size="11" text-anchor="start" fill="#6f6a60">possibly lent record</text>
+    <line x1="750" y1="64" x2="710" y2="62" stroke="#c2185b" stroke-width="2.2" marker-end="url(#sg-magenta)"/>
+    <text x="712" y="54" font-size="11" text-anchor="start" fill="#c2185b">wife</text>
+    <polyline points="830,300 830,260 710,260 710,96" fill="none" stroke="#6b4a1f" stroke-width="2.2" marker-end="url(#sg-brown)"/>
+    <text x="720" y="252" font-size="11" text-anchor="start" fill="#6b4a1f">pitch declined</text>
+    <polyline points="930,328 950,328 950,20 400,20 400,40" fill="none" stroke="#6b4a1f" stroke-width="2.2" marker-end="url(#sg-brown)"/>
+    <text x="700" y="13" font-size="11" text-anchor="start" fill="#6b4a1f">'I'll do it' — Britt</text>
+    <line x1="830" y1="420" x2="830" y2="356" stroke="#0e7c7b" stroke-width="2.2" marker-end="url(#sg-teal)"/>
+    <text x="660" y="400" font-size="11" text-anchor="start" fill="#0e7c7b">source of founding account</text>
+  </svg>
+narrative: |
+  <p><strong>1. 1964: a man joins Amway</strong></p>
+  <p>The chapter opens with a 1964 montage — Beatles, civil rights, LBJ — and drops the date's real cargo: "a man named Dexter Yager becomes one of the early distributors in Amway, a company which at that point is really only about five years old." Munger then flags his method honestly, and it's the chapter's most important sentence: researching Yager's life "reminds me of nothing so much as researching the biographies of medieval saints." So many layers of hagiography, much of it Yager's own, that fact and legend barely separate.</p>
+  <p>What survives the hagiography: born 1939 upstate New York, an evidently poor family; the self-told origin story of the born salesman (sixth-grade soda bottles sold to construction workers, upgraded to wholesale Coke — Munger doubts the anecdote and places it in the mid-century "born salesman" genre).</p>
+  <p>Real jobs as a car salesman and a beer salesman (West End Brewery's Utica Club was the product line); a period as a heavy drinker. And in 1964 he joins Amway — the company barely five years old, the whole MLM form barely older.</p>
+  <p><strong>2. What Yager's own story skipped</strong></p>
+  <p>The hagiography has a hole: after joining, Yager didn't make much money. Even though he "went direct very quickly" and claimed he "ate, slept, and breathed the business 7 days a week", within about three years he was applying for other jobs.</p>
+  <p>Munger reads this as damning: <em>one of the earliest adopters couldn't make the plan pay</em> — evidence that the business model "was already financially exhausted within about 5 years", that there "just wasn't enough money in 'the plan' to sustain people with full-time incomes". He adds that the same complaint was still being made — on tape, by a tools kingpin — in 1983. Hold that thought; it is the engine of the whole story.</p>
+  <p><strong>3. The record arrives: Nightingale</strong></p>
+  <p>Sometime in the mid-1960s — probably 1966 — someone (possibly Fred Hanson, an original Amway distributor — the video spells it Hansen; Wead's 2009 blog post spells it Hanson) loans Yager a copy of <strong>Earl Nightingale's "The Strangest Secret" (1956)</strong>, "the earliest motivational tape", then a big 1960s fad.</p>
+  <p>The chapter then does its cultural spadework, and this lineage matters for the whole video: Nightingale was inspired by <strong>Napoleon Hill</strong> (<em>Think and Grow Rich</em>, 1937 — later at the top of the classic Amway reading list; in Munger's telling, "a con man with a long string of failed businesses"). The same 1930s–50s self-help wave gave the world <strong>Dale Carnegie's</strong> <em>How to Win Friends and Influence People</em> — which, the chapter notes, "inspired, among others, Charles Manson" — and <strong>Norman Vincent Peale</strong>, the preacher in whose New York congregation sat the Trump family. The tapes' content was never invented for Amway; it was inherited, off the shelf.</p>
+  <p><strong>4. Fall 1966: the first duplication</strong></p>
+  <p>Yager sponsors <strong>Tony Renard</strong> into Amway; Renard shares the Nightingale interest, buys a second-hand tape recorder from Yager, and begins duplicating motivational tapes. Renard's identity is resolved outside the video: Wead's 2009 blog post places him as a piano player in Schenectady in 1966, buying a reel-to-reel from Dexter for $46.75 (wife Sue).</p>
+  <p>By the late 1960s motivational tapes are moving through Yager's downline — "at first, they're not a profit center". The chapter widens the frame: parallel proto-MLMs <strong>Holiday Magic</strong> and <strong>Koscot Interplanetary</strong> are also building motivational divisions in this same window, and Amway Corporation itself runs a small motivational operation. The tape was in the air; what was about to happen in Charlotte was not.</p>
+  <p><strong>5. 1969: Charlotte</strong></p>
+  <p>Yager moves his family — wife <strong>Birdie</strong>, four children, eventually seven — to <strong>Charlotte, North Carolina</strong>, probably to be closer to key people in his downline. Munger marks the move plainly: "Charlotte, as you'll see, rapidly becomes center stage of our story."</p>
+  <p><strong>6. 1970: Britt</strong></p>
+  <p>A second montage, and the other founder: <strong>Bill Britt</strong> joins Amway in 1970, sponsored by <strong>Dominic Conigliaro</strong>, whose sponsor was Yager. Britt is "even more of a black box" than Yager — "virtually every mention of him in the historical record surrounded by cocoons of salesmen and motivational biography".</p>
+  <p>What's known: U.S. Army service in the Korean War; minor official in a few municipal governments in central North Carolina (the video says "the Charlotte area"); then the chain of sponsorship places him directly beneath Yager. Munger pauses to note what those chains mean: upline–downline relationships "are very similar to family genealogies, another reason why Amway organizations resemble the structure of the mafia".</p>
+  <p><strong>7. The Fontainebleau meeting</strong></p>
+  <p>Then the chapter's founding scene, delivered as a quote — its source: <strong>Doug Wead</strong>, "who I'll profile in chapter six":</p>
+  <blockquote>
+    <p>"Then, a bright young man, who will remain nameless, changed everything. He sat across from Dexter Yager and Bill Britt in the coffee shop of the Fontainebleau Hotel and told Yager that for a $50,000 investment, he could buy the latest machinery and set up his own tape duplicating company.</p>
+    <p>Dexter turned him down.</p>
+    <p>Britt said, 'I'll do it.' And so, the modern networking tape business was born."</p>
+    <em>— as quoted in chapter 4 (source: Wead)</em>
+  </blockquote>
+  <p>Who was the nameless young man? Unknown. Wead himself is considered and set aside — he was only 24 in 1970 and by most accounts hadn't met Yager yet. But the chapter's real point is the pitch's arithmetic: somebody had calculated "there was enough profit potential in the tools themselves to offer a significant return on a $50,000 investment" — about $371,000 in today's money, the chapter says — and this is exactly when cassette tapes are becoming ubiquitous. "It all lines up."</p>
+  <p><strong>8. The solve</strong></p>
+  <p>Britt begins manufacturing tapes on a mass basis; Yager begins distributing them through his downlines; Britt offers a sweetheart wholesale deal; "within a few short years, they both grow very rich and highly influential".</p>
+  <p>And now the sentence the whole video turns on: for Britt, Yager, and the nameless young man, "the central problem of the Amway business, which is that you can't make any real money at it, has been solved." The solution was not a better way to sell soap. It was an entirely new income stream — the tools — built on the work of the self-help writers who came before. The recruiting business remained as it was: largely illusory income. The tape business was real income, and it had a customer list already: everyone chasing the illusion.</p>
+  <p>Was the discovery an accident? "We can't know because there are so few primary sources," Munger says — but it may not have come out of left field, because other motivational organizations of the same moment, "also likened to cults", were taking similar shapes.</p>
+  <p><strong>10. What the record shows — checking chapter 4's claims</strong></p>
+
+    Fact-check — verified against obituaries, litigation records, press, and scholarship
+    <ul>
+      <li><strong>Yager's spelling and dates:</strong> "Yager" is correct (captions sometimes show "Yeager"). He was born <strong>6 December 1939 in Fulton, New York</strong> and raised in Rome — the video's "born in Rome" conflates birthplace with hometown. (Obituaries: <a href="https://www.dignitymemorial.com/obituaries/charlotte-nc/dexter-yager-8121334">Dignity Memorial</a>; <a href="https://www.romesentinel.com/entertainment-life/culture/rome-man-made-millions-with-amway-and-advice/article_29bf5c2e-3200-560d-bbeb-6eb5dcee8400.html">Rome Sentinel</a>.)</li>
+      <li><strong>1964, Charlotte 1969, the jobs:</strong> confirmed. A relative introduced him to Amway in 1964; he married Birdie Narehood in 1957; the family moved Rome → Charlotte in 1969; he "sold Sears tools, Ford cars and Utica Club beer" (West End Brewing's brand — the video's "beer salesman with an outfit called the West End Brewery" is consistent). (<a href="https://www.charlotteobserver.com/news/politics-government/article224288605.html">Charlotte Observer</a>; Dignity Memorial.)</li>
+      <li><strong>The heavy-drinking claim</strong> traces to Yager's own account ("up to two cases of beer a day") — self-report, not independent record.</li>
+      <li><strong>"Applying for other jobs by ~1967" — not found.</strong> No obituary, press profile, or accessible history supports the claim that Yager was job-hunting within three years; the surviving material repeats the opposite posture ("Amway became my top priority"). Treat the chapter's inference — "the model was already exhausted within five years" — as Munger's argument, not a documented fact.</li>
+      <li><strong>Britt:</strong> joined Amway 1970 (initial investment $25, per his obituary); U.S. Army from 1949, an officer in the Korean War commanding a floating bridge unit. But his municipal career was <em>central North Carolina</em>, not "the Charlotte area": assistant to the city manager in Raleigh, then city manager of Sanford and Goldsboro, town manager of Carrboro, M.P.A. from UNC. His organization became <strong>Britt World Wide</strong>; tape-era entities in the litigation record include American Multimedia, Britt Motivation, Britt Leasing, Britt Management, and Britt Resources — "founded the tape-manufacturing business" compresses several companies into one. (<a href="https://www.legacy.com/us/obituaries/newsobserver/name/billy-britt-obituary?id=12439515">News &amp; Observer obituary</a>; AmwayWiki — a distributor-maintained wiki, use with care.)</li>
+      <li><strong>Fred Hanson — real, but the DeVos sponsorship is wrong, and the spelling is Hanson.</strong> Hanson was an original figure (he signed Amway's articles of incorporation and sat on its 1960–61 distributor board), but the record shows he was sponsored by <strong>the Basses</strong>, not Rich DeVos. Wead's 2009 blog post spells the name Hanson — canonical here, not the video's Hansen. And no source connects Hanson to lending Yager the Nightingale record — that part stays unverified. (Amway leadership history; <a href="https://www.mlive.com/news/grand-rapids/2009/05/post_44.html">MLive</a>; FTC 1979 decision's witness list; <a href="https://amwaywiki.com">AmwayWiki</a> — distributor-maintained, use with care.)</li>
+      <li><strong>Tony Renard — identity resolved via <a href="https://dougwead.wordpress.com/2009/04/14/amway-and-the-tools/">Wead's 2009 blog post</a>.</strong> Piano player in Schenectady, 1966; bought a reel-to-reel from Dexter for $46.75; wife Sue. The "first duplication" story itself still rests on the video's (and Yager-era) oral tradition alone — the blog pins the man, not every detail of the tale.</li>
+      <li><strong>"Dominic Conigliaro" — spelling varies in the record</strong> ("Dom &amp; Pat Coniguliaro" / "Congilero"); the sponsorship position (Britt's upline, beneath Yager) matches how the lines of sponsorship appear in later litigation. Name only; the case it appears in belongs to a later chapter.</li>
+      <li><strong>"Betty Joe Renfro" — correct spelling is Rex &amp; Betty Jo Renfrow</strong>; the identity and her kingpin husband check out in the records where the names appear. The "tape of the day / hour" quote itself: not located in any accessible source.</li>
+      <li><strong>The Fontainebleau quote is located: Wead's 2009 blog post.</strong> Wead is real — Amway diamond, prolific author, tied to Yager personally (his books' dedications; himself later a subject of press profiles; died 2021) — and the exact quote's true home is his 2009 blog post, not <em>The Magic Makers</em> (Yager &amp; Wead, 1982), which survives only as a controlled-lending scan (Internet Archive id magicmakershowto00yage). So: Munger's key quote is <em>attributed</em> to Wead with the primary text now pinned. Read the scene as one insider's account, flagged.</li>
+      <li><strong>Lineage checks:</strong> Nightingale's "Strangest Secret" (1956) sold over a million and is widely called the first spoken-word Gold Record — but the certification traces to his own company's marketing, so "first" stays soft. Hill (1937) checks out, and the "con man" characterization is substantially supported by investigative journalism (fake Carnegie meeting, deadbeat ventures, warrants in Illinois). The Nightingale-was-inspired-by-Hill link is confirmed in Nightingale's own words. Carnegie's book is 1936; "inspired Charles Manson" is better told as: Manson enrolled in the Dale Carnegie course at Terminal Island in 1957 — and dropped out before completing it — then used what he learned (Guinn via <a href="https://www.bloomberg.com/news/articles/2013-07-22/charles-mansons-turning-point-dale-carnegie-classes">Bloomberg 2013</a>; Telegraph/SMH 2017 for the dropout). Peale was pastor of Marble Collegiate Church (1932–84) and the Trump family attended (Peale married Donald and Ivana there in 1977); "the Trump family" needs that precision, not more.</li>
+      <li><strong>The parallels:</strong> Holiday Magic (founded 1964, William Penn Patrick) and <strong>Koscot</strong> Interplanetary (1967, Glenn W. Turner — the transcript's "Koskot" is ASR; the name is an acronym, "Kosmetics for the Communities of Tomorrow"). Both did develop motivational arms in the late '60s: Leadership Dynamics (1967), Mind Dynamics (1968, bought by Patrick 1970), and Turner's own Dare to Be Great (1969) — whose rallies, court records note, "are like an old time revival meeting". "Golden Eagle gatherings" doesn't appear in the record; that detail is unverified as stated.</li>
+      <li><strong>The cassette timing is half-right:</strong> the compact cassette (1963) and car players (from 1968, Philips) were real and rising — but in American cars the 8-track still ruled; cassette "ubiquity" in cars arrives around 1980, not 1969–71. "It all lines up" works for taping culture and portability; it overclaims for cars.</li>
+      <li><strong>The money:</strong> $50,000 in 1970 converts to roughly <strong>$410,000–430,000</strong> in 2026 dollars (CPI). The chapter's "$371,000" matches the 2021–22 conversion window; in today's numbers, correct it upward. (<a href="https://www.bls.gov/data/inflation_calculator.htm">BLS inflation calculator</a>.)</li>
+    </ul>
+machinery: |
+  <p><strong>9. What the chapter establishes mechanically</strong></p>
+  <ul>
+    <li><strong>Two pyramids get their founders.</strong> Ch3 drew the structure (Amway's small pyramid, the tools' large one); ch4 names the men who built the large one — Britt (manufacturing) and Yager (distribution) — with Wead as the kingpin/insider who tells it.</li>
+    <li><strong>The founding insight.</strong> The tools are a separate business whose profits don't depend on soap at all; the "solve" is a business model switch, not a sales improvement.</li>
+    <li><strong>The lineage.</strong> The tools' content is recycled from Nightingale/Hill/Carnegie/Peale — an existing motivational culture, repurposed as an inventory item.</li>
+    <li><strong>The trigger.</strong> The founding happens only after the underlying plan shows itself unable to support its own earliest adopters; the taping business begins as the answer to a shortage of real income, not as a master plan.</li>
+    <li><strong>The method lesson.</strong> For both biographies, primary sources are scarce and self-serving; Munger teaches the reader to hold "hagiography" at arm's length — including his own key quote, which he flags as one man's account.</li>
+  </ul>
+sources:
+  - label: "Dignity Memorial"
+    url: "https://www.dignitymemorial.com/obituaries/charlotte-nc/dexter-yager-8121334"
+  - label: "Rome Sentinel"
+    url: "https://www.romesentinel.com/entertainment-life/culture/rome-man-made-millions-with-amway-and-advice/article_29bf5c2e-3200-560d-bbeb-6eb5dcee8400.html"
+  - label: "Charlotte Observer"
+    url: "https://www.charlotteobserver.com/news/politics-government/article224288605.html"
+  - label: "News & Observer obituary"
+    url: "https://www.legacy.com/us/obituaries/newsobserver/name/billy-britt-obituary?id=12439515"
+  - label: "MLive"
+    url: "https://www.mlive.com/news/grand-rapids/2009/05/post_44.html"
+  - label: "AmwayWiki"
+    url: "https://amwaywiki.com"
+  - label: "Wead's 2009 blog post"
+    url: "https://dougwead.wordpress.com/2009/04/14/amway-and-the-tools/"
+  - label: "Bloomberg 2013"
+    url: "https://www.bloomberg.com/news/articles/2013-07-22/charles-mansons-turning-point-dale-carnegie-classes"
+  - label: "BLS inflation calculator"
+    url: "https://www.bls.gov/data/inflation_calculator.htm"

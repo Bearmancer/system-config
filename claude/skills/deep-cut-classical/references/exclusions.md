@@ -6,14 +6,9 @@ Full ban list for the `deep-cut-classical` skill's recommendation lane; `SKILL.m
 
 Skip every composer below unless the user names it explicitly. Same rule regardless of why a composer is here — a reason is recorded when one exists, but its absence doesn't weaken the ban. Reasons name composer-level over-recommendation patterns only, never a specific work. Era bans (below) carry no exceptions.
 
-No stated reason (banned on the user's own say-so):
-
-Rachmaninoff, Beethoven, Brahms, Mendelssohn, Bruch, Mozart, Haydn, Bruckner, Mahler, Schubert, Schumann, Stravinsky, Tchaikovsky, Ravel, Debussy, Richard Strauss, Johann Strauss I, Johann Strauss II, Eduard Strauss, Josef Strauss, Wagner, Prokofiev, Scriabin, Wetz, Tyberg, Shostakovich, Sibelius, Sousa, Walton, Vaughan Williams (RWV), Suppe, Offenbach, Verdi, Rossini, Liszt, Weingartner
-
-With a stated reason:
-
 | Composer                    | Reason                                       |
 | ---------------------------- | --------------------------------------------- |
+| Rachmaninoff, Beethoven, Brahms, Mendelssohn, Bruch, Mozart, Haydn, Bruckner, Mahler, Schubert, Schumann, Stravinsky, Tchaikovsky, Ravel, Debussy, Richard Strauss, Johann Strauss I, Johann Strauss II, Eduard Strauss, Josef Strauss, Wagner, Prokofiev, Scriabin, Wetz, Tyberg, Shostakovich, Sibelius, Sousa, Walton, Vaughan Williams (RWV), Suppe, Offenbach, Verdi, Rossini, Liszt, Weingartner | no stated reason (user's own say-so) |
 | Korngold (Erich Wolfgang)   | over-recommended (user, added 2026-09-20)    |
 | Bax (Arnold)                | lush circuit (user, added 2026-09-20)        |
 | Enescu (George)             | over-recommended staple (user, added 2026-09-20) |

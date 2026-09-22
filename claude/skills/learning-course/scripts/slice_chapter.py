@@ -33,7 +33,8 @@ def fmt_clock(t):
 
 
 def load_cues(vtt_path):
-    raw = open(vtt_path, encoding="utf-8").read()
+    with open(vtt_path, encoding="utf-8") as fh:
+        raw = fh.read()
     cues = []
     for block in raw.split("\n\n"):
         lines = block.strip().splitlines()
@@ -109,8 +110,13 @@ def main():
         title = None
         if "|" in spec:
             spec, title = spec.split("|", 1)
-        rng, slug = spec.rsplit(":", 1)
-        start_s, end_s = rng.split("-", 1)
+        try:
+            rng, slug = spec.rsplit(":", 1)
+            start_s, end_s = rng.split("-", 1)
+        except ValueError:
+            print(f"Error: invalid spec format '{spec}'", file=sys.stderr)
+            print(f"Expected format: start-end:slug[|title]", file=sys.stderr)
+            sys.exit(1)
         start, end = parse_time(start_s), parse_time(end_s)
 
         before, after, sel = boundary_split(cues, start, end)

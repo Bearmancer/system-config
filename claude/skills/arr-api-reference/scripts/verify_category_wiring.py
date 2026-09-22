@@ -22,11 +22,14 @@ from arr_scripts import HOST, get_arr_api_key, get_sab_api_key
 
 
 def get_sab_categories() -> set[str]:
-    url = (
-        f"http://{HOST}:8080/api?mode=get_config&section=categories"
-        f"&apikey={get_sab_api_key()}&output=json"
-    )
-    resp = requests.get(url)
+    url = f"http://{HOST}:8080/api"
+    params = {
+        "mode": "get_config",
+        "section": "categories",
+        "apikey": get_sab_api_key(),
+        "output": "json",
+    }
+    resp = requests.get(url, params=params, timeout=10)
     resp.raise_for_status()
     cats = resp.json()["config"]["categories"]
     return {c["name"] for c in cats if c["name"] != "*"}
@@ -37,7 +40,7 @@ def get_arr_download_client_categories(
 ) -> dict[str, str]:
     """Returns {download_client_name: category_value}."""
     headers = {"X-Api-Key": get_arr_api_key(app)}
-    resp = requests.get(f"http://{HOST}:{port}/api/v3/downloadclient", headers=headers)
+    resp = requests.get(f"http://{HOST}:{port}/api/v3/downloadclient", headers=headers, timeout=10)
     resp.raise_for_status()
     out: dict[str, str] = {}
     for client in resp.json():
@@ -50,7 +53,7 @@ def get_arr_download_client_categories(
 def get_prowlarr_client_categories() -> dict[str, list[str]]:
     """Returns {download_client_name: [clientCategory, ...]}."""
     headers = {"X-Api-Key": get_arr_api_key("Prowlarr")}
-    resp = requests.get(f"http://{HOST}:9696/api/v1/downloadclient", headers=headers)
+    resp = requests.get(f"http://{HOST}:9696/api/v1/downloadclient", headers=headers, timeout=10)
     resp.raise_for_status()
     out: dict[str, list[str]] = {}
     for client in resp.json():

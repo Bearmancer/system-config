@@ -32,8 +32,8 @@ body {
 /* Headings */
 .kicker {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.72rem;
-	letter-spacing: 0.14em;
+	font-size: 0.85rem;
+	letter-spacing: 0.10em;
 	color: var(--accent);
 	margin: 0 0 0.6rem;
 }
@@ -59,7 +59,7 @@ h3 {
 
 .meta {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.78rem;
+	font-size: 0.9rem;
 	color: var(--ink-soft);
 	margin: 0 0 2rem;
 }
@@ -70,24 +70,24 @@ h3 {
 }
 .surtitle {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.82rem;
+	font-size: 0.9rem;
 	color: var(--ink-soft);
 	margin: 0 0 1.2rem;
 }
 .home-link {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.78rem;
+	font-size: 0.9rem;
 	color: var(--ink-soft);
 	margin: 0 0 1.4rem;
 }
 .top-nav {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.8rem;
+	font-size: 0.9rem;
 	color: var(--ink-soft);
 	margin: 0 0 1.6rem;
 }
 .top-nav a {
-	margin-right: 1rem;
+	margin-right: 1.2rem;
 }
 
 /* Links & text */
@@ -104,12 +104,12 @@ strong {
 }
 .t {
 	font-family: var(--mono);
-	font-size: 0.82em;
+	font-size: 0.88em;
 	color: var(--accent);
 	white-space: nowrap;
 }
 .small {
-	font-size: 0.86rem;
+	font-size: 0.92rem;
 	color: var(--ink-soft);
 }
 
@@ -123,7 +123,7 @@ blockquote p {
 	margin: 0.3rem 0;
 }
 blockquote cite {
-	font-size: 0.84rem;
+	font-size: 0.9rem;
 	font-style: normal;
 }
 
@@ -144,7 +144,7 @@ blockquote cite {
 }
 .box .box-title {
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.72rem;
+	font-size: 0.85rem;
 	letter-spacing: 0.12em;
 	color: var(--accent);
 	display: block;
@@ -171,13 +171,24 @@ th {
 	border-bottom: 1.5px solid var(--rule);
 	padding: 0.4rem 0.5rem;
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.78rem;
+	font-size: 0.85rem;
 	font-weight: 600;
 }
 td {
 	border-bottom: 1px solid var(--rule);
 	padding: 0.4rem 0.5rem;
 	vertical-align: top;
+}
+
+/* Cast block — enlarged roster table */
+.cast {
+	font-size: 1.02rem;
+}
+.cast th {
+	font-size: 0.9rem;
+}
+.cast td {
+	padding: 0.5rem 0.6rem;
 }
 
 /* Timeline */
@@ -195,7 +206,7 @@ td {
 }
 .tl .when {
 	font-family: var(--mono);
-	font-size: 0.8rem;
+	font-size: 0.85rem;
 	color: var(--accent);
 	padding-top: 0.15rem;
 }
@@ -216,7 +227,7 @@ ul.tight li, ol.tight li {
 	white-space: nowrap;
 	color: var(--ink-soft);
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.82rem;
+	font-size: 0.9rem;
 }
 
 /* Footer */
@@ -225,7 +236,7 @@ ul.tight li, ol.tight li {
 	padding-top: 1.1rem;
 	border-top: 1px solid var(--rule);
 	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.8rem;
+	font-size: 0.9rem;
 	color: var(--ink-soft);
 }
 .lesson-footer nav a {

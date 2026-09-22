@@ -35,22 +35,59 @@ def backup_arr_stack() -> list[Path]:
     for app, port in ports.items():
         key = get_arr_api_key(app)
         ver = "v1" if app == "Prowlarr" else "v3"
+        headers = {"X-Api-Key": key}
+        triggered_at = time.time()
         resp = requests.post(
             f"http://{HOST}:{port}/api/{ver}/command",
-            headers={"X-Api-Key": key},
+            headers=headers,
             json={"name": "Backup"},
+            timeout=10,
         )
         resp.raise_for_status()
-        time.sleep(3)
+        command_id = resp.json()["id"]
+
+        status = None
+        for _ in range(30):
+            time.sleep(1)
+            status_resp = requests.get(
+                f"http://{HOST}:{port}/api/{ver}/command/{command_id}", headers=headers, timeout=10
+            )
+            status_resp.raise_for_status()
+            status = status_resp.json().get("status")
+            if status == "completed":
+                break
+        else:
+            raise TimeoutError(
+                f"{app} backup command {command_id} did not complete within 30s "
+                f"(last status: {status})"
+            )
+
         backups_dir = Path(rf"C:\ProgramData\{app}\Backups\manual")
         zips = sorted(
             backups_dir.glob("*.zip"), key=lambda p: p.stat().st_mtime, reverse=True
         )
-        shutil.copy2(zips[0], configs / f"{app} - {date}.zip")
+        if not zips:
+            raise FileNotFoundError(
+                f"{app} backup command reported completed but no zip found in {backups_dir}"
+            )
+        newest = zips[0]
+        if newest.stat().st_mtime < triggered_at:
+            raise RuntimeError(
+                f"{app} backup command reported completed but newest zip {newest} "
+                f"predates the backup trigger time — refusing to copy a stale backup"
+            )
+        shutil.copy2(newest, configs / f"{app} - {date}.zip")
 
     sab_key = get_sab_api_key()
     resp = requests.get(
-        f"http://{HOST}:8080/api?mode=config&name=create_backup&apikey={sab_key}&output=json"
+        f"http://{HOST}:8080/api",
+        params={
+            "mode": "config",
+            "name": "create_backup",
+            "apikey": sab_key,
+            "output": "json",
+        },
+        timeout=10,
     )
     resp.raise_for_status()
     sab_backup_path = Path(resp.json()["value"]["message"])

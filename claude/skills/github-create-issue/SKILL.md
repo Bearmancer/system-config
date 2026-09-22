@@ -71,36 +71,4 @@ Write outcome under **Counter-scenarios tried**, include any that fail to reprod
 
 ## Environment block — software-maximalist, no hardware
 
-Software fact only. Never CPU/GPU/RAM/model, never hostname/username/tokens.
-
-- OS: caption, version, build, architecture — **verify, never guess** (Win10 and Win11 both report `Windows 10.0.x`; build `19045` = Win10 22H2, `22000+` = Win11)
-- App: opencode version; plugin names + versions
-- Runtime/deps: node, npm/pnpm/bun, python, dotnet — whatever repro touch
-- Every binary repro name, with its version
-- Config excerpt (relevant keys, verbatim)
-- **Logs — always.** At least one verbatim log line show divergent value, plus log file path
-
-Collect on Windows with CIM one-liner (faster than built-in `systeminfo`):
-
-```powershell
-Get-CimInstance Win32_OperatingSystem | Select-Object Caption,Version,BuildNumber,OSArchitecture
-node --version; npm --version; bun --version
-<tool> --version
-```
-
-## Corrections: edit, don't stack
-
-- Own issue body wrong → `gh issue edit <n> --repo <owner>/<repo> --body-file <file>`
-- Bad comment → `gh api -X DELETE repos/<owner>/<repo>/issues/comments/<comment_id>`
-- Never post "correction" comment that supersede earlier wrong one — delete earlier one instead.
-- Environment mistake be most common correction: verify before post; if one slip through, edit or delete — never append.
-
-## Independent re-audit
-
-After file, hand full list of post (issue numbers + comment IDs) to fresh agent with instruct to **independently** re-read each post from GitHub, check every claim against machine and source, flag anything unverified, mis-stated, or contradict. Fix or delete flagged item. Never self-certify.
-
-## gh CLI only — no GitHub plugin/MCP needed
-
-Use `gh` via Bash for all this. No reach for GitHub plugin/MCP server unless user have one enable and ask specific.
-
-**Why plain `gh` enough here:** issue search, issue create, issue comment, PR/issue read — all single `gh` subcommand, plain-text or `--json` output. No multi-step orchestrate, no auth flow beyond `gh auth status`, wrapper add nothing on top. A GitHub plugin/MCP server adds dependency and permission surface for zero behavior gain on this task shape.
+See `references/shared-conventions.md` for which of the three skills fires on an ambiguous request, plus the Environment block, Corrections, Independent re-audit, and gh-CLI-only sections — identical across all three github-create-* skills.
