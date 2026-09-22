@@ -5,7 +5,7 @@ description: "Tiered, multi-source verification engine: take a list of checkable
 
 # Rigorous Research
 
-Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (OMO) — the only runtime this domain has. No portability guarding, no alternate-host fallback: `skill()` is an OMO tool, called directly.
+Tiered, multi-source claim verification. Invoke via the `rigorous-research` skill, under OpenCode + oh-my-openagent (OMO) or under Claude Code alike.
 
 ## Input contract
 
@@ -23,6 +23,8 @@ Tiered, multi-source claim verification. Runs under OpenCode + oh-my-openagent (
 
 Output shape per claim: `claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote`. Loop until every claim resolves; stop after 5 passes and mark whatever remains plainly unverified — a claim with no witness stays unverified. Coordinate passes so each claim is searched once.
 
+**Looping on request.** When the caller asks for another pass on claims already run through this skill, the response opens with the exhausted-resources list for those claims: every domain, source, and tool already queried, per claim, before any new pass starts. The new pass targets sources outside that list; querying an already-exhausted source again is not a new pass. The exhausted-resources list stays in the output alongside the claim → verdict → URL → quote table, not folded into it.
+
 ## Scaling beyond 2 passes
 
 Default to **2 parallel passes** — the existing upper bound. A claim list large enough to need more than that (3+ distinct source territories, e.g. court records / contemporaneous press / scholarship, or unresolved claims by pass 3 of the 5-pass budget) is an orchestration decision for the calling session, not this skill: hand it the claim list, the source ordering below, and the output format, split by axis, one worker per axis. This skill states what to research and how to verify it; how many workers carry that out is the caller's call.
@@ -39,12 +41,12 @@ Single home for every source-choice rule:
 
 ## Burn guards
 
-Map before crawl with an explicit limit; never `raw_content` at scale; never request a summary for a large N that goes unused; pin agent effort and bound arrays; pilot-measure bytes-per-record on 50-100 pages; block media and fonts; track cost per usable record.
+Map before crawl with an explicit limit; never `raw_content` at scale; never request a summary for a large N that goes unused; pin agent effort and bound arrays; block media and fonts.
 
 ## Tool routing — pointer only
 
-Do not choose servers here. Load the web-data-apis skill (`skill(name="web-data-apis")` in OpenCode, or via the `Skill` tool with `skill: "web-data-apis"` in Claude Code) and pick from its capability table, citing the row you used.
+Do not choose servers here. Load the `web-data-apis` skill and pick from its capability table, citing the row you used.
 
 ## Failover — pointer only
 
-Credit exhaustion during a research pass: the rotation mechanics, the hard-stop rule, and the never-read-`~/.secrets/.env` prohibition live in `learning-course` skill's "API key failover" section. Consult it there — not restated here.
+Credit exhaustion during a research pass: the rotation mechanics, the hard-stop rule, and the never-read-`~/.secrets/.env` prohibition live in `web-data-apis` skill's "API key failover" section. Consult it there — not restated here.

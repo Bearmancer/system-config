@@ -1,9 +1,9 @@
 {
 	"plugin": [
-		"@slkiser/opencode-quota",
-		"oh-my-openagent@latest",
-		"./plugins/caveman/plugin.js",
-	],
+    "@slkiser/opencode-quota",
+    "./plugins/caveman/plugin.js",
+    "oh-my-openagent@latest"
+  ],
 	"$schema": "https://opencode.ai/config.json",
 	"shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
 	"lsp": {

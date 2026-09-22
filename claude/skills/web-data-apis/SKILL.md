@@ -61,7 +61,7 @@ Dappier and ScrapeGraphAI run via `uvx` (Python); AgentQL via `cmd /c npx -y` (N
 
 ## Music search
 
-Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? One query, one source is not an answer — `references/music-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session (reissues/represses aren't new recordings), and duration verification. Never cite Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz as a source.
+Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? `deep-cut-classical` skill's `references/discography-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session, duration verification, and citation sources — genre-agnostic, reusable by any music task.
 
 ## Companion tool skills
 
@@ -70,9 +70,24 @@ The house rules above route to dedicated skills for some servers. Split across t
 - `~/.agents/skills/`: `bright-data-mcp`, `scrape`, `browser`, `apify-ultimate-scraper`, `context7`, `just-scrape`
 - `~/.config/opencode/skills/`: `web-search`, `answers`, `news-search`, `images-search`, `videos-search`, `suggest`, `spellcheck`, `local-place-search`, `local-pois`, `local-descriptions`, `bx`, `bx-search`, `llm-context` (Brave-backed skills — OpenCode only; under Claude Code, equivalent capability comes from MCP servers configured in the session)
 
-## Keys + credit failover
+## Keys + credit failover (11 keyed services)
 
-Account pools live in `~/.secrets/.env`. **Never read that file.** Rotation mechanics, the hard-stop rule, and the sanctioned reader (`switch_api_key.py`) live in one place: `learning-course` skill's "API key failover" section (`SKILL.md`). Consult it there — not restated here.
+Research-tool account pools live in `~/.secrets/.env`. **Never read that file — no Read, no cat, no rg, not even for variable names. `learning-course/scripts/switch_api_key.py` is its only sanctioned reader**, and it prints nothing but account names + sha256 fingerprints; key material never enters chat, logs, or context.
+
+Trigger: a research call fails on credit/quota exhaustion — Tavily usage limit, Firecrawl insufficient credits / 402, Exa credits exhausted, key suddenly 401s after working earlier. Transient rate limit: retry once first; rotate only on credit/quota/payment/auth signatures.
+
+Rotate (exact order):
+
+1. Run: `python <path-to-learning-course-skill>/scripts/switch_api_key.py --service <tavily|exa|firecrawl|dappier|agentql|scrapegraph|context7|brave|apify|brightdata|browserbase> --next`
+2. Report the script's output line to the user verbatim (already masked).
+3. Tell the user to **restart OpenCode** — MCP servers read env at startup only.
+4. **HARD STOP.** No retries with the old key, no further tool calls, no carrying on the remaining work this session. Resume after restart.
+
+Controls: `--list` peeks pool + active account (no write); `--service all --list` covers every supported service; `--set <ACCOUNT>` pins one; `--next --dry-run` previews. Pointer = the User-scope env var (`TAVILY_API_KEY`, `EXA_API_KEY`, `FIRECRAWL_API_KEY`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `APIFY_TOKEN`, `BRIGHTDATA_API_KEY`, `BROWSERBASE_API_KEY`); OpenCode's `{env:...}` references resolve against it. If any other loader re-imports `.env` wholesale, rerun the script.
+
+Context7, Brave, Apify, Bright Data, Browserbase joined the pool 2026-09-20.
+
+**Not in the failover pool, by design:** Dappier, AgentQL, ScrapeGraphAI — keyed and wired, see their own usage detail above in the capability table (ScrapeGraphAI also has `just-scrape`).
 
 **Exa is the one exception where rotation is a no-op.** `switch_api_key.py --service exa` rewrites the `EXA_API_KEY` pointer, but `opencode.jsonc`'s `exa` MCP entry is a bare remote URL (`https://mcp.exa.ai/mcp?tools=...`) with no `{env:EXA_API_KEY}` reference anywhere in it — confirmed by reading the config directly. Rotating the Exa key changes nothing until the config entry itself is fixed to reference the env var.
 

@@ -195,92 +195,102 @@ def main():
     failed = 0
     for path in args.files:
         try:
-            html = open(path, encoding="utf-8", errors="replace").read()
+            with open(path, encoding="utf-8", errors="replace") as fh:
+                html = fh.read()
         except OSError as exc:
             print(f"ERROR {path}: {exc}")
             failed += 1
             continue
         svg_matches = re.findall(r"<svg\b.*?</svg>", html, re.S)
-        svg = svg_matches[0] if svg_matches else ""
-        svg = re.sub(r"<defs\b.*?</defs>", "", svg, flags=re.S)
+        if not svg_matches:
+            print(f"ERROR {path}: no <svg> block found")
+            failed += 1
+            continue
 
-        rects_all = load_all_rects(svg)
-        boxes = [r for r, is_frame in rects_all if not is_frame]
-        segs = load_segments(svg)
-        labels = load_labels(svg)
-        terminals = load_terminals(svg)
+        file_fatal = 0
+        for svg_idx, svg in enumerate(svg_matches, start=1):
+            label = f"{path} SVG #{svg_idx}" if len(svg_matches) > 1 else path
+            svg = re.sub(r"<defs\b.*?</defs>", "", svg, flags=re.S)
 
-        edge_hits = []
-        for si, (p1, p2) in enumerate(segs):
-            for bi, r in enumerate(boxes):
-                ov = overlap_length(p1, p2, r)
-                if ov > args.min_overlap:
-                    edge_hits.append((si, bi, ov, r, p1, p2))
+            rects_all = load_all_rects(svg)
+            boxes = [r for r, is_frame in rects_all if not is_frame]
+            segs = load_segments(svg)
+            labels = load_labels(svg)
+            terminals = load_terminals(svg)
 
-        box_hits = []
-        for i in range(len(rects_all)):
-            for j in range(i + 1, len(rects_all)):
-                ri, i_is_frame = rects_all[i]
-                rj, j_is_frame = rects_all[j]
-                ox, oy = rect_overlap(ri, rj)
-                if ox > args.min_overlap and oy > args.min_overlap:
-                    if (contains(rj, ri) and j_is_frame) or (
-                        contains(ri, rj) and i_is_frame
-                    ):
-                        continue
-                    box_hits.append((i, j, ox, oy, ri, rj))
-
-        label_line_hits = []
-        for rect, text in labels:
+            edge_hits = []
             for si, (p1, p2) in enumerate(segs):
-                if overlap_length(p1, p2, rect) > args.min_overlap:
-                    label_line_hits.append((text, si, p1, p2))
+                for bi, r in enumerate(boxes):
+                    ov = overlap_length(p1, p2, r)
+                    if ov > args.min_overlap:
+                        edge_hits.append((si, bi, ov, r, p1, p2))
 
-        label_box_hits = []
-        for rect, text in labels:
-            for bi, r in enumerate(boxes):
-                ox, oy = rect_overlap(rect, r)
-                if ox > args.min_overlap and oy > args.min_overlap:
-                    if contains(r, rect):
-                        continue
-                    label_box_hits.append((text, bi, r, ox, oy))
+            box_hits = []
+            for i in range(len(rects_all)):
+                for j in range(i + 1, len(rects_all)):
+                    ri, i_is_frame = rects_all[i]
+                    rj, j_is_frame = rects_all[j]
+                    ox, oy = rect_overlap(ri, rj)
+                    if ox > args.min_overlap and oy > args.min_overlap:
+                        if (contains(rj, ri) and j_is_frame) or (
+                            contains(ri, rj) and i_is_frame
+                        ):
+                            continue
+                        box_hits.append((i, j, ox, oy, ri, rj))
 
-        arrow_hits = []
-        for i in range(len(terminals)):
-            for j in range(i + 1, len(terminals)):
-                (ax, ay), (bx, by) = terminals[i], terminals[j]
-                gap = ((ax - bx) ** 2 + (ay - by) ** 2) ** 0.5
-                if gap < args.arrowhead_gap:
-                    arrow_hits.append((i, j, gap, terminals[i], terminals[j]))
+            label_line_hits = []
+            for rect, text in labels:
+                for si, (p1, p2) in enumerate(segs):
+                    if overlap_length(p1, p2, rect) > args.min_overlap:
+                        label_line_hits.append((text, si, p1, p2))
 
-        fatal = (
-            len(edge_hits)
-            + len(box_hits)
-            + len(label_box_hits)
-            + len(arrow_hits)
-            + (len(label_line_hits) if args.strict_labels else 0)
-        )
-        print(
-            f"{'OK' if fatal == 0 else 'PROBLEMS'} {path}: {len(boxes)} boxes, {len(segs)} segments, "
-            f"{len(labels)} labels | edges-through-boxes={len(edge_hits)} box-overlaps={len(box_hits)} "
-            f"merged-arrowheads={len(arrow_hits)} labels-on-boxes={len(label_box_hits)} "
-            f"labels-on-lines={len(label_line_hits)}{' (fatal)' if args.strict_labels else ' (warnings)'}"
-        )
-        for si, bi, ov, r, p1, p2 in edge_hits:
-            print(
-                f"   edge {si} {p1}->{p2} passes through box {bi} at x={r[0]} y={r[1]} w={r[2]} h={r[3]} by {ov:.1f}px"
+            label_box_hits = []
+            for rect, text in labels:
+                for bi, r in enumerate(boxes):
+                    ox, oy = rect_overlap(rect, r)
+                    if ox > args.min_overlap and oy > args.min_overlap:
+                        if contains(r, rect):
+                            continue
+                        label_box_hits.append((text, bi, r, ox, oy))
+
+            arrow_hits = []
+            for i in range(len(terminals)):
+                for j in range(i + 1, len(terminals)):
+                    (ax, ay), (bx, by) = terminals[i], terminals[j]
+                    gap = ((ax - bx) ** 2 + (ay - by) ** 2) ** 0.5
+                    if gap < args.arrowhead_gap:
+                        arrow_hits.append((i, j, gap, terminals[i], terminals[j]))
+
+            fatal = (
+                len(edge_hits)
+                + len(box_hits)
+                + len(label_box_hits)
+                + len(arrow_hits)
+                + (len(label_line_hits) if args.strict_labels else 0)
             )
-        for i, j, ox, oy, a, b in box_hits:
-            print(f"   boxes {i} {a} and {j} {b} overlap by {ox:.1f}x{oy:.1f}px")
-        for i, j, gap, p, q in arrow_hits:
-            print(f"   arrowheads merge: endpoints {p} and {q} are {gap:.1f}px apart")
-        for text, bi, r, ox, oy in label_box_hits:
             print(
-                f'   label "{safe(text[:40])}" covers box {bi} at x={r[0]} y={r[1]} by {ox:.1f}x{oy:.1f}px'
+                f"{'OK' if fatal == 0 else 'PROBLEMS'} {label}: {len(boxes)} boxes, {len(segs)} segments, "
+                f"{len(labels)} labels | edges-through-boxes={len(edge_hits)} box-overlaps={len(box_hits)} "
+                f"merged-arrowheads={len(arrow_hits)} labels-on-boxes={len(label_box_hits)} "
+                f"labels-on-lines={len(label_line_hits)}{' (fatal)' if args.strict_labels else ' (warnings)'}"
             )
-        for text, si, p1, p2 in label_line_hits:
-            print(f'   label "{safe(text[:40])}" sits on edge {si} {p1}->{p2}')
-        if fatal:
+            for si, bi, ov, r, p1, p2 in edge_hits:
+                print(
+                    f"   edge {si} {p1}->{p2} passes through box {bi} at x={r[0]} y={r[1]} w={r[2]} h={r[3]} by {ov:.1f}px"
+                )
+            for i, j, ox, oy, a, b in box_hits:
+                print(f"   boxes {i} {a} and {j} {b} overlap by {ox:.1f}x{oy:.1f}px")
+            for i, j, gap, p, q in arrow_hits:
+                print(f"   arrowheads merge: endpoints {p} and {q} are {gap:.1f}px apart")
+            for text, bi, r, ox, oy in label_box_hits:
+                print(
+                    f'   label "{safe(text[:40])}" covers box {bi} at x={r[0]} y={r[1]} by {ox:.1f}x{oy:.1f}px'
+                )
+            for text, si, p1, p2 in label_line_hits:
+                print(f'   label "{safe(text[:40])}" sits on edge {si} {p1}->{p2}')
+            file_fatal += fatal
+
+        if file_fatal:
             failed += 1
     sys.exit(1 if failed else 0)
 

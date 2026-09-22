@@ -463,20 +463,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/firecrawl/skills.git",
       "skillPath": "skills/core/firecrawl/SKILL.md",
-      "skillFolderHash": "9d8b4d326324851f1d145d3ca6ae2193c18f2a3f",
-      "pluginName": "firecrawl",
+      "skillFolderHash": "59861e9caca68b9244b009d1ae558269bdc64a98",
       "installedAt": "2026-09-10T22:40:36.867Z",
-      "updatedAt": "2026-09-10T22:40:36.867Z"
+      "updatedAt": "2026-09-21T23:31:44.963Z"
     },
     "firecrawl-agent": {
       "source": "firecrawl/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/firecrawl/skills.git",
       "skillPath": "skills/core/firecrawl-agent/SKILL.md",
-      "skillFolderHash": "0a92e3a26a151e6de4b2902c25278dac68df78e0",
-      "pluginName": "firecrawl",
+      "skillFolderHash": "f72cc56a3b0cf878d2be95edeb1646f1ebf67976",
       "installedAt": "2026-09-10T22:40:36.871Z",
-      "updatedAt": "2026-09-10T22:40:36.871Z"
+      "updatedAt": "2026-09-21T23:31:48.520Z"
     },
     "firecrawl-crawl": {
       "source": "firecrawl/skills",
@@ -562,18 +560,18 @@
       "sourceType": "github",
       "sourceUrl": "https://github.com/firecrawl/skills.git",
       "skillPath": "skills/core/firecrawl-scrape/SKILL.md",
-      "skillFolderHash": "2534102e5102b5dabfc185a174995f47dc468d90",
+      "skillFolderHash": "40e574a6b626c89c66dccd4f4db6ed5648080083",
       "installedAt": "2026-09-10T22:40:36.901Z",
-      "updatedAt": "2026-09-20T22:17:54.107Z"
+      "updatedAt": "2026-09-21T23:31:52.677Z"
     },
     "firecrawl-search": {
       "source": "firecrawl/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/firecrawl/skills.git",
       "skillPath": "skills/core/firecrawl-search/SKILL.md",
-      "skillFolderHash": "f889f8cb747abaad09873b23ae02ff65c7c482fd",
+      "skillFolderHash": "122d4fc7b4a94b878e45da18450c8909917cc92a",
       "installedAt": "2026-09-10T22:40:36.904Z",
-      "updatedAt": "2026-09-15T19:52:15.109Z"
+      "updatedAt": "2026-09-21T23:31:56.103Z"
     },
     "firecrawl-company-directories": {
       "source": "firecrawl/skills",

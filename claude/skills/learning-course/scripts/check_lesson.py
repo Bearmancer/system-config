@@ -34,7 +34,8 @@ def stray_timestamps(html):
 
 def check(path):
     issues = []
-    html = open(path, encoding="utf-8", errors="replace").read()
+    with open(path, encoding="utf-8", errors="replace") as fh:
+        html = fh.read()
     low = html.lower()
 
     if QUIZ.search(html):

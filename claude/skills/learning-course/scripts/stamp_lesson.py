@@ -101,9 +101,13 @@ def sibling_title(lessons_dir, name):
 
 
 def chapter_sibling(lessons_dir, ref):
+    try:
+        ref_n = int(ref)
+    except (TypeError, ValueError):
+        raise StampError(f"cast ref: '{ref}' is not a valid chapter number")
     for p in lessons_dir.glob("*.html"):
         m = re.search(r"(?i)-ch0*(\d+)-", p.name)
-        if m and int(m.group(1)) == int(ref):
+        if m and int(m.group(1)) == ref_n:
             return p.name
     return None
 
@@ -148,7 +152,10 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         if field not in data or data[field] in ("", None, []):
             raise StampError(f"missing field: {field}")
 
-    chapter = int(data["chapter"])
+    try:
+        chapter = int(data["chapter"])
+    except (TypeError, ValueError):
+        raise StampError(f"chapter: '{data['chapter']}' is not a valid integer")
     mch = re.search(r"(?i)-ch0*(\d+)-", stem)
     file_ch = mch.group(1) if mch else None
     if file_ch is None or int(file_ch) != chapter:
@@ -226,6 +233,13 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         n = order[idx + 1]
         next_link = f'    <a href="{n}">Next: {html_mod.escape(sibling_title(lessons_dir, n))}</a>'
 
+    try:
+        chapters_total = int(data["chapters_total"])
+    except (TypeError, ValueError):
+        raise StampError(
+            f"chapters_total: '{data['chapters_total']}' is not a valid integer"
+        )
+
     meta = (
         f'Lesson {lesson_no:02d} · <a href="../reference/cast-map.html">cast map</a> · '
         f'<a href="../reference/glossary.html">glossary</a>'
@@ -236,7 +250,7 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         "KICKER": html_mod.escape(str(data["kicker"])),
         "TITLE": html_mod.escape(str(data["title"])),
         "CHAPTER_N": chapter,
-        "CHAPTER_M": int(data["chapters_total"]),
+        "CHAPTER_M": chapters_total,
         "META_LINE": meta,
         "LEAD": f"<p>{html_mod.escape(str(data['lead']))}</p>",
         "SUBGRAPH": subgraph,

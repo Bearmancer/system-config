@@ -7,6 +7,8 @@ description: Find obscure classical works by skipping the overplayed canon. Use 
 
 Recommend unfamiliar orchestral works. Default bias: exclude famous, over-recorded repertoire. Dig past canon. Work-level only. Every pick names a specific work with verified timing.
 
+**Scope tiers.** This skill's classical tier — ban list, era rules, orchestral/chamber/vocal priority order — lives here and in `references/exclusions.md`, genre-specific to classical. `references/discography-search.md` is a separate cross-skill tier: genre-agnostic entry→trace→verify method and duration-verification rules, reusable by any future non-classical music skill by pointing at that file directly rather than duplicating it.
+
 ## Core rule
 
 Never recommend a banned composer unless the user explicitly names it to unban it. No "just one Beethoven exception." Unbanning is scoped to that composer, that turn — "allow Dvorak this once" unlocks only Dvorak, not the rest of the list.
@@ -40,7 +42,7 @@ The keyword controls depth, not taste — it never lifts a ban.
 2. Publisher pages (Universal, Barenreiter, Schott, Eschig) for scoring and catalog scope
 3. Orchestra program notes (LSO, Berlin Phil, Concertgebouw, LA Phil) for context
 4. Labels with deep catalog: Chandos, Hyperion, BIS, Naxos, CPO, Capriccio
-5. For release/discography lookups (catalog numbers, pressing detail, "every recording of this work"): `web-data-apis` skill's `references/music-search.md` — MusicBrainz/Discogs are entry points to trace, not the answer; verify each candidate back to its underlying session before counting it as distinct from a repress. Same banned-streaming-services rule applies here: never Spotify/Apple Music/Apple Classical/Amazon Music/Tidal/Deezer/Qobuz.
+5. For release/discography lookups (catalog numbers, pressing detail, "every recording of this work"): `references/discography-search.md` — entry-point → trace → verify method and citation sources.
 6. Streaming / YouTube only for a listen pointer, never for facts
 
 If sources conflict on dates, prefer the catalog entry. State the conflict in one line.
@@ -49,7 +51,7 @@ If sources conflict on dates, prefer the catalog entry. State the conflict in on
 
 Rules for every duration stated:
 
-1. Cite the publisher-stated duration (if any) plus two independent label track totals (Naxos / CPO / Chandos / Hyperion / BIS / Discogs / Presto — never a streaming service, see `web-data-apis` skill's `references/music-search.md`). Give the movement breakdown with the sum. Example: Glass 5 CPO 35:20 = 10:28 + 6:42 + 5:50 + 12:20.
+1. Cite the publisher-stated duration (if any) plus two independent label track totals (Naxos / CPO / Chandos / Hyperion / BIS / Discogs / Presto — see `references/discography-search.md` for source handling). Give the movement breakdown with the sum. Example: Glass 5 CPO 35:20 = 10:28 + 6:42 + 5:50 + 12:20.
 2. Cross-check the movement sum yourself; if it contradicts the stated total, say so. Never copy an album total that covers two works (Apple 1h29 = Sym7+Sym3; Naxos 68:26 = Glass 5+6).
 3. Flag complete-vs-cut for any work with known cuts. Paderewski's cuts fall in movement I and the finale per Hyperion — state "74:13 complete Maksymiuk – 63:39 cut Boguszewski/DUX." Never collapse to one number.
 4. If recordings differ beyond tempo variance, state the range with names: "35:36 Raiskin – 41:37 Todorov." Never collapse to a memory number.

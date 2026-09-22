@@ -56,7 +56,7 @@ def add_arr_download_client(
     headers = {"X-Api-Key": get_arr_api_key(app)}
     base = f"http://{HOST}:{port}/api/v3"
 
-    resp = requests.get(f"{base}/downloadclient/schema", headers=headers)
+    resp = requests.get(f"{base}/downloadclient/schema", headers=headers, timeout=10)
     resp.raise_for_status()
     tmpl = next(
         (
@@ -89,7 +89,7 @@ def add_arr_download_client(
         "tags": [],
     }
 
-    resp = requests.post(f"{base}/downloadclient", headers=headers, json=body)
+    resp = requests.post(f"{base}/downloadclient", headers=headers, json=body, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -100,7 +100,7 @@ def set_prowlarr_category_map(
     headers = {"X-Api-Key": get_arr_api_key("Prowlarr")}
     base = f"http://{HOST}:9696/api/v1"
 
-    resp = requests.get(f"{base}/downloadclient/{client_id}", headers=headers)
+    resp = requests.get(f"{base}/downloadclient/{client_id}", headers=headers, timeout=10)
     resp.raise_for_status()
     client = resp.json()
     client["fields"] = merge_arr_fields(client["fields"])
@@ -113,29 +113,38 @@ def set_prowlarr_category_map(
     ]
 
     resp = requests.put(
-        f"{base}/downloadclient/{client_id}", headers=headers, json=client
+        f"{base}/downloadclient/{client_id}", headers=headers, json=client, timeout=10
     )
     resp.raise_for_status()
     return resp.json()
 
 
 def set_sab_category_dir(category: str, dir_: str) -> Any:
-    keyword = "%2A" if category == "*" else category
-    url = (
-        f"http://{HOST}:8080/api?mode=set_config&section=categories"
-        f"&keyword={keyword}&dir={dir_}&apikey={get_sab_api_key()}&output=json"
-    )
-    resp = requests.get(url)
+    keyword = "*" if category == "*" else category
+    url = f"http://{HOST}:8080/api"
+    params = {
+        "mode": "set_config",
+        "section": "categories",
+        "keyword": keyword,
+        "dir": dir_,
+        "apikey": get_sab_api_key(),
+        "output": "json",
+    }
+    resp = requests.get(url, params=params, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
 
 def remove_sab_category(category: str) -> Any:
-    url = (
-        f"http://{HOST}:8080/api?mode=del_config&section=categories"
-        f"&keyword={category}&apikey={get_sab_api_key()}&output=json"
-    )
-    resp = requests.get(url)
+    url = f"http://{HOST}:8080/api"
+    params = {
+        "mode": "del_config",
+        "section": "categories",
+        "keyword": category,
+        "apikey": get_sab_api_key(),
+        "output": "json",
+    }
+    resp = requests.get(url, params=params, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -144,13 +153,20 @@ def set_qbt_category_dir(category: str, dir_: str) -> None:
     resp = requests.post(
         f"http://{HOST}:8088/api/v2/torrents/editCategory",
         data={"category": category, "savePath": dir_},
+        timeout=10,
     )
     resp.raise_for_status()
 
 
 def find_arr_job(name_match: str) -> list[dict[str, Any]]:
-    url = f"http://{HOST}:8080/api?mode=history&limit=200&apikey={get_sab_api_key()}&output=json"
-    resp = requests.get(url)
+    url = f"http://{HOST}:8080/api"
+    params = {
+        "mode": "history",
+        "limit": 200,
+        "apikey": get_sab_api_key(),
+        "output": "json",
+    }
+    resp = requests.get(url, params=params, timeout=10)
     resp.raise_for_status()
     hist = resp.json()
     pattern = re.compile(re.escape(name_match), re.IGNORECASE)
@@ -171,7 +187,8 @@ def find_arr_job(name_match: str) -> list[dict[str, Any]]:
 def add_emby_library_path(
     library_name: str, path: str, api_key: str, emby_base: str = "http://localhost:8096"
 ) -> Any:
-    resp = requests.get(f"{emby_base}/Library/VirtualFolders?api_key={api_key}")
+    headers = {"X-Emby-Token": api_key}
+    resp = requests.get(f"{emby_base}/Library/VirtualFolders", headers=headers, timeout=10)
     resp.raise_for_status()
     libs = resp.json()
     target = next(
@@ -181,8 +198,10 @@ def add_emby_library_path(
         raise ValueError(f"No Emby library named '{library_name}'.")
 
     resp = requests.post(
-        f"{emby_base}/Library/VirtualFolders/Paths"
-        f"?id={target['Guid']}&path={path}&refreshLibrary=true&api_key={api_key}"
+        f"{emby_base}/Library/VirtualFolders/Paths",
+        params={"id": target["Guid"], "path": path, "refreshLibrary": "true"},
+        headers=headers,
+        timeout=10,
     )
     resp.raise_for_status()
     if resp.text:

@@ -78,16 +78,19 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS compress all skills/artifacts using caveman compression (learning notwithstanding.) Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
 
 <!-- CODEGRAPH_START -->
+## CodeGraph — mandatory index, always init
 
-## CodeGraph
+Every repo need `.codegraph/` at root. No skip. No optional.
 
-In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the repo root), reach for it BEFORE grep/find or reading files when you need to understand or locate code:
+Session start or enter repo: check `.codegraph/` exist. Missing? `codegraph init` there. Wait finish. Then use.
 
-- **MCP tool** (when available): `codegraph_explore` answers most code questions in one call — the relevant symbols' verbatim source plus the call paths between them, including dynamic-dispatch hops grep can't follow. Name a file or symbol in the query to read its current line-numbered source. If it's listed but deferred, load it by name via tool search.
-- **Shell** (always works): `codegraph explore "<symbol names or question>"` prints the same output.
+Monorepo or multi-repo: each sub-project own `.codegraph/` (nearest at or above `projectPath`). Init each missing.
 
-If there is no `.codegraph/` directory, skip CodeGraph entirely — indexing is the user's decision.
+Indexed: use CodeGraph BEFORE grep/find/read.
+- MCP: `codegraph_explore` one call. Verbatim source + call paths. Name file/symbol in query. Pass `projectPath` for specific sub-project. Deferred? load by name.
+- Shell: `codegraph explore "<query>"`.
 
+Stale (files changed, symbols missing, line numbers wrong): `codegraph init` again or repo refresh.
 <!-- CODEGRAPH_END -->
 
 <!-- USER:START -->
@@ -125,6 +128,7 @@ Exception: `/teach` output → `~/.omo/teach/<topic>/` (MISSION.md, lessons/, re
 <content_provenance>
 Compression, rewrites (incl. PS1→Python), lint/format passes: user-created content only. Never touch third-party/bundled plugin skills, vendored scripts, or anything under a plugin cache/marketplace dir — those are overwritten on update regardless, and edits there don't survive.
 Caveman-compression (any mode) on AI-consumed instruction files (SKILL.md, CLAUDE.md, AGENTS.md): keep text only if removing it changes model behavior (a rule becomes ambiguous, ambiguity resolves the wrong way). Narrative/historical/motivational "why" that doesn't change what the model does next: delete unconditionally, regardless of resulting length either direction.
+State the current fact only, never as a diff against a prior state. Write `X used for Z`, not `X no longer does Y but now does Z` or `X previously A, now B`. Applies to any instruction/reference file edit (SKILL.md, CLAUDE.md, AGENTS.md, ref docs). Purge existing before/after narration on sight when editing a file in scope, retroactively.
 </content_provenance>
 
 <no_comments>
@@ -161,5 +165,9 @@ Pass `session_id` so state is session-scoped. Update `current_phase` on every st
 <worktree_lifecycle>
 Worktree with commits → push + `gh pr create` same turn, never teardown unpushed/PR-less work. After PR `MERGED` (check `gh pr view`): exit worktree, stop its agents + build servers (`dotnet build-server shutdown`), `git worktree remove`, `git branch -D`, `git worktree prune`.
 </worktree_lifecycle>
+
+<sibling_duplication_check>
+Before adding a new file for a variant of an existing concept (a new format/grammar/handler/parser sibling), diff its planned structure against every existing file in the same directory implementing the same interface/role. If 2+ siblings would share more than half their logic with the new one (same field-extraction shape, same validate-construct-filter sequence, same dict/table), stop — extract the shared part into one parameterized module (constructor args/delegates/enums, not a premature interface) before writing the 3rd near-duplicate file. Applies to any repo, any file family — not just OCR/grammar-shaped code. Red flag: copy-pasting a whole dictionary/table byte-for-byte into a new file is an instant stop-and-check trigger, not a "fix it later" note.
+</sibling_duplication_check>
 
 <!-- USER:END -->

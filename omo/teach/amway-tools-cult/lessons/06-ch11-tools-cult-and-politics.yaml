@@ -1,0 +1,183 @@
+kicker: "The Tools Cult"
+title: "The Tools Cult & Politics"
+chapter: 11
+chapters_total: 12
+time_range: "1:30:19–1:38:32"
+transcript: "tools-cult-and-politics-1h30m19s-1h38m32s.md"
+lead: "This chapter makes the video's most openly interpretive move: the tools cult was not just a way to make vast amounts of money — \"though clearly it was that\" — but a political and ideological project to remake America."
+cast:
+  - name: "Bill (William) Abraham"
+    role: "One replayed Miami-tape line only, quoted here in corrected form — full line in Lesson 04 (chapter 9)"
+  - name: "Fred Harteis"
+    role: "Head of a spin-off of Yager's line; his organisation's 5,000-strong seminars are where Yager told the Hillary Clinton story (the figure attaches to the seminars generally)"
+  - name: "Doug Wead"
+    role: "Yager's protégé turned Reagan campaign biographer and Bush-family pipeline — full line in Lesson 02 (chapter 4)"
+  - name: "Ronald Reagan"
+    role: "Candidate in 1980; subject of Wead's dedicated-to-Yager biography; speaks at the Charlotte Amway gathering about six months before the election"
+  - name: "Pat Robertson"
+    role: "Head of the Christian Broadcasting Network, which hired Bakker in 1966; the mid-1970s falling-out sends the Bakkers to Charlotte"
+  - name: "Jerry Falwell"
+    role: "Founder of the Moral Majority (June 1979); the chapter's marker for the Christian right's galvanising"
+  - name: "John Osteen"
+    role: "Houston pastor with early FGBMFI affiliation per scholarship; Joel Osteen connects by lineage only — the video's \"Osteen family, including today's Joel\" needs that precision"
+  - name: "Oral Roberts"
+    role: "Pentecostal televangelist; a founding figure of FGBMFI and the chapter's proof the fellowship bridged into mass televangelism"
+  - name: "Tammy Faye Bakker"
+    role: "Jim's wife and PTL co-face; flees with him when the scandal breaks; dramatised in the 2021 film"
+  - name: "Jim Bakker"
+    role: "Televangelist; falls out with Robertson's CBN, moves to Charlotte in 1974, founds the PTL ministry, absorbs Yager's tools style, falls in March 1987"
+  - name: "Dexter Yager"
+    role: "FGBMFI member, Bakker's enthralled ally and underwriter, PTL board member, Reagan-rally host — full line in Lesson 02 (chapter 4)"
+subgraph: |
+  <svg viewBox="0 0 920 600" width="100%" role="img" aria-label="Chapter 11 relationship subgraph" style="font-family:'Segoe UI',system-ui,sans-serif;background:#fdfcf9;">
+    <defs>
+      <marker id="sg-olive" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#677500"/></marker>
+      <marker id="sg-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7a3fa0"/></marker>
+      <marker id="sg-magenta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c2185b"/></marker>
+      <marker id="sg-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1a7f37"/></marker>
+      <marker id="sg-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b3261e"/></marker>
+      <marker id="sg-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0e7c7b"/></marker>
+    </defs>
+    <rect x="20" y="24" width="170" height="56" rx="8" fill="#f2efe4" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="32" y="45" font-size="12.5" font-weight="600" fill="#201d1a">FGBMFI</text>
+    <text x="32" y="61" font-size="11" fill="#5a544b">Full Gospel fellowship</text>
+    <text x="32" y="75" font-size="10" fill="#8a8578">(inc. Jan 1952)</text>
+    <rect x="260" y="24" width="150" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="272" y="45" font-size="12.5" font-weight="600" fill="#201d1a">Oral Roberts</text>
+    <text x="272" y="61" font-size="11" fill="#5a544b">founding figure</text>
+    <rect x="470" y="24" width="200" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="482" y="45" font-size="12.5" font-weight="600" fill="#201d1a">John Osteen</text>
+    <text x="482" y="61" font-size="11" fill="#5a544b">early tie; Joel by lineage</text>
+    <rect x="20" y="140" width="170" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.4"/>
+    <text x="32" y="161" font-size="12.5" font-weight="600" fill="#201d1a">Dexter Yager</text>
+    <text x="32" y="177" font-size="11" fill="#5a544b">member; PTL board</text>
+    <rect x="250" y="140" width="170" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="262" y="161" font-size="12.5" font-weight="600" fill="#201d1a">Jim Bakker</text>
+    <text x="262" y="177" font-size="11" fill="#5a544b">PTL founder; fell 1987</text>
+    <rect x="470" y="140" width="170" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="482" y="161" font-size="12.5" font-weight="600" fill="#201d1a">Tammy Faye Bakker</text>
+    <text x="482" y="177" font-size="11" fill="#5a544b">PTL co-face</text>
+    <rect x="690" y="140" width="200" height="56" rx="8" fill="#f2efe4" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="702" y="161" font-size="12.5" font-weight="600" fill="#201d1a">PTL ministry</text>
+    <text x="702" y="177" font-size="11" fill="#5a544b">Charlotte, from 1974</text>
+    <rect x="20" y="260" width="190" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="32" y="281" font-size="12.5" font-weight="600" fill="#201d1a">Pat Robertson</text>
+    <text x="32" y="297" font-size="11" fill="#5a544b">CBN; hired Bakker 1966</text>
+    <rect x="250" y="260" width="200" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="262" y="281" font-size="12.5" font-weight="600" fill="#201d1a">Jerry Falwell</text>
+    <text x="262" y="297" font-size="11" fill="#5a544b">Moral Majority, Jun 1979</text>
+    <rect x="520" y="260" width="150" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="532" y="281" font-size="12.5" font-weight="600" fill="#201d1a">Ronald Reagan</text>
+    <text x="532" y="297" font-size="11" fill="#5a544b">elected 1980</text>
+    <rect x="700" y="260" width="190" height="56" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="712" y="281" font-size="12.5" font-weight="600" fill="#201d1a">Doug Wead</text>
+    <text x="712" y="297" font-size="11" fill="#5a544b">protege; Reagan bio</text>
+    <rect x="20" y="380" width="210" height="60" rx="8" fill="#fff" stroke="#8a8578" stroke-width="1.2"/>
+    <text x="32" y="401" font-size="12.5" font-weight="600" fill="#201d1a">Fred Harteis</text>
+    <text x="32" y="417" font-size="11" fill="#5a544b">spin-off of Yager line</text>
+    <text x="32" y="431" font-size="10" fill="#8a8578">(captions: Hartis)</text>
+    <line x1="105" y1="82" x2="105" y2="138" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="113" y="114" font-size="11" text-anchor="start" fill="#677500">member</text>
+    <line x1="192" y1="52" x2="258" y2="52" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="194" y="44" font-size="11" text-anchor="start" fill="#677500">member</text>
+    <line x1="412" y1="52" x2="468" y2="52" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="414" y="44" font-size="11" text-anchor="start" fill="#677500">member</text>
+    <line x1="192" y1="168" x2="248" y2="168" stroke="#7a3fa0" stroke-width="2.2" marker-end="url(#sg-purple)"/>
+    <text x="196" y="186" font-size="11" text-anchor="start" fill="#7a3fa0">mentor</text>
+    <line x1="422" y1="168" x2="468" y2="168" stroke="#c2185b" stroke-width="2.2" marker-end="url(#sg-magenta)"/>
+    <text x="424" y="160" font-size="11" text-anchor="start" fill="#c2185b">wife</text>
+    <line x1="642" y1="168" x2="688" y2="168" stroke="#1a7f37" stroke-width="2.2" marker-end="url(#sg-green)"/>
+    <text x="665" y="230" font-size="11" text-anchor="middle" fill="#1a7f37">founded Charlotte 1974</text>
+    <polyline points="160,138 160,108 790,108 790,138" fill="none" stroke="#1a7f37" stroke-width="2.2" marker-end="url(#sg-green)"/>
+    <text x="470" y="100" font-size="11" text-anchor="middle" fill="#1a7f37">PTL board seat</text>
+    <polyline points="120,258 120,240 335,240 335,198" fill="none" stroke="#b3261e" stroke-width="2.2" marker-end="url(#sg-red)"/>
+    <text x="343" y="240" font-size="11" text-anchor="start" fill="#b3261e">1970s split</text>
+    <line x1="452" y1="288" x2="518" y2="288" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="456" y="308" font-size="11" text-anchor="start" fill="#677500">1980 boost</text>
+    <polyline points="18,188 16,188 16,560 590,560 590,320" fill="none" stroke="#677500" stroke-width="2.2" marker-end="url(#sg-olive)"/>
+    <text x="300" y="552" font-size="11" text-anchor="middle" fill="#677500">Charlotte rally 1980</text>
+    <line x1="672" y1="288" x2="698" y2="288" stroke="#0e7c7b" stroke-width="2.2" marker-end="url(#sg-teal)"/>
+    <text x="685" y="340" font-size="11" text-anchor="middle" fill="#0e7c7b">campaign biography, ~800k copies</text>
+    <polyline points="60,138 60,108 8,108 8,372 130,372 130,379" fill="none" stroke="#7a3fa0" stroke-width="2.2" marker-end="url(#sg-purple)"/>
+    <text x="140" y="364" font-size="11" text-anchor="start" fill="#7a3fa0">Hillary story to 5,000</text>
+  </svg>
+narrative: |
+  <p>The route runs through Dexter Yager's Full Gospel fellowship, his entanglement with Jim and Tammy Faye Bakker's PTL ministry in Charlotte, Doug Wead's pipeline from Yager's circle to Ronald Reagan's campaign, and the movement's harder edge. If you are lost in this chapter, hold four things: the fellowship bridge, the Bakker entanglement, the Reagan connection, and where the video's wording ends and the record's begins.</p>
+  <p><strong>2. The fellowship bridge: FGBMFI and prosperity gospel</strong></p>
+  <p>The chapter opens where the course's politics has been parked since the John Birch Society thread of chapter 5: Amway distributors "are and have historically been conservative Republicans." Doug Wead — "tools cult kingpin and pipeline from the religious right to the Bush family" — was profiled back in chapter 6.</p>
+  <p>The new institution is the Full Gospel Business Men's Fellowship International: "a hard Christian right organization based in the Pentecostal Evangelical movement that expanded throughout the South in the 1950s and essentially built the ideology that we now call prosperity gospel." Read "essentially built" as the video's gloss on the scholarly account. The fellowship is real — incorporated January 1952 by Demos Shakarian in Los Angeles, chapters across the US through the 1950s — and Oral Roberts was a founding figure. But the video compresses a whole scholarship into one sentence.</p>
+  <p>Yager's own membership is thesis-supported (Weinberg) with no membership roll located — say so and move on. The fellow-traveller list needs more care: John Osteen carries an early FGBMFI affiliation per scholarship, while Joel Osteen connects by lineage only. So the video's "Osteen family, including today's Joel" overreaches by a generation (and the captions render the name "Austin" — an ASR garble of Osteen).</p>
+  <p>The fellowship's doctrine, as the chapter states it, is that "the American dream was embodied by economic growth and personal prosperity, and also that these things were core tenets of Christianity" — which is why the tools-cult dreams "really were the point": "the coach, the boat, the mansion, and the fur coats, the stuff that Amway believers were instructed to cut out pictures of and paste on their refrigerators."</p>
+  <p><strong>3. Yager and the Bakkers: Charlotte, PTL, and the $20,000 satchel</strong></p>
+  <p>"Televangelist Jim Bakker… became a close friend of Dexter Yager. In fact, Yeager was something of a mentor to Bakker" — with the names spelled right, that is the chapter's claim, and "mentor" is the video's word. What the thesis actually says is enthralled ally and underwriter, in a passage built on interviews plus the Charlotte Observer (8 June 1989) plus Shepard's book, quoted here in its confirmed verbatim form:</p>
+  <blockquote>
+    <p>"Baker was especially interested to learn how to apply Yeager's inspirational messages and techniques to his own ministry. In fact, he was so enthralled with Yeager that he became an Amway sales associate and attended weekly meetings with Yeager, Doug Wead and other important members of the Amway organization."</p>
+    <em>— the quoted historian's passage, via Weinberg, <em>Creating Heaven on Earth</em> (2012), pp. 92–96 (names as carried; canonical: Bakker, Yager)</em>
+  </blockquote>
+  <p>The passage continues past the Amway associateship: the meetings "inspired Baker to make prosperity theology an even more important part of his ministry." Bakker "began to learn from Yeager how to market and sell his message" — incorporating "the style and messaging of the Amway motivational tools" into a "politically conservative, capitalist-oriented Christian gospel, particularly through the medium of television."</p>
+  <p>The traffic ran both ways: "Yeager, meanwhile, endorsed PTL and encouraged his distributors to support Baker's new network." The chronology around it is confirmed: after CBN (Bakker hired 1966) and California, the Bakkers moved to Charlotte in 1974. "One of the factors that drew them there was Yeager's presence in the Charlotte community," and "as soon as Bakker arrived in Charlotte, Dexter Yager was there to greet him." Bakker then arranged a seat for Yager on what became PTL's board.</p>
+  <p>The colour — Yager flaunting success to PTL employees "by walking around the offices with a shoulder satchel containing $20,000 of, quote, pocket money, end quote" — is Weinberg's text sourced to a memoir (Miles, <em>Don't Call Me Brother</em>). Label it memoir-sourced and enjoy it at that discount.</p>
+  <p><strong>4. The political arc: Moral Majority, Reagan, Wead</strong></p>
+  <p>The chapter sets PTL inside a larger mid-1970s movement — "a backlash to the cultural and economic liberalism of the 1960s, LBJ's Great Society, the protests against the Vietnam War, and particularly… second-wave feminism and the LGBTQ liberation movement." That backlash "would manifest itself later in the decade with the foundation of the Moral Majority, Jerry Falwell's political action organization." The galvanising "was instrumental in propelling Ronald Reagan to the White House in 1980." Moral Majority (June 1979) and Reagan 1980 check out; the rest of the arc is inference stacked on ties.</p>
+  <p>"Seeing it all in context, doesn't it make sense that Doug Wead, another of Dexter Yeager's protégés, wrote Reagan's campaign biography?" Wead's <em>Reagan: In Pursuit of the Presidency</em> (1980, ~800,000 copies) is confirmed, dedication and photos supporting the Yager tie. "It makes sense, doesn't it, that Reagan spoke at an Amway convention organized by Dexter Yeager?" The appearance is confirmed at the coarser grain — Reagan spoke at the Charlotte Amway gathering roughly six months before the election (Spokesman-Review: "six months before he was elected president in 1980"). But the exact day is unfindable and "organised by Yager" is the video's inference. Read the sentence as argued, not as sourced.</p>
+  <p>The chapter's own summary of the thesis: "The tools cult was not just a way to make vast amounts of money, though clearly it was that. It was also a political and ideological project to remake America." One replayed line gets its corrected form here (full treatment stays in <a href="../lessons/04-ch9-the-miami-showdown.html">Lesson 04</a>). Where chapter 11's captions garble Abraham's Miami peroration to "confronted with Miami, and Miami happens to be the liberal of this country," the actual line from the chapter-9 slice is:</p>
+  <blockquote>
+    <p>"confronted with the enemy, and the enemy happens to be the liberals in this country"</p>
+    <em>— Bill (William) Abraham, Miami tape, corrected wording per the ch.9 slice</em>
+  </blockquote>
+  <p><strong>5. The harder edge: homophobia, the Hillary story, and the fall</strong></p>
+  <p>"As the hold of the Christian right wing over America tightened in the 1980s and 90s, homophobia became one of the major characteristics of their movement and a major policy plank of the Republican Party." With the Soviet Union gone after 1991, "some gay leaders argue that hatred of the LGBTQ community began to replace anti-communism as the galvanizing ideology."</p>
+  <p>On the tapes, the chapter asserts, "there are homophobic statements from [Yager] condemning the LGBTQ community and criticizing the so-called gay lifestyle," with a political component: in the 1990s "he attacked Hillary Clinton… as a lesbian and charged that the Secret Service brought her lesbian lovers into the White House, a story that he told to 5,000 Amway distributors of the Fred Hartis organization, itself a spin-off of Yeager's line."</p>
+  <p>Two flags ride on that paragraph. The spelling is <strong>Harteis</strong> — the captions' "Hartis" is wrong. And the only trace of the story is ex-distributor advocacy: Eric Scheibeler's archived case-studies page, where the 5,000-distributor figure attaches to Harteis seminars generally, not to that night. "Because, of course, being a Democrat and being a lesbian were comparable sins in the politicized Christian worldview of the Amway tools cult" is the video's own acid gloss — quote it as his.</p>
+  <p>"In March 1987, Jim Bakker was brought down as head of the PTL ministry" — resigned 19 March 1987 over the payoff to church secretary Jessica Hahn (the video calls her his "mistress" and says funds were diverted to her; the rape allegation was denied). "When the story broke, Bakker went into hiding to avoid the press and also his aggrieved wife, Tammy Faye. Where exactly did he go to hide? To a guest house on Dexter Yeager's estate." That matches the thesis (Weinberg p. 184; NYT December 1988; Mother Jones 1996). Note the limit — the immediate weeks after March 1987 are thesis-only, with press showing Palm Springs.</p>
+  <p>Bakker "eventually went to prison for fraud and conspiracy": convicted 1989, 45 years reduced, paroled 1994. The coda: "despite Bakker's closeness to him, Dexter Yeager does not appear as a character in the 2021 film <em>The Eyes of Tammy Faye</em>" (Chastain, Garfield; Searchlight, September 2021) — confirmed, and the cast lists contain no Yager. File it as an absence, not a cover-up.</p>
+  <p><strong>7. What the record shows — checking chapter 11 claims</strong></p>
+
+    Fact-check — verified against incorporation records, the thesis text, press archives, and the caption slices
+    <ul>
+      <li><strong>FGBMFI is real; "essentially built prosperity gospel" is gloss.</strong> Incorporated January 1952 by Demos Shakarian in Los Angeles; chapters spread across the US in the 1950s (<a href="https://www.fgbmfi.org/history">FGBMFI history page</a>). Oral Roberts was a founding figure. "Essentially built prosperity gospel" is the video's one-sentence gloss on the scholarly account — read it as argued, not as sourced.</li>
+      <li><strong>CORRECTION — the Osteen connection is John, not Joel.</strong> John Osteen carries early FGBMFI affiliation per scholarship; Joel Osteen connects by lineage only. The video's "Osteen family, including today's Joel" overreaches by a generation, and the captions' "Austin" is an ASR garble of Osteen.</li>
+      <li><strong>Yager's membership: thesis-supported, roll unlocated.</strong> Weinberg supports the FGBMFI membership; no membership roll was located — say so. The video's "Dexter Yeager was a member" therefore rests on the thesis alone.</li>
+      <li><strong>The Yager–Bakker passage is confirmed verbatim — as secondary text.</strong> The quoted historian's passage is secondary text in <a href="https://uknowledge.uky.edu/cgi/viewcontent.cgi?article=1006&amp;context=history_etds">Weinberg, <em>Creating Heaven on Earth</em> (2012)</a>, pp. 92–96, built on interviews + the Charlotte Observer (8 June 1989) + Shepard's book. Confirmed verbatim ("he was so enthralled with Yeager that he became an Amway sales associate and attended weekly meetings with Yeager, Doug Wead and other important members of the Amway organization…"). "Mentor" is the video's word; the thesis says enthralled ally and underwriter.</li>
+      <li><strong>Charlotte 1974, the greeting, and the board seat: confirmed.</strong> After CBN (hired 1966) and California, the Bakkers moved to Charlotte in 1974; "as soon as Bakker arrived in Charlotte, Dexter Yager was there to greet him"; Bakker arranged Yager's seat on what became PTL's board.</li>
+      <li><strong>The $20,000 satchel is memoir-sourced.</strong> The passage is Weinberg's text, sourced to a memoir (Miles, <em>Don't Call Me Brother</em>) — label it memoir-sourced and discount accordingly.</li>
+      <li><strong>Politics timeline: dates confirmed, day and organiser unconfirmed.</strong> Moral Majority founded June 1979 (Falwell); Reagan elected 1980; Wead's <em>Reagan: In Pursuit of the Presidency</em> (1980, ~800,000 copies) confirmed. Reagan spoke at the Charlotte Amway gathering roughly six months before the election (Spokesman-Review: "six months before he was elected president in 1980"). The exact day is unfindable, and "organised by Yager" is the video's inference — the book's dedication and photos support the tie but do not prove organisation.</li>
+      <li><strong>The Hillary story: advocacy-sourced, figure misattached.</strong> The only trace is Eric Scheibeler's archived case-studies page (ex-distributor advocacy): Yager telling distributors the Secret Service smuggled Hillary Clinton's lovers into the White House. The "5,000 distributors" figure attaches to Harteis seminars generally in that source, not to that night. <strong>Spelling: Harteis</strong> — the captions' "Hartis" is wrong.</li>
+      <li><strong>Bakker's fall: confirmed with a wording preference and a limit.</strong> Resigned 19 March 1987 over the payoff to church secretary Jessica Hahn — prefer that wording (the video says "mistress" and diverted funds; the rape allegation was denied). He lived for a time in the guesthouse on Yager's estate and later broadcast from leased space on Yager's 58-acre property (Weinberg p. 184; NYT December 1988; Mother Jones 1996). Convicted 1989, 45 years reduced, paroled 1994. The video's "went into hiding… at a guest house on Yager's estate" matches the thesis; the immediate weeks after March 1987 are thesis-only (press shows Palm Springs).</li>
+      <li><strong><em>The Eyes of Tammy Faye</em> (2021): confirmed as an absence.</strong> Chastain and Garfield; Searchlight, September 2021. Cast lists contain no Yager — note it as an absence, not a finding.</li>
+      <li><strong>CORRECTION — the replayed Miami line, quoted right.</strong> Chapter 11 replays the chapter-9 tape line and the captions garble it to "confronted with Miami, and Miami happens to be the liberal of this country." The actual line (chapter-9 slice) is "confronted with the enemy, and the enemy happens to be the liberals in this country." Quote the corrected line.</li>
+    </ul>
+machinery: |
+  <p><strong>1. What matters — and what you can skip</strong></p>
+  <p><strong>Keep these four essentials:</strong></p>
+  <ol>
+    <li><strong>The fellowship bridge.</strong> Yager belonged to the Full Gospel Business Men's Fellowship International (FGBMFI) — the Pentecostal businessmen's network the video credits with "essentially" building prosperity-gospel ideology. The same network touches Oral Roberts, John Osteen (Joel by lineage only — see the fact-check box), and Jim Bakker. This is the chapter's institutional hinge between the tools cult and televangelism.</li>
+    <li><strong>The Bakker entanglement.</strong> After the Bakkers' falling-out with Pat Robertson's Christian Broadcasting Network, they moved to Charlotte in 1974 — drawn partly by Yager's presence — founded the PTL ministry, and Yager sat on PTL's board. The quoted historian's passage (enthralled, Amway associateship, weekly meetings with Yager and Wead) is the evidentiary core; "mentor" is the video's word for it.</li>
+    <li><strong>The tools cult as political project.</strong> The arc runs Moral Majority (June 1979) → Reagan 1980 → Wead's campaign biography (~800,000 copies) → Reagan speaking at the Charlotte Amway gathering roughly six months before the election. "Organised by Yager" is the video's inference, and the exact day is unfindable — both flagged below.</li>
+    <li><strong>The fall lands on Yager's estate.</strong> Bakker resigned on 19 March 1987 over the payoff to church secretary Jessica Hahn, then lived for a time in the guesthouse on Yager's estate and later broadcast from leased space on Yager's 58-acre property — convicted 1989, paroled 1994. The video's hiding-at-Yager's account matches the thesis; the immediate post-March weeks are thesis-only.</li>
+  </ol>
+  <p><strong>What can be skimmed:</strong> the environmental-limits riff (capitalism brooking "any hint of limits, ecological or otherwise") is scene-setting for the ideology claim, not evidence — one read is enough. The replayed Miami-tape line is covered in Lesson 04; note only the corrected wording here. The <em>Eyes of Tammy Faye</em> coda records an absence (no Yager in the cast lists), not a finding — one sentence and move on.</p>
+
+    Cast — on stage this chapter
+    <ul><li><strong>Name</strong> — Role this chapter</li><li><strong>Dexter Yager</strong> — FGBMFI member, Bakker's enthralled ally and underwriter, PTL board member, Reagan-rally host — full line in Lesson 02 (chapter 4)</li><li><strong>Jim Bakker</strong> — Televangelist; falls out with Robertson's CBN, moves to Charlotte in 1974, founds the PTL ministry, absorbs Yager's tools style, falls in March 1987</li><li><strong>Tammy Faye Bakker</strong> — Jim's wife and PTL co-face; flees with him when the scandal breaks; dramatised in the 2021 film</li><li><strong>Oral Roberts</strong> — Pentecostal televangelist; a founding figure of FGBMFI and the chapter's proof the fellowship bridged into mass televangelism</li><li><strong>John Osteen</strong> — Houston pastor with early FGBMFI affiliation per scholarship; Joel Osteen connects by lineage only — the video's "Osteen family, including today's Joel" needs that precision</li><li><strong>Jerry Falwell</strong> — Founder of the Moral Majority (June 1979); the chapter's marker for the Christian right's galvanising</li><li><strong>Pat Robertson</strong> — Head of the Christian Broadcasting Network, which hired Bakker in 1966; the mid-1970s falling-out sends the Bakkers to Charlotte</li><li><strong>Ronald Reagan</strong> — Candidate in 1980; subject of Wead's dedicated-to-Yager biography; speaks at the Charlotte Amway gathering about six months before the election</li><li><strong>Doug Wead</strong> — Yager's protégé turned Reagan campaign biographer and Bush-family pipeline — full line in Lesson 02 (chapter 4)</li><li><strong>Fred Harteis</strong> — Head of a spin-off of Yager's line; his organisation's 5,000-strong seminars are where Yager told the Hillary Clinton story (the figure attaches to the seminars generally)</li><li><strong>Bill (William) Abraham</strong> — One replayed Miami-tape line only, quoted here in corrected form — full line in Lesson 04 (chapter 9)</li></ul>
+
+  <p><strong>6. The machinery: what the chapter establishes structurally</strong></p>
+  <ul>
+    <li><strong>The fellowship as transmission belt.</strong> FGBMFI carries personnel (Yager, Bakker, Roberts, John Osteen) and doctrine (prosperity as Christian tenet) between the tools business and televangelism — the institutional answer to how Amway motivation-talk became televised gospel.</li>
+    <li><strong>Reciprocal endorsement.</strong> Bakker takes Yager's marketing and prosperity theology; Yager takes PTL's pulpit-adjacent legitimacy and a board seat, then aims his distributors at Bakker's network. Each man's audience becomes the other's feedstock.</li>
+    <li><strong>Politics as the third pyramid.</strong> After the two pyramids of Lesson 04 (Amway business, tools business), this chapter stacks a third: the electoral project — Moral Majority organisation, Reagan candidacy, Wead's biography-as-tool, the Charlotte rally. The economics explainer's two-pyramid model (<a href="../reference/mlm-economics.html">economics explainer</a>) gains its political superstructure here.</li>
+    <li><strong>Outsiders as enemies.</strong> "Fused together with the politics and the theology of prosperity gospel, Amway itself becomes something righteous and holy, and anyone outside the cult is an enemy" — the chapter's own sociology of the corrected Abraham line.</li>
+    <li><strong>Sanctuary as structure.</strong> When PTL collapses, its head shelters inside the tools kingpin's estate and later broadcasts from the kingpin's acreage — dependence made physical, the endpoint of the reciprocal-endorsement machine.</li>
+  </ul>
+  <ul>
+    <li><strong>Which day did Reagan speak?</strong> "Roughly six months before the election" is the finest grain the record gives; the exact day — and with it, what Reagan said and who introduced him — stays open.</li>
+    <li><strong>What did "organised by Yager" cover?</strong> The dedication and photos tie Yager to the event and the biography; whether he booked the hall, paid, or merely lent his downlines is the chapter's own unresolved inference.</li>
+    <li><strong>How deep did the PTL board seat go?</strong> The seat is confirmed; what Yager did with it — governance, endorsement, or mutual audience-feeding — is not in the record this chapter draws on.</li>
+    <li><strong>Where were the first weeks after March 1987?</strong> Thesis says Yager's guesthouse; press shows Palm Springs. Both can be true in sequence, but no source in hand orders them.</li>
+    <li><strong>How far did the fellowship tie reach?</strong> No membership roll surfaced, so the FGBMFI circle's exact roster — who else overlapped Yager there — stays open.</li>
+  </ul>
+sources:
+  - label: "FGBMFI history page"
+    url: "https://www.fgbmfi.org/history"
+  - label: "Weinberg, Creating Heaven on Earth (2012)"
+    url: "https://uknowledge.uky.edu/cgi/viewcontent.cgi?article=1006&amp;context=history_etds"

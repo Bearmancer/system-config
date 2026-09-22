@@ -32,6 +32,9 @@ def git(*args: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
 
 
 def robocopy(source: Path, destination: Path, extra: list[str]) -> None:
+    if not source.exists():
+        write_log(f"skip: source missing {source}")
+        return
     args = ["robocopy", str(source), str(destination), *extra, "/NFL", "/NDL", "/NJH", "/NJS", "/R:1", "/W:1"]
     result = subprocess.run(args, capture_output=True, text=True)
     if result.returncode >= 8:
