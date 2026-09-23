@@ -18,6 +18,7 @@ VERDICT = re.compile(
     r"\b(confirmed|corrected|partially correct|wrong|unfindable|unverified|allegation)\b",
     re.I,
 )
+TAG_CODE = re.compile(r"\[[A-Z]{1,3}\d+[a-z]?\]")
 BARE = re.compile(r"https?://\S+")
 TS = re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\b")
 SECTION_REF = re.compile(r"(?:§|\bsections?\b)\s*(\d+)", re.I)
@@ -41,11 +42,12 @@ REQUIRED = (
     "time_range",
     "transcript",
     "lead",
-    "cast",
     "narrative",
     "machinery",
     "sources",
 )
+# cast is optional-but-explicit: absent/None/"" refuses (fail-closed);
+# explicit `cast: []` omits §2 Cast (no humans this chapter).
 
 
 class StampError(Exception):
@@ -183,6 +185,12 @@ def stamp(yaml_path, lessons_dir, stencil_path):
                 raise StampError(f"banned phrase in {what}: '{phrase}'")
         if BARE.search(ANCHOR.sub(" ", textval)):
             raise StampError(f"bare URL in {what}: wrap it in a link")
+        tag_hit = TAG_CODE.search(ANCHOR.sub(" ", textval))
+        if tag_hit:
+            raise StampError(
+                f"bare tag code in {what}: '{tag_hit.group(0)}' points nowhere — "
+                "use a real hyperlink beside bare numerals"
+            )
         if TS.search(textval):
             raise StampError(
                 f"timestamp in {what}: no timestamps anywhere on the page, not even the surtitle"
@@ -200,28 +208,61 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         )
 
     lesson_no = lesson_number(stem)
-    cast_rows = []
-    for c in data["cast"]:
-        role = html_mod.escape(str(c.get("role", "")))
-        if c.get("ref") is not None:
-            sib = chapter_sibling(lessons_dir, c["ref"])
-            if not sib:
-                raise StampError(
-                    f"cast ref: chapter {c['ref']} has no sibling lesson file"
-                )
-            role += f' <a href="{sib}">(chapter {c["ref"]})</a>'
-        cast_rows.append(
-            f"<tr><td>{html_mod.escape(str(c.get('name', '')))}</td><td>{role}</td></tr>"
+    if "cast" not in data or data["cast"] in ("", None):
+        raise StampError(
+            "missing field: cast (use explicit `cast: []` when no humans appear)"
         )
-
-    subgraph = str(data.get("subgraph", "") or "").strip()
-    if subgraph:
-        if not (subgraph.startswith("<svg") and subgraph.endswith("</svg>")):
-            raise StampError("subgraph: must be a single inline <svg>…</svg> fragment")
-        low_svg = subgraph.lower()
-        if 'href="http' in low_svg or 'src="http' in low_svg:
-            raise StampError("subgraph: no external references (inline only)")
-        subgraph = f'<figure class="map">\n{subgraph}\n</figure>'
+    cast = data["cast"]
+    if not isinstance(cast, list):
+        raise StampError(
+            "cast: must be a list (use explicit `cast: []` when no humans appear)"
+        )
+    has_cast = len(cast) > 0
+    cast_block = ""
+    if has_cast:
+        cast_rows = []
+        for c in cast:
+            role = html_mod.escape(str(c.get("role", "")))
+            if c.get("ref") is not None:
+                sib = chapter_sibling(lessons_dir, c["ref"])
+                if not sib:
+                    raise StampError(
+                        f"cast ref: chapter {c['ref']} has no sibling lesson file"
+                    )
+                role += f' <a href="{sib}">(chapter {c["ref"]})</a>'
+            cast_rows.append(
+                f"<tr><td>{html_mod.escape(str(c.get('name', '')))}</td><td>{role}</td></tr>"
+            )
+        subgraph = str(data.get("subgraph", "") or "").strip()
+        if subgraph:
+            if not (subgraph.startswith("<svg") and subgraph.endswith("</svg>")):
+                raise StampError(
+                    "subgraph: must be a single inline <svg>…</svg> fragment"
+                )
+            low_svg = subgraph.lower()
+            if 'href="http' in low_svg or 'src="http' in low_svg:
+                raise StampError("subgraph: no external references (inline only)")
+            subgraph = f'<figure class="map">\n{subgraph}\n</figure>'
+        cast_block = (
+            "\n\t\t<h2>2. Cast</h2>\n"
+            + (f"{subgraph}\n" if subgraph else "")
+            + '\t\t<table class="cast">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>Name</th>\n\t\t\t\t\t<th>Role This Chapter</th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n'
+            + "\n".join(cast_rows)
+            + "\n\t\t\t</tbody>\n\t\t</table>\n\n"
+        )
+    else:
+        if str(data.get("subgraph", "") or "").strip():
+            raise StampError("subgraph: no cast — omit subgraph when `cast: []`")
+        for textval, what in (
+            (data["lead"], "lead"),
+            (data["narrative"], "narrative"),
+            (data["machinery"], "machinery"),
+        ):
+            for ref in SECTION_REF.findall(textval):
+                if int(ref) == 2:
+                    raise StampError(
+                        f"section ref 2 in {what}: no §2 Cast when `cast: []`"
+                    )
 
     order = sorted_lessons(lessons_dir, f"{stem}.html")
     idx = order.index(f"{stem}.html")
@@ -240,10 +281,6 @@ def stamp(yaml_path, lessons_dir, stencil_path):
             f"chapters_total: '{data['chapters_total']}' is not a valid integer"
         )
 
-    meta = (
-        f'Lesson {lesson_no:02d} · <a href="../reference/cast-map.html">cast map</a> · '
-        f'<a href="../reference/glossary.html">glossary</a>'
-    )
     stencil = stencil_path.read_text(encoding="utf-8")
     subs = {
         "PAGE_TITLE": f"Lesson {lesson_no:02d} — {data['title']}",
@@ -251,10 +288,8 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         "TITLE": html_mod.escape(str(data["title"])),
         "CHAPTER_N": chapter,
         "CHAPTER_M": chapters_total,
-        "META_LINE": meta,
+        "CAST_BLOCK": cast_block,
         "LEAD": f"<p>{html_mod.escape(str(data['lead']))}</p>",
-        "SUBGRAPH": subgraph,
-        "CAST_ROWS": "\n".join(cast_rows),
         "NARRATIVE": data["narrative"],
         "MACHINERY": data["machinery"],
         "PREV_LINK": prev_link,

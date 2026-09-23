@@ -183,16 +183,33 @@
 			"enabled": true,
 		},
 		"exa": {
-			"type": "remote",
-			"url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
-			"headers": {
-				"Authorization": "Bearer {env:EXA_API_KEY}",
-			},
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+				"--transport",
+				"http-only",
+				"--header",
+				"x-api-key:{env:EXA_API_KEY}"
+			],
 			"enabled": true,
 		},
 		"microsoft-learn": {
-			"type": "remote",
-			"url": "https://learn.microsoft.com/api/mcp",
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://learn.microsoft.com/api/mcp",
+				"--transport",
+				"http-only"
+			],
 			"enabled": true,
 		},
 		"azure-mcp": {
@@ -221,6 +238,7 @@
 				"FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}",
 			},
 			"enabled": true,
+			"timeout": 120000,
 		},
 		"agentql": {
 			"type": "local",
@@ -247,25 +265,49 @@
 			"enabled": true,
 		},
 		"tavily": {
-			"type": "remote",
-			"url": "https://mcp.tavily.com/mcp/",
-			"headers": {
-				"Authorization": "Bearer {env:TAVILY_API_KEY}",
-			},
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+				"--transport",
+				"http-only"
+			],
 			"enabled": true,
 		},
 		"context7": {
-			"type": "remote",
-			"url": "https://mcp.context7.com/mcp",
-			"headers": {
-				"Authorization": "Bearer {env:CONTEXT7_API_KEY}",
-			},
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://mcp.context7.com/mcp",
+				"--transport",
+				"http-only",
+				"--header",
+				"Authorization:Bearer {env:CONTEXT7_API_KEY}"
+			],
 			"enabled": true,
 		},
 		"browserbase": {
-			"type": "remote",
-			"url": "https://mcp.browserbase.com/mcp?browserbaseApiKey={env:BROWSERBASE_API_KEY}",
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://mcp.browserbase.com/mcp?browserbaseApiKey={env:BROWSERBASE_API_KEY}",
+				"--transport",
+				"http-only"
+			],
 			"enabled": true,
+			"timeout": 120000,
 		},
 		"brightdata": {
 			"type": "remote",
@@ -273,12 +315,21 @@
 			"enabled": true,
 		},
 		"apify": {
-			"type": "remote",
-			"url": "https://mcp.apify.com/",
-			"headers": {
-				"Authorization": "Bearer {env:APIFY_TOKEN}",
-			},
+			"type": "local",
+			"command": [
+				"cmd",
+				"/c",
+				"npx",
+				"-y",
+				"mcp-remote",
+				"https://mcp.apify.com",
+				"--transport",
+				"http-only",
+				"--header",
+				"Authorization:Bearer {env:APIFY_TOKEN}"
+			],
 			"enabled": true,
+			"timeout": 120000,
 		},
 		"brave": {
 			"type": "local",

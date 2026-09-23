@@ -62,12 +62,16 @@ def check(path):
         )
     stray = stray_timestamps(html)
     if stray:
-        issues.append(f"timestamps found (no timestamps anywhere on the page): {stray[:5]}")
+        issues.append(
+            f"timestamps found (no timestamps anywhere on the page): {stray[:5]}"
+        )
 
     if re.search(r"youtube\.com|youtu\.be", html, re.I):
         issues.append("YouTube URL present: a YouTube video is never a source")
     if "canon-checked" in low or "canon checked" in low:
-        issues.append("'canon-checked' wording present: verdicts use confirmed/corrected/etc, not 'canon'")
+        issues.append(
+            "'canon-checked' wording present: verdicts use confirmed/corrected/etc, not 'canon'"
+        )
 
     if "how this treatise was built" in low:
         issues.append("method box: lessons carry no method block")
@@ -83,6 +87,11 @@ def check(path):
     bare = re.findall(r"https?://\S+", ANCHOR.sub(" ", html))
     if bare:
         issues.append(f"bare URL text (wrap it in a link): {bare[:3]}")
+    tag_hit = re.findall(r"\[[A-Z]{1,3}\d+[a-z]?\]", ANCHOR.sub(" ", html))
+    if tag_hit:
+        issues.append(
+            f"bare tag code (points nowhere — use a real hyperlink beside bare numerals): {sorted(set(tag_hit))[:5]}"
+        )
 
     seen_citations = set()
     for m in ANCHOR.finditer(html):
@@ -132,13 +141,39 @@ def check(path):
 
     if "lesson-footer" not in low:
         issues.append("missing lesson footer")
+    navs = re.findall(
+        r'<nav[^>]*class="[^"]*top-nav[^"]*"[^>]*>(.*?)</nav>', html, re.S | re.I
+    )
+    if len(navs) != 1:
+        issues.append(
+            f"top-nav: expected exactly one merged nav row, found {len(navs)}"
+        )
+    nav = navs[0] if navs else ""
+    for label, pat in (
+        ("Home", r">Home<"),
+        ("Chapter Index", r">Chapter Index<"),
+        ("Glossary", r">Glossary<"),
+        ("Cast Map", r">Cast Map<"),
+    ):
+        if not re.search(pat, nav):
+            issues.append(f"top-nav: missing Title Case cell '{label}' in merged nav")
+    if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
+        issues.append(
+            "meta row present: lessons carry no <p class=meta>, nav holds Lesson NN"
+        )
+    if re.search(r"\bspine\b", low):
+        issues.append("spine wording present: use 'course source', never 'spine'")
+    if re.search(r"eight treatises", low):
+        issues.append("eight-treatises wording present: use 'Section treatises'")
+    if re.search(r"\bstatus\b", low) and "status code" not in low:
+        issues.append("status wording present: use 'standing', never 'status'")
     if not re.search(r'href="[^"]*glossary[^"]*"', low):
         issues.append(
-            "top-nav: no glossary link (glossary link sits in the top nav, below the heading)"
+            "top-nav: no glossary link (glossary link sits in the merged top nav)"
         )
     if 'href="../../index.html"' not in html:
         issues.append(
-            'top-nav: no home link (needs href="../../index.html", above the kicker)'
+            'top-nav: no home link (needs href="../../index.html" inside <nav class="top-nav">)'
         )
     if not re.search(r'href="\.\./index\.html#ch\d+"', html):
         issues.append(
@@ -170,6 +205,16 @@ def check(path):
     if len(backlink_hrefs) > 1:
         issues.append(
             f"chapter-index link repeated {len(backlink_hrefs)}x (budget: ../index.html* at most once)"
+        )
+    gloss_hrefs = [h for h in HREF.findall(html) if "glossary" in h.lower()]
+    if len(gloss_hrefs) > 1:
+        issues.append(
+            f"glossary link repeated {len(gloss_hrefs)}x (budget: glossary at most once, merged nav only)"
+        )
+    castmap_hrefs = [h for h in HREF.findall(html) if "cast-map" in h.lower()]
+    if len(castmap_hrefs) > 1:
+        issues.append(
+            f"cast-map link repeated {len(castmap_hrefs)}x (budget: cast-map at most once, merged nav only)"
         )
 
     for href in HREF.findall(html):

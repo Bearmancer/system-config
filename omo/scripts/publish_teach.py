@@ -102,11 +102,11 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str) -> str:
   <p class="home-link"><a href="../index.html">Home</a></p>
   <p class="kicker">Course Home</p>
   <h1>{ws_title}</h1>
-  <h2>Chapters</h2>
+  <h2>Chapter index</h2>
   <ul>
 {lesson_rows}
   </ul>
-  <h2>Reference</h2>
+  <h2>Cast roster · Glossary</h2>
   <ul>
 {ref_rows}
   </ul>
@@ -145,51 +145,36 @@ def build_hub_rows(
 
         dest = staging / ws.name
         ws_title = ws.name.replace("-", " ").title()
-        mission_path = ws / "MISSION.md"
-        if mission_path.exists():
-            m = MISSION_H1_PATTERN.search(mission_path.read_text(encoding="utf-8"))
-            if m:
-                ws_title = MISSION_PREFIX_PATTERN.sub("", m.group(1).strip())
-
-        existing_home = None
-        for p in ws_pages:
-            if (
-                COURSE_HOME_TITLE_PATTERN.match(p["title"])
-                or Path(p["path"]).name.lower() == "index.html"
-            ):
-                existing_home = p
-                break
 
         lesson_pages = [p for p in ws_pages if LESSON_PATH_PATTERN.match(p["path"])]
         ref_pages = [p for p in ws_pages if REFERENCE_PATH_PATTERN.match(p["path"])]
         chapter_count = len(lesson_pages)
 
-        if existing_home:
-            home_rel_from_root = existing_home["path"]
-        else:
-            lesson_rows_list: list[str] = []
-            for i, p in enumerate(
-                sorted(
-                    lesson_pages, key=lambda p: get_chapter_num(p["title"], p["path"])
-                ),
-                start=1,
-            ):
-                leaf = p["path"].split("/", 1)[1]
-                row_id = get_chapter_row_id(p["path"], i)
-                lesson_rows_list.append(
-                    f'    <li id="{row_id}"><a href="{leaf}">{p["title"]}</a></li>'
-                )
-
-            ref_rows_list: list[str] = []
-            for p in sorted(ref_pages, key=lambda p: p["path"]):
-                leaf = p["path"].split("/", 1)[1]
-                ref_rows_list.append(f'    <li><a href="{leaf}">{p["title"]}</a></li>')
-
-            home_html = build_home_html(
-                ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list)
+        lesson_rows_list: list[str] = []
+        for i, p in enumerate(
+            sorted(lesson_pages, key=lambda p: get_chapter_num(p["title"], p["path"])),
+            start=1,
+        ):
+            leaf = p["path"].split("/", 1)[1]
+            row_id = get_chapter_row_id(p["path"], i)
+            lesson_rows_list.append(
+                f'    <li id="{row_id}"><a href="{leaf}">{row_id}</a></li>'
             )
-            (dest / "index.html").write_text(home_html, encoding="utf-8")
-            home_rel_from_root = f"{ws.name}/index.html"
+
+        ref_labels = {"cast-map.html": "Cast roster", "glossary.html": "Glossary"}
+        ref_rows_list: list[str] = []
+        for p in sorted(ref_pages, key=lambda p: p["path"]):
+            label = ref_labels.get(Path(p["path"]).name.lower())
+            if label is None:
+                continue
+            leaf = p["path"].split("/", 1)[1]
+            ref_rows_list.append(f'    <li><a href="{leaf}">{label}</a></li>')
+
+        home_html = build_home_html(
+            ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list)
+        )
+        (dest / "index.html").write_text(home_html, encoding="utf-8")
+        home_rel_from_root = f"{ws.name}/index.html"
 
         hub_rows.append(
             {"title": ws_title, "chapters": chapter_count, "link": home_rel_from_root}

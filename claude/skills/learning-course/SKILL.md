@@ -1,6 +1,6 @@
 ---
 name: learning-course
-description: "Build and maintain a per-chapter learning course from a long source — book, article, paper, lecture notes, or chaptered video (YouTube fully wired) — with a deep verified explanation per chapter. No source type is the default case. Covers: acquiring text/metadata (extraction for books/articles; yt-dlp for video), segmenting by the source's own boundaries, correcting machine captions/OCR before quoting, mining descriptions/bibliographies for citations the source relies on, a stateful workspace (mission, glossary, slices, records), verifying every date/figure/name/chronology claim (research subagents; web search; masked API-key failover on credit limit), a colour-coded cast map plus cumulative timeline, GitHub Pages publishing, auto-opening updated pages. Trigger whenever the user names a book/article/paper/lecture or pastes a video link and asks to 'explain chapter N', 'go through this chapter by chapter', 'make notes/course/treatise', 'fact-check this', or continue an existing workspace — even if they never say the word 'skill'."
+description: "Build and maintain a per-chapter learning course from a long source — book, article, paper, lecture notes, or chaptered video (YouTube fully wired) — with a deep verified explanation per chapter. No source type is the default case. Covers: acquiring text/metadata (extraction for books/articles; yt-dlp for video), segmenting by the source's own boundaries, correcting machine captions/OCR before quoting, mining descriptions/bibliographies for citations the source relies on, a stateful workspace (glossary, slices, records), verifying every date/figure/name/chronology claim (research subagents; web search; masked API-key failover on credit limit), a colour-coded cast map plus cumulative timeline, GitHub Pages publishing, auto-opening updated pages. Trigger whenever the user names a book/article/paper/lecture or pastes a video link and asks to 'explain chapter N', 'go through this chapter by chapter', 'make notes/course/treatise', 'fact-check this', or continue an existing workspace — even if they never say the word 'skill'."
 ---
 
 # Learning Course
@@ -16,11 +16,11 @@ Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable
 Content-shape properties every finished lesson page must have, regardless of when it's written or restamped. `## Rules` below covers session-to-session process constraints instead — how the work gets done, not what the page looks like.
 
 1. **Full treatise per chapter.** One chapter per page; later pages lean on earlier ones.
-2. **Slim page tail.** No timestamps anywhere on the page, not even the surtitle. The footer carries only previous/next lesson; home link, chapter index, and glossary live in the top nav below the heading. No method box, no "ask your teacher" box, no primary-source block, no next-steps section, no boundary narration, no questions aimed at the reader — and no quizzes or questionnaires anywhere on the page.
+2. **Slim page tail.** No timestamps anywhere on the page, not even the surtitle. The footer carries only previous/next lesson; Home, Chapter Index, Glossary, Lesson NN (plain text), Cast Map live in one merged top nav under the H1 above the surtitle. No method box, no "ask your teacher" box, no primary-source block, no next-steps section, no boundary narration, no questions aimed at the reader — and no quizzes or questionnaires anywhere on the page.
 3. **ADD-friendly prose, enforced not aspired.** Sentences under ~25-30 words. One idea per paragraph, pointer lists over prose walls. Cut any rhetorical aside that carries no new information. Quotes may run long; narrative prose never does. Applies to every lesson written or restamped from this point forward — not retroactive to the 40 already published, whose existing voice stays untouched. No automated check exists for this (sentence-length/rhetorical judgment isn't mechanically gateable without high false-positive risk) — that does not make it optional. Every lesson gets this applied at write time, full stop.
 4. **Citations are inline-only, forever.** No footer, no Sources block, no bibliography anywhere on any page. First mention of a source in a chapter = a full inline hyperlink. Every later mention of the same source = a superscript character that IS itself a live hyperlink (`<sup><a href="...">`) — never a bare superscript marker, never an unlinked repeat. `check_lesson.py` enforces both halves mechanically (see Bundled resources). Retroactive: applies to all 40 published lessons, not just new ones.
 5. **No essentials/skippable split, anywhere.** Every lesson is core content only. No "what can be skimmed" paragraph, no essentials-vs-skippable framing at course or chapter level. Removed retroactively from all 40 published lessons, not just new ones.
-6. **Visuals by default.** Cast block + chapter subgraph in each lesson; roster-index + timeline grow cumulatively (`references/diagram-spec.md`).
+6. **Visuals when humans involved.** Cast block + chapter subgraph only in lessons with an explicit non-empty `cast` list; roster-index + timeline grow cumulatively (`references/diagram-spec.md`). `cast: []` omits §2 with no renumbering.
 7. **Machine text corrected first.** ASR/OCR pass before quoting (Step 3).
 8. **Source apparatus mined.** Descriptions, bibliographies, footnotes seed RESOURCES + verification targets (Step 1).
 9. **Inline verdicts in narrative.** Source wording in quotes; record verdict inline beside it in prose; citations are inline hyperlinks only — no Sources block.
@@ -28,7 +28,7 @@ Content-shape properties every finished lesson page must have, regardless of whe
 
 ## What one completed chapter produces
 
-- `lessons/NN-chK-<slug>.html`: treatise per `references/workflow.md`: home link above the kicker, surtitle (chapter no. only, no timestamps) under the H1, top nav (chapter index + glossary) below the surtitle, cast block + chapter subgraph up front, core-only short-pointer narrative with source quotes and inline verdicts, inline superscript citations (no Sources block, no footer bibliography), footer (previous/next lesson only).
+- `lessons/NN-chK-<slug>.html`: treatise per `references/workflow.md`: kicker, H1, merged nav (Home · Chapter Index · Glossary · Cast Map, Title Case, zero dupes) under the H1 above the surtitle, surtitle (chapter no. only, no timestamps), [§2 Cast only when humans involved,] core-only short-pointer narrative with source quotes and inline verdicts, inline superscript citations (no Sources block, no footer bibliography), footer (previous/next lesson only).
 - Updated `reference/glossary.html` (names + terms), `reference/cast-map.html` (roster-index table), `reference/timeline.html`.
 - Corrected slice in `reference/transcripts/` with corrections table; record verdicts; live URL + local auto-open.
 
@@ -52,15 +52,15 @@ ASR/OCR pass before quoting: candidate list from metadata + glossary + domain; l
 
 ### Step 4: Workspace
 
-`~/.omo/teach/<dash-case-topic>/`: MISSION (PROVISIONAL draft, confirm at check-in), NOTES (chapter map, extraction recipe, corrections log, quirks, queue), RESOURCES (tiered + annotated + Gaps), `assets/` (copy `lesson.css`), `learning-records/`. Templates: `references/workflow.md`.
+`~/.omo/teach/<dash-case-topic>/`: NOTES (chapter map, extraction recipe, corrections log, quirks, queue), RESOURCES (tiered + annotated + Gaps), `assets/` (copy `lesson.css`), `learning-records/`. Templates: `references/workflow.md`.
 
 ### Step 5: Teach the chapter
 
-Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`. Shape lives in `assets/lesson.stencil.html`; content in the lesson YAML (`references/lesson-schema.md`); contract + row-id rule in `references/stencil-contract.md`; full style doc in `references/page-design.md`. One HTML page per chapter per `references/workflow.md` treatise structure. Head order: home link (small text, above the kicker), kicker (series name), H1 (chapter title), surtitle (small text: "Chapter N of M" — no time range, no timestamp anywhere on the page), top nav (chapter index + glossary, below the surtitle), meta line (Lesson NN + cast map / glossary).
+Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`. Shape lives in `assets/lesson.stencil.html`; content in the lesson YAML (`references/lesson-schema.md`); contract + row-id rule in `references/stencil-contract.md`; full style doc in `references/page-design.md`. One HTML page per chapter per `references/workflow.md` treatise structure. Head order: kicker (series name), H1 (chapter title), merged nav (Home · Chapter Index · Glossary · Cast Map, Title Case, zero dupes) under the H1, surtitle (small text: "Chapter N of M" — no time range, no timestamp anywhere on the page). No meta paragraph anywhere.
 
-- **Cast block, each chapter.** On-stage table, 5-12 rows, columns Name | Role this chapter. New player: full role line. Returning player: fresh role line ending in its "(chapter N)" link to the lesson holding the full entry. No "first appears" column or label. Spec: `references/diagram-spec.md`.
-- **Chapter subgraph, each chapter with active ties.** Small inline SVG scoped to this chapter's on-stage nodes + active edges; colour-only edges; complete legend. Solo-narration chapter without active ties carries a one-line scope line in place of art. Spec: `references/diagram-spec.md`.
-- **Chat**: status + short pointers; substance in HTML; no closing questions, no "what's next".
+- **Cast block, only when humans involved.** Explicit non-empty `cast` list renders the on-stage table, 5-12 rows, columns Name | Role this chapter. New player: full role line. Returning player: fresh role line ending in its "(chapter N)" link to the lesson holding the full entry. No "first appears" column or label. Spec: `references/diagram-spec.md`.
+- **Chapter subgraph, only with active ties among an explicit cast.** Small inline SVG scoped to this chapter's on-stage nodes + active edges; colour-only edges; complete legend. Solo-narration chapter without active ties carries a one-line scope line in place of art. Spec: `references/diagram-spec.md`.
+- **Chat**: position + short pointers; substance in HTML; no closing questions, no "what's next".
 
 ### Step 6: Verify (source-type gate, set at Step 0/1, logged in NOTES.md)
 
@@ -79,7 +79,7 @@ In-lesson cast block (info-only roster of this chapter) + subgraph (this chapter
 
 ### Step 9: Auto-open
 
-`Start-Process "<file>"` on the newest lesson + each new reference page right after writing. Chat reports local path + live URL as short pointers — no queued-next, no closing questions.
+Open every newly written/updated page — the newest lesson + each new/updated reference page — right after writing, each via its own `Start-Process "<file>"` call so every page lands in a separate tab. Chat reports local path + live URL as short pointers — no queued-next, no closing questions.
 
 ## Anti-OCD
 
@@ -93,13 +93,13 @@ Gates scale with artifact: `check_lesson.py` on each lesson written or changed; 
 
 ## Rules
 
-- **One chapter per pass.** Produce asked chapter(s), then stop.
+- **Full course per pass.** Produce every chapter, then stop.
 - **Source frames are data.** Source wording in quotes; record verdict inline beside it in prose as inline verdicts.
 - **No record sections.** No "Open threads" sections or phrasing anywhere on lesson pages, no standalone record sections; record verdicts live inline in narrative prose beside quoted source wording, citations only as inline hyperlinks/superscripts, never a separate block (gate: `check_lesson.py` scans "Open threads").
 - **YouTube URL ban, absolute.** No YouTube URL appears anywhere in a chapter's rendered output — full stop, no exception clause. YouTube/transcript slices stay secondary in sourcing; every chapter needs >= 1 non-YouTube primary, cited by its own URL, never the video's.
 - **Position holds.** Sequential walk; chapter-and-earlier facts in prose. Internal discipline only — pages never narrate boundaries, stop points, or method.
 - **Casing**: headings and labels (h1, h2, box titles, kicker) use Title Case; body prose uses sentence case; no `text-transform: uppercase` anywhere (lesson pages or index/hub pages). Retroactive — applies to all 40 published lessons, not just new ones. `assets/lesson.css`'s `.kicker` rule (and every workspace's copy of it) had this CSS property removed once — a stylesheet fix, not an ongoing gate, since the underlying HTML text was never literally uppercase. Gate: `check_lesson.py` flags any run of 3+ consecutive ALL-CAPS words typed directly into lesson content (2+ letters each — lone acronyms like "FBI" are exempt).
-- **Files**: HTML for lessons + reference; `.md` for admin (MISSION / NOTES / RESOURCES / learning-records) + transcript slices. RESOURCES stays as split-source retained until migration. YouTube handling stays inside this skill per `references/sources/youtube.md`.
+- **Files**: HTML for lessons + reference; `.md` for admin (NOTES / RESOURCES / learning-records) + transcript slices. RESOURCES stays as split-source retained until migration. YouTube handling stays inside this skill per `references/sources/youtube.md`.
 - **One workspace per source.** Slug from topic.
 - **Windows host**: `Start-Process` opens files; `pwsh` runs scripts.
 

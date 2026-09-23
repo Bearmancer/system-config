@@ -14,7 +14,7 @@ The script:
 - commits and pushes to `Bearmancer/bearmancer.github.io` (public site: `https://bearmancer.github.io/`),
 - prints the page count.
 
-Scope is fixed: **teaching pages only**. `.md` admin files (MISSION / NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
+Scope is fixed: **teaching pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
 
 ## Dry run (no flag — preview by hand)
 

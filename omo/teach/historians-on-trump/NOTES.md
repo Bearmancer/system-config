@@ -1,6 +1,6 @@
-# Notes — chapter map, extraction recipe, spine pointers, queue
+# Notes — chapter map, extraction recipe, course-source pointers, queue
 
-## Chapter map (Wave1 decision, 8 sections)
+## Chapter map (Wave1 decision)
 
 | # | Section | Date-span | Essential? |
 |---|---------|-----------|------------|
@@ -13,16 +13,16 @@
 | 7 | Historian frames — dictatorship, braggadocio, norms rupture | 2025–2026 | yes |
 | 8 | Annex + method — A1–A3 barred, how the instruments differ | 2021–2026 | skippable |
 
-- Spine note: primary source is `report.html` in the source dir (ulw-research 20260921-010000-historians-trump). SYNTHESIS pointer: `bg_7f09dd81` full text (local SYNTHESIS.md carries the lock header only). Claim-graph lock: verified C4–C10b / A1–A3 per `claim-graph.md` (from `bg_8e30dca9`); O1–O28 frozen per observation-manifest.
+- Course-source note: primary source is `report.html` in the source dir (ulw-research 20260921-010000-historians-trump). SYNTHESIS pointer: `bg_7f09dd81` full text (local SYNTHESIS.md carries the lock header only). Claim-graph lock: verified C4–C10b / A1–A3 per `claim-graph.md` (from `bg_8e30dca9`); O1–O28 frozen per observation-manifest.
 - Ch8 is reference/annex: barred claims stay framing-only; method comparison is the teachable core.
 
 ## time_range convention (text source — no video timestamps)
 
 Lessons use `Section N of 8 · <date-span>` in the surtitle slot (the page's only range line). Example: `Section 1 of 8 · Apr 2025`. Calendar dates inside prose are untouched. No `mm:ss` ranges exist for this course; do not invent any.
 
-## Extraction recipe (text spine — no yt-dlp)
+## Extraction recipe (text source — no yt-dlp)
 
-1. Spine lives at: `C:\Users\Lance\.omo\agents-config\.claude\worktrees\agents-config-setup\omo\ulw-research\20260921-010000-historians-trump\report.html` (+ `.pdf`, `.docx` mirrors).
+1. Course source lives at: `C:\Users\Lance\.omo\agents-config\.claude\worktrees\agents-config-setup\omo\ulw-research\20260921-010000-historians-trump\report.html` (+ `.pdf`, `.docx` mirrors).
 2. Per-section slice (Wave3): copy the section's report HTML block into `reference/transcripts/sec<N>-<slug>.md`, preserve claim/counter `[C#]/[O#]` tags verbatim, prepend a corrections table (typo / garble → canonical → basis).
 3. Cross-check: first claim tag in the slice matches the claim-graph lock range for that section; SYNTHESIS `bg_7f09dd81` output is the verdict authority for C-claims.
 4. Re-run rule: slices derive from `report.html` bytes only — never from memory or snippet recall.
@@ -38,7 +38,7 @@ Lessons use `Section N of 8 · <date-span>` in the surtitle slot (the page's onl
 - No single Brinkley imperial transcript exists (O18) — Roosevelt House + CNN transcripts are context only.
 - Beschloss long-form transcript missing (O30); Goodwin MorningJoe transcript absent (O31); Brinkley MTP video-only (O32).
 
-## Queue & status
+## Queue & standing
 
 - 2026-09-21 — scaffold only (this pass). No lessons, no slices (Wave3), no stamp/check/publish runs.
  - Next: Wave3 slices sec1–sec8 DONE 2026-09-21 → lesson 01 (ch1 NYT April) with verification fan-out per claim-graph lock.

@@ -11,7 +11,30 @@
 	--note-bg: #f4f1e8;
 	--warn-bg: #fbf5e4;
 	--warn-edge: #c9a94e;
-	--mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+	--font-body: "Sitka Text", Constantia, Charter, Georgia, serif;
+	--font-ui: -apple-system, "Segoe UI", system-ui, sans-serif;
+	--font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+	--mono: var(--font-mono);
+	--size-base: 19px;
+	--size-lead: 1.12rem;
+	--size-small: 0.84rem;
+}
+
+/* Size presets: default M. Set data-size on <html> to switch. */
+html[data-size="S"] {
+	--size-base: 17px;
+	--size-lead: 1rem;
+	--size-small: 0.75rem;
+}
+html[data-size="M"] {
+	--size-base: 19px;
+	--size-lead: 1.12rem;
+	--size-small: 0.84rem;
+}
+html[data-size="L"] {
+	--size-base: 21px;
+	--size-lead: 1.24rem;
+	--size-small: 0.93rem;
 }
 
 html {
@@ -23,66 +46,66 @@ body {
 	margin: 0 auto;
 	padding: 3.5rem 2.5rem 5rem;
 	color: var(--ink);
-	font-family: "Sitka Text", Constantia, Charter, Georgia, serif;
-	font-size: 18px;
+	font-family: var(--font-body);
+	font-size: var(--size-base);
 	line-height: 1.62;
 	text-rendering: optimizeLegibility;
 }
 
 /* Headings */
 .kicker {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.72rem;
+	font-family: var(--font-ui);
+	font-size: 0.7rem;
 	letter-spacing: 0.14em;
 	color: var(--accent);
 	margin: 0 0 0.6rem;
 }
 h1 {
-	font-size: 2.05rem;
+	font-size: 1.9rem;
 	line-height: 1.15;
 	font-weight: 600;
 	margin: 0 0 0.5rem;
 	letter-spacing: -0.01em;
 }
 h2 {
-	font-size: 1.22rem;
+	font-size: 1.2rem;
 	font-weight: 600;
 	margin: 2.6rem 0 0.7rem;
 	padding-top: 1.1rem;
 	border-top: 1px solid var(--rule);
 }
 h3 {
-	font-size: 1.02rem;
+	font-size: 1rem;
 	font-weight: 600;
 	margin: 1.6rem 0 0.4rem;
 }
 
 .meta {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.78rem;
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
 	color: var(--ink-soft);
 	margin: 0 0 2rem;
 }
 .lead {
-	font-size: 1.06rem;
+	font-size: var(--size-lead);
 	color: var(--ink-soft);
 	margin: 0 0 1.6rem;
 }
 .surtitle {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.82rem;
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
 	color: var(--ink-soft);
 	margin: 0 0 1.2rem;
 }
 .home-link {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-family: var(--font-ui);
 	font-size: 0.78rem;
 	color: var(--ink-soft);
 	margin: 0 0 1.4rem;
 }
 .top-nav {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.8rem;
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
 	color: var(--ink-soft);
 	margin: 0 0 1.6rem;
 }
@@ -103,13 +126,13 @@ strong {
 	font-weight: 600;
 }
 .t {
-	font-family: var(--mono);
-	font-size: 0.82em;
+	font-family: var(--font-mono);
+	font-size: 0.86em;
 	color: var(--accent);
 	white-space: nowrap;
 }
 .small {
-	font-size: 0.86rem;
+	font-size: var(--size-small);
 	color: var(--ink-soft);
 }
 
@@ -123,7 +146,7 @@ blockquote p {
 	margin: 0.3rem 0;
 }
 blockquote cite {
-	font-size: 0.84rem;
+	font-size: 0.86rem;
 	font-style: normal;
 }
 
@@ -143,8 +166,8 @@ blockquote cite {
 	margin-bottom: 0;
 }
 .box .box-title {
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.72rem;
+	font-family: var(--font-ui);
+	font-size: 0.7rem;
 	letter-spacing: 0.12em;
 	color: var(--accent);
 	display: block;
@@ -170,7 +193,7 @@ th {
 	text-align: left;
 	border-bottom: 1.5px solid var(--rule);
 	padding: 0.4rem 0.5rem;
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+	font-family: var(--font-ui);
 	font-size: 0.78rem;
 	font-weight: 600;
 }
@@ -194,8 +217,8 @@ td {
 	border-bottom: 1px dotted var(--rule);
 }
 .tl .when {
-	font-family: var(--mono);
-	font-size: 0.8rem;
+	font-family: var(--font-mono);
+	font-size: var(--size-small);
 	color: var(--accent);
 	padding-top: 0.15rem;
 }
@@ -215,8 +238,8 @@ ul.tight li, ol.tight li {
 .hub-table td:last-child {
 	white-space: nowrap;
 	color: var(--ink-soft);
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.82rem;
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
 }
 
 /* Footer */
@@ -224,8 +247,8 @@ ul.tight li, ol.tight li {
 	margin-top: 3.2rem;
 	padding-top: 1.1rem;
 	border-top: 1px solid var(--rule);
-	font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-	font-size: 0.8rem;
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
 	color: var(--ink-soft);
 }
 .lesson-footer nav a {
@@ -236,7 +259,7 @@ ul.tight li, ol.tight li {
 @media (max-width: 640px) {
 	body {
 		padding: 2rem 1.2rem 3rem;
-		font-size: 17px;
+		font-size: min(var(--size-base), 17px);
 	}
 	.tl li {
 		grid-template-columns: 4.6rem 1fr;

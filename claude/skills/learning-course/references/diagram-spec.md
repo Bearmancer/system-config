@@ -1,12 +1,12 @@
 # Visuals spec — cast block, chapter subgraph, roster-index & timeline (colour-coded, legend-complete, clash-free)
 
-Two cumulative references grow with every course — a roster-index and a timeline — plus per-lesson visuals. Each lesson carries a cast block and a chapter-scoped relationship subgraph (Part 0). Chapter scope keeps a large, tangled cast (e.g. Stalin's circle) readable chapter by chapter, in place of one huge cumulative diagram.
+Two cumulative references grow with every course — a roster-index and a timeline — plus per-lesson visuals when humans are involved. Each lesson with an explicit non-empty `cast` list carries a cast block and a chapter-scoped relationship subgraph (Part 0). Chapter scope keeps a large, tangled cast (e.g. Stalin's circle) readable chapter by chapter, in place of one huge cumulative diagram.
 
-## Part 0 — Per-chapter cast block & subgraph (in the lesson, every chapter)
+## Part 0 — Per-chapter cast block & subgraph (in the lesson, only when `cast` is an explicit non-empty list)
 
 Table plus diagram both scope toward _this chapter alone_. That scope keeps duplication low and complexity bounded.
 
-### Cast block (table, mandatory, every lesson)
+### Cast block (table, only with explicit non-empty `cast`)
 
 - One row per person acting on stage this chapter — the on-stage cast, apart from the full roster and apart from passing mentions. Target 5–12 rows; a larger on-stage cast stays whole while each listed person acts.
 - Columns: **Name | Role this chapter**. Info alone: current role for this chapter; every row reads standalone. No "first appears" column and no introduction-date column.
@@ -14,14 +14,14 @@ Table plus diagram both scope toward _this chapter alone_. That scope keeps dupl
 - **Returning player**: role text fresh for this chapter, ending with its "(chapter N)" link to the lesson holding the full entry — chapter numbers are absolute. Internal "(chapter N)" links count toward the max-twice hyperlink rule: each target at most twice per page. Short role-change phrases ("now NKVD chief") ride inside the role cell where roles shifted.
 - Model row: `Rich DeVos | on the stand in 1988, admits abuses persist, pledges unenforced (full line: <a>chapter 2</a>)` — fresh role text plus the chapter link each time.
 
-### Chapter-scoped relationship subgraph (SVG, mandatory for chapters with active ties among the on-stage cast — the common case in court/circle narrative)
+### Chapter-scoped relationship subgraph (SVG, only with explicit cast plus active ties among the on-stage cast)
 
 - A **subgraph**, scoped toward this chapter: nodes on stage this chapter plus edges active in it. Chapter scope keeps the visual small while total cast grows.
 - Node cap 12. On-stage casts above 12 split into two subgraphs clustered by concern (e.g. court cluster, street cluster), each with a complete legend for the colours shown.
 - Same hard rules as Part 1 (colour-only edges, clash-free geometry, direction-checked arrows) — the three hard rules apply here in full.
 - Canvas 700–950 wide, sized toward node count; cumulative-map size stays out of scope here.
-- A solo-narration chapter, with active ties absent among on-stage people, carries a one-line coverage line in place of the subgraph, naming the chapter scope.
-- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the page's top meta line already links it. Citation hyperlinks live in the lesson narrative and its per-chapter Sources block; the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
+- A solo-narration chapter, or any chapter with `cast: []`, omits the whole §2 Cast block (table plus subgraph) with no renumbering; a solo-narration chapter with a cast list but no active ties carries a one-line coverage line in place of the subgraph, naming the chapter scope.
+- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citation hyperlinks live in the lesson narrative and its per-chapter Sources block; the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
 
 ## Part 1 — Roster-index (`reference/cast-map.html`)
 
@@ -62,12 +62,10 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 
 ### Page structure (roster-index)
 
-1. kicker `Reference — who is who, and who is wired to whom`; H1 "Cast roster — as of chapter N"; meta line (coverage sentence, canonical-naming line, links).
-2. How-to-read box: colour carries line meaning in chapter subgraphs; this page spells each tie in words for full coverage including colour-vision limits.
-3. Roster — grouped prose list: every node, one to three lines, relations spelled out in words, each entry carrying its introduction chapter `(chN)` (absolute) plus an anchor link toward that chapter's lesson.
-4. Context section for parallels and offstage actors, with reason for table-only coverage.
-5. Links: lesson, glossary, timeline, transcript slices.
-6. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown.
+1. H1 "Cast roster — as of chapter N"; short cross-link line (cast roster · glossary · chapter index, no lesson list). No kicker on reference pages.
+2. Roster — grouped prose list: every node, one to three lines, relations spelled out in words, each entry carrying its introduction chapter `(chN)` (absolute) plus an anchor link toward that chapter's lesson.
+3. Context section for parallels and offstage actors, with reason for table-only coverage.
+4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown.
 
 ### Updating per chapter
 
@@ -80,12 +78,10 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 
 Cumulative chronology, growing exactly like the roster: append plus move, resolved entries retained, header "as of chapter N".
 
-- **Layout**: era/act sections; each entry holds one date plus one-line event plus a colour tag for kind (policy / business / violence / publication / … — chosen per course). Flow layout (sections and lists) gives overlap-free construction; print-friendly output.
-- **Status rides in text, kind rides in colour.** Each date states verified-against-record or source-claimed ("1971 (video's claim; records show 1970)"). Colour-blind readers get full coverage from text alone.
-- **Legend**: one row per tag colour with meaning, plus verified-vs-source-claimed style guide; complete for the page.
-- Tag meanings hold steady across chapters; legend growth adds rows; old entries keep their colours.
+- **Layout**: era/act sections; each entry holds one date plus one-line event plus standing words. Flow layout (sections and lists) gives overlap-free construction; print-friendly output. No colour tags, no legend.
+- **Standing rides in text alone.** Each date states verified-against-record or source-claimed ("1971 (video's claim; records show 1970)"). No kind colours anywhere on this page.
 - **Corrections move entries**: record contradictions relocate the entry with correction labelled inside the entry; single current version stands per event.
-- In-lesson mini-timelines use `<ul class="tl">` with `<li><span class="when">1967</span><div>…</div></li>` — same tag colours, same status labelling. Shared stylesheet styles `.tl`; per-page restyle stays out.
+- In-lesson mini-timelines use `<ul class="tl">` with `<li><span class="when">1967</span><div>…</div></li>` — same standing labelling. Shared stylesheet styles `.tl`; per-page restyle stays out.
 
 A course workspace lacking `reference/timeline.html` gains a fresh build seeded from prior chapters, then the current chapter addition. Each chapter adds roster rows plus timeline entries; a quiet chapter still advances the "as of chapter N" header.
 

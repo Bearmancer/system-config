@@ -19,20 +19,21 @@ and `machinery` accept a restricted HTML subset: `<p> <blockquote> <ul> <ol>
 | `time_range`     | string | yes      | `1:55:38–2:08:19` (en dash) — admin-only: feeds NOTES.md chapter map + correction tracking; the stamp never renders it on the page          |
 | `transcript`     | string | yes      | slice filename under `reference/transcripts/` — admin-only: correction sourcing; the stamp never renders a link to it                       |
 | `lead`           | string | yes      | §1 paragraph (plain text)                                                                                                                  |
-| `cast`           | list   | yes      | `{name, role, ref?}` — `ref` = chapter number for the `(chapter N)` link                                                                   |
+| `cast`           | list   | explicit  | `{name, role, ref?}` — `ref` = chapter number for the `(chapter N)` link. Absent/`null`/`""` refuses; explicit `cast: []` omits §2 Cast (no humans this chapter) |
 | `subgraph`       | bool   | no       | default false; true renders a placeholder comment slot                                                                                     |
 | `narrative`      | text   | yes      | §3 restricted HTML; MUST carry ≥2 verdict words (confirmed / corrected / partially correct / wrong / unfindable / unverified / allegation) |
 | `machinery`      | text   | yes      | §4 restricted HTML                                                                                                                         |
 | `sources`        | list   | yes      | `{label, url, note?}` — non-empty; every `url` starts `https://`; a `youtube.com`/`youtu.be` url refuses — a YouTube video is never a source |
 
-Derived by the stamp (never authored): page `<title>`, top-nav home link
-(`../../index.html`, small text, above the kicker), surtitle (`Chapter N of
-M` — no time range, no timestamp anywhere on the page), top nav (chapter-index
-backlink + glossary, below the surtitle), meta line, cast-table `(chapter N)`
-hrefs (resolved against sibling lesson files), prev/next links (from filename
+Derived by the stamp (never authored): page `<title>`, merged top nav
+(Home + Chapter Index + Glossary + Cast Map, Title Case,
+zero dupe links, below the H1 above the surtitle), surtitle (`Chapter N of
+M` — no time range, no timestamp anywhere on the page), cast-table `(chapter N)`
+hrefs (resolved against sibling lesson files; whole §2 Cast block omitted when
+`cast: []`), prev/next links (from filename
 order; text `Previous: <target title>` read from the sibling YAML or H1), row
 id from the filename. No Sources block, no footer bibliography, no footer
-workspace line — the stamp renders no separate citation list and no footer
+workspace line, no `<p class="meta">` — the stamp renders no separate citation list, no meta paragraph, and no footer
 text at all; the footer carries only the previous/next nav.
 
 **Citations are author-written inline, not stamp-derived.** Write the first
@@ -47,14 +48,16 @@ be a bare `<a>`; every occurrence after the first must be wrapped in
 
 1. Filename not `NN-chK-<slug>.html`-shaped → refuse.
 2. `chapter` ≠ filename `K` → refuse.
-3. Any required field missing/empty → refuse.
+3. Any required field missing/empty → refuse (`cast` absent/`null`/`""` → refuse with `missing field: cast`; explicit `cast: []` is valid and omits §2).
 4. `sources` empty or a source lacks `label`/`url` → refuse.
 5. Narrative verdict words < 2 → refuse.
 6. Any link target's occurrence after the first not wrapped in `<sup>...</sup>` → refuse (first occurrence may be bare; every repeat must be a live superscript link).
+6b. Bare claim/observation tag code (`[C4]`, `[O2]`, or clusters) outside a hyperlink → refuse. Numerals stand alone; every claim carries a real `<a href="https://…">` beside it.
 7. Bare `http(s)://` text outside an anchor in any field → refuse.
-8. §-reference to a section number outside 1–4 → refuse.
+8. §-reference to a section number outside 1–4 → refuse; §2 ref when `cast: []` → refuse (no §2 Cast on the page).
 9. Timestamp pattern in narrative/machinery/lead → refuse. No timestamp
    renders anywhere on the page, including the surtitle.
+10a. `subgraph` present with `cast: []` → refuse (omit subgraph when no cast).
 10. `cast[].ref` pointing at a chapter with no sibling lesson file → refuse.
 11. Write target outside `<workspace>/lessons/` → refuse.
 12. A `sources[].url` matching `youtube.com`/`youtu.be` → refuse. A YouTube
