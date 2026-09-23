@@ -95,7 +95,7 @@ node scripts/bisect-cdp.mjs my-run
 node scripts/bb-finalize.mjs my-run --release
 ```
 
-Attaching to a session that's *already running* (e.g. one your production worker created) — `bb-capture.mjs` accepts a session id instead of `--new`:
+Attaching to a session that's _already running_ (e.g. one your production worker created) — `bb-capture.mjs` accepts a session id instead of `--new`:
 
 ```bash
 # Pick a running session (filter client-side; browse cloud sessions list has no --status flag)
@@ -118,7 +118,7 @@ node scripts/bb-finalize.mjs mid-flight-debug   # without --release: leave the s
 
 Session replay artifact fetching is **deprecated** and isn't fetched. Use the screenshots + DOM dumps in `screenshots/` and `dom/` for visual ground truth.
 
-The live `debugger_url` in the manifest opens an interactive Chrome DevTools view served by Browserbase — handy for *watching* a long-running automation while the tracer captures the firehose to disk.
+The live `debugger_url` in the manifest opens an interactive Chrome DevTools view served by Browserbase — handy for _watching_ a long-running automation while the tracer captures the firehose to disk.
 
 ## Filesystem layout
 
@@ -158,24 +158,34 @@ When a run was started via `bb-capture.mjs`, `manifest.json` also carries a top-
 
 ```json
 {
-  "sessionId": "45f28023-…",
-  "duration": { "startMs": 1777312533000, "endMs": 1777312609000, "totalMs": 76000 },
-  "totalEvents": 420,
-  "pages": [
-    {
-      "pageId": 0,
-      "url": "https://example.com/",
-      "startMs": 1777312533000, "endMs": 1777312538886, "durationMs": 5886,
-      "eventCount": 60,
-      "domains": {
-        "Network": { "count": 18, "errors": 1 },
-        "Console": { "count": 2 },
-        "Page":    { "count": 24 },
-        "Runtime": { "count": 13 }
-      },
-      "network": { "requests": 4, "failed": 1, "byType": { "Document": 2, "Script": 1, "Other": 1 } }
-    }
-  ]
+	"sessionId": "45f28023-…",
+	"duration": {
+		"startMs": 1777312533000,
+		"endMs": 1777312609000,
+		"totalMs": 76000
+	},
+	"totalEvents": 420,
+	"pages": [
+		{
+			"pageId": 0,
+			"url": "https://example.com/",
+			"startMs": 1777312533000,
+			"endMs": 1777312538886,
+			"durationMs": 5886,
+			"eventCount": 60,
+			"domains": {
+				"Network": { "count": 18, "errors": 1 },
+				"Console": { "count": 2 },
+				"Page": { "count": 24 },
+				"Runtime": { "count": 13 }
+			},
+			"network": {
+				"requests": 4,
+				"failed": 1,
+				"byType": { "Document": 2, "Script": 1, "Other": 1 }
+			}
+		}
+	]
 }
 ```
 
@@ -229,7 +239,7 @@ See **REFERENCE.md** for the full jq recipe library and a method-by-method bisec
 ## Best practices
 
 1. **Use `bb-capture.mjs` on Browserbase**: it enforces `--keep-alive`, fetches the connectUrl, captures the debugger URL, and stamps the manifest. Doing it manually invites mistakes.
-2. **Don't `--release` a session you don't own**: `bb-finalize.mjs --release` is for sessions *you* created with `--new`. When attaching to a production session via `bb-capture.mjs <session-id>`, run `bb-finalize.mjs` without `--release` so the original automation keeps running.
+2. **Don't `--release` a session you don't own**: `bb-finalize.mjs --release` is for sessions _you_ created with `--new`. When attaching to a production session via `bb-capture.mjs <session-id>`, run `bb-finalize.mjs` without `--release` so the original automation keeps running.
 3. **Order matters for remote**: on Browserbase, attach the main automation client before (or together with) the tracer, and create the session with `--keep-alive`. Otherwise the session ends as soon as the tracer's WS closes.
 4. **Don't poll faster than ~1s**: each sample runs browser CLI read commands and screenshots Chrome. 2s is a good default.
 5. **Pick domains deliberately**: defaults (`Network Console Runtime Log Page`) cover most debugging. Add `DOM` for DOM-tree mutations (very noisy) via `O11Y_DOMAINS="$O11Y_DOMAINS DOM"`.

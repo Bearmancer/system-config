@@ -69,51 +69,51 @@ GET https://api.search.brave.com/res/v1/local/place_search
 
 Providing a geographic anchor improves precision. You can use coordinates (`latitude` + `longitude`) or a `location` string. Omitting both is allowed when a `q` is given — results are sourced globally and may be less precise. Omitting all three (`q`, `latitude`/`longitude`, and `location`) returns HTTP 422.
 
-| Parameter | Type | Required | Default | Description |
-|--|--|--|--|--|
-| `latitude` | float | Conditional | — | Latitude (-90.0 to 90.0). Required together with `longitude` |
-| `longitude` | float | Conditional | — | Longitude (-180.0 to 180.0). Required together with `latitude` |
-| `location` | string | No | — | Location string, alternative to coordinates. US: `<city> <state> <country>` (e.g., `san francisco ca united states`). Non-US: `<city> <country>` (e.g., `tokyo japan`). Case-insensitive, no commas needed. English or the most popular local language works best |
+| Parameter   | Type   | Required    | Default | Description                                                                                                                                                                                                                                                       |
+| ----------- | ------ | ----------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `latitude`  | float  | Conditional | —       | Latitude (-90.0 to 90.0). Required together with `longitude`                                                                                                                                                                                                      |
+| `longitude` | float  | Conditional | —       | Longitude (-180.0 to 180.0). Required together with `latitude`                                                                                                                                                                                                    |
+| `location`  | string | No          | —       | Location string, alternative to coordinates. US: `<city> <state> <country>` (e.g., `san francisco ca united states`). Non-US: `<city> <country>` (e.g., `tokyo japan`). Case-insensitive, no commas needed. English or the most popular local language works best |
 
 ### Search
 
-| Parameter | Type | Required | Default | Description |
-|--|--|--|--|--|
-| `q` | string | No | — | Free-text query (e.g., `coffee shops`, `pizza`). Fully optional — if omitted, returns general POIs in the given area |
+| Parameter | Type   | Required | Default | Description                                                                                                          |
+| --------- | ------ | -------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
+| `q`       | string | No       | —       | Free-text query (e.g., `coffee shops`, `pizza`). Fully optional — if omitted, returns general POIs in the given area |
 
 ### Additional Options
 
-| Parameter | Type | Required | Default | Description |
-|--|--|--|--|--|
-| `radius` | float | No | — | Search radius **bias** around the provided coordinates, in meters. Not a hard cutoff — results may extend beyond it. No upper limit |
-| `count` | int | No | `20` | Total items returned across **all** buckets (1–100), not just `results` — an address query can spend the whole budget on `addresses`/`streets` |
-| `geoloc` | string | No | — | User geolocation as `<latitude>x<longitude>` (e.g., `40.7128x-74.0060`), used to compute `distance` |
-| `country` | string | No | `US` | Search country (2-letter country code or `ALL`) |
-| `search_lang` | string | No | `en` | Language for search results (2+ char language code) |
-| `ui_lang` | string | No | `en-US` | UI language (locale code, e.g., `en-US`) |
-| `units` | string | No | `metric` | Measurement units: `metric` or `imperial` |
-| `safesearch` | string | No | `strict` | Safe search level: `off`, `moderate`, or `strict` |
-| `spellcheck` | bool | No | `true` | Whether to apply spellcheck to the query |
+| Parameter     | Type   | Required | Default  | Description                                                                                                                                    |
+| ------------- | ------ | -------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `radius`      | float  | No       | —        | Search radius **bias** around the provided coordinates, in meters. Not a hard cutoff — results may extend beyond it. No upper limit            |
+| `count`       | int    | No       | `20`     | Total items returned across **all** buckets (1–100), not just `results` — an address query can spend the whole budget on `addresses`/`streets` |
+| `geoloc`      | string | No       | —        | User geolocation as `<latitude>x<longitude>` (e.g., `40.7128x-74.0060`), used to compute `distance`                                            |
+| `country`     | string | No       | `US`     | Search country (2-letter country code or `ALL`)                                                                                                |
+| `search_lang` | string | No       | `en`     | Language for search results (2+ char language code)                                                                                            |
+| `ui_lang`     | string | No       | `en-US`  | UI language (locale code, e.g., `en-US`)                                                                                                       |
+| `units`       | string | No       | `metric` | Measurement units: `metric` or `imperial`                                                                                                      |
+| `safesearch`  | string | No       | `strict` | Safe search level: `off`, `moderate`, or `strict`                                                                                              |
+| `spellcheck`  | bool   | No       | `true`   | Whether to apply spellcheck to the query                                                                                                       |
 
 ## Response Format
 
 ### Top-Level Fields
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Always `"locations"` |
-| `results` | array | List of `LocationResult` objects (individual POIs) |
-| `cities` | array | Matched cities, `type: "city"` — see Geographic Place Fields |
-| `countries` | array | Matched countries, `type: "country"` |
-| `regions` | array | Matched regions, `type: "region"` |
-| `neighborhoods` | array | Matched neighborhoods, `type: "neighborhood"` |
-| `addresses` | array | List of `AddressResult` objects with `type: "address"` — specific street + number locations |
-| `streets` | array | List of `AddressResult` objects with `type: "street"` — entire streets |
-| `mixed` | array | `ResultReference` ordering hints describing how to interleave the buckets on a SERP |
-| `location` | object? | Resolved location info |
-| `location.coordinates` | [float, float] | `[latitude, longitude]` of the resolved center |
-| `location.name` | string | Resolved location name (e.g., `"Helsinki"`) |
-| `location.country` | string | Two-letter country code (e.g., `"FI"`) |
+| Field                  | Type           | Description                                                                                 |
+| ---------------------- | -------------- | ------------------------------------------------------------------------------------------- |
+| `type`                 | string         | Always `"locations"`                                                                        |
+| `results`              | array          | List of `LocationResult` objects (individual POIs)                                          |
+| `cities`               | array          | Matched cities, `type: "city"` — see Geographic Place Fields                                |
+| `countries`            | array          | Matched countries, `type: "country"`                                                        |
+| `regions`              | array          | Matched regions, `type: "region"`                                                           |
+| `neighborhoods`        | array          | Matched neighborhoods, `type: "neighborhood"`                                               |
+| `addresses`            | array          | List of `AddressResult` objects with `type: "address"` — specific street + number locations |
+| `streets`              | array          | List of `AddressResult` objects with `type: "street"` — entire streets                      |
+| `mixed`                | array          | `ResultReference` ordering hints describing how to interleave the buckets on a SERP         |
+| `location`             | object?        | Resolved location info                                                                      |
+| `location.coordinates` | [float, float] | `[latitude, longitude]` of the resolved center                                              |
+| `location.name`        | string         | Resolved location name (e.g., `"Helsinki"`)                                                 |
+| `location.country`     | string         | Two-letter country code (e.g., `"FI"`)                                                      |
 
 Treat a missing bucket as empty. For typical POI-style queries only `results` is populated, so clients that don't render rich SERPs can ignore the rest — except for address- or street-shaped queries, which can return an empty `results` and put every match in `addresses`/`streets`.
 
@@ -121,75 +121,75 @@ Treat a missing bucket as empty. For typical POI-style queries only `results` is
 
 Each item in `results` is a `LocationResult`:
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Always `"location_result"` |
-| `title` | string | Business/POI name |
-| `url` | string | Canonical URL |
-| `description` | string? | Short description or category label (e.g., `"Coffee Shop"`) |
-| `provider_url` | string | Provider page URL |
-| `id` | string? | Opaque POI identifier (valid ~8 hours, usable with `local-pois` and `local-descriptions`) |
-| `coordinates` | [float, float]? | `[latitude, longitude]` |
-| `postal_address` | object | `displayAddress`, plus optional `streetAddress`, `addressLocality`, `addressRegion`, `postalCode`, `country` |
-| `contact.telephone` | string? | Phone number |
-| `contact.email` | string? | Email address |
-| `rating.ratingValue` | float? | Average rating |
-| `rating.bestRating` | float? | Max possible rating |
-| `rating.reviewCount` | int? | Number of reviews |
-| `rating.is_tripadvisor` | bool | Whether the rating comes from Tripadvisor |
-| `opening_hours.current_day` | object[]? | Today's hours (`abbr_name`, `full_name`, `opens`, `closes`) |
-| `opening_hours.days` | object[][]? | Hours for each day of the week |
-| `categories` | string[] | Business categories (default `[]`) |
-| `price_range` | string? | Price indicator, e.g. `$`, `$$`, `$$ - $$$` |
-| `serves_cuisine` | string[]? | Cuisine types (restaurants) |
-| `distance.value` | float? | Distance from the search location |
-| `distance.units` | string? | Distance unit |
-| `icon_category` | string? | Icon category slug (e.g., `cafe`) |
-| `thumbnail.src` | string? | Thumbnail image URL |
-| `thumbnail.original` | string? | Original image URL |
-| `pictures.results` | object[]? | Additional images (`src`, `original`) |
-| `profiles` | object[]? | External profiles (`name`, `url`, `long_name`, `img`) |
-| `timezone` | string? | IANA timezone (e.g., `America/Los_Angeles`) |
-| `zoom_level` | int | Suggested map zoom level (default `7`) |
+| Field                       | Type            | Description                                                                                                  |
+| --------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------ |
+| `type`                      | string          | Always `"location_result"`                                                                                   |
+| `title`                     | string          | Business/POI name                                                                                            |
+| `url`                       | string          | Canonical URL                                                                                                |
+| `description`               | string?         | Short description or category label (e.g., `"Coffee Shop"`)                                                  |
+| `provider_url`              | string          | Provider page URL                                                                                            |
+| `id`                        | string?         | Opaque POI identifier (valid ~8 hours, usable with `local-pois` and `local-descriptions`)                    |
+| `coordinates`               | [float, float]? | `[latitude, longitude]`                                                                                      |
+| `postal_address`            | object          | `displayAddress`, plus optional `streetAddress`, `addressLocality`, `addressRegion`, `postalCode`, `country` |
+| `contact.telephone`         | string?         | Phone number                                                                                                 |
+| `contact.email`             | string?         | Email address                                                                                                |
+| `rating.ratingValue`        | float?          | Average rating                                                                                               |
+| `rating.bestRating`         | float?          | Max possible rating                                                                                          |
+| `rating.reviewCount`        | int?            | Number of reviews                                                                                            |
+| `rating.is_tripadvisor`     | bool            | Whether the rating comes from Tripadvisor                                                                    |
+| `opening_hours.current_day` | object[]?       | Today's hours (`abbr_name`, `full_name`, `opens`, `closes`)                                                  |
+| `opening_hours.days`        | object[][]?     | Hours for each day of the week                                                                               |
+| `categories`                | string[]        | Business categories (default `[]`)                                                                           |
+| `price_range`               | string?         | Price indicator, e.g. `$`, `$$`, `$$ - $$$`                                                                  |
+| `serves_cuisine`            | string[]?       | Cuisine types (restaurants)                                                                                  |
+| `distance.value`            | float?          | Distance from the search location                                                                            |
+| `distance.units`            | string?         | Distance unit                                                                                                |
+| `icon_category`             | string?         | Icon category slug (e.g., `cafe`)                                                                            |
+| `thumbnail.src`             | string?         | Thumbnail image URL                                                                                          |
+| `thumbnail.original`        | string?         | Original image URL                                                                                           |
+| `pictures.results`          | object[]?       | Additional images (`src`, `original`)                                                                        |
+| `profiles`                  | object[]?       | External profiles (`name`, `url`, `long_name`, `img`)                                                        |
+| `timezone`                  | string?         | IANA timezone (e.g., `America/Los_Angeles`)                                                                  |
+| `zoom_level`                | int             | Suggested map zoom level (default `7`)                                                                       |
 
 ### Geographic Place Fields (`cities`, `countries`, `regions`, `neighborhoods`)
 
 All four buckets share one shape, differing only by the `type` identifier. The published spec names
 them `CityResult` / `CountryResult` / `RegionResult` / `NeighborhoodResult`.
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Bucket identifier: `city`, `country`, `region`, or `neighborhood` |
-| `name` | string | Place name |
-| `country` | string | Country code of the place |
-| `coordinates` | [float, float] | `[latitude, longitude]` |
-| `thumbnail.src` | string | Primary image URL |
+| Field           | Type           | Description                                                       |
+| --------------- | -------------- | ----------------------------------------------------------------- |
+| `type`          | string         | Bucket identifier: `city`, `country`, `region`, or `neighborhood` |
+| `name`          | string         | Place name                                                        |
+| `country`       | string         | Country code of the place                                         |
+| `coordinates`   | [float, float] | `[latitude, longitude]`                                           |
+| `thumbnail.src` | string         | Primary image URL                                                 |
 
 ### AddressResult Fields (`addresses` and `streets`)
 
 Same model is used for both buckets. Items in `addresses` have `type: "address"` (street + number); items in `streets` have `type: "street"` (entire street).
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | `"address"` (in `addresses`) or `"street"` (in `streets`) |
-| `name` | string | Display name of the address or street |
-| `coordinates` | [float, float] | `[latitude, longitude]` |
-| `pois` | object[] | `LocationResult` objects located **at** this address/street |
-| `pois_nearby` | object[] | `LocationResult` objects located **nearby** |
-| `zoom_level` | int | Suggested map zoom level (default `15`) |
-| `distance.value` | float? | Distance from the search location |
-| `distance.units` | string? | Distance unit |
-| `postal_address` | object? | `displayAddress`, `streetAddress`, `addressLocality`, `addressRegion`, `country` |
+| Field            | Type           | Description                                                                      |
+| ---------------- | -------------- | -------------------------------------------------------------------------------- |
+| `type`           | string         | `"address"` (in `addresses`) or `"street"` (in `streets`)                        |
+| `name`           | string         | Display name of the address or street                                            |
+| `coordinates`    | [float, float] | `[latitude, longitude]`                                                          |
+| `pois`           | object[]       | `LocationResult` objects located **at** this address/street                      |
+| `pois_nearby`    | object[]       | `LocationResult` objects located **nearby**                                      |
+| `zoom_level`     | int            | Suggested map zoom level (default `15`)                                          |
+| `distance.value` | float?         | Distance from the search location                                                |
+| `distance.units` | string?        | Distance unit                                                                    |
+| `postal_address` | object?        | `displayAddress`, `streetAddress`, `addressLocality`, `addressRegion`, `country` |
 
 ### Mixed Ordering (`mixed`)
 
 `mixed` is an ordered list of `ResultReference` objects telling clients how to interleave items from the different buckets on a single SERP.
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Bucket to draw from: `results`, `cities`, `countries`, `regions`, `neighborhoods`, `addresses`, or `streets` |
-| `index` | int? | 0-based index of the item within that bucket. May be `null` when `all` is `true` |
-| `all` | bool | When `true`, all remaining items from the named bucket should be placed at this position |
+| Field   | Type   | Description                                                                                                  |
+| ------- | ------ | ------------------------------------------------------------------------------------------------------------ |
+| `type`  | string | Bucket to draw from: `results`, `cities`, `countries`, `regions`, `neighborhoods`, `addresses`, or `streets` |
+| `index` | int?   | 0-based index of the item within that bucket. May be `null` when `all` is `true`                             |
+| `all`   | bool   | When `true`, all remaining items from the named bucket should be placed at this position                     |
 
 Clients that only render POIs can ignore `mixed` entirely and read `results` directly.
 
@@ -197,60 +197,70 @@ Clients that only render POIs can ignore `mixed` entirely and read `results` dir
 
 ```json
 {
-  "type": "locations",
-  "results": [
-    {
-      "type": "location_result",
-      "title": "Blue Bottle Coffee",
-      "url": "https://yelp.com/biz/blue-bottle-coffee-sf",
-      "provider_url": "",
-      "id": "loc4CQWMJWLD4VBEBZ62XQLJTGK6YCJEEJDNAAAAAAA=",
-      "description": "Coffee Shop",
-      "postal_address": {
-        "type": "PostalAddress",
-        "displayAddress": "315 Linden St, San Francisco, CA 94102"
-      },
-      "contact": { "telephone": "+15106533394" },
-      "rating": {
-        "ratingValue": 4.3,
-        "bestRating": 5.0,
-        "reviewCount": 1024,
-        "is_tripadvisor": true
-      },
-      "opening_hours": {
-        "current_day": [
-          { "abbr_name": "Tue", "full_name": "Tuesday", "opens": "07:00", "closes": "18:00" }
-        ],
-        "days": [
-          [{ "abbr_name": "Mon", "full_name": "Monday", "opens": "07:00", "closes": "18:00" }]
-        ]
-      },
-      "coordinates": [37.7763, -122.4215],
-      "categories": [],
-      "serves_cuisine": ["Cafe", "Coffee Shop"],
-      "price_range": "$$",
-      "icon_category": "cafe",
-      "thumbnail": {
-        "src": "https://example.com/thumb.jpg",
-        "original": "https://example.com/original.jpg"
-      },
-      "zoom_level": 7
-    }
-  ],
-  "cities": [],
-  "countries": [],
-  "regions": [],
-  "neighborhoods": [],
-  "addresses": [],
-  "streets": [],
-  "mixed": [
-    { "type": "results", "index": 0, "all": false }
-  ],
-  "location": {
-    "coordinates": [37.7749, -122.4194],
-    "name": "San Francisco",
-    "country": "US"
-  }
+	"type": "locations",
+	"results": [
+		{
+			"type": "location_result",
+			"title": "Blue Bottle Coffee",
+			"url": "https://yelp.com/biz/blue-bottle-coffee-sf",
+			"provider_url": "",
+			"id": "loc4CQWMJWLD4VBEBZ62XQLJTGK6YCJEEJDNAAAAAAA=",
+			"description": "Coffee Shop",
+			"postal_address": {
+				"type": "PostalAddress",
+				"displayAddress": "315 Linden St, San Francisco, CA 94102"
+			},
+			"contact": { "telephone": "+15106533394" },
+			"rating": {
+				"ratingValue": 4.3,
+				"bestRating": 5.0,
+				"reviewCount": 1024,
+				"is_tripadvisor": true
+			},
+			"opening_hours": {
+				"current_day": [
+					{
+						"abbr_name": "Tue",
+						"full_name": "Tuesday",
+						"opens": "07:00",
+						"closes": "18:00"
+					}
+				],
+				"days": [
+					[{
+						"abbr_name": "Mon",
+						"full_name": "Monday",
+						"opens": "07:00",
+						"closes": "18:00"
+					}]
+				]
+			},
+			"coordinates": [37.7763, -122.4215],
+			"categories": [],
+			"serves_cuisine": ["Cafe", "Coffee Shop"],
+			"price_range": "$$",
+			"icon_category": "cafe",
+			"thumbnail": {
+				"src": "https://example.com/thumb.jpg",
+				"original": "https://example.com/original.jpg"
+			},
+			"zoom_level": 7
+		}
+	],
+	"cities": [],
+	"countries": [],
+	"regions": [],
+	"neighborhoods": [],
+	"addresses": [],
+	"streets": [],
+	"mixed": [
+		{ "type": "results", "index": 0, "all": false }
+	],
+	"location": {
+		"coordinates": [37.7749, -122.4194],
+		"name": "San Francisco",
+		"country": "US"
+	}
 }
 ```
 
@@ -258,18 +268,18 @@ For a query that matches a city name, the response additionally surfaces a city 
 
 ```json
 {
-  "cities": [
-    {
-      "type": "city",
-      "name": "San Francisco",
-      "country": "US",
-      "coordinates": [37.7749, -122.4194],
-      "thumbnail": { "src": "https://example.com/sf.jpg" }
-    }
-  ],
-  "mixed": [
-    { "type": "cities", "index": 0, "all": false }
-  ]
+	"cities": [
+		{
+			"type": "city",
+			"name": "San Francisco",
+			"country": "US",
+			"coordinates": [37.7749, -122.4194],
+			"thumbnail": { "src": "https://example.com/sf.jpg" }
+		}
+	],
+	"mixed": [
+		{ "type": "cities", "index": 0, "all": false }
+	]
 }
 ```
 

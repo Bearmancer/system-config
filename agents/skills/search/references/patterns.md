@@ -14,7 +14,7 @@ Before claiming a search succeeded:
    - `Checking your browser`
    - `captcha`
    - `cf-browser-verification`
-   - `cloudflare` *(with < 2KB total body)*
+   - `cloudflare` _(with < 2KB total body)_
 5. **Geo sanity:** result TLDs / languages match the requested `--country` / `--language`.
 
 ## Multi-query batch with dedup

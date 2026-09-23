@@ -2,11 +2,11 @@
 
 ## Pricing models
 
-| Model | How it works | Action before running |
-|-------|-------------|----------------------|
-| FREE | No per-result cost, only platform compute | None needed |
-| PAY_PER_EVENT (PPE) | Charged per result item | MUST estimate cost first |
-| FLAT_PRICE_PER_MONTH | Monthly subscription | Verify user has active subscription |
+| Model                | How it works                              | Action before running               |
+| -------------------- | ----------------------------------------- | ----------------------------------- |
+| FREE                 | No per-result cost, only platform compute | None needed                         |
+| PAY_PER_EVENT (PPE)  | Charged per result item                   | MUST estimate cost first            |
+| FLAT_PRICE_PER_MONTH | Monthly subscription                      | Verify user has active subscription |
 
 To check an Actor's pricing:
 
@@ -49,12 +49,14 @@ Prefer this for larger inputs:
 
 **Rate limiting on large scrapes**
 Platforms throttle or block large-volume scraping. Mitigations:
+
 - Use proxy configuration when available: `"proxyConfiguration": {"useApifyProxy": true}`
 - Set reasonable concurrency limits (check the Actor's `maxConcurrency` input)
 - For 1,000+ results, suggest splitting into smaller batches
 
 **Empty results**
 Common causes:
+
 - Too-narrow search query or geo-restriction (try broader terms)
 - Platform blocking without proxy (enable Apify Proxy)
 - Actor requires cookies/login but none provided
@@ -62,33 +64,36 @@ Common causes:
 
 **maxResults vs maxCrawledPages**
 Different Actors use different limit field names. Common variants:
+
 - `maxResults`, `resultsLimit`, `maxItems` - limit output items
 - `maxCrawledPages`, `maxRequestsPerCrawl` - limit pages visited
-Always fetch the input schema to find the correct field for the specific Actor.
+  Always fetch the input schema to find the correct field for the specific Actor.
 
 **Deprecated Actors**
 Check `.isDeprecated` in `apify actors info "ACTOR_ID" --user-agent apify-agent-skills/apify-ultimate-scraper --json`. If `true`:
+
 1. Search for alternatives: `apify actors search "SIMILAR_KEYWORDS" --user-agent apify-agent-skills/apify-ultimate-scraper --json`
 2. Prefer `apify` tier replacements over `community` alternatives
 
 **LinkedIn pricing**
 LinkedIn Actors are all PPE and vary significantly:
+
 - `harvestapi/` Actors: generally cheaper ($0.001-0.01/result)
 - `apimaestro/` Actors: generally more expensive ($0.005-0.02/result)
 - `dev_fusion/` Actors: mid-range, useful for mass scraping with email enrichment
-Always compare pricing before selecting a LinkedIn Actor.
+  Always compare pricing before selecting a LinkedIn Actor.
 
 **SEO tool pricing**
 `radeance/` SEO scrapers (SimilarWeb, Ahrefs, SEMrush, Moz) have the highest per-result costs ($0.005-0.0275/result). For large-scale SEO analysis, estimate costs carefully and suggest batching.
 
 ## Error recovery
 
-| Symptom | Likely cause | Fix |
-|---------|-------------|-----|
-| `status: FAILED` in run output | Actor crashed or input invalid | Read `.statusMessage` in JSON; check run log at `https://console.apify.com/actors/runs/RUN_ID/log` |
-| `isDeprecated: true` in Actor info | Actor is end-of-life | Search for replacement: `apify actors search "KEYWORDS" --user-agent apify-agent-skills/apify-ultimate-scraper --json` |
-| Empty dataset (0 items) | Query too narrow, geo-restriction, or anti-bot block | Broaden search terms; enable Apify Proxy; check Actor README with `apify actors info ACTOR_ID --user-agent apify-agent-skills/apify-ultimate-scraper --readme` |
-| Run takes >10 minutes | Large scrape or slow target site | Switch to fire-and-forget: `apify actors start --user-agent apify-agent-skills/apify-ultimate-scraper --json`, poll with `apify runs info RUN_ID --user-agent apify-agent-skills/apify-ultimate-scraper --json` |
+| Symptom                            | Likely cause                                         | Fix                                                                                                                                                                                                             |
+| ---------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `status: FAILED` in run output     | Actor crashed or input invalid                       | Read `.statusMessage` in JSON; check run log at `https://console.apify.com/actors/runs/RUN_ID/log`                                                                                                              |
+| `isDeprecated: true` in Actor info | Actor is end-of-life                                 | Search for replacement: `apify actors search "KEYWORDS" --user-agent apify-agent-skills/apify-ultimate-scraper --json`                                                                                          |
+| Empty dataset (0 items)            | Query too narrow, geo-restriction, or anti-bot block | Broaden search terms; enable Apify Proxy; check Actor README with `apify actors info ACTOR_ID --user-agent apify-agent-skills/apify-ultimate-scraper --readme`                                                  |
+| Run takes >10 minutes              | Large scrape or slow target site                     | Switch to fire-and-forget: `apify actors start --user-agent apify-agent-skills/apify-ultimate-scraper --json`, poll with `apify runs info RUN_ID --user-agent apify-agent-skills/apify-ultimate-scraper --json` |
 
 ## Why Apify Actors vs raw HTTP scraping
 

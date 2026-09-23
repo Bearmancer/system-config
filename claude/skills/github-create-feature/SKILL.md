@@ -31,24 +31,24 @@ git status --short --branch
 
 `<fork-remote>` = local remote name point at your fork (e.g. `fork`); `<fork-user>` = your GitHub user own the fork. Define both before any push. Never push to `origin` on upstream checkout.
 
-| state | reason | closing actor | action |
-| ----- | ------ | ------------- | ------ |
-| open issue/PR, same capability | — | — | comment with new evidence or adopt that thread; never duplicate |
-| closed | not_planned | `github-actions[bot]` | **stale-bot close, NOT rejection** → file NEW issue citing old number, then PR |
-| closed | completed | human/bot | shipped; if gap remain → new issue citing old, scoped to remainder, then PR |
-| closed | not_planned | human | truly declined; refile only with materially stronger case (new impact, new users, narrower scope, working PR attached) |
-| CONTRIBUTING says proposal-only | — | — | issue-only, state why, skip PR |
+| state                           | reason      | closing actor         | action                                                                                                                 |
+| ------------------------------- | ----------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| open issue/PR, same capability  | —           | —                     | comment with new evidence or adopt that thread; never duplicate                                                        |
+| closed                          | not_planned | `github-actions[bot]` | **stale-bot close, NOT rejection** → file NEW issue citing old number, then PR                                         |
+| closed                          | completed   | human/bot             | shipped; if gap remain → new issue citing old, scoped to remainder, then PR                                            |
+| closed                          | not_planned | human                 | truly declined; refile only with materially stronger case (new impact, new users, narrower scope, working PR attached) |
+| CONTRIBUTING says proposal-only | —           | —                     | issue-only, state why, skip PR                                                                                         |
 
 `not_planned` stamp by bot mean nothing — read timeline, never label alone. **Comment on stale-closed thread be dead letter.**
 
 ## Procedure
 
 0. **Indexed checkout for PR half.** All file:line quotes come from indexed checkout, never memory:
-    ```bash
-    git clone https://github.com/<owner>/<repo>.git $(mktemp -d)/<repo>
-    codegraph init
-    ```
-    Quote gap source and change hunks from this checkout only. Stale index (moved lines, missing symbols) → `codegraph init` again before quote.
+   ```bash
+   git clone https://github.com/<owner>/<repo>.git $(mktemp -d)/<repo>
+   codegraph init
+   ```
+   Quote gap source and change hunks from this checkout only. Stale index (moved lines, missing symbols) → `codegraph init` again before quote.
 
 1. **Triage first, then search.** Before draft anything:
    ```bash
@@ -70,20 +70,20 @@ git status --short --branch
    - Unless-impossible note: if PR cannot attach, state exact blocker under **PR status**
 
 4. **Attach PR in same pass unless impossible.** Build plus test plus push first, then issue create, then PR create, then comment link. Branch, build narrowly, test, push to `<fork-remote>`, then file issue, then PR body match reference bar:
-    - Linked issue: `Closes #<n>` or `Related #<n>` (use `Closes` only when PR fully satisfy acceptance)
-    - Change describe: mechanism, file list, what left out
-    - Test evidence: exact command + verbatim output (new test name visible)
-    - Expect vs actual: separate line, before and after values
-    - Scope: each hunk map to one acceptance item; no drive-by refactors
-    ```bash
-    git push -u <fork-remote> <branch>
-    gh issue create --repo <owner>/<repo> --title "<short, names the capability>" --body-file <issue-body.md>
-    gh pr create --repo <owner>/<repo> --base <base> --head <fork-user>:<branch> --title "<short, names the capability>" --body-file <pr-body.md>
-    gh issue comment <issue-n> --repo <owner>/<repo> --body "PR attached: #<pr-n>"
-    ```
-    Write bodies to files first. Never heredoc-inline — heredoc mangle on Windows shell. Never `--fill`.
-    Failed push or failed PR create → `gh issue edit <issue-n> --repo <owner>/<repo> --body-file <file>` set **PR status: blocked by <reason>** same pass, never silent.
-    Impossible mean only: no push/fork rights obtainable, change span private code, maintainer demand proposal-only, or diff exceed reviewable scope and cannot narrow. Then issue-only with **PR status: blocked by <reason>** — never silent.
+   - Linked issue: `Closes #<n>` or `Related #<n>` (use `Closes` only when PR fully satisfy acceptance)
+   - Change describe: mechanism, file list, what left out
+   - Test evidence: exact command + verbatim output (new test name visible)
+   - Expect vs actual: separate line, before and after values
+   - Scope: each hunk map to one acceptance item; no drive-by refactors
+   ```bash
+   git push -u <fork-remote> <branch>
+   gh issue create --repo <owner>/<repo> --title "<short, names the capability>" --body-file <issue-body.md>
+   gh pr create --repo <owner>/<repo> --base <base> --head <fork-user>:<branch> --title "<short, names the capability>" --body-file <pr-body.md>
+   gh issue comment <issue-n> --repo <owner>/<repo> --body "PR attached: #<pr-n>"
+   ```
+   Write bodies to files first. Never heredoc-inline — heredoc mangle on Windows shell. Never `--fill`.
+   Failed push or failed PR create → `gh issue edit <issue-n> --repo <owner>/<repo> --body-file <file>` set **PR status: blocked by <reason>** same pass, never silent.
+   Impossible mean only: no push/fork rights obtainable, change span private code, maintainer demand proposal-only, or diff exceed reviewable scope and cannot narrow. Then issue-only with **PR status: blocked by <reason>** — never silent.
 
 5. **Confirm authorize before file.** Public issue + push + public PR = visible, hard-reverse actions. State draft titles + base/head + one-line capability, get explicit go-ahead before run `gh issue create` + push + `gh pr create` — unless user already give blanket authorize for this specific repo/session.
 

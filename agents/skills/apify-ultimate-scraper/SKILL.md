@@ -8,6 +8,7 @@ description: Universal AI-powered web scraper for any platform. Scrape data from
 AI-driven data extraction from ~100 Actors across 15+ platforms via the Apify CLI.
 
 **Rules for every `apify` command:**
+
 1. Pass `--json` for machine-readable output (stable across CLI versions).
 2. Pass `--user-agent apify-agent-skills/apify-ultimate-scraper` for telemetry attribution.
 3. Redirect stderr with `2>/dev/null` (stderr contains progress messages that break JSON parsers).
@@ -35,22 +36,22 @@ Identify the target platform and use case. Read `references/actor-index.md` to f
 
 If the task involves a multi-step pipeline, also read the matching workflow guide:
 
-| Task involves... | Read |
-|-----------------|------|
-| leads, contacts, emails, B2B | `references/workflows/lead-generation.md` |
-| competitor, ads, pricing | `references/workflows/competitive-intel.md` |
-| influencer, creator | `references/workflows/influencer-vetting.md` |
-| brand, mentions, sentiment | `references/workflows/brand-monitoring.md` |
-| reviews, ratings, reputation | `references/workflows/review-analysis.md` |
-| SEO, SERP, crawl, content, RAG | `references/workflows/content-and-seo.md` |
-| analytics, engagement, performance | `references/workflows/social-media-analytics.md` |
-| trends, keywords, hashtags | `references/workflows/trend-research.md` |
-| jobs, recruiting, candidates | `references/workflows/job-market-and-recruitment.md` |
-| real estate, listings, hotels | `references/workflows/real-estate-and-hospitality.md` |
-| price monitoring, e-commerce, products | `references/workflows/ecommerce-price-monitoring.md` |
-| contact enrichment, email extraction | `references/workflows/contact-enrichment.md` |
-| knowledge base, RAG, LLM data feed | `references/workflows/knowledge-base-and-rag.md` |
-| company research, due diligence | `references/workflows/company-research.md` |
+| Task involves...                       | Read                                                  |
+| -------------------------------------- | ----------------------------------------------------- |
+| leads, contacts, emails, B2B           | `references/workflows/lead-generation.md`             |
+| competitor, ads, pricing               | `references/workflows/competitive-intel.md`           |
+| influencer, creator                    | `references/workflows/influencer-vetting.md`          |
+| brand, mentions, sentiment             | `references/workflows/brand-monitoring.md`            |
+| reviews, ratings, reputation           | `references/workflows/review-analysis.md`             |
+| SEO, SERP, crawl, content, RAG         | `references/workflows/content-and-seo.md`             |
+| analytics, engagement, performance     | `references/workflows/social-media-analytics.md`      |
+| trends, keywords, hashtags             | `references/workflows/trend-research.md`              |
+| jobs, recruiting, candidates           | `references/workflows/job-market-and-recruitment.md`  |
+| real estate, listings, hotels          | `references/workflows/real-estate-and-hospitality.md` |
+| price monitoring, e-commerce, products | `references/workflows/ecommerce-price-monitoring.md`  |
+| contact enrichment, email extraction   | `references/workflows/contact-enrichment.md`          |
+| knowledge base, RAG, LLM data feed     | `references/workflows/knowledge-base-and-rag.md`      |
+| company research, due diligence        | `references/workflows/company-research.md`            |
 
 If no Actor matches in the index, search dynamically:
 
@@ -101,6 +102,7 @@ Poll: `apify runs info RUN_ID --user-agent apify-agent-skills/apify-ultimate-scr
 ### Step 4: Deliver results
 
 Report: result count, file location (if saved), key data fields, and links:
+
 - Dataset: `https://console.apify.com/storage/datasets/DATASET_ID`
 - Run: `https://console.apify.com/actors/runs/RUN_ID`
 

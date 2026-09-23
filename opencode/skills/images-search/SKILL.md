@@ -12,6 +12,7 @@ description: USE FOR image search. Returns images with title, source URL, thumbn
 ## Quick Start (cURL)
 
 ### Basic Search
+
 ```bash
 curl -s "https://api.search.brave.com/res/v1/images/search?q=mountain+landscape" \
   -H "Accept: application/json" \
@@ -19,6 +20,7 @@ curl -s "https://api.search.brave.com/res/v1/images/search?q=mountain+landscape"
 ```
 
 ### With Parameters
+
 ```bash
 curl -s "https://api.search.brave.com/res/v1/images/search" \
   -H "Accept: application/json" \
@@ -41,89 +43,89 @@ GET https://api.search.brave.com/res/v1/images/search
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|--|--|--|--|--|
-| `q` | string | **Yes** | - | Search query (1-400 chars, max 50 words) |
-| `country` | string | No | `US` | Search country (2-letter country code or `ALL`) |
-| `search_lang` | string | No | `en` | 2+ char language code |
-| `count` | int | No | 50 | Results to return (1-200) |
-| `safesearch` | string | No | `strict` | `off` or `strict` (no `moderate` for images) |
-| `spellcheck` | bool | No | true | Auto-correct query; corrected query in `query.altered` |
+| Parameter     | Type   | Required | Default  | Description                                            |
+| ------------- | ------ | -------- | -------- | ------------------------------------------------------ |
+| `q`           | string | **Yes**  | -        | Search query (1-400 chars, max 50 words)               |
+| `country`     | string | No       | `US`     | Search country (2-letter country code or `ALL`)        |
+| `search_lang` | string | No       | `en`     | 2+ char language code                                  |
+| `count`       | int    | No       | 50       | Results to return (1-200)                              |
+| `safesearch`  | string | No       | `strict` | `off` or `strict` (no `moderate` for images)           |
+| `spellcheck`  | bool   | No       | true     | Auto-correct query; corrected query in `query.altered` |
 
 ## Response Format
 
 ```json
 {
-  "type": "images",
-  "query": {
-    "original": "mountain landscape",
-    "altered": null,
-    "spellcheck_off": false,
-    "show_strict_warning": false
-  },
-  "results": [
-    {
-      "type": "image_result",
-      "title": "Beautiful Mountain Landscape",
-      "url": "https://example.com/mountain-photo",
-      "source": "example.com",
-      "page_fetched": "2025-09-15T10:30:00Z",
-      "thumbnail": {
-        "src": "https://imgs.search.brave.com/...",
-        "width": 200,
-        "height": 150
-      },
-      "properties": {
-        "url": "https://example.com/images/mountain.jpg",
-        "placeholder": "https://imgs.search.brave.com/placeholder/...",
-        "width": 1920,
-        "height": 1080
-      },
-      "meta_url": {
-        "scheme": "https",
-        "netloc": "example.com",
-        "hostname": "example.com",
-        "favicon": "https://imgs.search.brave.com/favicon/...",
-        "path": "/mountain-photo"
-      },
-      "confidence": "high"
-    }
-  ],
-  "extra": {
-    "might_be_offensive": false
-  }
+	"type": "images",
+	"query": {
+		"original": "mountain landscape",
+		"altered": null,
+		"spellcheck_off": false,
+		"show_strict_warning": false
+	},
+	"results": [
+		{
+			"type": "image_result",
+			"title": "Beautiful Mountain Landscape",
+			"url": "https://example.com/mountain-photo",
+			"source": "example.com",
+			"page_fetched": "2025-09-15T10:30:00Z",
+			"thumbnail": {
+				"src": "https://imgs.search.brave.com/...",
+				"width": 200,
+				"height": 150
+			},
+			"properties": {
+				"url": "https://example.com/images/mountain.jpg",
+				"placeholder": "https://imgs.search.brave.com/placeholder/...",
+				"width": 1920,
+				"height": 1080
+			},
+			"meta_url": {
+				"scheme": "https",
+				"netloc": "example.com",
+				"hostname": "example.com",
+				"favicon": "https://imgs.search.brave.com/favicon/...",
+				"path": "/mountain-photo"
+			},
+			"confidence": "high"
+		}
+	],
+	"extra": {
+		"might_be_offensive": false
+	}
 }
 ```
 
 ## Response Fields
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Always `"images"` |
-| `query.original` | string | Original query |
-| `query.altered` | string? | Spellchecked query (null if no correction) |
-| `query.spellcheck_off` | bool? | Whether spellcheck was disabled |
-| `query.show_strict_warning` | bool? | True if strict safesearch hid relevant results |
-| `results[]` | array | List of image results |
-| `results[].type` | string | Always `"image_result"` |
-| `results[].title` | string? | Image title |
-| `results[].url` | string? | Page URL where image was found |
-| `results[].source` | string? | Source domain |
-| `results[].page_fetched` | string? | ISO datetime of last page crawl |
-| `results[].thumbnail.src` | string? | Brave-proxied thumbnail URL (~500px width) |
-| `results[].thumbnail.width` | int? | Thumbnail width |
-| `results[].thumbnail.height` | int? | Thumbnail height |
-| `results[].properties.url` | string? | Original full-size image URL |
-| `results[].properties.placeholder` | string? | Low-res placeholder URL (Brave-proxied) |
-| `results[].properties.width` | int? | Original image width (may be null) |
-| `results[].properties.height` | int? | Original image height (may be null) |
-| `results[].meta_url.scheme` | string? | URL protocol scheme |
-| `results[].meta_url.netloc` | string? | Network location |
-| `results[].meta_url.hostname` | string? | Lowercased domain |
-| `results[].meta_url.favicon` | string? | Favicon URL |
-| `results[].meta_url.path` | string? | URL path |
-| `results[].confidence` | string? | Relevance: `low`, `medium`, or `high` |
-| `extra.might_be_offensive` | bool | Whether results may contain offensive content |
+| Field                              | Type    | Description                                    |
+| ---------------------------------- | ------- | ---------------------------------------------- |
+| `type`                             | string  | Always `"images"`                              |
+| `query.original`                   | string  | Original query                                 |
+| `query.altered`                    | string? | Spellchecked query (null if no correction)     |
+| `query.spellcheck_off`             | bool?   | Whether spellcheck was disabled                |
+| `query.show_strict_warning`        | bool?   | True if strict safesearch hid relevant results |
+| `results[]`                        | array   | List of image results                          |
+| `results[].type`                   | string  | Always `"image_result"`                        |
+| `results[].title`                  | string? | Image title                                    |
+| `results[].url`                    | string? | Page URL where image was found                 |
+| `results[].source`                 | string? | Source domain                                  |
+| `results[].page_fetched`           | string? | ISO datetime of last page crawl                |
+| `results[].thumbnail.src`          | string? | Brave-proxied thumbnail URL (~500px width)     |
+| `results[].thumbnail.width`        | int?    | Thumbnail width                                |
+| `results[].thumbnail.height`       | int?    | Thumbnail height                               |
+| `results[].properties.url`         | string? | Original full-size image URL                   |
+| `results[].properties.placeholder` | string? | Low-res placeholder URL (Brave-proxied)        |
+| `results[].properties.width`       | int?    | Original image width (may be null)             |
+| `results[].properties.height`      | int?    | Original image height (may be null)            |
+| `results[].meta_url.scheme`        | string? | URL protocol scheme                            |
+| `results[].meta_url.netloc`        | string? | Network location                               |
+| `results[].meta_url.hostname`      | string? | Lowercased domain                              |
+| `results[].meta_url.favicon`       | string? | Favicon URL                                    |
+| `results[].meta_url.path`          | string? | URL path                                       |
+| `results[].confidence`             | string? | Relevance: `low`, `medium`, or `high`          |
+| `extra.might_be_offensive`         | bool    | Whether results may contain offensive content  |
 
 ## Use Cases
 

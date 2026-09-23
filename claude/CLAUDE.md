@@ -78,6 +78,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS compress all skills/artifacts using caveman compression (learning notwithstanding.) Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
 
 <!-- CODEGRAPH_START -->
+
 ## CodeGraph — mandatory index, always init
 
 Every repo need `.codegraph/` at root. No skip. No optional.
@@ -87,10 +88,12 @@ Session start or enter repo: check `.codegraph/` exist. Missing? `codegraph init
 Monorepo or multi-repo: each sub-project own `.codegraph/` (nearest at or above `projectPath`). Init each missing.
 
 Indexed: use CodeGraph BEFORE grep/find/read.
+
 - MCP: `codegraph_explore` one call. Verbatim source + call paths. Name file/symbol in query. Pass `projectPath` for specific sub-project. Deferred? load by name.
 - Shell: `codegraph explore "<query>"`.
 
 Stale (files changed, symbols missing, line numbers wrong): `codegraph init` again or repo refresh.
+
 <!-- CODEGRAPH_END -->
 
 <!-- USER:START -->

@@ -12,13 +12,13 @@ Locator: `report.html #ch1` — heading "Two survey rounds, four buckets", Dec22
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet | Corrected | Basis |
-|---|---|---|
-| 35 historians (Apr number) applied to December | 36 experts for Dec22 round | report #ch1 cast row "Dec22 36 experts"; manifest O2; wave-1 digest Dec22 36 experts |
-| Sinha boats quote from snippet recall | Sinha felon-nominee / boats quote per BrightData full page (O2, O25) — quote slice verbatim at lesson pass, never from snippet | wave-3 digest "Dec22 Sinha boats quote via BrightData full pages"; NOTES corrections-log seed (NYT Dec22 Sinha boats quote, snippet drift) |
-| snippet "second term verdict = unprecedented" | second-round answers split four ways like April | report #ch1 verdict div [C4][O1]; SYNTHESIS lock "NYT split 4 buckets no single verdict" |
-| Dec write-up URL recalled from memory | https://www.nytimes.com/2025/12/22/us/politics/trump-historians-second-term.html | report #ch1 verdict div href bytes |
-| full-page body assumed readable | frozen primary is BrightData full page (O2, O25); NYT pages JS-walled | NOTES quirks; wave-2 digest Apify fail NYT JS; RESOURCES [D] caution |
+| Heard / snippet                                | Corrected                                                                                                                      | Basis                                                                                                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 35 historians (Apr number) applied to December | 36 experts for Dec22 round                                                                                                     | report #ch1 cast row "Dec22 36 experts"; manifest O2; wave-1 digest Dec22 36 experts                                                       |
+| Sinha boats quote from snippet recall          | Sinha felon-nominee / boats quote per BrightData full page (O2, O25) — quote slice verbatim at lesson pass, never from snippet | wave-3 digest "Dec22 Sinha boats quote via BrightData full pages"; NOTES corrections-log seed (NYT Dec22 Sinha boats quote, snippet drift) |
+| snippet "second term verdict = unprecedented"  | second-round answers split four ways like April                                                                                | report #ch1 verdict div [C4][O1]; SYNTHESIS lock "NYT split 4 buckets no single verdict"                                                   |
+| Dec write-up URL recalled from memory          | https://www.nytimes.com/2025/12/22/us/politics/trump-historians-second-term.html                                               | report #ch1 verdict div href bytes                                                                                                         |
+| full-page body assumed readable                | frozen primary is BrightData full page (O2, O25); NYT pages JS-walled                                                          | NOTES quirks; wave-2 digest Apify fail NYT JS; RESOURCES [D] caution                                                                       |
 
 ## Claim-tag coverage
 

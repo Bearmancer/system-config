@@ -21,11 +21,12 @@ metadata:
 
 Discover is **intent-ranked semantic web search**. You give it a `query` plus an
 `intent`, and it returns results scored by AI relevance — optionally with the full
-parsed page content. It is the right primitive when result *quality/relevance*
+parsed page content. It is the right primitive when result _quality/relevance_
 matters more than raw keyword rank, and the building block for retrieval (RAG),
 research, and knowledge-base pipelines.
 
 **Discover vs. the neighbors:**
+
 - Keyword "what ranks for X" SERP → use the **`search`** skill (`bdata search`).
 - Structured data from a known platform (Amazon/LinkedIn/…) → use **`data-feeds`**.
 - A whole research brief or a RAG/search pipeline on top of Discover → use
@@ -42,16 +43,17 @@ when you need parameters the wrappers don't expose (notably `mode`).
 
 ## Pick your surface
 
-| You are… | Use |
-|---|---|
-| In a terminal, one-off or scripted | CLI: `bdata discover` |
-| Writing Node/TS code | JS SDK: `client.discover()` — see `js-sdk-best-practices` |
-| Writing Python code | Python SDK: `client.discover()` — see `python-sdk-best-practices` |
-| Need `mode` (deep/fast/zeroRanking) or `include_images` | **Raw REST** (wrappers don't expose these yet) |
+| You are…                                                | Use                                                               |
+| ------------------------------------------------------- | ----------------------------------------------------------------- |
+| In a terminal, one-off or scripted                      | CLI: `bdata discover`                                             |
+| Writing Node/TS code                                    | JS SDK: `client.discover()` — see `js-sdk-best-practices`         |
+| Writing Python code                                     | Python SDK: `client.discover()` — see `python-sdk-best-practices` |
+| Need `mode` (deep/fast/zeroRanking) or `include_images` | **Raw REST** (wrappers don't expose these yet)                    |
 
 ### CLI — `bdata discover`
 
 Setup gate first:
+
 ```bash
 command -v bdata >/dev/null 2>&1 || echo "CLI missing — see bright-data-best-practices/references/cli-setup.md"
 bdata zones >/dev/null 2>&1 || echo "not authenticated — run: bdata login"
@@ -71,23 +73,31 @@ bdata discover "webhook retry best practices" \
 bdata discover "react server components" \
   --start-date 2025-01-01 --end-date 2025-12-31 --num-results 20 --json
 ```
+
 Results live at `.results[]`; each has `title`, `link`, `description`,
 `relevance_score`, and `content` when `--include-content`. Full CLI flag list:
 [`search` skill → `references/flags.md`](../search/references/flags.md).
 
 ### SDK (one line each)
+
 ```javascript
 // JS — see js-sdk-best-practices for all options.
 // VERIFIED v1.1.0: discover() returns a WRAPPER { success, data:[...], totalResults, cost, taskId, ... }
-const res = await client.discover('Tesla battery tech', { intent: 'EV battery breakthroughs', numResults: 10, includeContent: true });
-const rows = res.data;   // ← rows are in .data (NOT a bare array, NOT .results)
+const res = await client.discover("Tesla battery tech", {
+	intent: "EV battery breakthroughs",
+	numResults: 10,
+	includeContent: true,
+});
+const rows = res.data; // ← rows are in .data (NOT a bare array, NOT .results)
 ```
+
 ```python
 # Python — see python-sdk-best-practices (confirm whether rows come back directly, under .data, or .results)
 out = client.discover(query="Tesla battery tech", intent="EV battery breakthroughs")
 ```
 
 ### Raw REST (full control, incl. `mode`)
+
 ```bash
 # 1) Trigger
 task_id=$(curl -s -X POST https://api.brightdata.com/discover \
@@ -110,30 +120,30 @@ echo "$resp" | jq '.results'
 `query` is required; everything else is optional. The CLI/SDK expose a subset
 (see `references/api-reference.md` for the exact per-surface matrix).
 
-| Param | Type | Default | Notes |
-|---|---|---|---|
-| `query` | string | — | required, ≤ 1500 chars |
-| `intent` | string | — | goal descriptor, ≤ 3000 chars; **strongly recommended** — drives ranking |
-| `mode` | enum | `standard` | `standard` \| `zeroRanking` \| `deep` \| `fast` (REST-only) |
-| `num_results` | int | — | **1–20**; ignored in `zeroRanking` |
-| `filter_keywords` | string[] | — | exact keywords that must appear |
-| `include_content` | bool | `false` | parsed page/PDF content (PDF ≤ 50 MB, 30s); unsupported in `zeroRanking` |
-| `include_images` | bool | `false` | image array (REST-only) |
-| `format` | enum | `json` | `json` \| `md` (SDK accepts only `json`) |
-| `country` | string | `US` | 2-letter ISO |
-| `city` | string | — | SERP city targeting |
-| `language` | string | `en` | 31 languages |
-| `start_date` / `end_date` | string | — | `YYYY-MM-DD` (REST-only) |
-| `remove_duplicates` | bool | `true` | dedupe results (REST-only) |
+| Param                     | Type     | Default    | Notes                                                                    |
+| ------------------------- | -------- | ---------- | ------------------------------------------------------------------------ |
+| `query`                   | string   | —          | required, ≤ 1500 chars                                                   |
+| `intent`                  | string   | —          | goal descriptor, ≤ 3000 chars; **strongly recommended** — drives ranking |
+| `mode`                    | enum     | `standard` | `standard` \| `zeroRanking` \| `deep` \| `fast` (REST-only)              |
+| `num_results`             | int      | —          | **1–20**; ignored in `zeroRanking`                                       |
+| `filter_keywords`         | string[] | —          | exact keywords that must appear                                          |
+| `include_content`         | bool     | `false`    | parsed page/PDF content (PDF ≤ 50 MB, 30s); unsupported in `zeroRanking` |
+| `include_images`          | bool     | `false`    | image array (REST-only)                                                  |
+| `format`                  | enum     | `json`     | `json` \| `md` (SDK accepts only `json`)                                 |
+| `country`                 | string   | `US`       | 2-letter ISO                                                             |
+| `city`                    | string   | —          | SERP city targeting                                                      |
+| `language`                | string   | `en`       | 31 languages                                                             |
+| `start_date` / `end_date` | string   | —          | `YYYY-MM-DD` (REST-only)                                                 |
+| `remove_duplicates`       | bool     | `true`     | dedupe results (REST-only)                                               |
 
 ## Modes (choose by goal)
 
-| Mode | What it does | Use for |
-|---|---|---|
-| `standard` *(default)* | balanced depth + AI ranking | general intent search |
-| `deep` | exhaustive, broader search; slower | **`live-research`**, comprehensive topic coverage |
-| `fast` | optimized for low latency | time-sensitive / interactive |
-| `zeroRanking` | no AI ranking, max raw volume; ignores `num_results`, no `include_content` | bulk corpus collection for **`rag-pipeline`** |
+| Mode                   | What it does                                                               | Use for                                           |
+| ---------------------- | -------------------------------------------------------------------------- | ------------------------------------------------- |
+| `standard` _(default)_ | balanced depth + AI ranking                                                | general intent search                             |
+| `deep`                 | exhaustive, broader search; slower                                         | **`live-research`**, comprehensive topic coverage |
+| `fast`                 | optimized for low latency                                                  | time-sensitive / interactive                      |
+| `zeroRanking`          | no AI ranking, max raw volume; ignores `num_results`, no `include_content` | bulk corpus collection for **`rag-pipeline`**     |
 
 > `mode` is currently **REST-only** — the CLI and SDKs don't expose it. For `deep`
 > coverage via the CLI/SDK, approximate with a high `num_results` + a sharp
@@ -142,19 +152,26 @@ echo "$resp" | jq '.results'
 ## Result shape
 
 **REST + CLI** (verified) — rows live under **`results`**:
+
 ```json
 {
-  "status": "done",
-  "duration_seconds": 12.4,
-  "timestamp": "2026-06-08T08:36:55.709Z",
-  "results": [
-    { "link": "https://…", "title": "…", "description": "…",
-      "relevance_score": 0.87, "content": "…(when --include-content)…" }
-  ]
+	"status": "done",
+	"duration_seconds": 12.4,
+	"timestamp": "2026-06-08T08:36:55.709Z",
+	"results": [
+		{
+			"link": "https://…",
+			"title": "…",
+			"description": "…",
+			"relevance_score": 0.87,
+			"content": "…(when --include-content)…"
+		}
+	]
 }
 ```
 
 **JS SDK** (verified v1.1.0) — rows live under **`data`**, inside a wrapper:
+
 ```js
 { success: true, data: [ {link, title, description, relevance_score, content?} ],
   totalResults, cost, taskId, query, intent, durationSeconds, triggerSentAt, dataFetchedAt }

@@ -7,16 +7,19 @@ Canonical install / login / troubleshooting reference for the `bdata` (aka `brig
 Pick one path:
 
 **Global (recommended for regular use):**
+
 ```bash
 npm install -g @brightdata/cli
 ```
 
 **Curl installer (macOS/Linux):**
+
 ```bash
 curl -fsSL https://cli.brightdata.com/install.sh | bash
 ```
 
 **One-off (no install):**
+
 ```bash
 npx --yes --package @brightdata/cli brightdata <command>
 ```
@@ -24,6 +27,7 @@ npx --yes --package @brightdata/cli brightdata <command>
 Requires Node.js ≥ 20. Both `brightdata` and `bdata` are exposed after install.
 
 Verify:
+
 ```bash
 bdata --version
 ```
@@ -31,6 +35,7 @@ bdata --version
 ## Authenticate
 
 One-time:
+
 ```bash
 bdata login
 ```
@@ -38,12 +43,15 @@ bdata login
 Opens a browser for OAuth, saves credentials locally, auto-creates the default zones (`cli_unlocker`, `cli_browser`), and writes config.
 
 **No browser available (SSH / CI / WSL without X):**
+
 ```bash
 bdata login --device
 ```
+
 Prints a code + URL to open on another device.
 
 **Non-interactive (CI / scripted):**
+
 ```bash
 bdata login --api-key "$BRIGHTDATA_API_KEY"
 ```
@@ -58,6 +66,7 @@ bdata config         # prints current config JSON
 The zones probe is the most reliable auth check: it requires valid credentials and returns quickly.
 
 **Config file locations:**
+
 - Linux: `~/.config/brightdata-cli/credentials.json`
 - macOS: `~/Library/Application Support/brightdata-cli/credentials.json`
 - Windows: `%APPDATA%\brightdata-cli\credentials.json`
@@ -96,6 +105,7 @@ fi
 ## Env-var fallback (legacy)
 
 Before the CLI, skills required:
+
 - `BRIGHTDATA_API_KEY` — Bright Data API key
 - `BRIGHTDATA_UNLOCKER_ZONE` — Web Unlocker zone name (also used as SERP fallback)
 - `BRIGHTDATA_SERP_ZONE` — (optional) dedicated SERP zone; preferred over the unlocker zone for `bdata search`
@@ -105,9 +115,9 @@ These are still honored by legacy `curl`-based paths documented in each skill's 
 
 Mapping:
 
-| Env var | CLI replacement |
-|---|---|
-| `BRIGHTDATA_API_KEY` | `bdata login` (stored in credentials file) or `-k/--api-key` per-command |
-| `BRIGHTDATA_UNLOCKER_ZONE` | Auto-provisioned by `bdata login`; override per-command with `--zone <name>` |
-| `BRIGHTDATA_SERP_ZONE` | Auto-provisioned by `bdata login`; override per-command with `--zone <name>` on `bdata search` |
-| `BRIGHTDATA_POLLING_TIMEOUT` | Still read by `bdata pipelines`; also overridable via `--timeout <sec>` |
+| Env var                      | CLI replacement                                                                                |
+| ---------------------------- | ---------------------------------------------------------------------------------------------- |
+| `BRIGHTDATA_API_KEY`         | `bdata login` (stored in credentials file) or `-k/--api-key` per-command                       |
+| `BRIGHTDATA_UNLOCKER_ZONE`   | Auto-provisioned by `bdata login`; override per-command with `--zone <name>`                   |
+| `BRIGHTDATA_SERP_ZONE`       | Auto-provisioned by `bdata login`; override per-command with `--zone <name>` on `bdata search` |
+| `BRIGHTDATA_POLLING_TIMEOUT` | Still read by `bdata pipelines`; also overridable via `--timeout <sec>`                        |

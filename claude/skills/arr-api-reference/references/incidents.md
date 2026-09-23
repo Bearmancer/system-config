@@ -42,12 +42,12 @@ don't wrap either as service/task unless ask again.
 
 ### Current inventory (verified 2026-08-29, post-fix)
 
-| App      | Autostart mechanism                                        | Account                     | Bind                    | Firewall                                                         |
-| -------- | ----------------------------------------------------------- | ---------------------------- | ------------------------ | ------------------------------------------------------------------ |
-| Sonarr   | native Windows Service, Auto                               | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| Radarr   | native Windows Service, Auto                               | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| Prowlarr | native Windows Service, Auto                               | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
-| SABnzbd  | native Windows Service, Auto (`sc create`, not installer)  | `LocalSystem`               | `0.0.0.0` (sabnzbd.ini) | `SABnzbd`/`SABnzbd-console` rules, `RemoteAddress=100.64.0.0/10` |
+| App      | Autostart mechanism                                       | Account                     | Bind                    | Firewall                                                         |
+| -------- | --------------------------------------------------------- | --------------------------- | ----------------------- | ---------------------------------------------------------------- |
+| Sonarr   | native Windows Service, Auto                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
+| Radarr   | native Windows Service, Auto                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
+| Prowlarr | native Windows Service, Auto                              | `NT AUTHORITY\LocalService` | `*` (config.xml)        | `NzbDrone` rule, `RemoteAddress=100.64.0.0/10`                   |
+| SABnzbd  | native Windows Service, Auto (`sc create`, not installer) | `LocalSystem`               | `0.0.0.0` (sabnzbd.ini) | `SABnzbd`/`SABnzbd-console` rules, `RemoteAddress=100.64.0.0/10` |
 
 qBittorrent: manual start only, no service/task — user decision 2026-08-29, don't wrap as service/task unless asked again. No network bind/firewall entry (not a listening service the way the four above are).
 Emby: login Startup-folder shortcut (`%AppData%\Microsoft\Windows\Start Menu\Programs\Startup\Emby Server.lnk`), runs as current user. Same — no bind/firewall entry.

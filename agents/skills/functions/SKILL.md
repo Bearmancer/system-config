@@ -28,6 +28,7 @@ cd my-function
 ```
 
 This creates:
+
 ```
 my-function/
 ├── package.json
@@ -54,22 +55,23 @@ import { defineFn } from "@browserbasehq/sdk-functions";
 import { chromium } from "playwright-core";
 
 defineFn("my-function", async (context) => {
-  const { session, params } = context;
+	const { session, params } = context;
 
-  // Connect to browser
-  const browser = await chromium.connectOverCDP(session.connectUrl);
-  const page = browser.contexts()[0]!.pages()[0]!;
+	// Connect to browser
+	const browser = await chromium.connectOverCDP(session.connectUrl);
+	const page = browser.contexts()[0]!.pages()[0]!;
 
-  // Your automation
-  await page.goto(params.url || "https://example.com");
-  const title = await page.title();
+	// Your automation
+	await page.goto(params.url || "https://example.com");
+	const title = await page.title();
 
-  // Return JSON-serializable result
-  return { success: true, title };
+	// Return JSON-serializable result
+	return { success: true, title };
 });
 ```
 
 **Key objects:**
+
 - `context.session.connectUrl` - CDP endpoint to connect Playwright
 - `context.params` - Input parameters from invocation
 
@@ -102,6 +104,7 @@ browse functions publish index.ts
 ```
 
 Output:
+
 ```
 Function published successfully
 Build ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
@@ -112,10 +115,10 @@ Function ID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 ## Quick Reference
 
-| Command | Description |
-|---------|-------------|
-| `browse functions init <name>` | Create new project |
-| `browse functions dev <file>` | Start local dev server |
-| `browse functions publish <file>` | Deploy to Browserbase |
+| Command                           | Description            |
+| --------------------------------- | ---------------------- |
+| `browse functions init <name>`    | Create new project     |
+| `browse functions dev <file>`     | Start local dev server |
+| `browse functions publish <file>` | Deploy to Browserbase  |
 
 For invocation examples, common patterns, and troubleshooting, see [REFERENCE.md](REFERENCE.md).

@@ -13,12 +13,12 @@ Locator: `report.html #ch2` — heading "Rankings converge at the bottom", chapm
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet | Corrected | Basis |
-|---|---|---|
-| 41/44 recalled as overall-last | 41st with score 312; overall-last belongs to the 2018 anchor / other series, not C-SPAN 2021 | report #ch2 pointers + subgraph "41st 312"; SYNTHESIS "C-SPAN41st 312"; manifest O3 |
-| methodology vs overall page conflated | methodology page answers weights (1–10, ten traits, equal) [O4]; overall page answers rank/score [O3] — cite the right one | RESOURCES [D] caution; manifest O3 vs O4; wave-1 digest C-SPAN method page |
-| n≈140 vague | n=142 raters | report #ch2 cast row "142 raters"; manifest O3; wave-3 digest "C-SPAN method 142" |
-| score recalled as ~300 | 312 | report #ch2 subgraph + pointers; wave-2 digest "C-SPAN Trump 312 41st" |
+| Heard / snippet                       | Corrected                                                                                                                  | Basis                                                                               |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| 41/44 recalled as overall-last        | 41st with score 312; overall-last belongs to the 2018 anchor / other series, not C-SPAN 2021                               | report #ch2 pointers + subgraph "41st 312"; SYNTHESIS "C-SPAN41st 312"; manifest O3 |
+| methodology vs overall page conflated | methodology page answers weights (1–10, ten traits, equal) [O4]; overall page answers rank/score [O3] — cite the right one | RESOURCES [D] caution; manifest O3 vs O4; wave-1 digest C-SPAN method page          |
+| n≈140 vague                           | n=142 raters                                                                                                               | report #ch2 cast row "142 raters"; manifest O3; wave-3 digest "C-SPAN method 142"   |
+| score recalled as ~300                | 312                                                                                                                        | report #ch2 subgraph + pointers; wave-2 digest "C-SPAN Trump 312 41st"              |
 
 ## Claim-tag coverage
 

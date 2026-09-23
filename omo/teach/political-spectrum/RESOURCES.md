@@ -1,6 +1,7 @@
 # RESOURCES — political-spectrum (tiered)
 
 ## Primary (first-party / reference)
+
 - Britannica, political spectrum — 1789 origin, equality vs hierarchy.
 - Britannica, 21st-century progressivism — Sanders, Warren, Ocasio-Cortez, Mamdani.
 - DSA, dsausa.org history + State of DSA — merger 1982, scale, strategy.
@@ -15,6 +16,7 @@
 - CNN on 2024 Libertarian convention — Oliver over NOTA, Mises defeat.
 
 ## Secondary (encyclopedic / press)
+
 - Wikipedia: political spectrum, classical liberalism, Nordic model,
   neoliberalism, Sharon Statement.
 - TIME (Rosenfeld/Higonnet) — literal seating descriptions, Gauchet spread.
@@ -29,4 +31,5 @@
 - Shepherd (CES) + Pew 2024 — diploma divide White-only, race gaps.
 
 ## Gaps
+
 - DSA counts vary by date/source; pin each figure to its date.

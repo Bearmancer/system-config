@@ -37,12 +37,12 @@ Get your API key from https://browserbase.com/settings.
 
 ### Body Parameters
 
-| Parameter | Type | Required | Default | Description |
-|-----------|------|----------|---------|-------------|
-| `url` | `string` (URI format) | Yes | — | The URL to fetch |
-| `allowRedirects` | `boolean` | No | `false` | Whether to follow HTTP redirects |
-| `allowInsecureSsl` | `boolean` | No | `false` | Whether to bypass TLS certificate verification for trusted test or staging hosts |
-| `proxies` | `boolean` | No | `false` | Whether to enable proxy support for the request |
+| Parameter          | Type                  | Required | Default | Description                                                                      |
+| ------------------ | --------------------- | -------- | ------- | -------------------------------------------------------------------------------- |
+| `url`              | `string` (URI format) | Yes      | —       | The URL to fetch                                                                 |
+| `allowRedirects`   | `boolean`             | No       | `false` | Whether to follow HTTP redirects                                                 |
+| `allowInsecureSsl` | `boolean`             | No       | `false` | Whether to bypass TLS certificate verification for trusted test or staging hosts |
+| `proxies`          | `boolean`             | No       | `false` | Whether to enable proxy support for the request                                  |
 
 Only use `allowInsecureSsl` for trusted public test hosts or environments you control. Do not use it for localhost, private-network, link-local, or cloud metadata endpoints.
 
@@ -75,14 +75,14 @@ curl -X POST "https://api.browserbase.com/v1/fetch" \
 
 Successful fetch. Returns:
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | `string` | Unique identifier for the fetch request |
-| `statusCode` | `integer` | HTTP status code of the fetched response |
-| `headers` | `object` (string → string) | Response headers as key-value pairs |
-| `content` | `string` | The response body content |
-| `contentType` | `string` | The MIME type of the response |
-| `encoding` | `string` | The character encoding of the response |
+| Field         | Type                       | Description                              |
+| ------------- | -------------------------- | ---------------------------------------- |
+| `id`          | `string`                   | Unique identifier for the fetch request  |
+| `statusCode`  | `integer`                  | HTTP status code of the fetched response |
+| `headers`     | `object` (string → string) | Response headers as key-value pairs      |
+| `content`     | `string`                   | The response body content                |
+| `contentType` | `string`                   | The MIME type of the response            |
+| `encoding`    | `string`                   | The character encoding of the response   |
 
 ## Security Notes
 
@@ -93,15 +93,15 @@ Successful fetch. Returns:
 
 ```json
 {
-  "id": "abc123",
-  "statusCode": 200,
-  "headers": {
-    "content-type": "text/html; charset=utf-8",
-    "server": "nginx"
-  },
-  "content": "<!DOCTYPE html><html>...</html>",
-  "contentType": "text/html",
-  "encoding": "utf-8"
+	"id": "abc123",
+	"statusCode": 200,
+	"headers": {
+		"content-type": "text/html; charset=utf-8",
+		"server": "nginx"
+	},
+	"content": "<!DOCTYPE html><html>...</html>",
+	"contentType": "text/html",
+	"encoding": "utf-8"
 }
 ```
 
@@ -113,9 +113,9 @@ Invalid request body. Check that `url` is a valid URI and parameters are correct
 
 ```json
 {
-  "statusCode": 400,
-  "error": "Bad Request",
-  "message": "Invalid URL format"
+	"statusCode": 400,
+	"error": "Bad Request",
+	"message": "Invalid URL format"
 }
 ```
 
@@ -125,9 +125,9 @@ Concurrent fetch request limit exceeded. Wait and retry.
 
 ```json
 {
-  "statusCode": 429,
-  "error": "Too Many Requests",
-  "message": "Concurrent fetch request limit exceeded"
+	"statusCode": 429,
+	"error": "Too Many Requests",
+	"message": "Concurrent fetch request limit exceeded"
 }
 ```
 
@@ -137,9 +137,9 @@ The fetched response was too large or TLS certificate verification failed.
 
 ```json
 {
-  "statusCode": 502,
-  "error": "Bad Gateway",
-  "message": "TLS certificate verification failed"
+	"statusCode": 502,
+	"error": "Bad Gateway",
+	"message": "TLS certificate verification failed"
 }
 ```
 
@@ -151,9 +151,9 @@ The fetch request timed out. Default timeout is 60 seconds.
 
 ```json
 {
-  "statusCode": 504,
-  "error": "Gateway Timeout",
-  "message": "Fetch request timed out"
+	"statusCode": 504,
+	"error": "Gateway Timeout",
+	"message": "Fetch request timed out"
 }
 ```
 
@@ -170,24 +170,24 @@ const bb = new Browserbase({ apiKey: process.env.BROWSERBASE_API_KEY });
 
 // Basic fetch
 const response = await bb.fetchAPI.create({
-  url: "https://example.com",
+	url: "https://example.com",
 });
 
 // With all options
 const response = await bb.fetchAPI.create({
-  url: "https://example.com",
-  allowRedirects: true,
-  allowInsecureSsl: false,
-  proxies: true,
+	url: "https://example.com",
+	allowRedirects: true,
+	allowInsecureSsl: false,
+	proxies: true,
 });
 
 // Access response fields
-response.id;          // string
-response.statusCode;  // number
-response.headers;     // Record<string, string>
-response.content;     // string
+response.id; // string
+response.statusCode; // number
+response.headers; // Record<string, string>
+response.content; // string
 response.contentType; // string
-response.encoding;    // string
+response.encoding; // string
 ```
 
 ### Python
@@ -219,9 +219,9 @@ response.content       # str
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BROWSERBASE_API_KEY` | Yes | API key from https://browserbase.com/settings |
+| Variable              | Required | Description                                   |
+| --------------------- | -------- | --------------------------------------------- |
+| `BROWSERBASE_API_KEY` | Yes      | API key from https://browserbase.com/settings |
 
 ### Timeouts
 

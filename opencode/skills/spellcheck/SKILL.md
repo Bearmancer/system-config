@@ -31,34 +31,34 @@ GET https://api.search.brave.com/res/v1/spellcheck/search
 
 ## Parameters
 
-| Parameter | Type | Required | Default | Description |
-|--|--|--|--|--|
-| `q` | string | **Yes** | — | Query to spell check (1-400 chars, max 50 words) |
-| `lang` | string | No | `en` | Language preference (2+ char language code, e.g. `en`, `fr`, `de`, `pt-br`, `zh-hans`). 51 codes supported |
-| `country` | string | No | `US` | Search country (2-letter country code or `ALL`) |
+| Parameter | Type   | Required | Default | Description                                                                                                |
+| --------- | ------ | -------- | ------- | ---------------------------------------------------------------------------------------------------------- |
+| `q`       | string | **Yes**  | —       | Query to spell check (1-400 chars, max 50 words)                                                           |
+| `lang`    | string | No       | `en`    | Language preference (2+ char language code, e.g. `en`, `fr`, `de`, `pt-br`, `zh-hans`). 51 codes supported |
+| `country` | string | No       | `US`    | Search country (2-letter country code or `ALL`)                                                            |
 
 ## Response Fields
 
-| Field | Type | Description |
-|--|--|--|
-| `type` | string | Always `"spellcheck"` |
-| `query.original` | string | The input query as submitted |
-| `results` | array | Spell-corrected suggestions. May be empty when no correction is found |
-| `results[].query` | string | A corrected version of the query |
+| Field             | Type   | Description                                                           |
+| ----------------- | ------ | --------------------------------------------------------------------- |
+| `type`            | string | Always `"spellcheck"`                                                 |
+| `query.original`  | string | The input query as submitted                                          |
+| `results`         | array  | Spell-corrected suggestions. May be empty when no correction is found |
+| `results[].query` | string | A corrected version of the query                                      |
 
 ## Example Response
 
 ```json
 {
-  "type": "spellcheck",
-  "query": {
-    "original": "artifical inteligence"
-  },
-  "results": [
-    {
-      "query": "artificial intelligence"
-    }
-  ]
+	"type": "spellcheck",
+	"query": {
+		"original": "artifical inteligence"
+	},
+	"results": [
+		{
+			"query": "artificial intelligence"
+		}
+	]
 }
 ```
 

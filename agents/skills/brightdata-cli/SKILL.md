@@ -12,16 +12,19 @@ The Bright Data CLI (`brightdata` or `bdata`) gives you full access to Bright Da
 If the CLI is not installed yet, guide the user:
 
 **macOS / Linux:**
+
 ```bash
 curl -fsSL https://cli.brightdata.com/install.sh | bash
 ```
 
 **Windows or manual install (any platform):**
+
 ```bash
 npm install -g @brightdata/cli
 ```
 
 **Without installing (one-off usage):**
+
 ```bash
 npx --yes --package @brightdata/cli brightdata <command>
 ```
@@ -38,6 +41,7 @@ bdata login
 ```
 
 This single command:
+
 1. Opens the browser for secure OAuth authentication
 2. Saves the API key locally (never needs to be entered again)
 3. Auto-creates required proxy zones (`cli_unlocker`, `cli_browser`)
@@ -46,16 +50,19 @@ This single command:
 After login, every subsequent command works without any manual intervention.
 
 For headless/SSH environments where no browser is available:
+
 ```bash
 bdata login --device
 ```
 
 For direct API key authentication (non-interactive):
+
 ```bash
 bdata login --api-key <key>
 ```
 
 To verify setup is complete, run:
+
 ```bash
 bdata config
 ```
@@ -70,20 +77,20 @@ Read [references/pipelines.md](references/pipelines.md) for the complete list of
 
 `bdata` is the shorthand for `brightdata`. Both work identically.
 
-| Command | Purpose |
-|---------|---------|
-| `bdata scrape <url>` | Scrape any URL as markdown, HTML, JSON, or screenshot |
-| `bdata search "<query>"` | Search Google/Bing/Yandex with structured results |
-| `bdata pipelines <type> [params]` | Extract structured data from 40+ platforms |
-| `bdata pipelines list` | List all 40+ available pipeline types |
-| `bdata status <job-id>` | Check async job status |
-| `bdata zones` | List proxy zones |
-| `bdata budget` | View account balance and costs |
-| `bdata skill add` | Install AI agent skills |
-| `bdata skill list` | List available skills |
-| `bdata config` | View/set configuration |
-| `bdata login` | Authenticate with Bright Data |
-| `bdata version` | Show CLI version and system info |
+| Command                           | Purpose                                               |
+| --------------------------------- | ----------------------------------------------------- |
+| `bdata scrape <url>`              | Scrape any URL as markdown, HTML, JSON, or screenshot |
+| `bdata search "<query>"`          | Search Google/Bing/Yandex with structured results     |
+| `bdata pipelines <type> [params]` | Extract structured data from 40+ platforms            |
+| `bdata pipelines list`            | List all 40+ available pipeline types                 |
+| `bdata status <job-id>`           | Check async job status                                |
+| `bdata zones`                     | List proxy zones                                      |
+| `bdata budget`                    | View account balance and costs                        |
+| `bdata skill add`                 | Install AI agent skills                               |
+| `bdata skill list`                | List available skills                                 |
+| `bdata config`                    | View/set configuration                                |
+| `bdata login`                     | Authenticate with Bright Data                         |
+| `bdata version`                   | Show CLI version and system info                      |
 
 ## How to Use Each Command
 
@@ -236,11 +243,11 @@ bdata skill list
 
 Every command supports multiple output formats:
 
-| Flag | Effect |
-|------|--------|
-| *(none)* | Human-readable formatted output with colors |
-| `--json` | Compact JSON to stdout |
-| `--pretty` | Indented JSON to stdout |
+| Flag        | Effect                                              |
+| ----------- | --------------------------------------------------- |
+| _(none)_    | Human-readable formatted output with colors         |
+| `--json`    | Compact JSON to stdout                              |
+| `--pretty`  | Indented JSON to stdout                             |
 | `-o <path>` | Write to file (format auto-detected from extension) |
 
 When piped (stdout is not a TTY), colors and spinners are automatically disabled.
@@ -266,23 +273,23 @@ bdata pipelines amazon_product "https://amazon.com/dp/xxx" --format csv > produc
 
 These override stored configuration:
 
-| Variable | Purpose |
-|----------|---------|
-| `BRIGHTDATA_API_KEY` | API key (skips login entirely) |
-| `BRIGHTDATA_UNLOCKER_ZONE` | Default Web Unlocker zone |
-| `BRIGHTDATA_SERP_ZONE` | Default SERP zone |
-| `BRIGHTDATA_POLLING_TIMEOUT` | Polling timeout in seconds |
+| Variable                     | Purpose                        |
+| ---------------------------- | ------------------------------ |
+| `BRIGHTDATA_API_KEY`         | API key (skips login entirely) |
+| `BRIGHTDATA_UNLOCKER_ZONE`   | Default Web Unlocker zone      |
+| `BRIGHTDATA_SERP_ZONE`       | Default SERP zone              |
+| `BRIGHTDATA_POLLING_TIMEOUT` | Polling timeout in seconds     |
 
 ## Troubleshooting
 
-| Error | Fix |
-|-------|-----|
-| CLI not found | Install with `npm i -g @brightdata/cli` or `curl -fsSL https://cli.brightdata.com/install.sh \| bash` |
-| "No Web Unlocker zone specified" | `bdata config set default_zone_unlocker <zone>` or re-run `bdata login` |
-| "Invalid or expired API key" | `bdata login` |
-| "Access denied" | Check zone permissions in the Bright Data control panel |
-| "Rate limit exceeded" | Wait and retry, or use `--async` for large jobs |
-| Async job timeout | Increase with `--timeout 1200` or `BRIGHTDATA_POLLING_TIMEOUT=1200` |
+| Error                            | Fix                                                                                                   |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| CLI not found                    | Install with `npm i -g @brightdata/cli` or `curl -fsSL https://cli.brightdata.com/install.sh \| bash` |
+| "No Web Unlocker zone specified" | `bdata config set default_zone_unlocker <zone>` or re-run `bdata login`                               |
+| "Invalid or expired API key"     | `bdata login`                                                                                         |
+| "Access denied"                  | Check zone permissions in the Bright Data control panel                                               |
+| "Rate limit exceeded"            | Wait and retry, or use `--async` for large jobs                                                       |
+| Async job timeout                | Increase with `--timeout 1200` or `BRIGHTDATA_POLLING_TIMEOUT=1200`                                   |
 
 ## Key Design Principles
 

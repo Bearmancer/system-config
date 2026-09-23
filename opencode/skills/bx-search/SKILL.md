@@ -72,11 +72,13 @@ One binary, JSON in/out, no runtime dependencies. The default subcommand is `con
 ## Quick Start
 
 **macOS/Linux**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/brave/brave-search-cli/main/scripts/install.sh | sh
 ```
 
 **Windows (PowerShell)**
+
 ```powershell
 powershell -ExecutionPolicy Bypass -c "irm https://raw.githubusercontent.com/brave/brave-search-cli/main/scripts/install.ps1 | iex"
 ```
@@ -97,11 +99,11 @@ bx --help                        # see all commands; bx <command> --help for fla
 
 Three methods, in priority order:
 
-| Priority | Method | Example |
-|----------|--------|---------|
-| 1 (highest) | `--api-key` flag | `bx --api-key KEY web "test"` |
-| 2 | `BRAVE_SEARCH_API_KEY` env var | `export BRAVE_SEARCH_API_KEY=KEY` |
-| 3 | Config file | `bx config set-key KEY` |
+| Priority    | Method                         | Example                           |
+| ----------- | ------------------------------ | --------------------------------- |
+| 1 (highest) | `--api-key` flag               | `bx --api-key KEY web "test"`     |
+| 2           | `BRAVE_SEARCH_API_KEY` env var | `export BRAVE_SEARCH_API_KEY=KEY` |
+| 3           | Config file                    | `bx config set-key KEY`           |
 
 The config file is stored at `~/.config/brave-search/api_key` (Linux), `~/Library/Application Support/brave-search/api_key` (macOS), or `%APPDATA%\brave-search\api_key` (Windows).
 
@@ -126,35 +128,46 @@ bx web "site:docs.rs axum middleware" --count 5
 
 ### When to Use Which Command
 
-| Your need | Command | Why |
-|-----------|---------|-----|
-| Look up docs, errors, code patterns | `context` | Pre-extracted text, token-budgeted |
-| Get a synthesized explanation | `answers` | AI-generated, cites sources |
-| Search a specific site (site:) | `web` | Supports search operators |
-| Find discussions/forums | `web --result-filter discussions` | Forums often have solutions |
-| Check latest versions/releases | `context` or `news --freshness pd` | Fresh info beyond training data |
-| Research security vulnerabilities | `context` or `news` | CVE details, advisories |
-| Boost/filter specific domains | `--goggles` on context/web/news | Custom re-ranking, no other API has this |
+| Your need                           | Command                            | Why                                      |
+| ----------------------------------- | ---------------------------------- | ---------------------------------------- |
+| Look up docs, errors, code patterns | `context`                          | Pre-extracted text, token-budgeted       |
+| Get a synthesized explanation       | `answers`                          | AI-generated, cites sources              |
+| Search a specific site (site:)      | `web`                              | Supports search operators                |
+| Find discussions/forums             | `web --result-filter discussions`  | Forums often have solutions              |
+| Check latest versions/releases      | `context` or `news --freshness pd` | Fresh info beyond training data          |
+| Research security vulnerabilities   | `context` or `news`                | CVE details, advisories                  |
+| Boost/filter specific domains       | `--goggles` on context/web/news    | Custom re-ranking, no other API has this |
 
 ### Response Shapes
 
 **`bx context`** — RAG/grounding (recommended)
+
 ```json
 {
-  "grounding": {
-    "generic": [
-      { "url": "...", "title": "...", "snippets": ["extracted content...", "..."] }
-    ]
-  }
+	"grounding": {
+		"generic": [
+			{
+				"url": "...",
+				"title": "...",
+				"snippets": ["extracted content...", "..."]
+			}
+		]
+	}
 }
 ```
 
 **`bx answers --no-stream`** — AI answer (single response)
+
 ```json
-{"choices": [{"message": {"content": "Rust lifetimes ensure references..."}}]}
+{
+	"choices": [
+		{ "message": { "content": "Rust lifetimes ensure references..." } }
+	]
+}
 ```
 
 **`bx answers`** — AI answer (streaming, one JSON chunk per line)
+
 ```json
 {"choices": [{"delta": {"content": "R"}}]}
 {"choices": [{"delta": {"content": "u"}}]}
@@ -164,6 +177,7 @@ bx web "site:docs.rs axum middleware" --count 5
 ```
 
 **`bx web`** — Full search results
+
 ```json
 {
   "web": { "results": [{"title": "...", "url": "...", "description": "..."}] },
@@ -176,17 +190,20 @@ bx web "site:docs.rs axum middleware" --count 5
 ### Agent Workflow Examples
 
 **Debugging an error:**
+
 ```bash
 bx "Python TypeError cannot unpack non-iterable NoneType" --max-tokens 4096
 ```
 
 **Evaluating a dependency:**
+
 ```bash
 bx context "reqwest crate security issues maintained 2026" --threshold strict
 bx news "reqwest Rust crate" --freshness pm
 ```
 
 **Corrective RAG loop:**
+
 ```bash
 # 1. Broad search
 bx "axum middleware authentication" --max-tokens 4096
@@ -197,12 +214,14 @@ bx answers "how to implement JWT auth middleware in axum" --enable-research
 ```
 
 **Checking for breaking changes before upgrading:**
+
 ```bash
 bx context "Next.js 15 breaking changes migration guide" --max-tokens 8192
 bx news "Next.js 15 release" --freshness pm
 ```
 
 **Focused search with Goggles (custom re-ranking):**
+
 ```bash
 bx "Python asyncio gather vs wait" \
   --goggles '$boost=3,site=docs.python.org
@@ -213,21 +232,25 @@ $discard,site=w3schools.com' --max-tokens 4096
 ```
 
 **Token budget control:**
+
 ```bash
 bx context "topic" --max-tokens 4096 --max-tokens-per-url 1024 --max-urls 5
 ```
 
 **Non-streaming answers (for programmatic use):**
+
 ```bash
 bx answers "compare SQLx and Diesel for Rust" --no-stream | jq '.choices[0].message.content'
 ```
 
 **Answers stdin mode** — pass `-` to read a full JSON request body:
+
 ```bash
 echo '{"messages":[{"role":"user","content":"review this code for security issues"}]}' | bx answers -
 ```
 
 **Other commands:**
+
 ```bash
 bx images "system architecture diagram microservices" | jq '.results[].thumbnail.src'
 bx suggest "how to implement" --count 10 | jq '.results[].query'
@@ -238,20 +261,20 @@ bx web "rust" --result-filter "web,discussions"
 
 ## Commands
 
-| Command | Description | Output Shape |
-|---------|-------------|--------------|
-| `context` | **RAG/LLM grounding** — pre-extracted web content | `.grounding.generic[]` → `{url, title, snippets[]}` |
-| `answers` | **AI answers** — OpenAI-compatible, streaming | `.choices[0].delta.content` (stream) |
-| `web` | Full web search — all result types | `.web.results[]`, `.news.results[]`, etc. |
-| `news` | News articles with freshness filters | `.results[]` → `{title, url, age}` |
-| `images` | Image search (up to 200 results) | `.results[]` → `{title, url, thumbnail.src}` |
-| `videos` | Video search with duration/views | `.results[]` → `{title, url, video.duration}` |
-| `places` | Local place/POI search (200M+ POIs) | `.results[]` → `{title, postal_address, contact}` |
-| `suggest` | Autocomplete/query suggestions | `.results[]` → `{query}` |
-| `spellcheck` | Spell-check a query | `.results[0].query` |
-| `pois` | POI details by ID | (use IDs from `places`) |
-| `descriptions` | AI-generated POI descriptions | `.results[].description` |
-| `config` | Manage API key | `set-key`, `show-key`, `path` |
+| Command        | Description                                       | Output Shape                                        |
+| -------------- | ------------------------------------------------- | --------------------------------------------------- |
+| `context`      | **RAG/LLM grounding** — pre-extracted web content | `.grounding.generic[]` → `{url, title, snippets[]}` |
+| `answers`      | **AI answers** — OpenAI-compatible, streaming     | `.choices[0].delta.content` (stream)                |
+| `web`          | Full web search — all result types                | `.web.results[]`, `.news.results[]`, etc.           |
+| `news`         | News articles with freshness filters              | `.results[]` → `{title, url, age}`                  |
+| `images`       | Image search (up to 200 results)                  | `.results[]` → `{title, url, thumbnail.src}`        |
+| `videos`       | Video search with duration/views                  | `.results[]` → `{title, url, video.duration}`       |
+| `places`       | Local place/POI search (200M+ POIs)               | `.results[]` → `{title, postal_address, contact}`   |
+| `suggest`      | Autocomplete/query suggestions                    | `.results[]` → `{query}`                            |
+| `spellcheck`   | Spell-check a query                               | `.results[0].query`                                 |
+| `pois`         | POI details by ID                                 | (use IDs from `places`)                             |
+| `descriptions` | AI-generated POI descriptions                     | `.results[].description`                            |
+| `config`       | Manage API key                                    | `set-key`, `show-key`, `path`                       |
 
 ## Goggles — Custom Search Re-Ranking
 
@@ -307,14 +330,14 @@ bx news "npm security advisory" --freshness pd \
 
 ### DSL Quick Reference
 
-| Rule | Effect | Example |
-|------|--------|---------|
-| `$boost=N,site=DOMAIN` | Promote domain (N=1-10) | `$boost=3,site=docs.rs` |
-| `$downrank=N,site=DOMAIN` | Demote domain (N=1-10) | `$downrank=5,site=medium.com` |
-| `$discard,site=DOMAIN` | Remove domain entirely | `$discard,site=w3schools.com` |
-| `/path/$boost=N` | Boost matching URL paths | `/docs/$boost=5` |
-| `*pattern*$boost=N` | Wildcard URL matching | `*api*$boost=3` |
-| Generic `$discard` | Allowlist mode — discard all unmatched | `$discard` (as first rule) |
+| Rule                      | Effect                                 | Example                       |
+| ------------------------- | -------------------------------------- | ----------------------------- |
+| `$boost=N,site=DOMAIN`    | Promote domain (N=1-10)                | `$boost=3,site=docs.rs`       |
+| `$downrank=N,site=DOMAIN` | Demote domain (N=1-10)                 | `$downrank=5,site=medium.com` |
+| `$discard,site=DOMAIN`    | Remove domain entirely                 | `$discard,site=w3schools.com` |
+| `/path/$boost=N`          | Boost matching URL paths               | `/docs/$boost=5`              |
+| `*pattern*$boost=N`       | Wildcard URL matching                  | `*api*$boost=3`               |
+| Generic `$discard`        | Allowlist mode — discard all unmatched | `$discard` (as first rule)    |
 
 Separate multiple rules with newlines. Full DSL + pattern syntax: [goggles-quickstart](https://github.com/brave/goggles-quickstart).
 
@@ -357,16 +380,17 @@ Community Goggles: [brave/goggles-quickstart](https://github.com/brave/goggles-q
 
 ## Exit Codes
 
-| Code | Meaning | Agent action |
-|------|---------|-------------|
-| 0 | Success | Process results |
-| 1 | Client error (bad request) | Fix query/parameters |
-| 2 | Usage error (bad flags) | Fix CLI arguments (clap) |
-| 3 | Auth/permission error (401/403) | Check API key or plan: `bx config show-key` |
-| 4 | Rate limited (429) | Retry after delay |
-| 5 | Server/network error | Retry with backoff |
+| Code | Meaning                         | Agent action                                |
+| ---- | ------------------------------- | ------------------------------------------- |
+| 0    | Success                         | Process results                             |
+| 1    | Client error (bad request)      | Fix query/parameters                        |
+| 2    | Usage error (bad flags)         | Fix CLI arguments (clap)                    |
+| 3    | Auth/permission error (401/403) | Check API key or plan: `bx config show-key` |
+| 4    | Rate limited (429)              | Retry after delay                           |
+| 5    | Server/network error            | Retry with backoff                          |
 
 Error output format (stderr):
+
 ```
 error: rate limited (429) — Request rate limit exceeded for plan.
 hint: retry after a short delay, or upgrade plan for higher rate limits

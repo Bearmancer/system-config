@@ -1,6 +1,7 @@
 ---
 description: Generate a terse caveman-style commit message for staged changes
 ---
+
 Generate a commit message for the current staged changes.
 
 Conventional Commits format. Subject line ≤50 chars, imperative, lowercase

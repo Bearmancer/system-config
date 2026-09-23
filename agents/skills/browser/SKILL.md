@@ -33,12 +33,14 @@ which browse || npm install -g browse
 The CLI supports explicit per-command environment flags. If you do nothing, the next session defaults to Browserbase when `BROWSERBASE_API_KEY` is set and to local otherwise.
 
 ### Local mode
+
 - `browse open <url> --local` starts a clean isolated local browser
 - `browse open <url> --auto-connect` attaches to an already-running debuggable Chrome; use `--local` when no debuggable Chrome is available
 - `browse open <url> --cdp <port|url>` attaches to a specific CDP target
 - Best for: development, localhost, trusted sites, and reproducible runs
 
 ### Remote mode (Browserbase)
+
 - `browse open <url> --remote` starts a Browserbase session
 - Without a local flag, Browserbase is also the default when `BROWSERBASE_API_KEY` is set
 - Provides: Browserbase Identity, Verified browsers, automatic CAPTCHA solving, residential proxies, session persistence
@@ -46,6 +48,7 @@ The CLI supports explicit per-command environment flags. If you do nothing, the 
 - Get credentials at https://browserbase.com/settings
 
 ### When to choose which
+
 - **Repeatable local testing / clean state**: `browse open <url> --local`
 - **Reuse your local login/cookies**: `browse open <url> --auto-connect`
 - **Simple browsing** (docs, wikis, public APIs): local mode is fine
@@ -57,6 +60,7 @@ The CLI supports explicit per-command environment flags. If you do nothing, the 
 Most driver commands work across local, remote, and CDP sessions after the daemon starts.
 
 ### Navigation
+
 ```bash
 browse open <url>                        # Go to URL
 browse open <url> --local                # Go to URL in a clean local browser
@@ -67,6 +71,7 @@ browse forward                           # Go forward in history
 ```
 
 ### Page state (prefer snapshot over screenshot)
+
 ```bash
 browse snapshot                          # Get accessibility tree with element refs (fast, structured)
 browse screenshot --path <path>          # Take visual screenshot (slow, uses vision tokens)
@@ -81,6 +86,7 @@ browse get value <selector>              # Get form field value
 Use `browse snapshot` as your default for understanding page state — it returns the accessibility tree with element refs you can use to interact. Only use `browse screenshot` when you need visual context (layout, images, debugging).
 
 ### Interaction
+
 ```bash
 browse click <ref>                       # Click element by ref from snapshot (e.g., @0-5)
 browse type <text>                       # Type text into focused element
@@ -97,6 +103,7 @@ browse wait <type> [arg]                 # Wait for: load, selector, timeout
 ```
 
 ### CDP event tailing
+
 ```bash
 browse cdp <url|port>                    # Stream CDP events as NDJSON from any target
 browse cdp 9222                          # Attach to local Chrome on port 9222
@@ -111,6 +118,7 @@ browse cdp <url> | jq '.method'          # Filter with jq
 The `cdp` command connects directly to any Chrome DevTools Protocol target and streams events. It does **not** use the daemon — it's a standalone, long-running process. Press Ctrl+C to stop. Default domains: Network, Console, Runtime, Log, Page.
 
 ### Session management
+
 ```bash
 browse stop                              # Stop the browser daemon
 browse status                            # Check daemon status and resolved mode
@@ -120,6 +128,7 @@ browse tab close [index-or-target-id]    # Close tab
 ```
 
 ### Typical workflow
+
 If the environment matters, put `--local`, `--remote`, `--auto-connect`, or `--cdp <port|url>` on the first browser command.
 
 1. `browse open <url> --local` or `browse open <url> --remote` — navigate to the page
@@ -141,16 +150,16 @@ browse stop
 
 ## Mode Comparison
 
-| Feature | Local | Browserbase |
-|---------|-------|-------------|
-| Speed | Faster | Slightly slower |
-| Setup | Chrome required | API key required |
-| Reuse existing local cookies | With `browse open <url> --auto-connect` | N/A |
-| Verified browser | No | Yes (Browserbase Verified browser via Identity) |
-| CAPTCHA solving | No | Yes (automatic reCAPTCHA/hCaptcha) |
-| Residential proxies | No | Yes (201 countries, geo-targeting) |
-| Session persistence | No | Yes (cookies/auth persist via contexts) |
-| Best for | Development/simple pages | Protected sites, Browserbase Identity + Verified access, production scraping |
+| Feature                      | Local                                   | Browserbase                                                                  |
+| ---------------------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
+| Speed                        | Faster                                  | Slightly slower                                                              |
+| Setup                        | Chrome required                         | API key required                                                             |
+| Reuse existing local cookies | With `browse open <url> --auto-connect` | N/A                                                                          |
+| Verified browser             | No                                      | Yes (Browserbase Verified browser via Identity)                              |
+| CAPTCHA solving              | No                                      | Yes (automatic reCAPTCHA/hCaptcha)                                           |
+| Residential proxies          | No                                      | Yes (201 countries, geo-targeting)                                           |
+| Session persistence          | No                                      | Yes (cookies/auth persist via contexts)                                      |
+| Best for                     | Development/simple pages                | Protected sites, Browserbase Identity + Verified access, production scraping |
 
 ## Best Practices
 

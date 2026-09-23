@@ -2,7 +2,7 @@
 
 ## Verdict
 
-**PARTIAL YES.** A stencil + stamp tool structurally precludes every *shape* bug
+**PARTIAL YES.** A stencil + stamp tool structurally precludes every _shape_ bug
 class (missing/misordered footer, missing Sources block, legacy-section
 regressions) and precludes orphan anchors + dangling index hrefs **iff** stamp
 and publisher derive their row ids from one shared contract. It cannot preclude
@@ -11,16 +11,16 @@ defenses. Adopt as structure owner; keep `check_lesson.py` as backstop.
 
 ## Bug-class coverage
 
-| Class | Precluded? | Mechanism / residual defense |
-|---|---|---|
-| Missing or misordered footer nav | Yes | Template owns the footer; writer never touches it |
-| Dangling `../../index.html` / `../index.html#chK` | Yes* | Stamp derives both from filename; *publisher must share the row-id function |
-| Orphan `chK` anchors (anchor without lesson) | Yes* | Same single-writer contract both sides; contract test pins parity |
-| Missing per-chapter Sources block | Yes | Unconditional slot; empty list = stamp hard fail |
-| Open Threads / fact-check-box regressions | Yes | No such blocks exist in the template |
-| Banned-phrase smuggle inside free narrative | No | Gate phrase scan stays |
-| Content truth (verdicts, citations, facts) | No | Verification fan-out + review stays |
-| Worker non-delivery (no diff, TEMP writes) | No | Stamp contract: repo path only + diff stat + mtime + gate exit 0 in report |
+| Class                                             | Precluded? | Mechanism / residual defense                                                |
+| ------------------------------------------------- | ---------- | --------------------------------------------------------------------------- |
+| Missing or misordered footer nav                  | Yes        | Template owns the footer; writer never touches it                           |
+| Dangling `../../index.html` / `../index.html#chK` | Yes*       | Stamp derives both from filename; *publisher must share the row-id function |
+| Orphan `chK` anchors (anchor without lesson)      | Yes*       | Same single-writer contract both sides; contract test pins parity           |
+| Missing per-chapter Sources block                 | Yes        | Unconditional slot; empty list = stamp hard fail                            |
+| Open Threads / fact-check-box regressions         | Yes        | No such blocks exist in the template                                        |
+| Banned-phrase smuggle inside free narrative       | No         | Gate phrase scan stays                                                      |
+| Content truth (verdicts, citations, facts)        | No         | Verification fan-out + review stays                                         |
+| Worker non-delivery (no diff, TEMP writes)        | No         | Stamp contract: repo path only + diff stat + mtime + gate exit 0 in report  |
 
 ## Architecture
 
@@ -40,11 +40,11 @@ defenses. Adopt as structure owner; keep `check_lesson.py` as backstop.
 
 ## Migration options
 
-| Option | Scope | Cost | Risk | Existing wave-3 footer work |
-|---|---|---|---|---|
-| A forward-only | New lessons stamped | Lowest | Two shapes coexist, old drift continues | Keep |
-| B on-touch (recommended) | New stamped + restamp each lesson when edited; 3-lesson pilot first | Low-medium | Bounded churn, converges over time | Keep; overwrite only on touch |
-| C full backfill | Reverse-extract 31 YAMLs, restamp everything | Highest | Regression in shipped pages; per-lesson review load | Supersede |
+| Option                   | Scope                                                               | Cost       | Risk                                                | Existing wave-3 footer work   |
+| ------------------------ | ------------------------------------------------------------------- | ---------- | --------------------------------------------------- | ----------------------------- |
+| A forward-only           | New lessons stamped                                                 | Lowest     | Two shapes coexist, old drift continues             | Keep                          |
+| B on-touch (recommended) | New stamped + restamp each lesson when edited; 3-lesson pilot first | Low-medium | Bounded churn, converges over time                  | Keep; overwrite only on touch |
+| C full backfill          | Reverse-extract 31 YAMLs, restamp everything                        | Highest    | Regression in shipped pages; per-lesson review load | Supersede                     |
 
 Do not commit to C until the 3-lesson pilot yields a per-lesson number.
 

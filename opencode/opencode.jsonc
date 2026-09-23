@@ -1,9 +1,9 @@
 {
 	"plugin": [
-    "@slkiser/opencode-quota",
-    "./plugins/caveman/plugin.js",
-    "oh-my-openagent@latest"
-  ],
+		"@slkiser/opencode-quota",
+		"./plugins/caveman/plugin.js",
+		"oh-my-openagent@latest",
+	],
 	"$schema": "https://opencode.ai/config.json",
 	"shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
 	"lsp": {
@@ -194,7 +194,7 @@
 				"--transport",
 				"http-only",
 				"--header",
-				"x-api-key:{env:EXA_API_KEY}"
+				"x-api-key:{env:EXA_API_KEY}",
 			],
 			"enabled": true,
 		},
@@ -208,7 +208,7 @@
 				"mcp-remote",
 				"https://learn.microsoft.com/api/mcp",
 				"--transport",
-				"http-only"
+				"http-only",
 			],
 			"enabled": true,
 		},
@@ -274,7 +274,7 @@
 				"mcp-remote",
 				"https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
 				"--transport",
-				"http-only"
+				"http-only",
 			],
 			"enabled": true,
 		},
@@ -290,7 +290,7 @@
 				"--transport",
 				"http-only",
 				"--header",
-				"Authorization:Bearer {env:CONTEXT7_API_KEY}"
+				"Authorization:Bearer {env:CONTEXT7_API_KEY}",
 			],
 			"enabled": true,
 		},
@@ -304,7 +304,7 @@
 				"mcp-remote",
 				"https://mcp.browserbase.com/mcp?browserbaseApiKey={env:BROWSERBASE_API_KEY}",
 				"--transport",
-				"http-only"
+				"http-only",
 			],
 			"enabled": true,
 			"timeout": 120000,
@@ -326,7 +326,7 @@
 				"--transport",
 				"http-only",
 				"--header",
-				"Authorization:Bearer {env:APIFY_TOKEN}"
+				"Authorization:Bearer {env:APIFY_TOKEN}",
 			],
 			"enabled": true,
 			"timeout": 120000,

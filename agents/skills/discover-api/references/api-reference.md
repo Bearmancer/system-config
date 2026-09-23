@@ -6,35 +6,50 @@ Docs: https://docs.brightdata.com/api-reference/discover/overview
 ## REST endpoints
 
 ### Trigger
+
 ```
 POST https://api.brightdata.com/discover
 Authorization: Bearer <BRIGHTDATA_API_TOKEN>
 Content-Type: application/json
 ```
+
 Body: see the parameter matrix below. Response:
+
 ```json
 { "status": "ok", "task_id": "bde85a92-3232-4f26-98f6-5ed0328b8288" }
 ```
 
 ### Retrieve results
+
 ```
 GET https://api.brightdata.com/discover?task_id=<task_id>
 Authorization: Bearer <BRIGHTDATA_API_TOKEN>
 ```
+
 Response while running:
+
 ```json
 { "status": "processing", "duration_seconds": 4.1 }
 ```
+
 Response when complete:
+
 ```json
 {
-  "status": "done",
-  "duration_seconds": 12.4,
-  "results": [
-    { "link": "…", "title": "…", "description": "…", "relevance_score": 0.87, "content": "…" }
-  ]
+	"status": "done",
+	"duration_seconds": 12.4,
+	"results": [
+		{
+			"link": "…",
+			"title": "…",
+			"description": "…",
+			"relevance_score": 0.87,
+			"content": "…"
+		}
+	]
 }
 ```
+
 - `status`: `"processing"` → `"done"`.
 - Poll on an interval (2–5s is reasonable). Tasks can expire after a period — retrieve promptly.
 
@@ -44,23 +59,23 @@ Legend: ✅ exposed · ➖ not exposed (use raw REST).
 
 CLI column **verified against `bdata discover --help` (brightdata CLI v0.3.1)**.
 
-| Param (REST) | Type / range | REST | CLI `bdata discover` | JS SDK (`client.discover`) | Python SDK |
-|---|---|:--:|:--:|:--:|:--:|
-| `query` | string ≤1500 (required) | ✅ | ✅ positional | ✅ `query` | ✅ `query` |
-| `intent` | string ≤3000 | ✅ | ✅ `--intent` | ✅ `intent` | ✅ `intent` |
-| `num_results` | int 1–20 | ✅ | ✅ `--num-results` | ✅ `numResults` | ✅ |
-| `filter_keywords` | string[] | ✅ | ✅ `--filter-keywords` (comma-separated) | ✅ `filterKeywords` | ✅ |
-| `include_content` | bool | ✅ | ✅ `--include-content` | ✅ `includeContent` | ✅ |
-| `country` | ISO code (default US) | ✅ | ✅ `--country` | ✅ `country` (lowercased) | ✅ |
-| `city` | string | ✅ | ✅ `--city` | ✅ `city` | ✅ |
-| `language` | string (31 langs) | ✅ | ✅ `--language` | ✅ `language` | ✅ |
-| `start_date` / `end_date` | `YYYY-MM-DD` | ✅ | ✅ `--start-date`/`--end-date` | ➖ | ➖ |
-| `remove_duplicates` | bool (default true) | ✅ | ✅ `--no-remove-duplicates` (to disable) | ➖ | ➖ |
-| `format` | `json`\|`md` | ✅ | ⚠️ `--json` only (no `md`) | ⚠️ `'json'` only | ✅ |
-| `mode` | `standard`\|`zeroRanking`\|`deep`\|`fast` | ✅ | ➖ | ➖ | ➖ |
-| `include_images` | bool | ✅ | ➖ | ➖ | ➖ |
-| `timeout` (poll budget) | CLI: seconds (600) · SDK: ms (60000) | n/a | ✅ `--timeout` | ✅ `timeout` | ✅ |
-| `pollInterval` | ms | n/a | n/a | ✅ `pollInterval` (2000) | n/a |
+| Param (REST)              | Type / range                              | REST |           CLI `bdata discover`           | JS SDK (`client.discover`) | Python SDK  |
+| ------------------------- | ----------------------------------------- | :--: | :--------------------------------------: | :------------------------: | :---------: |
+| `query`                   | string ≤1500 (required)                   |  ✅  |              ✅ positional               |         ✅ `query`         | ✅ `query`  |
+| `intent`                  | string ≤3000                              |  ✅  |              ✅ `--intent`               |        ✅ `intent`         | ✅ `intent` |
+| `num_results`             | int 1–20                                  |  ✅  |            ✅ `--num-results`            |      ✅ `numResults`       |     ✅      |
+| `filter_keywords`         | string[]                                  |  ✅  | ✅ `--filter-keywords` (comma-separated) |    ✅ `filterKeywords`     |     ✅      |
+| `include_content`         | bool                                      |  ✅  |          ✅ `--include-content`          |    ✅ `includeContent`     |     ✅      |
+| `country`                 | ISO code (default US)                     |  ✅  |              ✅ `--country`              | ✅ `country` (lowercased)  |     ✅      |
+| `city`                    | string                                    |  ✅  |               ✅ `--city`                |         ✅ `city`          |     ✅      |
+| `language`                | string (31 langs)                         |  ✅  |             ✅ `--language`              |       ✅ `language`        |     ✅      |
+| `start_date` / `end_date` | `YYYY-MM-DD`                              |  ✅  |      ✅ `--start-date`/`--end-date`      |             ➖             |     ➖      |
+| `remove_duplicates`       | bool (default true)                       |  ✅  | ✅ `--no-remove-duplicates` (to disable) |             ➖             |     ➖      |
+| `format`                  | `json`\|`md`                              |  ✅  |        ⚠️ `--json` only (no `md`)         |      ⚠️ `'json'` only       |     ✅      |
+| `mode`                    | `standard`\|`zeroRanking`\|`deep`\|`fast` |  ✅  |                    ➖                    |             ➖             |     ➖      |
+| `include_images`          | bool                                      |  ✅  |                    ➖                    |             ➖             |     ➖      |
+| `timeout` (poll budget)   | CLI: seconds (600) · SDK: ms (60000)      | n/a  |              ✅ `--timeout`              |        ✅ `timeout`        |     ✅      |
+| `pollInterval`            | ms                                        | n/a  |                   n/a                    |  ✅ `pollInterval` (2000)  |     n/a     |
 
 Other verified CLI-only flags: `--pretty`, `--timing`, `-o/--output`, `-k/--api-key`
 (note: in some environments `-k` is ignored and the stored `bdata login` credential
@@ -76,12 +91,12 @@ durationSeconds, ...}` — check `success` first. See the SKILL's "Result shape"
 
 ## Modes — detail
 
-| Mode | Behavior | `num_results` | `include_content` |
-|---|---|---|---|
-| `standard` (default) | balanced depth + AI ranking | honored | supported |
-| `deep` | exhaustive/broader; slower; best topic coverage | honored | supported |
-| `fast` | lowest latency | honored | supported |
-| `zeroRanking` | no AI ranking, max raw volume | **ignored** | **unsupported** |
+| Mode                 | Behavior                                        | `num_results` | `include_content` |
+| -------------------- | ----------------------------------------------- | ------------- | ----------------- |
+| `standard` (default) | balanced depth + AI ranking                     | honored       | supported         |
+| `deep`               | exhaustive/broader; slower; best topic coverage | honored       | supported         |
+| `fast`               | lowest latency                                  | honored       | supported         |
+| `zeroRanking`        | no AI ranking, max raw volume                   | **ignored**   | **unsupported**   |
 
 Documented use cases (from the API overview): investment-analysis RAG systems,
 developer knowledge bases / engineering troubleshooting, VC financial research,
@@ -96,13 +111,13 @@ senior-engineer internal resources.
 
 ## Errors
 
-| Code | Meaning | Fix |
-|---|---|---|
-| 400 | missing `task_id` (retrieve) or bad body | include `task_id` / fix JSON body |
-| 401 | missing/invalid credentials | check `BRIGHTDATA_API_TOKEN` |
-| 403 | Discover not enabled on account | enable API access in the dashboard |
-| 404 | invalid/expired `task_id` | re-trigger; retrieve sooner |
-| 429 | rate / concurrency exceeded | back off and retry; reduce parallel triggers |
+| Code | Meaning                                  | Fix                                          |
+| ---- | ---------------------------------------- | -------------------------------------------- |
+| 400  | missing `task_id` (retrieve) or bad body | include `task_id` / fix JSON body            |
+| 401  | missing/invalid credentials              | check `BRIGHTDATA_API_TOKEN`                 |
+| 403  | Discover not enabled on account          | enable API access in the dashboard           |
+| 404  | invalid/expired `task_id`                | re-trigger; retrieve sooner                  |
+| 429  | rate / concurrency exceeded              | back off and retry; reduce parallel triggers |
 
 `content` returns empty for block pages or oversized PDFs — validate before use
 (grep for captcha / "Just a moment" / "Access Denied" signatures).
@@ -122,11 +137,13 @@ error. Don't retry more than ~2× — a persistent empty result usually means th
 
 ```js
 async function discoverWithRetry(client, query, opts, tries = 2) {
-  for (let i = 0; i < tries; i++) {
-    const res = await client.discover(query, opts);
-    if (res.success && Array.isArray(res.data)) return res.data;
-    await new Promise(r => setTimeout(r, 1500 * (i + 1)));   // linear backoff
-  }
-  throw new Error('discover failed after retries (check intent breadth / account access)');
+	for (let i = 0; i < tries; i++) {
+		const res = await client.discover(query, opts);
+		if (res.success && Array.isArray(res.data)) return res.data;
+		await new Promise((r) => setTimeout(r, 1500 * (i + 1))); // linear backoff
+	}
+	throw new Error(
+		"discover failed after retries (check intent breadth / account access)",
+	);
 }
 ```

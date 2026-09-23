@@ -26,16 +26,16 @@ Halt and route to `skills/bright-data-best-practices/references/cli-setup.md` if
 
 ## Pick your path
 
-| Situation | Action |
-|---|---|
-| Single keyword query, just SERP | `bdata search "<query>" --engine google --json --pretty` |
-| Paginated SERP (more results) | loop `--page 0`, `--page 1`, … (0-indexed) |
-| Multiple queries | shell loop over a queries file |
-| Intent-ranked / semantic (not keyword) | `bdata discover "<query>" --intent "<intent>" --num-results 20` |
-| Want page bodies along with results, one pass | `bdata discover ... --include-content` |
-| News / images / shopping SERP | `bdata search "<query>" --type news` (or `images`, `shopping`) |
-| Want Amazon/LinkedIn/TikTok/… structured data | **stop — hand off to `data-feeds`** |
-| Have URLs, want content | **hand off to `scrape`** |
+| Situation                                     | Action                                                          |
+| --------------------------------------------- | --------------------------------------------------------------- |
+| Single keyword query, just SERP               | `bdata search "<query>" --engine google --json --pretty`        |
+| Paginated SERP (more results)                 | loop `--page 0`, `--page 1`, … (0-indexed)                      |
+| Multiple queries                              | shell loop over a queries file                                  |
+| Intent-ranked / semantic (not keyword)        | `bdata discover "<query>" --intent "<intent>" --num-results 20` |
+| Want page bodies along with results, one pass | `bdata discover ... --include-content`                          |
+| News / images / shopping SERP                 | `bdata search "<query>" --type news` (or `images`, `shopping`)  |
+| Want Amazon/LinkedIn/TikTok/… structured data | **stop — hand off to `data-feeds`**                             |
+| Have URLs, want content                       | **hand off to `scrape`**                                        |
 
 ## Action
 
@@ -75,13 +75,13 @@ Full flag reference: [`references/flags.md`](references/flags.md).
 
 ### `search` vs `discover` — pick the right one
 
-| You want | Use |
-|---|---|
-| "What Google ranks for this exact keyword" | `search` |
-| "Pages that match this meaning/intent" | `discover` |
-| "News / images / shopping vertical SERP" | `search --type <vertical>` |
-| "Results + page bodies in one call" | `discover --include-content` |
-| "Dedup / semantic ranking across queries" | `discover` |
+| You want                                   | Use                          |
+| ------------------------------------------ | ---------------------------- |
+| "What Google ranks for this exact keyword" | `search`                     |
+| "Pages that match this meaning/intent"     | `discover`                   |
+| "News / images / shopping vertical SERP"   | `search --type <vertical>`   |
+| "Results + page bodies in one call"        | `discover --include-content` |
+| "Dedup / semantic ranking across queries"  | `discover`                   |
 
 ## Verification gate
 
@@ -97,12 +97,12 @@ Full flag reference: [`references/flags.md`](references/flags.md).
    - `Checking your browser`
    - `captcha`
    - `cf-browser-verification`
-   - `cloudflare` *(with < 2KB total body)*
+   - `cloudflare` _(with < 2KB total body)_
 5. **Geo sanity:** if the user expected country-specific results, inspect TLDs / languages of top results. If mis-localized, re-run with explicit `--country` and `--language`.
 
 ## Red flags
 
-- Using `search` to *fetch content* from Amazon, LinkedIn, TikTok, etc. when `data-feeds` returns clean structured data in one call.
+- Using `search` to _fetch content_ from Amazon, LinkedIn, TikTok, etc. when `data-feeds` returns clean structured data in one call.
 - Scraping every SERP result blindly — filter first (domain allowlist, keyword in title, relevance heuristic).
 - Confusing `search` (keyword) with `discover` (semantic). They answer different questions.
 - Running multiple queries without deduping URLs across result sets before scraping.

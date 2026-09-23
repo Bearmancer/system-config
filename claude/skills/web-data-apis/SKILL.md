@@ -11,22 +11,22 @@ MCP servers only — no vendor ships an OpenCode skill, plugin, or agent for the
 
 ## Capability audit — pick by capability, not by habit
 
-| Server               | Capability tags                                                                                     | Use when                                                                                                             |
-| -------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Server               | Capability tags                                                                                      | Use when                                                                                                                                                                   |
+| -------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Firecrawl            | js-render, clean-markdown, site-crawl, site-map, llm-extract, search, change-monitor, paper-research | Default workhorse for a known URL or a whole-site harvest that must return clean markdown. Also the academic-papers chain (`firecrawl_research_*` — confirmed registered). |
-| Tavily               | llm-tuned-search, synthesized-answer, extract, crawl, map                                           | A question goes in and a cited answer plus ranked URLs must come out — first stop for query-unknown factual lookups. |
-| Exa                  | semantic-search, similarity-search, long-form/academic-leaning index, fetch, agent-run              | The query is conceptual rather than keyword-shaped, or you need papers and long-form that keyword engines miss.      |
-| Brave                | independent-crawler-index, web/news/image/video search, local-poi                                   | Cross-checking when Tavily and Exa agree — they can share upstream bias; also local and place queries.               |
-| Crawl4AI             | self-hosted, bulk-cheap, playwright-crawl, markdown                                                 | Bulk crawling where volume would burn paid credits and slower turnaround is acceptable.                              |
-| ScrapeGraphAI        | ai-extract, scrape, search, async-crawl (start→poll), monitor — 17 tools confirmed                   | Schema-shaped extraction across many pages, or a crawl that outlives one tool call.                                  |
-| AgentQL              | structured-extraction, nl→typed-json, single-url, browser-rendered                                  | You already know the page and want one specific JSON shape out of it — that is its only job.                         |
-| Apify                | purpose-built actors (social / e-commerce / maps / reviews), platform-structured                    | A platform has a dedicated actor that beats any generic scrape of it.                                                |
-| Bright Data          | anti-bot, proxy-network, geo-routing, unlocker, dataset-apis                                        | The page is WAF/Cloudflare/geo-blocked and cheaper tiers already returned 403 or empty.                              |
-| Browserbase          | stateful-session, login-flows, multi-step-interaction, hosted-browser                               | The data sits behind a login or a multi-step flow and state must persist across steps.                               |
-| Firefox DevTools MCP | js-heavy-pages, browser-control, dom/a11y-snapshot, console+network inspection, screenshot, js-eval | A JS-gated page you must see rendered, or you need the network/console truth behind what the page displays.          |
-| Context7             | library-api-docs, version-pinned                                                                    | A coding task needs current SDK/framework docs. Not a fact-checking source for course verification.                  |
-| Microsoft Learn      | first-party ms/azure docs, code-samples, full-page-fetch                                            | Anything Microsoft, Azure, or .NET — first-party docs beat a general web search every time.                          |
-| Dappier              | realtime-feeds (news / finance / sports / weather), licensed-publisher content, recommendations     | Freshness is the actual requirement — today's price, score, or headline — not general web recall.                    |
+| Tavily               | llm-tuned-search, synthesized-answer, extract, crawl, map                                            | A question goes in and a cited answer plus ranked URLs must come out — first stop for query-unknown factual lookups.                                                       |
+| Exa                  | semantic-search, similarity-search, long-form/academic-leaning index, fetch, agent-run               | The query is conceptual rather than keyword-shaped, or you need papers and long-form that keyword engines miss.                                                            |
+| Brave                | independent-crawler-index, web/news/image/video search, local-poi                                    | Cross-checking when Tavily and Exa agree — they can share upstream bias; also local and place queries.                                                                     |
+| Crawl4AI             | self-hosted, bulk-cheap, playwright-crawl, markdown                                                  | Bulk crawling where volume would burn paid credits and slower turnaround is acceptable.                                                                                    |
+| ScrapeGraphAI        | ai-extract, scrape, search, async-crawl (start→poll), monitor — 17 tools confirmed                   | Schema-shaped extraction across many pages, or a crawl that outlives one tool call.                                                                                        |
+| AgentQL              | structured-extraction, nl→typed-json, single-url, browser-rendered                                   | You already know the page and want one specific JSON shape out of it — that is its only job.                                                                               |
+| Apify                | purpose-built actors (social / e-commerce / maps / reviews), platform-structured                     | A platform has a dedicated actor that beats any generic scrape of it.                                                                                                      |
+| Bright Data          | anti-bot, proxy-network, geo-routing, unlocker, dataset-apis                                         | The page is WAF/Cloudflare/geo-blocked and cheaper tiers already returned 403 or empty.                                                                                    |
+| Browserbase          | stateful-session, login-flows, multi-step-interaction, hosted-browser                                | The data sits behind a login or a multi-step flow and state must persist across steps.                                                                                     |
+| Firefox DevTools MCP | js-heavy-pages, browser-control, dom/a11y-snapshot, console+network inspection, screenshot, js-eval  | A JS-gated page you must see rendered, or you need the network/console truth behind what the page displays.                                                                |
+| Context7             | library-api-docs, version-pinned                                                                     | A coding task needs current SDK/framework docs. Not a fact-checking source for course verification.                                                                        |
+| Microsoft Learn      | first-party ms/azure docs, code-samples, full-page-fetch                                             | Anything Microsoft, Azure, or .NET — first-party docs beat a general web search every time.                                                                                |
+| Dappier              | realtime-feeds (news / finance / sports / weather), licensed-publisher content, recommendations      | Freshness is the actual requirement — today's price, score, or headline — not general web recall.                                                                          |
 
 ### Quick index
 
@@ -48,14 +48,14 @@ MCP servers only — no vendor ships an OpenCode skill, plugin, or agent for the
 
 ## Fleet (wiring/ops — keyed subset only; the capability table above covers all 14)
 
-| Server        | Config entry  | Key env var (in OpenCode)                          | Pool service name | Tools                                                                    |
-| ------------- | ------------- | -------------------------------------------------- | ----------------- | ------------------------------------------------------------------------ |
-| Firecrawl     | `firecrawl`   | `FIRECRAWL_API_KEY`                                | `firecrawl`       | scrape, map, crawl, search, extract, monitor_*                           |
-| Tavily        | `tavily`      | `TAVILY_API_KEY`                                   | `tavily`          | tavily_search, tavily_extract, tavily_crawl, tavily_map, tavily_research |
+| Server        | Config entry  | Key env var (in OpenCode)                            | Pool service name | Tools                                                                    |
+| ------------- | ------------- | ---------------------------------------------------- | ----------------- | ------------------------------------------------------------------------ |
+| Firecrawl     | `firecrawl`   | `FIRECRAWL_API_KEY`                                  | `firecrawl`       | scrape, map, crawl, search, extract, monitor_*                           |
+| Tavily        | `tavily`      | `TAVILY_API_KEY`                                     | `tavily`          | tavily_search, tavily_extract, tavily_crawl, tavily_map, tavily_research |
 | Exa           | `exa`         | none wired — bare remote URL, no `{env:EXA_API_KEY}` | `exa`             | web_search_exa, web_fetch_exa, web_search_advanced_exa, agent_run        |
-| Dappier       | `dappier`     | `DAPPIER_API_KEY`                                  | `dappier`         | `dappier_real_time_search`, `dappier_ai_recommendations`                 |
-| AgentQL       | `agentql`     | `AGENTQL_API_KEY`                                  | `agentql`         | `extract-web-data`                                                       |
-| ScrapeGraphAI | `scrapegraph` | `SGAI_API_KEY` (mapped from `SCRAPEGRAPH_API_KEY`) | `scrapegraph`     | scrape, extract, search, crawl__, monitor__, credits, history_*          |
+| Dappier       | `dappier`     | `DAPPIER_API_KEY`                                    | `dappier`         | `dappier_real_time_search`, `dappier_ai_recommendations`                 |
+| AgentQL       | `agentql`     | `AGENTQL_API_KEY`                                    | `agentql`         | `extract-web-data`                                                       |
+| ScrapeGraphAI | `scrapegraph` | `SGAI_API_KEY` (mapped from `SCRAPEGRAPH_API_KEY`)   | `scrapegraph`     | scrape, extract, search, crawl__, monitor__, credits, history_*          |
 
 Dappier and ScrapeGraphAI run via `uvx` (Python); AgentQL via `cmd /c npx -y` (Node, Windows shim). First `uvx` launch per package pays a cold-start install: `~4s`.
 
