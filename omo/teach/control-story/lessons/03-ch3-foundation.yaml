@@ -26,13 +26,6 @@ cast:
   - name: "Ahti"
     role: "His corridor leads down; his answers do not"
     ref: 12
-essentials:
-  - "The Nail holds the Astral Plane back and it is failing after Marshall damaged it."
-  - "The Former offers Jesse help and the Board resents the acceptance."
-  - "Jesse finishes the descent trusting the Board less than before."
-skippables:
-  - "Crystal-shape powers and combat tuning."
-  - "Side errands such as the collection sweep."
 narrative: |
   <p>Jesse enters through the Restricted Area and asks the obvious question:</p>
   <blockquote>"Is this still a part of the Oldest House? It feels much older."</blockquote>

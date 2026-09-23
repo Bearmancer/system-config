@@ -75,3 +75,11 @@ A contract test must assert the stamp's row-id capture and
 `publish_teach.py`'s `get_chapter_row_id` produce identical ids for a fixture
 set of filenames (`07-ch13-1996.html` → `ch13`; `01-ch7-…` → `ch7`; a legacy
 `nochapter.html` → `lesson-NN`), so the two sides can never drift.
+
+## Holistic gate modes (`scripts/check_lesson.py` by path)
+
+- `lessons/` → full lesson rules (merged nav, inline verdicts, superscript repeats, no bare tag codes, budgets).
+- Workspace `index.html` → chapter links present, no Status/Spine/Live/Pages/How-works/Mission wording, nav-only footer.
+- `reference/` (cast-map, glossary) → no kicker, short cross-link meta (never a lesson/slice list), no Links section, no how-read box, nav-only footer.
+- `reference/timeline.html` → reference rules plus text-only entries (no kind tags, no legend, standing words alone).
+- Fragments, slices, and stencil copies report SKIP.

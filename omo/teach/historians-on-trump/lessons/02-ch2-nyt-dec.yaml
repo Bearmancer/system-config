@@ -24,13 +24,6 @@ cast:
   - name: "April round (contrast)"
     role: "Thirty-five historians; the earlier round that set the four-way shape"
     ref: 1
-essentials:
-  - "The December round counts thirty-six experts, not the April thirty-five [C4][O2]."
-  - "Second-round answers split the same four ways; no single verdict emerged [C4][O1]."
-  - "The Sinha felon-nominee voice belongs to the December round as attribution, not fact-assertion [O25]."
-skippables:
-  - "Voice-by-voice scorekeeping across the two rounds."
-  - "Snippet-recall versions of the Sinha boats wording."
 narrative: |
   <p>On Dec 22 2025 the report states thirty-six experts were asked about second-round actions, and that count is <strong>confirmed</strong> by the cast table and the observation manifest alike. The April 35 must never be carried into December, a swap <strong>corrected</strong> at the start; the two numerals are double-witnessed apart, 35 with the April pointers and 36 with the December pointers, so each round keeps its own headcount.</p>
   <blockquote>"whether 22 Trump actions had precedent"</blockquote>

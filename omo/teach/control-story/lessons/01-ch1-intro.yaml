@@ -24,13 +24,6 @@ cast:
   - name: "Ahti"
     role: "Janitor who knows too much"
     ref: 12
-essentials:
-  - "Control is Remedy's 2019 action-adventure about the Federal Bureau of Control."
-  - "The video tells the full plot first, then unpacks the lore chapter by chapter."
-  - "The spoiler warning covers both Control and Alan Wake."
-skippables:
-  - "Gameplay praise and engine talk."
-  - "Connected-universe name-drops that later chapters unpack."
 narrative: |
   <p>The video introduces itself as an installment of a series that unpacks stories from games, and names its subject in one breath:</p>
   <blockquote>"a Top Secret Agency dedicated to containing and studying paranatural phenomena"</blockquote>

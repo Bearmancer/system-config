@@ -24,13 +24,6 @@ cast:
   - name: "Emily Pope"
     role: "Later reconstructs the case from files"
     ref: 7
-essentials:
-  - "The dump projector and its slides opened Slidescape-36 over Ordinary."
-  - "The Bureau took Dylan and the projector while Jesse escaped."
-  - "Burned-slide tallies differ between accounts, so both are given unsettled."
-skippables:
-  - "Ordinary citizen names beyond the siblings."
-  - "Dump-site trivia and slide-number lore."
 narrative: |
   <p>Children find a projector in a landfill, slides go in, and an Altered World Event erases the adults. The case name itself is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Ordinary_AWE">the Ordinary AWE page</a>, and the Bureau's arrival, seizing Dylan and the projector while Jesse runs, is <strong>confirmed</strong> in the plot record.</p>
   <p>Jesse's counter-move is the fire:</p>

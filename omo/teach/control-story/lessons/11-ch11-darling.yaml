@@ -23,13 +23,6 @@ cast:
   - name: "Dylan Faden"
     role: "His supervised candidate turned lost cause"
     ref: 10
-essentials:
-  - "Darling's expeditions found Hedron and yielded the HRAs."
-  - "His projector research mapped the Hiss route in."
-  - "His fate after the Hedron chamber stays unrecorded."
-skippables:
-  - "Presentation-by-presentation recap."
-  - "Dynamite jokes without canon weight."
 narrative: |
   <p>Darling never appears alive; he presents. His tapes guide Jesse through Dimensional Research to the chamber, and the find they describe is:</p>
   <blockquote>"A polyhedron-shaped organism he coined the Hedron."</blockquote>

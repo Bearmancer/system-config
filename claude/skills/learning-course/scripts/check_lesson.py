@@ -19,6 +19,9 @@ FOOTER_RE = re.compile(
 SUP_BLOCK = re.compile(r"<sup>.*?</sup>", re.S | re.I)
 SUP_WRAP = re.compile(r"<sup>\s*$")
 CAPS_RUN = re.compile(r"\b(?:[A-Z]{2,}\s+){2,}[A-Z]{2,}\b")
+TAG_CODE = re.compile(r"\[[A-Z]{1,3}\d+[a-z]?\]")
+META_P = re.compile(r'<p[^>]*class="[^"]*meta[^"]*"[^>]*>(.*?)</p>', re.S | re.I)
+KICKER_P = re.compile(r'<p[^>]*class="[^"]*kicker[^"]*"', re.I)
 
 
 def stray_timestamps(html):
@@ -32,11 +35,30 @@ def stray_timestamps(html):
     return sorted(set(stray))
 
 
+def page_type(path):
+    norm = path.replace(os.sep, "/")
+    if "/lessons/" in norm:
+        return "lesson"
+    if (
+        "learning-records/" in norm
+        or "/transcripts/" in norm
+        or norm.endswith("lesson.stencil.html")
+    ):
+        return "skip"
+    base = os.path.basename(norm)
+    if "/reference/" in norm:
+        return "timeline" if base == "timeline.html" else "reference"
+    if base == "index.html":
+        return "index"
+    return "lesson"
+
+
 def check(path):
     issues = []
     with open(path, encoding="utf-8", errors="replace") as fh:
         html = fh.read()
     low = html.lower()
+    ptype = page_type(path)
 
     if QUIZ.search(html):
         issues.append("quiz block present: no quizzes/questionnaires in lessons")
@@ -56,15 +78,16 @@ def check(path):
                 f"boundary narration found: '{phrase}' — lessons never mention boundaries or stop points"
             )
 
-    if not SURTITLE.search(html):
+    if ptype == "lesson" and not SURTITLE.search(html):
         issues.append(
             'missing surtitle: <p class="surtitle">Chapter N of M</p> under the H1'
         )
-    stray = stray_timestamps(html)
-    if stray:
-        issues.append(
-            f"timestamps found (no timestamps anywhere on the page): {stray[:5]}"
-        )
+    if ptype == "lesson":
+        stray = stray_timestamps(html)
+        if stray:
+            issues.append(
+                f"timestamps found (no timestamps anywhere on the page): {stray[:5]}"
+            )
 
     if re.search(r"youtube\.com|youtu\.be", html, re.I):
         issues.append("YouTube URL present: a YouTube video is never a source")
@@ -80,38 +103,39 @@ def check(path):
     if "next on request" in low:
         issues.append("next-steps line: lessons carry no 'next on request'")
 
-    if not re.search(r'href="https?://', html):
+    if ptype == "lesson" and not re.search(r'href="https?://', html):
         issues.append(
             "no hyperlinked sources (each cited source links to its actual page)"
         )
     bare = re.findall(r"https?://\S+", ANCHOR.sub(" ", html))
     if bare:
         issues.append(f"bare URL text (wrap it in a link): {bare[:3]}")
-    tag_hit = re.findall(r"\[[A-Z]{1,3}\d+[a-z]?\]", ANCHOR.sub(" ", html))
+    tag_hit = TAG_CODE.findall(ANCHOR.sub(" ", html))
     if tag_hit:
         issues.append(
             f"bare tag code (points nowhere — use a real hyperlink beside bare numerals): {sorted(set(tag_hit))[:5]}"
         )
 
-    seen_citations = set()
-    for m in ANCHOR.finditer(html):
-        hrefs = HREF.findall(m.group(0))
-        if not hrefs or not hrefs[0].startswith(("http://", "https://")):
-            continue
-        target = hrefs[0].split("#")[0]
-        if target in seen_citations:
-            preceding = html[: m.start()]
-            if not SUP_WRAP.search(preceding):
+    if ptype == "lesson":
+        seen_citations = set()
+        for m in ANCHOR.finditer(html):
+            hrefs = HREF.findall(m.group(0))
+            if not hrefs or not hrefs[0].startswith(("http://", "https://")):
+                continue
+            target = hrefs[0].split("#")[0]
+            if target in seen_citations:
+                preceding = html[: m.start()]
+                if not SUP_WRAP.search(preceding):
+                    issues.append(
+                        f"repeat citation not superscripted: {target} - every mention after the first must be <sup><a href=...>"
+                    )
+            else:
+                seen_citations.add(target)
+        for m in SUP_BLOCK.finditer(html):
+            if not ANCHOR.search(m.group(0)):
                 issues.append(
-                    f"repeat citation not superscripted: {target} - every mention after the first must be <sup><a href=...>"
+                    f"bare superscript marker, no link inside: {m.group(0)[:40]} - superscript IS the citation, never a bare marker"
                 )
-        else:
-            seen_citations.add(target)
-    for m in SUP_BLOCK.finditer(html):
-        if not ANCHOR.search(m.group(0)):
-            issues.append(
-                f"bare superscript marker, no link inside: {m.group(0)[:40]} - superscript IS the citation, never a bare marker"
-            )
 
     if re.search(r"<h2[^>]*>[^<]*(fact-check|what the record shows|record box)", low):
         issues.append(
@@ -130,89 +154,171 @@ def check(path):
     caps_hits = CAPS_RUN.findall(re.sub(r"<[^>]*>", " ", html))
     if caps_hits:
         issues.append(f"all-caps text run (3+ words): {caps_hits[:3]}")
-    verdicts = re.findall(
-        r"\b(confirmed|corrected|partially correct|wrong|unfindable|unverified|allegation)\b",
-        low,
-    )
-    if len(verdicts) < 2:
-        issues.append(
-            "no inline verdicts in narrative (verdict words like confirmed/corrected/unfindable beside the quoted wording)"
+    if ptype == "lesson":
+        verdicts = re.findall(
+            r"\b(confirmed|corrected|partially correct|wrong|unfindable|unverified|allegation)\b",
+            low,
         )
+        if len(verdicts) < 2:
+            issues.append(
+                "no inline verdicts in narrative (verdict words like confirmed/corrected/unfindable beside the quoted wording)"
+            )
 
     if "lesson-footer" not in low:
         issues.append("missing lesson footer")
-    navs = re.findall(
-        r'<nav[^>]*class="[^"]*top-nav[^"]*"[^>]*>(.*?)</nav>', html, re.S | re.I
-    )
-    if len(navs) != 1:
-        issues.append(
-            f"top-nav: expected exactly one merged nav row, found {len(navs)}"
-        )
-    nav = navs[0] if navs else ""
-    for label, pat in (
-        ("Home", r">Home<"),
-        ("Chapter Index", r">Chapter Index<"),
-        ("Glossary", r">Glossary<"),
-        ("Cast Map", r">Cast Map<"),
-    ):
-        if not re.search(pat, nav):
-            issues.append(f"top-nav: missing Title Case cell '{label}' in merged nav")
-    if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
-        issues.append(
-            "meta row present: lessons carry no <p class=meta>; the merged nav holds Home · Chapter Index · Glossary · Cast Map"
-        )
-    if re.search(r"\bspine\b", low):
-        issues.append("spine wording present: use 'course source', never 'spine'")
-    if re.search(r"eight treatises", low):
-        issues.append("eight-treatises wording present: use 'Section treatises'")
-    if re.search(r"\bstatus\b", low) and "status code" not in low:
-        issues.append("status wording present: use 'standing', never 'status'")
-    if not re.search(r'href="[^"]*glossary[^"]*"', low):
-        issues.append(
-            "top-nav: no glossary link (glossary link sits in the merged top nav)"
-        )
-    if 'href="../../index.html"' not in html:
-        issues.append(
-            'top-nav: no home link (needs href="../../index.html" inside <nav class="top-nav">)'
-        )
-    if not re.search(r'href="\.\./index\.html#ch\d+"', html):
-        issues.append(
-            'top-nav: no chapter-index backlink (needs href="../index.html#chN")'
-        )
-    footer_m = FOOTER_RE.search(html)
-    footer_block = footer_m.group(1) if footer_m else ""
-    footer_hrefs = HREF.findall(footer_block)
 
-    headings = {int(n) for n in HEADING.findall(html)}
-    if headings:
-        for match in SECTION_REF.findall(html):
-            for num in (int(t) for t in re.findall(r"\d+", match)):
-                if num not in headings:
-                    issues.append(
-                        f"section reference to {num} but no such heading (headings: {sorted(headings)})"
-                    )
+    if ptype == "lesson":
+        navs = re.findall(
+            r'<nav[^>]*class="[^"]*top-nav[^"]*"[^>]*>(.*?)</nav>', html, re.S | re.I
+        )
+        if len(navs) != 1:
+            issues.append(
+                f"top-nav: expected exactly one merged nav row, found {len(navs)}"
+            )
+        nav = navs[0] if navs else ""
+        for label, pat in (
+            ("Home", r">Home<"),
+            ("Chapter Index", r">Chapter Index<"),
+            ("Glossary", r">Glossary<"),
+            ("Cast Map", r">Cast Map<"),
+        ):
+            if not re.search(pat, nav):
+                issues.append(
+                    f"top-nav: missing Title Case cell '{label}' in merged nav"
+                )
+        if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
+            issues.append(
+                "meta row present: lessons carry no <p class=meta>; the merged nav holds Home · Chapter Index · Glossary · Cast Map"
+            )
+        if not re.search(r'href="[^"]*glossary[^"]*"', low):
+            issues.append(
+                "top-nav: no glossary link (glossary link sits in the merged top nav)"
+            )
+        if 'href="../../index.html"' not in html:
+            issues.append(
+                'top-nav: no home link (needs href="../../index.html" inside <nav class="top-nav">)'
+            )
+        if not re.search(r'href="\.\./index\.html#ch\d+"', html):
+            issues.append(
+                'top-nav: no chapter-index backlink (needs href="../index.html#chN")'
+            )
+
+    if ptype == "index":
+        for phrase, fix in (
+            (
+                "eight treatises",
+                "eight-treatises wording present: use 'Section treatises'",
+            ),
+            (
+                "<td>Live</td>",
+                "Live cell present: drop the Status column, standings live in prose",
+            ),
+            (
+                "<th>Status</th>",
+                "Status column present: drop it, standings live in prose",
+            ),
+            (
+                "The pages</h2>",
+                "links section present: companion listing lives in the generated home, not here",
+            ),
+            (
+                "How this course works</h2>",
+                "how-works section present: method lives in lessons, not here",
+            ),
+            ("Workspace:", "workspace footer line present: footers carry nav only"),
+        ):
+            if phrase.lower() in low or phrase in html:
+                issues.append(f"index: {fix}")
+        if re.search(r"\bspine\b", low):
+            issues.append("spine wording present: use 'course source', never 'spine'")
+        if re.search(r"\bstatus\b", low) and "status code" not in low:
+            issues.append("status wording present: use 'standing', never 'status'")
+        if re.search(r"\bmission\b", low) and "permission" not in low:
+            issues.append(
+                "mission wording present: no MISSION file, slug names the source"
+            )
+        if "provisional" in low:
+            issues.append("provisional wording present: no draft-status labels")
+        if not re.search(r'href="lessons/', html):
+            issues.append("index: no chapter links (index lists its lessons)")
+
+    if ptype in ("reference", "timeline"):
+        if KICKER_P.search(html):
+            issues.append(
+                "kicker present: reference pages carry no kicker, H1 opens the page"
+            )
+        meta_m = META_P.search(html)
+        if meta_m and (
+            "lessons/" in meta_m.group(1) or "transcripts/" in meta_m.group(1)
+        ):
+            issues.append(
+                "header meta lists lessons/slices: keep the short cross-link line (cast roster · glossary · chapter index)"
+            )
+        if re.search(r"<h2[^>]*>\s*Links\s*</h2>", html):
+            issues.append(
+                "links section present: companion listing lives in the generated home, not here"
+            )
+        if "How to read this page" in html:
+            issues.append("how-read box present: pages open cold, no reading guide")
+        if "Workspace:" in html:
+            issues.append("workspace footer line present: footers carry nav only")
+        footer_m = FOOTER_RE.search(html)
+        if footer_m and "<p" in footer_m.group(1):
+            issues.append("footer paragraph present: reference footers carry nav only")
+
+    if ptype == "timeline":
+        if re.search(r'class="tag', html):
+            issues.append(
+                "kind tag present: timeline entries carry standing words, no colour tags"
+            )
+        if re.search(r"<h2[^>]*>[^<]*[Ll]egend", html):
+            issues.append("legend present: no kind legend on text-only timelines")
+        if "seven kinds" in low:
+            issues.append(
+                "kinds wording present: no kind taxonomy on text-only timelines"
+            )
+
+    if ptype == "lesson":
+        footer_m = FOOTER_RE.search(html)
+        footer_block = footer_m.group(1) if footer_m else ""
+        footer_hrefs = HREF.findall(footer_block)
+
+        headings = {int(n) for n in HEADING.findall(html)}
+        if headings:
+            for match in SECTION_REF.findall(html):
+                for num in (int(t) for t in re.findall(r"\d+", match)):
+                    if num not in headings:
+                        issues.append(
+                            f"section reference to {num} but no such heading (headings: {sorted(headings)})"
+                        )
 
     base = os.path.dirname(os.path.abspath(path))
 
+    allow = ["../../index.html", "../index.html"]
+    if ptype in ("index", "reference", "timeline"):
+        allow.append("../index.html")
+    if ptype == "index":
+        allow.append("index.html")
+
     home_hrefs = [h for h in HREF.findall(html) if h == "../../index.html"]
-    if len(home_hrefs) > 1:
+    if ptype == "lesson" and len(home_hrefs) > 1:
         issues.append(
             f"home link repeated {len(home_hrefs)}x (budget: ../../index.html at most once)"
         )
     backlink_hrefs = [
         h for h in HREF.findall(html) if h.split("#")[0] == "../index.html"
     ]
-    if len(backlink_hrefs) > 1:
+    if ptype == "lesson" and len(backlink_hrefs) > 1:
         issues.append(
             f"chapter-index link repeated {len(backlink_hrefs)}x (budget: ../index.html* at most once)"
         )
     gloss_hrefs = [h for h in HREF.findall(html) if "glossary" in h.lower()]
-    if len(gloss_hrefs) > 1:
+    if ptype == "lesson" and len(gloss_hrefs) > 1:
         issues.append(
             f"glossary link repeated {len(gloss_hrefs)}x (budget: glossary at most once, merged nav only)"
         )
     castmap_hrefs = [h for h in HREF.findall(html) if "cast-map" in h.lower()]
-    if len(castmap_hrefs) > 1:
+    if ptype == "lesson" and len(castmap_hrefs) > 1:
         issues.append(
             f"cast-map link repeated {len(castmap_hrefs)}x (budget: cast-map at most once, merged nav only)"
         )
@@ -220,7 +326,7 @@ def check(path):
     for href in HREF.findall(html):
         if href.startswith(("http://", "https://", "#", "mailto:", "data:")):
             continue
-        if href == "../../index.html" or href.split("#")[0] == "../index.html":
+        if href in allow or href.split("#")[0] in allow:
             continue
         target = href.split("#")[0]
         if not target:
@@ -238,13 +344,16 @@ def check(path):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Check a chapter lesson against the workspace rules (no quizzes, surtitle-only timestamps, inline verdicts + inline-only citations with superscript repeats, no Sources/References block anywhere, no fact-check boxes or Open Threads, no all-caps text runs, hyperlinked sources, links/assets)."
+        description="Check any course page against the workspace rules by path: lessons/ gets full lesson rules (merged nav, inline verdicts + inline-only citations with superscript repeats, no bare tag codes, no Sources/References block, no fact-check boxes or Open Threads, no all-caps runs, hyperlinked sources, links/assets); workspace index gets index rules (chapter links, no Status/Spine/Live/Pages/How-works/Mission wording, nav-only footer); reference/ gets header/footer rules (no kicker, short cross-link meta, no Links section, no how-read box, nav-only footer); timeline adds text-only rules (no kind tags, no legend). Fragments, slices, and stencil copies report SKIP."
     )
-    ap.add_argument("files", nargs="+", help="lesson HTML file(s)")
+    ap.add_argument("files", nargs="+", help="course HTML file(s)")
     args = ap.parse_args()
 
     failed = 0
     for path in args.files:
+        if page_type(path) == "skip":
+            print("SKIP (not a gated page type) " + path)
+            continue
         issues = check(path)
         print(("OK " if not issues else "PROBLEMS ") + path)
         for issue in issues:

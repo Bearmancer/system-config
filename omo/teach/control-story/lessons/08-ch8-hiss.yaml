@@ -26,13 +26,6 @@ cast:
   - name: "The Board"
     role: "Nearly lost its Plane to Dylan's Hiss bid"
     ref: 5
-essentials:
-  - "The Hiss entered through Trench's burned slide during the expeditions."
-  - "It spreads as corrupting resonance that HRAs block."
-  - "Hedron's death nearly takes Jesse until Polaris resurfaces inside her."
-skippables:
-  - "Hiss enemy-type roster."
-  - "Chant compilations beyond the one line that matters."
 narrative: |
   <p>The invasion looks external until the tapes play. The first impression of an outside attack is <strong>corrected</strong> by <a href="https://control.fandom.com/wiki/Hiss_invasion">the invasion record</a>: Trench, already under influence, worked the projector himself, so the door opened from inside.</p>
   <p>What came through announces itself endlessly:</p>
