@@ -164,7 +164,7 @@ def check(path):
                 "no inline verdicts in narrative (verdict words like confirmed/corrected/unfindable beside the quoted wording)"
             )
 
-    if "lesson-footer" not in low:
+    if ptype in ("lesson", "reference", "timeline") and "lesson-footer" not in low:
         issues.append("missing lesson footer")
 
     if ptype == "lesson":
@@ -239,8 +239,13 @@ def check(path):
             )
         if "provisional" in low:
             issues.append("provisional wording present: no draft-status labels")
-        if not re.search(r'href="lessons/', html):
-            issues.append("index: no chapter links (index lists its lessons)")
+        if (
+            not re.search(r'href="lessons/', html)
+            and len([h for h in HREF.findall(html) if h.endswith("/index.html")]) < 2
+        ):
+            issues.append(
+                "index: no chapter links (index lists its lessons or workspace homes)"
+            )
 
     if ptype in ("reference", "timeline"):
         if KICKER_P.search(html):
