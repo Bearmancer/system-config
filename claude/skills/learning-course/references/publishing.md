@@ -22,20 +22,19 @@ The script ships no `--dry-run` / `-WhatIf` flag: one run mirrors, commits, and 
 
 ## Verify
 
-Two steps. Status codes first, then the bytes themselves:
+One command. Never gate a bare download — a lone file false-fails the
+dangling-link checks, so live verification mirrors the tree:
 
 ```powershell
-Start-Sleep -Seconds 10   # Pages rebuild takes a moment
-curl.exe -s -o NUL -w "%{http_code}" https://bearmancer.github.io/<workspace>/lessons/<file>.html
+python <skill>/scripts/verify_live.py <workspace-dir> https://bearmancer.github.io/<workspace>
 ```
 
-Expect `200` for every newly published URL (lesson + each new reference page). The script probes the root index itself (retries 8 x 15 s, warns on lag); per-page probes stay manual. Then download what you published and run the gates against it, confirming the mirror stayed faithful:
-
-```powershell
-curl.exe -s -o "$env:TEMP\live\reference\cast-map.html" https://bearmancer.github.io/<workspace>/reference/cast-map.html
-python <skill>/scripts/check_map_geometry.py --strict-labels "$env:TEMP\live\reference\cast-map.html"
-python <skill>/scripts/check_lesson.py "$env:TEMP\live\lessons\<file>.html"
-```
+It downloads lessons plus their link targets (assets, reference, index) into a
+temp tree, gates every live lesson, asserts no `.md` hrefs survived (the
+publisher flattens them), and byte-compares each asset. Exit 0 only when all
+of that holds. The publish script already probes the root index (retries
+8 x 15 s, warns on lag); per-page 200s are inside the verifier's download
+step — any non-200 fails the run.
 
 Gates apply by artifact: any SVG visual that changed (the cast map) also gets the geometry checker on its live copy; the timeline is HTML-flow, so the screenshot pass covers it when it changed. Per-chapter Sources blocks ride inside the lesson HTML, so they publish with the lesson; RESOURCES stays local (split-source retained until migration) and never publishes.
 
