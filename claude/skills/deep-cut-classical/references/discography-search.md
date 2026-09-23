@@ -10,7 +10,7 @@ Cite MusicBrainz, Discogs, Presto Classical, label websites, and print/label lin
 
 ## Method: entry point → trace → verify
 
-Every source below is a place to find *candidates*; each candidate gets traced before it counts.
+Every source below is a place to find _candidates_; each candidate gets traced before it counts.
 
 ### 1. Entry points — cast the net
 

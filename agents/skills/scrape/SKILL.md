@@ -23,15 +23,15 @@ If either check fails, halt and route the user to `skills/bright-data-best-pract
 
 ## Pick your path
 
-| Situation | Action |
-|---|---|
-| Single URL | `bdata scrape <url> -f markdown` |
-| Small list (≤ ~20 URLs) | shell loop, 1 at a time (see `references/patterns.md`) |
-| Larger list (dozens+) | `xargs -P 4` with parallelism cap (see `references/patterns.md`) |
-| Paginated listing | scrape page 1 → extract next-page URL → append → repeat (see `references/examples.md`) |
-| JS-heavy / login-gated / interaction-required | escalate to `bdata browser` (see `brightdata-cli` skill) |
-| Amazon, LinkedIn, TikTok, Instagram, YouTube, Reddit, … | **stop — hand off to `data-feeds`** |
-| No URL yet, just a topic | **hand off to `search`** |
+| Situation                                               | Action                                                                                 |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Single URL                                              | `bdata scrape <url> -f markdown`                                                       |
+| Small list (≤ ~20 URLs)                                 | shell loop, 1 at a time (see `references/patterns.md`)                                 |
+| Larger list (dozens+)                                   | `xargs -P 4` with parallelism cap (see `references/patterns.md`)                       |
+| Paginated listing                                       | scrape page 1 → extract next-page URL → append → repeat (see `references/examples.md`) |
+| JS-heavy / login-gated / interaction-required           | escalate to `bdata browser` (see `brightdata-cli` skill)                               |
+| Amazon, LinkedIn, TikTok, Instagram, YouTube, Reddit, … | **stop — hand off to `data-feeds`**                                                    |
+| No URL yet, just a topic                                | **hand off to `search`**                                                               |
 
 ## Action
 
@@ -52,7 +52,6 @@ bdata scrape "https://example.com" -f screenshot -o page.png
 
 # Geo-targeted (override the exit country)
 bdata scrape "https://example.com" --country de -f markdown
-
 ```
 
 Full flag reference: [`references/flags.md`](references/flags.md).
@@ -67,8 +66,8 @@ Full flag reference: [`references/flags.md`](references/flags.md).
    - `Checking your browser`
    - `captcha`
    - `cf-browser-verification`
-   - `cloudflare` *(with < 2KB total body)*
-3. **Expected markers present** for the task: e.g., a product page should contain a price pattern (`\$\d`); an article should contain at least one `<h1>` or `# ` heading.
+   - `cloudflare` _(with < 2KB total body)_
+3. **Expected markers present** for the task: e.g., a product page should contain a price pattern (`\$\d`); an article should contain at least one `<h1>` or `#` heading.
 4. **On failure, escalation ladder:**
    - Retry with a different `--country` (e.g., `--country de` if the origin site is US)
    - Escalate to `bdata browser` for full JS rendering (hand off to `brightdata-cli` skill)

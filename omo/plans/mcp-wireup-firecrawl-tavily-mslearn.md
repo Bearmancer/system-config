@@ -6,9 +6,11 @@ status: active
 source_draft: .omo/drafts/mcp-wireup-firecrawl-tavily-mslearn.md
 
 ## Goal
+
 Global opencode config gains three working MCP servers (microsoft-learn remote, firecrawl local stdio, tavily remote) with secrets referenced via `{env:...}` only, plus two thin global skills and one researcher subagent. Done = all three servers listed after restart, JSON valid, existing entries untouched.
 
 ## Key facts (grounded this session)
+
 - Global MCP file: `C:\Users\Lance\.config\opencode\opencode.jsonc` (holds firefox-devtools/codegraph/exa). The legacy `opencode.json` stays untouched.
 - Windows convention in-file: local npx via `["cmd","/c","npx",...]` (matches firefox-devtools entry).
 - Schema (https://opencode.ai/config.json): McpLocalConfig requires type+command; McpRemoteConfig requires type+url; `{env:VAR}` interpolation supported in string values.
@@ -17,12 +19,17 @@ Global opencode config gains three working MCP servers (microsoft-learn remote, 
 
 ## TODOs
 
-- [x] 1. Append microsoft-learn remote entry to opencode.jsonc mcp — expect entry present, existing blocks byte-identical
-- [x] 2. Append firecrawl local entry to opencode.jsonc mcp — expect cmd /c npx argv + environment placeholder, no literal key
-- [x] 3. Append tavily remote entry to opencode.jsonc mcp — expect url + Bearer {env:TAVILY_API_KEY} header
-- [x] 4. Create global skills firecrawl + tavily and agent web-researcher — expect 3 new files, skill frontmatter name matches folder
+-
+  1. [x] Append microsoft-learn remote entry to opencode.jsonc mcp — expect entry present, existing blocks byte-identical
+-
+  2. [x] Append firecrawl local entry to opencode.jsonc mcp — expect cmd /c npx argv + environment placeholder, no literal key
+-
+  3. [x] Append tavily remote entry to opencode.jsonc mcp — expect url + Bearer {env:TAVILY_API_KEY} header
+-
+  4. [x] Create global skills firecrawl + tavily and agent web-researcher — expect 3 new files, skill frontmatter name matches folder
   - Superseded 2026-09-21 by user rule: no manual MCP skills; missing skills omitted entirely. firecrawl/ + tavily/ skill dirs deleted again after recreation; agents/web-researcher.md kept (agent, not a skill).
-- [x] 5. Validate JSON parses and restart opencode, confirm all three MCP servers connect — expect microsoft-learn ok; firecrawl/tavily ok iff env keys present
+-
+  5. [x] Validate JSON parses and restart opencode, confirm all three MCP servers connect — expect microsoft-learn ok; firecrawl/tavily ok iff env keys present
   - Evidence 2026-09-21: opencode.jsonc PARSE_OK, mcp keys include microsoft-learn + firecrawl + tavily; live calls ok for microsoft-learn (docs search returned) + tavily (search returned); FIRECRAWL_API_KEY + TAVILY_API_KEY both set. The 3 item-4 files were absent, recreated verbatim, then the 2 skill files deleted again per user no-manual-MCP-skills rule (only agents/web-researcher.md kept). Remaining user step: restart opencode client, confirm listing.
 
 ## Exact snippets (worker copies verbatim)
@@ -93,6 +100,7 @@ You are a read-only web researcher. Route by source: query-driven search and dee
 ```
 
 ## Must-NOT-have
+
 - No literal API keys in any file (only `{env:...}` references).
 - No edits to `opencode.json`, no project-level configs, no new opencode command (would duplicate `/search`).
 - No product-code changes (config-only task; Pristine var-args stays separate).

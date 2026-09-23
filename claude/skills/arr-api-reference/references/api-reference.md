@@ -4,12 +4,12 @@ All endpoints verified working real instances. Auth key each app own config file
 
 ## Auth key locations
 
-| App      | Config file                                | Key path            |
-| -------- | -------------------------------------------- | -------------------- |
-| Sonarr   | `<AppData>\Sonarr\config.xml`                | `<Config><ApiKey>` |
-| Radarr   | `<AppData>\Radarr\config.xml`                | `<Config><ApiKey>` |
-| Prowlarr | `<AppData>\Prowlarr\config.xml`              | `<Config><ApiKey>` |
-| SABnzbd  | `<UserAppData>\Local\sabnzbd\sabnzbd.ini`    | `[misc] api_key =` |
+| App      | Config file                               | Key path           |
+| -------- | ----------------------------------------- | ------------------ |
+| Sonarr   | `<AppData>\Sonarr\config.xml`             | `<Config><ApiKey>` |
+| Radarr   | `<AppData>\Radarr\config.xml`             | `<Config><ApiKey>` |
+| Prowlarr | `<AppData>\Prowlarr\config.xml`           | `<Config><ApiKey>` |
+| SABnzbd  | `<UserAppData>\Local\sabnzbd\sabnzbd.ini` | `[misc] api_key =` |
 
 Emby: no key on disk. Mint one in Dashboard → Advanced → API Keys, or trade username/password for a session token via `POST /Users/AuthenticateByName`.
 

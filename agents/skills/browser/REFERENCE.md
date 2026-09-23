@@ -421,10 +421,10 @@ browse cdp wss://connect.browserbase.com/debug/...    # remote Browserbase debug
 
 **Options:**
 
-| Flag | Description |
-|------|-------------|
+| Flag                    | Description                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------- |
 | `--domain <domains...>` | CDP domains to enable (repeatable). Default: Network, Console, Runtime, Log, Page |
-| `--pretty` | Human-readable output instead of JSON. Auto-enabled for TTY |
+| `--pretty`              | Human-readable output instead of JSON. Auto-enabled for TTY                       |
 
 **Default domains:** Network, Console, Runtime, Log, Page. To capture only specific domains:
 
@@ -479,11 +479,11 @@ Context flags such as `--context-id` and `--persist` live on `browse cloud sessi
 
 ### Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BROWSE_SESSION` | No | Default session name (alternative to `--session`) |
-| `BROWSERBASE_API_KEY` | For remote mode | API key from https://browserbase.com/settings; makes Browserbase the default desired mode when no override is set |
-| `BROWSERBASE_PROJECT_ID` | No | Passed through to Browserbase when set |
+| Variable                 | Required        | Description                                                                                                       |
+| ------------------------ | --------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `BROWSE_SESSION`         | No              | Default session name (alternative to `--session`)                                                                 |
+| `BROWSERBASE_API_KEY`    | For remote mode | API key from https://browserbase.com/settings; makes Browserbase the default desired mode when no override is set |
+| `BROWSERBASE_PROJECT_ID` | No              | Passed through to Browserbase when set                                                                            |
 
 Without an override, setting `BROWSERBASE_API_KEY` makes Browserbase the default desired mode. Otherwise the default desired mode is local. Use `--local`, `--remote`, `--auto-connect`, or `--cdp <port|url>` on `browse open` when you need an explicit target.
 
@@ -500,21 +500,26 @@ Get these values from https://browserbase.com/settings.
 ## Error Messages
 
 **"No active page"**
+
 - The daemon is running but has no page open.
 - Fix: Run `browse open <url>`. If the issue persists, run `browse stop` and retry. For zombie daemons: `pkill -f "browse.*daemon"`.
 
 **"Chrome not found"** / **"Could not find local Chrome installation"**
+
 - Chrome/Chromium is not installed or not in a standard location.
 - Fix: Install Chrome, use `browse open <url> --auto-connect` if you already have a debuggable Chrome running, or switch to remote with `browse open <url> --remote` (no local browser needed).
 
 **"Daemon not running"**
+
 - No daemon process is active. Most commands auto-start the daemon, but `snapshot`, `click`, etc. require an active session.
 - Fix: Run `browse open <url>` to start a session.
 
 **Element ref not found (e.g., "@0-5")**
+
 - The ref from a previous snapshot is no longer valid (page changed).
 - Fix: Run `browse snapshot` again to get fresh refs.
 
 **Timeout errors**
+
 - The page took too long to load or an element didn't appear.
 - Fix: Try `browse wait load` before interacting, or increase wait time.

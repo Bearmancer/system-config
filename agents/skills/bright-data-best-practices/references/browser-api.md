@@ -27,15 +27,15 @@ Bright Data Browser API (also called Scraping Browser) is a managed cloud browse
 
 **When to use Browser API vs other APIs:**
 
-| Need | Use |
-|------|-----|
-| Simple HTTP scraping, no interaction | Web Unlocker |
-| Google/Bing search results | SERP API |
-| Structured data from known platforms | Web Scraper API |
-| Click, scroll, fill forms, run JS | **Browser API** |
-| Intercept XHR/fetch calls from a page | **Browser API** |
+| Need                                          | Use             |
+| --------------------------------------------- | --------------- |
+| Simple HTTP scraping, no interaction          | Web Unlocker    |
+| Google/Bing search results                    | SERP API        |
+| Structured data from known platforms          | Web Scraper API |
+| Click, scroll, fill forms, run JS             | **Browser API** |
+| Intercept XHR/fetch calls from a page         | **Browser API** |
 | Handle complex anti-bot that requires browser | **Browser API** |
-| Puppeteer/Playwright/Selenium automation | **Browser API** |
+| Puppeteer/Playwright/Selenium automation      | **Browser API** |
 
 ---
 
@@ -54,11 +54,11 @@ export BROWSER_AUTH="brd-customer-CUSTOMER_ID-zone-ZONE_NAME:PASSWORD"
 
 ## Connection Strings
 
-| Framework | Connection Type | Endpoint |
-|-----------|----------------|----------|
-| Playwright | WebSocket | `wss://${AUTH}@brd.superproxy.io:9222` |
-| Puppeteer | WebSocket | `wss://${AUTH}@brd.superproxy.io:9222` |
-| Selenium | HTTPS | `https://${AUTH}@brd.superproxy.io:9515` |
+| Framework  | Connection Type | Endpoint                                 |
+| ---------- | --------------- | ---------------------------------------- |
+| Playwright | WebSocket       | `wss://${AUTH}@brd.superproxy.io:9222`   |
+| Puppeteer  | WebSocket       | `wss://${AUTH}@brd.superproxy.io:9222`   |
+| Selenium   | HTTPS           | `https://${AUTH}@brd.superproxy.io:9515` |
 
 Replace `${AUTH}` with `username:password`.
 
@@ -91,23 +91,25 @@ Replace `${AUTH}` with `username:password`.
 ```javascript
 const { chromium } = require("playwright-core");
 
-const AUTH = process.env.BROWSER_AUTH || "brd-customer-CUSTOMER_ID-zone-ZONE_NAME:PASSWORD";
+const AUTH =
+	process.env.BROWSER_AUTH ||
+	"brd-customer-CUSTOMER_ID-zone-ZONE_NAME:PASSWORD";
 const TARGET_URL = "https://example.com";
 
 (async () => {
-  const browser = await chromium.connectOverCDP(
-    `wss://${AUTH}@brd.superproxy.io:9222`
-  );
-  const page = await browser.newPage();
+	const browser = await chromium.connectOverCDP(
+		`wss://${AUTH}@brd.superproxy.io:9222`,
+	);
+	const page = await browser.newPage();
 
-  // Set navigation timeout to 2 minutes (recommended for complex unlocking)
-  page.setDefaultNavigationTimeout(120000);
+	// Set navigation timeout to 2 minutes (recommended for complex unlocking)
+	page.setDefaultNavigationTimeout(120000);
 
-  await page.goto(TARGET_URL, { waitUntil: "domcontentloaded" });
-  const html = await page.content();
-  console.log(html);
+	await page.goto(TARGET_URL, { waitUntil: "domcontentloaded" });
+	const html = await page.content();
+	console.log(html);
 
-  await browser.close();
+	await browser.close();
 })();
 ```
 
@@ -142,20 +144,22 @@ asyncio.run(main())
 ```javascript
 const puppeteer = require("puppeteer-core");
 
-const AUTH = process.env.BROWSER_AUTH || "brd-customer-CUSTOMER_ID-zone-ZONE_NAME:PASSWORD";
+const AUTH =
+	process.env.BROWSER_AUTH ||
+	"brd-customer-CUSTOMER_ID-zone-ZONE_NAME:PASSWORD";
 
 (async () => {
-  const browser = await puppeteer.connect({
-    browserWSEndpoint: `wss://${AUTH}@brd.superproxy.io:9222`
-  });
-  const page = await browser.newPage();
-  page.setDefaultNavigationTimeout(120000);
+	const browser = await puppeteer.connect({
+		browserWSEndpoint: `wss://${AUTH}@brd.superproxy.io:9222`,
+	});
+	const page = await browser.newPage();
+	page.setDefaultNavigationTimeout(120000);
 
-  await page.goto("https://example.com", { waitUntil: "domcontentloaded" });
-  const html = await page.content();
-  console.log(html);
+	await page.goto("https://example.com", { waitUntil: "domcontentloaded" });
+	const html = await page.content();
+	console.log(html);
 
-  await browser.close();
+	await browser.close();
 })();
 ```
 
@@ -188,6 +192,7 @@ Bright Data extends standard CDP with specialized commands. Use `page.evaluate` 
 ### CAPTCHA Handling
 
 #### `Captcha.setAutoSolve`
+
 Control automatic CAPTCHA solving.
 
 ```javascript
@@ -197,6 +202,7 @@ await client.send("Captcha.setAutoSolve", { autoSolve: false });
 ```
 
 #### `Captcha.solve`
+
 Manually trigger CAPTCHA solving and wait for completion.
 
 ```javascript
@@ -215,15 +221,16 @@ print(result["status"])
 ### Geolocation
 
 #### `Proxy.setLocation`
+
 Set precise proxy location by coordinates. **Must be called before navigating to the site.**
 
 ```javascript
 const client = await page.target().createCDPSession();
 await client.send("Proxy.setLocation", {
-  latitude: 37.7749,
-  longitude: -122.4194,
-  distance: 10,   // Search radius in km
-  strict: true    // true = only peers within distance; false = expand if none found
+	latitude: 37.7749,
+	longitude: -122.4194,
+	distance: 10, // Search radius in km
+	strict: true, // true = only peers within distance; false = expand if none found
 });
 await page.goto("https://example.com");
 ```
@@ -242,6 +249,7 @@ await page.goto("https://example.com")
 ### Session Management
 
 #### `Proxy.useSession`
+
 Maintain consistent proxy peer across multiple browsing sessions (same IP continuity).
 
 ```javascript
@@ -252,6 +260,7 @@ await client.send("Proxy.useSession", { sessionId: "my-session-123" });
 ### Device Emulation
 
 #### `Emulation.getSupportedDevices`
+
 Get list of available device profiles.
 
 ```javascript
@@ -261,22 +270,24 @@ console.log(devices); // ["iPhone 14", "Samsung Galaxy S21", ...]
 ```
 
 #### `Emulation.setDevice`
+
 Apply a specific device profile (user agent, screen size, touch).
 
 ```javascript
 await client.send("Emulation.setDevice", {
-  deviceName: "iPhone 14"
+	deviceName: "iPhone 14",
 });
 // Optional: landscape orientation
 await client.send("Emulation.setDevice", {
-  deviceName: "iPhone 14",
-  landscape: true
+	deviceName: "iPhone 14",
+	landscape: true,
 });
 ```
 
 ### Ad Blocking
 
 #### `Unblocker.enableAdBlock` / `Unblocker.disableAdBlock`
+
 Block/unblock ads to reduce bandwidth on content-heavy sites.
 
 ```javascript
@@ -289,49 +300,53 @@ await client.send("Unblocker.disableAdBlock"); // if needed later
 ### Input Acceleration
 
 #### `Input.type`
+
 Faster text input than standard keyboard simulation. Useful for bulk form-filling.
 
 ```javascript
 const client = await page.target().createCDPSession();
 await client.send("Input.type", {
-  text: "search query here",
-  selector: "#search-input"
+	text: "search query here",
+	selector: "#search-input",
 });
 ```
 
 ### File Downloads
 
 #### `Download.*`
+
 Control file downloads with content-type filtering.
 
 ```javascript
 const client = await page.target().createCDPSession();
 await client.send("Download.setDownloadBehavior", {
-  behavior: "allow",
-  downloadPath: "/tmp/downloads"
+	behavior: "allow",
+	downloadPath: "/tmp/downloads",
 });
 // Retrieve file as base64
 const { data } = await client.send("Download.getDownloadedFile", {
-  guid: "download-guid-here"
+	guid: "download-guid-here",
 });
 ```
 
 ### Security / Client Certificates
 
 #### `Browser.addCertificate`
+
 Install a client SSL/TLS certificate for authenticated domain access. Certificate is automatically removed when the session ends.
 
 ```javascript
 await client.send("Browser.addCertificate", {
-  host: "example.com",
-  certificate: "base64-encoded-cert",
-  privateKey: "base64-encoded-key"
+	host: "example.com",
+	certificate: "base64-encoded-cert",
+	privateKey: "base64-encoded-key",
 });
 ```
 
 ### Debugging
 
 #### `Page.inspect`
+
 Get a Chrome DevTools debugger URL to connect and inspect the live session.
 
 ```javascript
@@ -345,28 +360,33 @@ console.log(`DevTools: ${url}`);
 ## Geolocation Targeting
 
 ### Country-Level (via credentials)
+
 Append `-country-XX` to your username (2-letter ISO code):
 
 ```javascript
 const AUTH = "brd-customer-ID-zone-NAME-country-us:PASSWORD";
-const browser = await chromium.connectOverCDP(`wss://${AUTH}@brd.superproxy.io:9222`);
+const browser = await chromium.connectOverCDP(
+	`wss://${AUTH}@brd.superproxy.io:9222`,
+);
 ```
 
 **EU targeting** — automatically routes through 29+ European countries:
+
 ```javascript
 const AUTH = "brd-customer-ID-zone-NAME-country-eu:PASSWORD";
 ```
 
 ### Precise Location (via CDP)
+
 Use `Proxy.setLocation` for city/neighborhood-level targeting. **Call before `page.goto()`**:
 
 ```javascript
 const client = await page.target().createCDPSession();
 await client.send("Proxy.setLocation", {
-  latitude: 51.5074,   // London
-  longitude: -0.1278,
-  distance: 5,          // 5km radius
-  strict: false         // expand search if no peers found nearby
+	latitude: 51.5074, // London
+	longitude: -0.1278,
+	distance: 5, // 5km radius
+	strict: false, // expand search if no peers found nearby
 });
 await page.goto("https://example.com");
 ```
@@ -383,12 +403,12 @@ Browser sessions are billed by traffic. These techniques reduce costs:
 // Puppeteer
 await page.setRequestInterception(true);
 page.on("request", (req) => {
-  const blocked = ["image", "stylesheet", "font", "media"];
-  if (blocked.includes(req.resourceType())) {
-    req.abort();
-  } else {
-    req.continue();
-  }
+	const blocked = ["image", "stylesheet", "font", "media"];
+	if (blocked.includes(req.resourceType())) {
+		req.abort();
+	} else {
+		req.continue();
+	}
 });
 ```
 
@@ -409,11 +429,7 @@ await page.route("**/*", block_resources)
 ```javascript
 const client = await page.target().createCDPSession();
 await client.send("Network.setBlockedURLs", {
-  urls: [
-    "*google-analytics*",
-    "*facebook.com/tr*",
-    "*.doubleclick.net*"
-  ]
+	urls: ["*google-analytics*", "*facebook.com/tr*", "*.doubleclick.net*"],
 });
 ```
 
@@ -424,6 +440,7 @@ await client.send("Unblocker.enableAdBlock");
 ```
 
 ### Browser Caching
+
 Browser API automatically caches resources across multiple navigations to the same domain within a session. No extra configuration needed.
 
 ---
@@ -431,6 +448,7 @@ Browser API automatically caches resources across multiple navigations to the sa
 ## CAPTCHA Handling
 
 ### Automatic (Default)
+
 CAPTCHA solving is enabled by default. No code needed — the browser solves CAPTCHAs transparently.
 
 ### Detect and Wait for CAPTCHA
@@ -443,7 +461,7 @@ await page.goto("https://example.com");
 // If CAPTCHA appears, explicitly wait for it
 const captchaResult = await client.send("Captcha.solve", { timeout: 60000 });
 if (captchaResult.status === "solved") {
-  console.log("CAPTCHA solved");
+	console.log("CAPTCHA solved");
 }
 ```
 
@@ -460,6 +478,7 @@ await client.send("Captcha.setAutoSolve", { autoSolve: false });
 ## Debugging
 
 ### Via Control Panel
+
 Navigate to your Browser API zone → Overview tab → Click "Chrome Dev Tools Debugger".
 
 ### Via CDP Command
@@ -470,6 +489,7 @@ const { url } = await client.send("Page.inspect");
 ```
 
 ### Programmatic Inspection (Playwright)
+
 Playwright provides a `slowMo` and debug URL option. Use `Page.inspect` to get the debug URL and connect with Chrome.
 
 ---
@@ -487,29 +507,30 @@ Certain websites classified as "premium" require more Browser API resources:
 
 ## Error Codes
 
-| Code | Issue | Solution |
-|------|-------|----------|
-| `407` | Wrong port | Playwright/Puppeteer = port `9222`, Selenium = port `9515` |
-| `403` | Authentication failure | Verify username format and password; confirm you're using a Browser API zone (not proxy zone) |
-| `503` | Service unavailable (scaling) | Reconnect after 1 minute |
+| Code  | Issue                         | Solution                                                                                      |
+| ----- | ----------------------------- | --------------------------------------------------------------------------------------------- |
+| `407` | Wrong port                    | Playwright/Puppeteer = port `9222`, Selenium = port `9515`                                    |
+| `403` | Authentication failure        | Verify username format and password; confirm you're using a Browser API zone (not proxy zone) |
+| `503` | Service unavailable (scaling) | Reconnect after 1 minute                                                                      |
 
 ---
 
 ## Billing Model
 
-| Factor | Detail |
-|--------|--------|
-| Pricing unit | Traffic-based only (bandwidth consumed) |
-| Time/instance fees | None |
+| Factor               | Detail                                   |
+| -------------------- | ---------------------------------------- |
+| Pricing unit         | Traffic-based only (bandwidth consumed)  |
+| Time/instance fees   | None                                     |
 | Session idle timeout | 5 minutes — sessions close automatically |
-| Session max duration | 30 minutes |
-| Resource blocking | Reduces bandwidth = reduces cost |
+| Session max duration | 30 minutes                               |
+| Resource blocking    | Reduces bandwidth = reduces cost         |
 
 ---
 
 ## Best Practices
 
 ### 1. Always set navigation timeout to 2 minutes
+
 Complex anti-bot procedures take time. Default timeouts (30s) are too short.
 
 ```javascript
@@ -517,6 +538,7 @@ page.setDefaultNavigationTimeout(120000); // 2 minutes
 ```
 
 ### 2. Call `Proxy.setLocation` before navigation
+
 Location selection must happen before `page.goto()` to ensure the correct proxy is selected.
 
 ```javascript
@@ -530,13 +552,17 @@ await client.send("Proxy.setLocation", { ... }); // too late
 ```
 
 ### 3. Block unnecessary resources to cut bandwidth costs
+
 Images, stylesheets, and fonts are often not needed for data extraction. Block them.
 
 ```javascript
-await page.route("**/*.{png,jpg,jpeg,gif,svg,css,woff,woff2}", route => route.abort());
+await page.route("**/*.{png,jpg,jpeg,gif,svg,css,woff,woff2}", (route) =>
+	route.abort(),
+);
 ```
 
 ### 4. Use `waitUntil: "domcontentloaded"` over `networkidle`
+
 `networkidle` waits for all network activity to stop, which is slow and often unnecessary. `domcontentloaded` is faster and sufficient for most pages.
 
 ```javascript
@@ -544,23 +570,27 @@ await page.goto(url, { waitUntil: "domcontentloaded" });
 ```
 
 ### 5. Start a fresh session for each new target URL
+
 Since only one initial navigation per session is allowed, create a new browser connection for each independent scraping task.
 
 ```javascript
 async function scrapeUrl(url) {
-  const browser = await chromium.connectOverCDP(`wss://${AUTH}@brd.superproxy.io:9222`);
-  try {
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(120000);
-    await page.goto(url, { waitUntil: "domcontentloaded" });
-    return await page.content();
-  } finally {
-    await browser.close();
-  }
+	const browser = await chromium.connectOverCDP(
+		`wss://${AUTH}@brd.superproxy.io:9222`,
+	);
+	try {
+		const page = await browser.newPage();
+		page.setDefaultNavigationTimeout(120000);
+		await page.goto(url, { waitUntil: "domcontentloaded" });
+		return await page.content();
+	} finally {
+		await browser.close();
+	}
 }
 ```
 
 ### 6. Use `Proxy.useSession` for IP continuity across sessions
+
 When you need the same IP for multiple requests (e.g., login → scrape → logout flow across sessions):
 
 ```javascript
@@ -568,9 +598,11 @@ await client.send("Proxy.useSession", { sessionId: "user-session-abc123" });
 ```
 
 ### 7. Use `Unblocker.enableAdBlock` for content-heavy sites
+
 Ad networks add significant bandwidth. Blocking ads reduces costs on news sites, blogs, and similar pages.
 
 ### 8. Use `Emulation.setDevice` for mobile-specific pages
+
 Some sites serve different content to mobile users. Set the device profile instead of manually setting user agent.
 
 ```javascript
@@ -579,9 +611,11 @@ await page.goto("https://example.com/mobile");
 ```
 
 ### 9. Monitor sessions via `Page.inspect` during development
+
 During development, use `Page.inspect` to get a live DevTools URL to debug what the browser actually sees.
 
 ### 10. Use `Input.type` for bulk form filling
+
 `Input.type` is faster than simulating individual keystrokes — important when filling many fields at scale.
 
 ---
@@ -602,6 +636,7 @@ Custom headers/cookies shift billing from success-only to 100% of all requests.
 
 **DO NOT rely on `networkidle` for SPA pages.**
 Single-page applications may never reach true `networkidle` state. Use specific element waiters instead:
+
 ```javascript
 await page.waitForSelector(".product-data", { timeout: 30000 });
 ```

@@ -5,14 +5,14 @@ Technical reference for the capture pipeline, the bisect mapping, and the jq rec
 ## Architecture
 
 ```
-                       ┌──────────────────────────────────────┐
-   main automation ──▶ │  Chrome / Browserbase CDP target     │ ◀── tracer (this skill)
-   (any framework)     └──────────────────────────────────────┘
-        │                                    │
-        ▼                                    ▼
-    drives page                browse cdp <target>     (firehose → raw.ndjson)
-                               browse screenshot --cdp <target> --path <file>  (sampler → screenshots/)
-                               browse get html body --cdp <target>             (sampler → dom/)
+                    ┌──────────────────────────────────────┐
+main automation ──▶ │  Chrome / Browserbase CDP target     │ ◀── tracer (this skill)
+(any framework)     └──────────────────────────────────────┘
+     │                                    │
+     ▼                                    ▼
+ drives page                browse cdp <target>     (firehose → raw.ndjson)
+                            browse screenshot --cdp <target> --path <file>  (sampler → screenshots/)
+                            browse get html body --cdp <target>             (sampler → dom/)
 ```
 
 CDP allows multiple concurrent clients on the same target. The tracer enables only read-only domains and never sends action commands like `Input.dispatch*` or `Runtime.evaluate`, so it cannot perturb the run.
@@ -54,20 +54,20 @@ Idempotent: rerun safely. The `cdp/pages/` tree is wiped and rebuilt each call.
 
 Reads the bisected output and prints either tabular text or NDJSON. Subcommands:
 
-| Subcommand                                | Output                                                         |
-| ----------------------------------------- | -------------------------------------------------------------- |
-| `list`                                    | one-line page table (`pid`, `events`, `duration`, `url`)       |
-| `summary`                                 | full `cdp/summary.json`                                        |
-| `page <pid>`                              | per-page `summary.json`                                        |
-| `page <pid> <bucket>`                     | cat `pages/<pid>/<bucket>.jsonl` (e.g. `network/failed`, `console/logs`, `raw`) |
-| `errors [pid\|all]`                       | unified error stream across pages: network failed, runtime exceptions, console errors, log-level errors. Each line tagged with `pid` and `kind` |
-| `hosts [pid\|all]`                        | top hosts by request count                                     |
-| `host <hostname> [pid\|all]`              | every request/response for that hostname, prefixed with `[pid]` |
-| `timeline`                                | ordered nav + lifecycle markers                                |
+| Subcommand                   | Output                                                                                                                                          |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `list`                       | one-line page table (`pid`, `events`, `duration`, `url`)                                                                                        |
+| `summary`                    | full `cdp/summary.json`                                                                                                                         |
+| `page <pid>`                 | per-page `summary.json`                                                                                                                         |
+| `page <pid> <bucket>`        | cat `pages/<pid>/<bucket>.jsonl` (e.g. `network/failed`, `console/logs`, `raw`)                                                                 |
+| `errors [pid\|all]`          | unified error stream across pages: network failed, runtime exceptions, console errors, log-level errors. Each line tagged with `pid` and `kind` |
+| `hosts [pid\|all]`           | top hosts by request count                                                                                                                      |
+| `host <hostname> [pid\|all]` | every request/response for that hostname, prefixed with `[pid]`                                                                                 |
+| `timeline`                   | ordered nav + lifecycle markers                                                                                                                 |
 
 Bypassable with raw `jq`/`rg` against `cdp/summary.json` and `cdp/pages/<pid>/` once you know the layout.
 
-### `snapshot-loop.mjs` *(internal)*
+### `snapshot-loop.mjs` _(internal)_
 
 Invoked by `start-capture.mjs`; not meant to be called directly. Loops at the configured interval, writing PNG + HTML + an entry to `index.jsonl` per tick. DOM dumps go through a `.partial` temp file so a SIGTERM mid-write never leaves a 0-byte HTML behind; `stop-capture.mjs` sweeps any survivors.
 
@@ -91,25 +91,25 @@ Pulls platform-side artifacts after the tracer has stopped:
 
 ## Bisect map
 
-| File                                    | CDP method                       | What's in it                                                 |
-| --------------------------------------- | -------------------------------- | ------------------------------------------------------------ |
-| `cdp/network/requests.jsonl`            | `Network.requestWillBeSent`      | every outgoing request: url, method, headers, postData, requestId |
-| `cdp/network/responses.jsonl`           | `Network.responseReceived`       | response status, headers, mimeType, remoteIPAddress, fromDiskCache |
-| `cdp/network/finished.jsonl`            | `Network.loadingFinished`        | byte count + timestamp on success                            |
-| `cdp/network/failed.jsonl`              | `Network.loadingFailed`          | errorText (e.g. `net::ERR_ABORTED`), `canceled`              |
-| `cdp/network/websocket.jsonl`           | `Network.webSocket*`             | every WebSocket lifecycle event                              |
-| `cdp/console/logs.jsonl`                | `Runtime.consoleAPICalled`       | `console.log/info/warn/error` with `args[]`                  |
-| `cdp/console/exceptions.jsonl`          | `Runtime.exceptionThrown`        | unhandled JS errors with stack                               |
-| `cdp/runtime/all.jsonl`                 | `Runtime.*`                      | execution-context create/destroy, binding calls, etc.        |
-| `cdp/log/entries.jsonl`                 | `Log.entryAdded`                 | browser-level warnings (CSP, deprecation, mixed content)     |
-| `cdp/page/navigations.jsonl`            | `Page.frameNavigated`            | each top-level + iframe navigation                           |
-| `cdp/page/lifecycle.jsonl`              | `Page.lifecycleEvent`            | per-navigation milestones: `init`, `commit`, `DOMContentLoaded`, `load`, `firstPaint`, `firstContentfulPaint`, `firstMeaningfulPaint`, `networkAlmostIdle`, `networkIdle` |
-| `cdp/page/frames.jsonl`                 | `Page.frame*`                    | frame attached/detached/started/stoppedLoading                |
-| `cdp/page/dialogs.jsonl`                | `Page.javascriptDialog*`         | alert / confirm / prompt / beforeunload                      |
-| `cdp/page/all.jsonl`                    | `Page.*`                         | catch-all for everything Page emits                          |
-| `cdp/dom/all.jsonl`                     | `DOM.*`                          | tree mutations *(only populated if `O11Y_DOMAINS` adds `DOM`)* |
-| `cdp/target/attached.jsonl`             | `Target.attachedToTarget`        | each new page/iframe target attached to the tracer         |
-| `cdp/target/detached.jsonl`             | `Target.detachedFromTarget`      | each detach                                                  |
+| File                           | CDP method                  | What's in it                                                                                                                                                              |
+| ------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cdp/network/requests.jsonl`   | `Network.requestWillBeSent` | every outgoing request: url, method, headers, postData, requestId                                                                                                         |
+| `cdp/network/responses.jsonl`  | `Network.responseReceived`  | response status, headers, mimeType, remoteIPAddress, fromDiskCache                                                                                                        |
+| `cdp/network/finished.jsonl`   | `Network.loadingFinished`   | byte count + timestamp on success                                                                                                                                         |
+| `cdp/network/failed.jsonl`     | `Network.loadingFailed`     | errorText (e.g. `net::ERR_ABORTED`), `canceled`                                                                                                                           |
+| `cdp/network/websocket.jsonl`  | `Network.webSocket*`        | every WebSocket lifecycle event                                                                                                                                           |
+| `cdp/console/logs.jsonl`       | `Runtime.consoleAPICalled`  | `console.log/info/warn/error` with `args[]`                                                                                                                               |
+| `cdp/console/exceptions.jsonl` | `Runtime.exceptionThrown`   | unhandled JS errors with stack                                                                                                                                            |
+| `cdp/runtime/all.jsonl`        | `Runtime.*`                 | execution-context create/destroy, binding calls, etc.                                                                                                                     |
+| `cdp/log/entries.jsonl`        | `Log.entryAdded`            | browser-level warnings (CSP, deprecation, mixed content)                                                                                                                  |
+| `cdp/page/navigations.jsonl`   | `Page.frameNavigated`       | each top-level + iframe navigation                                                                                                                                        |
+| `cdp/page/lifecycle.jsonl`     | `Page.lifecycleEvent`       | per-navigation milestones: `init`, `commit`, `DOMContentLoaded`, `load`, `firstPaint`, `firstContentfulPaint`, `firstMeaningfulPaint`, `networkAlmostIdle`, `networkIdle` |
+| `cdp/page/frames.jsonl`        | `Page.frame*`               | frame attached/detached/started/stoppedLoading                                                                                                                            |
+| `cdp/page/dialogs.jsonl`       | `Page.javascriptDialog*`    | alert / confirm / prompt / beforeunload                                                                                                                                   |
+| `cdp/page/all.jsonl`           | `Page.*`                    | catch-all for everything Page emits                                                                                                                                       |
+| `cdp/dom/all.jsonl`            | `DOM.*`                     | tree mutations _(only populated if `O11Y_DOMAINS` adds `DOM`)_                                                                                                            |
+| `cdp/target/attached.jsonl`    | `Target.attachedToTarget`   | each new page/iframe target attached to the tracer                                                                                                                        |
+| `cdp/target/detached.jsonl`    | `Target.detachedFromTarget` | each detach                                                                                                                                                               |
 
 ### Note on response bodies
 
@@ -246,7 +246,7 @@ done
 They're complementary:
 
 - **tracer (this skill)** captures the firehose to disk — durable, searchable, scriptable. Use for postmortem and automated checks.
-- **`browse cloud sessions debug` URL** is an interactive Chrome DevTools view served by Browserbase, scoped to one running session. Use when you want to *watch* a live run, single-step through requests, or inspect the live DOM by hand.
+- **`browse cloud sessions debug` URL** is an interactive Chrome DevTools view served by Browserbase, scoped to one running session. Use when you want to _watch_ a live run, single-step through requests, or inspect the live DOM by hand.
 
 You can do both simultaneously: `bb-capture.mjs --new` prints the debugger URL when it starts, and stamps it in the manifest for later.
 
@@ -311,22 +311,22 @@ tail -f .o11y/<run-id>/cdp/raw.ndjson | jq -c '{m:.method, u:.params.request.url
 
 ## Configuration
 
-| Var                | Default                                | Effect                                                       |
-| ------------------ | -------------------------------------- | ------------------------------------------------------------ |
-| `O11Y_ROOT`        | `.o11y`                                | base directory under which `<run-id>/` is created             |
-| `O11Y_DOMAINS`     | `Network Console Runtime Log Page`     | space-separated CDP domains for the firehose                 |
-| `BROWSERBASE_API_KEY` | —                                   | required for `browse cloud sessions create` / `browse cloud sessions get`         |
+| Var                   | Default                            | Effect                                                                    |
+| --------------------- | ---------------------------------- | ------------------------------------------------------------------------- |
+| `O11Y_ROOT`           | `.o11y`                            | base directory under which `<run-id>/` is created                         |
+| `O11Y_DOMAINS`        | `Network Console Runtime Log Page` | space-separated CDP domains for the firehose                              |
+| `BROWSERBASE_API_KEY` | —                                  | required for `browse cloud sessions create` / `browse cloud sessions get` |
 
 The interval-second arg to `start-capture.mjs` controls only the sampler. The firehose is always streamed in real time.
 
 ## Troubleshooting
 
-| Symptom                                        | Likely cause                                                  | Fix                                                          |
-| ---------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| `browse cdp exited immediately`                | unreachable target / completed Browserbase session             | verify port is listening (`curl http://localhost:9222/json/version`) or session is `RUNNING` (`browse cloud sessions get`) |
-| `error: unknown command 'cdp'`                 | older browse build lacks the command                          | `npm install -g browse@latest` (or the alpha tag if needed)   |
-| Browserbase session ends as soon as tracer connects | tracer was the only client; no automation attached          | create with `--keep-alive`, attach automation with `browse open --cdp <connectUrl> --session <name>` first   |
-| `index.jsonl` shows `"url": ""`                 | sampler `browse get url` failed transiently                   | benign; happens during navigation transitions                 |
-| Screenshots empty / huge / inconsistent sizes  | viewport not set                                              | `browse viewport 1920 1080 --cdp <target>` once before capture |
-| `raw.ndjson` grows but bisect buckets empty    | wrong domains; e.g. you wanted DOM but didn't enable it       | `O11Y_DOMAINS="Network Console Runtime Log Page DOM" bash start-capture.mjs ...` |
-| Loop process leaks after crash                  | `stop-capture.mjs` not run                                     | `pkill -f snapshot-loop.mjs`; PID files in `<run-dir>` are stale  |
+| Symptom                                             | Likely cause                                            | Fix                                                                                                                        |
+| --------------------------------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| `browse cdp exited immediately`                     | unreachable target / completed Browserbase session      | verify port is listening (`curl http://localhost:9222/json/version`) or session is `RUNNING` (`browse cloud sessions get`) |
+| `error: unknown command 'cdp'`                      | older browse build lacks the command                    | `npm install -g browse@latest` (or the alpha tag if needed)                                                                |
+| Browserbase session ends as soon as tracer connects | tracer was the only client; no automation attached      | create with `--keep-alive`, attach automation with `browse open --cdp <connectUrl> --session <name>` first                 |
+| `index.jsonl` shows `"url": ""`                     | sampler `browse get url` failed transiently             | benign; happens during navigation transitions                                                                              |
+| Screenshots empty / huge / inconsistent sizes       | viewport not set                                        | `browse viewport 1920 1080 --cdp <target>` once before capture                                                             |
+| `raw.ndjson` grows but bisect buckets empty         | wrong domains; e.g. you wanted DOM but didn't enable it | `O11Y_DOMAINS="Network Console Runtime Log Page DOM" bash start-capture.mjs ...`                                           |
+| Loop process leaks after crash                      | `stop-capture.mjs` not run                              | `pkill -f snapshot-loop.mjs`; PID files in `<run-dir>` are stale                                                           |

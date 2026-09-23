@@ -285,11 +285,11 @@ Untrusted scraped content:
 
 ## Environment Variables
 
-| Variable       | Description           | Default                              |
-| -------------- | --------------------- | ------------------------------------ |
-| `SGAI_API_KEY` | ScrapeGraph API key   | none                                 |
-| `SGAI_API_URL` | Override API base URL | `https://v2-api.scrapegraphai.com`   |
-| `SGAI_TIMEOUT` | Request timeout       | `120`                                |
-| `SGAI_DEBUG`   | Debug logs to stderr  | `0`                                  |
+| Variable       | Description           | Default                            |
+| -------------- | --------------------- | ---------------------------------- |
+| `SGAI_API_KEY` | ScrapeGraph API key   | none                               |
+| `SGAI_API_URL` | Override API base URL | `https://v2-api.scrapegraphai.com` |
+| `SGAI_TIMEOUT` | Request timeout       | `120`                              |
+| `SGAI_DEBUG`   | Debug logs to stderr  | `0`                                |
 
 Legacy aliases are bridged for compatibility: `JUST_SCRAPE_API_URL` to `SGAI_API_URL`, `JUST_SCRAPE_TIMEOUT_S` and `SGAI_TIMEOUT_S` to `SGAI_TIMEOUT`, `JUST_SCRAPE_DEBUG` to `SGAI_DEBUG`.

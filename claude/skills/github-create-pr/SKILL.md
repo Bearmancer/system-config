@@ -28,16 +28,16 @@ gh repo view <owner>/<repo> --json viewerPermission --jq .viewerPermission
 
 Probe `viewerPermission` first: `ADMIN`/`MAINTAIN`/`WRITE` → own branch allowed; `READ`/`TRIAGE`/`none` → fork path mandatory. Pick triage row on probe result, never on guess.
 
-| situation | action |
-| --------- | ------ |
-| open PR, same head, same mechanism | update that PR; never duplicate |
-| merged PR, same diff, bug still reproduces | regression → new branch, new PR citing old PR + old issue |
-| closed unmerged PR by human, same mechanism | refile only with materially stronger case (new repro, narrower diff, new test) |
-| stale-closed linked issue (`not_planned`, stale-bot or human) but mechanism still reproduces on current base | treat like closed unmerged: refile PR only with fresh repro on current base + cite old issue/PR; state why close reason wrong |
-| no push rights, no fork yet | `gh repo fork <owner>/<repo> --clone=false`, then `git remote add <fork-remote> git@github.com:<fork-user>/<repo>.git`, push to fork, `--head <fork-user>:<branch>` |
-| push rights (`WRITE`+) | own branch on upstream, `--head <branch>`; still never push direct to base |
-| maintainer prefers issue-only (CONTRIBUTING says so) | file issue via github-create-issue, skip PR, state why in draft |
-| base moved ahead | rebase on `origin/<base>`, retest, then file |
+| situation                                                                                                    | action                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| open PR, same head, same mechanism                                                                           | update that PR; never duplicate                                                                                                                                     |
+| merged PR, same diff, bug still reproduces                                                                   | regression → new branch, new PR citing old PR + old issue                                                                                                           |
+| closed unmerged PR by human, same mechanism                                                                  | refile only with materially stronger case (new repro, narrower diff, new test)                                                                                      |
+| stale-closed linked issue (`not_planned`, stale-bot or human) but mechanism still reproduces on current base | treat like closed unmerged: refile PR only with fresh repro on current base + cite old issue/PR; state why close reason wrong                                       |
+| no push rights, no fork yet                                                                                  | `gh repo fork <owner>/<repo> --clone=false`, then `git remote add <fork-remote> git@github.com:<fork-user>/<repo>.git`, push to fork, `--head <fork-user>:<branch>` |
+| push rights (`WRITE`+)                                                                                       | own branch on upstream, `--head <branch>`; still never push direct to base                                                                                          |
+| maintainer prefers issue-only (CONTRIBUTING says so)                                                         | file issue via github-create-issue, skip PR, state why in draft                                                                                                     |
+| base moved ahead                                                                                             | rebase on `origin/<base>`, retest, then file                                                                                                                        |
 
 Read timeline, never label alone. Stale-bot `not_planned` on linked issue mean nothing about PR merit.
 

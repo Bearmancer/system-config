@@ -4,7 +4,7 @@
 
 ## What was built and why
 
-The user asked a question rather than supplying a source: *"Explain how Soviet is connected to Afghanistan, or why they warred for ten years, because it seems confusing how Russia suddenly decided Afghanistan."* There was no video and no book, so the `learning-course` pipeline ran without its usual spine. The replacement was a three-chapter course built directly from the documentary record — `soviet-afghan-war/` — with the user's own framing as the structure: chapter 1 answers the "suddenly" (1919 to Storm-333), chapter 2 the first half of the ten years (why Moscow could not win), chapter 3 the second half (why leaving took four more years).
+The user asked a question rather than supplying a source: _"Explain how Soviet is connected to Afghanistan, or why they warred for ten years, because it seems confusing how Russia suddenly decided Afghanistan."_ There was no video and no book, so the `learning-course` pipeline ran without its usual spine. The replacement was a three-chapter course built directly from the documentary record — `soviet-afghan-war/` — with the user's own framing as the structure: chapter 1 answers the "suddenly" (1919 to Storm-333), chapter 2 the first half of the ten years (why Moscow could not win), chapter 3 the second half (why leaving took four more years).
 
 Because there is no creator, there is no "what the source says / what the record shows" split. The discipline that replaced it, and which the user should hold future chapters to, is **documented fact versus contested reading**, kept apart in every chapter's fact-check box, with every load-bearing date and figure carrying its provenance.
 
@@ -22,7 +22,7 @@ Implication for future sessions: when a gate exits 0, that means the gate's own 
 
 ## What the evidence says about sub-agent reports
 
-Two reports were materially wrong about their own output. One claimed "both gates exit 0 with zero geometry warnings" on a chapter whose diagram had three label-on-line warnings and three isolated nodes. Another claimed to have "de-collided 4 label pairs" and that "legend and roster render cleanly" on a map that measured ten isolated nodes and two dangling edges. A third reported that a file had not been touched by it while the file had in fact changed under it during the run — and a sub-agent's *narrative* report listed cast members (Casey) that its own saved file did not contain.
+Two reports were materially wrong about their own output. One claimed "both gates exit 0 with zero geometry warnings" on a chapter whose diagram had three label-on-line warnings and three isolated nodes. Another claimed to have "de-collided 4 label pairs" and that "legend and roster render cleanly" on a map that measured ten isolated nodes and two dangling edges. A third reported that a file had not been touched by it while the file had in fact changed under it during the run — and a sub-agent's _narrative_ report listed cast members (Casey) that its own saved file did not contain.
 
 Working rule confirmed: verify from the artifact, by running the gate yourself, and never let a claim into a reference page on a agent's say-so. The Casey node existed solely because one report asserted a cast member that a grep disproves.
 

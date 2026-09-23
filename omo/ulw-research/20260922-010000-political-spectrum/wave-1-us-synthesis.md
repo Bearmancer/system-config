@@ -1,7 +1,9 @@
 # Wave 1 digest — us-synthesis (2026-09-22)
+
 Source member: us-synthesis. Status: closure-ready.
 
 ## Key findings
+
 - Liberal = active govt reduce inequality expand health edu regulate env expand rights = Dems. Conservative = small govt market family religion personal responsibility strong military = GOP. Split = role of govt.
 - Gallup 2024: 37% conservative 34% moderate 25% liberal. PRRI 2025: 38/35/27. Liberals grew 17% 1992 to 25% 2016 flat. Moderates fell 43% 1992 to 34% 2024.
 - Independents largest bloc: 43% 2023, 51% Jun 2024 peak, 45% 2025. 2024 exit 34% electorate broke 49% Harris 46% Trump. 47% moderate 27% conservative 24% liberal. 9.7% split ticket.
@@ -12,9 +14,11 @@ Source member: us-synthesis. Status: closure-ready.
 - Fusionism Meyer 1962 In Defense Freedom + Sharon Statement, Buckley YAF, Reagan coalition. Tension Bozell Kirk Rothbard. Now NatCon vs FreeCon split.
 
 ## Sources
+
 Gallup 2024, PRRI 2025 Atlas, AP Votecast, CES, Cato mission, LP convention votes, Meyer 1962, Mudde/Laclau.
 
 ## EXPAND verbatim
+
 - NatCon vs FreeCon text comparison
 - Mises vs Oliver platform 2024
 - AP Votecast race x education crosstabs
@@ -23,4 +27,5 @@ Gallup 2024, PRRI 2025 Atlas, AP Votecast, CES, Cato mission, LP convention vote
 - Cato Freedom Index use
 
 ## CLAIMS (12, see peer msg 321a057f)
+
 All high-value electoral stats need 2-domain corroboration in Phase 3b.

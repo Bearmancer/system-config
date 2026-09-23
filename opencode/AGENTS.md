@@ -58,6 +58,7 @@ User-global, not tied to any one repo: `~/.omo/` — e.g. `~/.omo/codegraph`, `~
 ## User rules. Beats the omo defaults above on conflict.
 
 <!-- CODEGRAPH_START -->
+
 ## CodeGraph — mandatory index, always init
 
 Every repo need `.codegraph/` at root. No skip. No optional.
@@ -67,10 +68,12 @@ Session start or enter repo: check `.codegraph/` exist. Missing? `codegraph init
 Monorepo or multi-repo: each sub-project own `.codegraph/` (nearest at or above `projectPath`). Init each missing.
 
 Indexed: use CodeGraph BEFORE grep/find/read.
+
 - MCP: `codegraph_explore` one call. Verbatim source + call paths. Name file/symbol in query. Pass `projectPath` for specific sub-project. Deferred? load by name.
 - Shell: `codegraph explore "<query>"`.
 
 Stale (files changed, symbols missing, line numbers wrong): `codegraph init` again or repo refresh.
+
 <!-- CODEGRAPH_END -->
 
 <!-- USER:START -->

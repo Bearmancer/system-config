@@ -24,12 +24,12 @@ Web Unlocker is Bright Data's HTTP-based unlocking proxy. It automatically selec
 
 **When to use Web Unlocker vs other APIs:**
 
-| Need | Use |
-|------|-----|
-| Scrape any webpage by URL | Web Unlocker |
-| Search engine results (Google, Bing) | SERP API |
-| Structured data from known platforms | Web Scraper API |
-| Click, scroll, fill forms, run JS | Browser API |
+| Need                                                | Use                           |
+| --------------------------------------------------- | ----------------------------- |
+| Scrape any webpage by URL                           | Web Unlocker                  |
+| Search engine results (Google, Bing)                | SERP API                      |
+| Structured data from known platforms                | Web Scraper API               |
+| Click, scroll, fill forms, run JS                   | Browser API                   |
 | Browser automation libraries (Playwright/Puppeteer) | Browser API, NOT Web Unlocker |
 
 ---
@@ -71,16 +71,16 @@ print(response.text)
 
 ```javascript
 const response = await fetch("https://api.brightdata.com/request", {
-  method: "POST",
-  headers: {
-    "Authorization": `Bearer ${API_KEY}`,
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    zone: "YOUR_ZONE_NAME",
-    url: "https://example.com",
-    format: "raw"
-  })
+	method: "POST",
+	headers: {
+		Authorization: `Bearer ${API_KEY}`,
+		"Content-Type": "application/json",
+	},
+	body: JSON.stringify({
+		zone: "YOUR_ZONE_NAME",
+		url: "https://example.com",
+		format: "raw",
+	}),
 });
 const html = await response.text();
 ```
@@ -114,6 +114,7 @@ response = requests.get("https://example.com", proxies=proxies, verify="/path/to
 ```
 
 Special proxy username flags (append to username string):
+
 - `-country-XX` → Geo-target to country (e.g., `-country-us`)
 - `-ua-mobile` → Use mobile user agent
 - `-debug-full` → Enable debug header in response
@@ -124,16 +125,16 @@ Special proxy username flags (append to username string):
 
 ### REST API Body Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `zone` | string | Yes | Zone name from your Control Panel |
-| `url` | string | Yes | Target URL (must include `http://` or `https://`) |
-| `format` | string | Yes | `"raw"` (HTML string) or `"json"` (structured JSON) |
-| `method` | string | No | HTTP verb, default `"GET"`. Use `"POST"` with `body` for POST requests |
-| `body` | string | No | POST body payload (use with `"method": "POST"`) |
-| `country` | string | No | 2-letter ISO country code for geo-targeting (e.g., `"us"`, `"gb"`). Auto-selected if omitted |
-| `data_format` | string | No | Transform output: `"markdown"` or `"screenshot"` |
-| `async` | boolean | No | Set `true` to use asynchronous mode. Returns `response_id` immediately |
+| Parameter     | Type    | Required | Description                                                                                  |
+| ------------- | ------- | -------- | -------------------------------------------------------------------------------------------- |
+| `zone`        | string  | Yes      | Zone name from your Control Panel                                                            |
+| `url`         | string  | Yes      | Target URL (must include `http://` or `https://`)                                            |
+| `format`      | string  | Yes      | `"raw"` (HTML string) or `"json"` (structured JSON)                                          |
+| `method`      | string  | No       | HTTP verb, default `"GET"`. Use `"POST"` with `body` for POST requests                       |
+| `body`        | string  | No       | POST body payload (use with `"method": "POST"`)                                              |
+| `country`     | string  | No       | 2-letter ISO country code for geo-targeting (e.g., `"us"`, `"gb"`). Auto-selected if omitted |
+| `data_format` | string  | No       | Transform output: `"markdown"` or `"screenshot"`                                             |
+| `async`       | boolean | No       | Set `true` to use asynchronous mode. Returns `response_id` immediately                       |
 
 ---
 
@@ -141,15 +142,16 @@ Special proxy username flags (append to username string):
 
 Used with the **proxy interface**. Pass in proxy username or as custom request headers.
 
-| Header | Value | Description |
-|--------|-------|-------------|
-| `x-unblock-data-format` | `"markdown"` or `"screenshot"` | Convert response to markdown or PNG screenshot |
-| `x-unblock-expect` | CSS selector, text, or body content | Wait for this element/text before returning response. Prevents partial page loads |
-| `x-unblock-url-fragment` | The `#fragment` part of URL | Handle hash-fragmented URLs in a single request |
-| `x-unblock-city` | City name string | Amazon-specific: simulate city selection |
-| `x-unblock-zipcode` | ZIP code string | Amazon-specific: simulate ZIP code for region-specific content |
+| Header                   | Value                               | Description                                                                       |
+| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------- |
+| `x-unblock-data-format`  | `"markdown"` or `"screenshot"`      | Convert response to markdown or PNG screenshot                                    |
+| `x-unblock-expect`       | CSS selector, text, or body content | Wait for this element/text before returning response. Prevents partial page loads |
+| `x-unblock-url-fragment` | The `#fragment` part of URL         | Handle hash-fragmented URLs in a single request                                   |
+| `x-unblock-city`         | City name string                    | Amazon-specific: simulate city selection                                          |
+| `x-unblock-zipcode`      | ZIP code string                     | Amazon-specific: simulate ZIP code for region-specific content                    |
 
 **Proxy username flags** (appended to username):
+
 - `-ua-mobile` → Uses mobile user agents instead of desktop
 - `-debug-full` → Adds `x-brd-debug` response header with: request ID, traffic metrics, billing status, destination IP, headers used, peer info, render status
 
@@ -161,12 +163,12 @@ Used with the **proxy interface**. Pass in proxy username or as custom request h
 
 ```json
 {
-  "status": 200,
-  "headers": {
-    "content-type": "text/html",
-    "...": "..."
-  },
-  "body": "<html>...</html>"
+	"status": 200,
+	"headers": {
+		"content-type": "text/html",
+		"...": "..."
+	},
+	"body": "<html>...</html>"
 }
 ```
 
@@ -176,11 +178,11 @@ Returns the raw HTML/content as a string directly.
 
 ### Error Codes
 
-| Code | Meaning | Action |
-|------|---------|--------|
-| `200` | Success | Process response |
-| `400` | Bad Request | Check required fields: `zone`, `url`, `format` |
-| `401` | Unauthorized | Verify API key |
+| Code  | Meaning      | Action                                         |
+| ----- | ------------ | ---------------------------------------------- |
+| `200` | Success      | Process response                               |
+| `400` | Bad Request  | Check required fields: `zone`, `url`, `format` |
+| `401` | Unauthorized | Verify API key                                 |
 
 ---
 
@@ -222,6 +224,7 @@ while True:
 ```
 
 ### Async Key Facts
+
 - Responses typically complete within **5 minutes**, up to **8 hours** during peak
 - Results stored for **48 hours**
 - Better for slow-responding sites or large-scale URL processing
@@ -232,12 +235,15 @@ while True:
 ## Output Formats
 
 ### HTML (default)
+
 Raw HTML string. Use `format: "raw"`.
 
 ### Markdown
+
 Clean markdown extracted from the page. Best for LLM consumption.
 
 **REST API:**
+
 ```json
 { "zone": "...", "url": "...", "format": "raw", "data_format": "markdown" }
 ```
@@ -246,9 +252,11 @@ Clean markdown extracted from the page. Best for LLM consumption.
 Add header: `x-unblock-data-format: markdown`
 
 ### Screenshot
+
 PNG screenshot of the rendered page. Useful for debugging and visual verification.
 
 **REST API:**
+
 ```json
 { "zone": "...", "url": "...", "format": "raw", "data_format": "screenshot" }
 ```
@@ -258,28 +266,37 @@ PNG screenshot of the rendered page. Useful for debugging and visual verificatio
 ## Features
 
 ### CAPTCHA Solving
+
 Enabled by default. Automatically solves CAPTCHAs encountered during requests. Can be disabled in Advanced Settings for a lightweight solution when CAPTCHA solving isn't needed.
 
 ### Premium Domains
+
 Certain high-difficulty websites require additional resources. Enable "Premium Domains" in zone settings during creation. Only requests targeting premium-classified domains are billed at the higher rate.
 
 ### Geolocation Targeting
+
 Auto-selects optimal IP location. Override with `country` parameter (REST API) or `-country-XX` (proxy). Country-level targeting only (not city-level—use Browser API for that).
 
 ### Mobile User Agent
+
 Append `-ua-mobile` to proxy username, or use via proxy username flag, to use mobile-specific user agents.
 
 ### Auto-Throttling
+
 System automatically adjusts based on success rates:
+
 - Default threshold: 70% success rate
 - Automatically applies better-performing configurations
 - When custom headers/cookies are enabled: customizable threshold
 
 ### Debug Header
+
 Add `-debug-full` to proxy username to receive `x-brd-debug` response header containing: request ID, traffic metrics, billing status, destination IP, headers used, peer info, render status.
 
 ### Success Rate API
+
 Query domain-specific success rates for the past 7 days:
+
 ```bash
 GET https://api.brightdata.com/unblocker/success_rate/?zone=YOUR_ZONE&domain=example.com
 Authorization: Bearer YOUR_API_KEY
@@ -298,6 +315,7 @@ Override automatically-generated headers and cookies.
 **Critical billing note:** Enabling custom headers/cookies means you are **billed for 100% of requests** (both successful and failed), because you are taking control of request parameters. Standard mode only bills for successes.
 
 **Restrictions:**
+
 - Custom values must be from a compliance-pre-approved list
 - Unlisted values require approval from the compliance team
 - Cannot pass authentication/login credentials
@@ -306,11 +324,11 @@ Override automatically-generated headers and cookies.
 
 ## Billing Model
 
-| Mode | Billing |
-|------|---------|
-| Standard | CPM — billed per 1,000 **successful** requests only |
-| Custom Headers/Cookies enabled | Billed for **all** requests (successful + failed) |
-| Async collect/retrieve calls | **Not billed** — only the initial submission is billed |
+| Mode                           | Billing                                                |
+| ------------------------------ | ------------------------------------------------------ |
+| Standard                       | CPM — billed per 1,000 **successful** requests only    |
+| Custom Headers/Cookies enabled | Billed for **all** requests (successful + failed)      |
+| Async collect/retrieve calls   | **Not billed** — only the initial submission is billed |
 
 Monitor usage via the "Traffic" column in My Proxies (CPM = cost per 1,000 successful requests).
 
@@ -319,6 +337,7 @@ Monitor usage via the "Traffic" column in My Proxies (CPM = cost per 1,000 succe
 ## Best Practices
 
 ### 1. Start with direct API endpoint targeting
+
 Many sites expose clean API endpoints. Try hitting the API directly first — it often succeeds without extra config and is cheaper.
 
 ```python
@@ -331,37 +350,49 @@ response = requests.post(
 ```
 
 ### 2. Fall back to main webpage if API fails
+
 If the direct API endpoint fails, scrape the primary webpage instead.
 
 ### 3. Use Browser API for complex JS-heavy scenarios
+
 When you need to execute JavaScript, click elements, or interact with the page — don't try to force Web Unlocker. Use Browser API.
 
 ### 4. Use `x-unblock-expect` to prevent partial loads
+
 For pages that load content progressively, specify an expected element to ensure the content you need is present.
 
 ```json
 {
-  "zone": "...",
-  "url": "https://example.com/products",
-  "format": "raw",
-  "headers": { "x-unblock-expect": ".product-list" }
+	"zone": "...",
+	"url": "https://example.com/products",
+	"format": "raw",
+	"headers": { "x-unblock-expect": ".product-list" }
 }
 ```
 
 ### 5. Use markdown format for LLM pipelines
+
 When feeding scraped content to an LLM, use `data_format: "markdown"` to get clean, structured text without HTML noise.
 
 ### 6. Use async for bulk/large-scale processing
+
 Async improves stability for slow sites and enables processing large batches of URLs without blocking.
 
 ### 7. Use geolocation for region-restricted content
+
 Pass `country` parameter when you need region-specific content (prices, availability, localized pages).
 
 ```json
-{ "zone": "...", "url": "https://example.com", "format": "raw", "country": "de" }
+{
+	"zone": "...",
+	"url": "https://example.com",
+	"format": "raw",
+	"country": "de"
+}
 ```
 
 ### 8. Monitor success rates before custom header mode
+
 Check your domain success rates via the API before enabling custom headers (which changes billing to 100%).
 
 ---
@@ -369,6 +400,7 @@ Check your domain success rates via the API before enabling custom headers (whic
 ## Anti-Patterns
 
 **DO NOT use Web Unlocker with browser automation libraries.**
+
 - Puppeteer, Playwright, Selenium → use **Browser API** instead
 - Chrome, Firefox, Edge → use **Bright Data proxy networks** (Residential, ISP, etc.)
 - Anti-detect browsers (Adspower, Multilogin) → use proxy networks

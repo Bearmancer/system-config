@@ -21,11 +21,11 @@ npx --yes --package @brightdata/cli brightdata <command>
 
 These flags work with any command:
 
-| Flag | Description |
-|------|-------------|
+| Flag                  | Description                       |
+| --------------------- | --------------------------------- |
 | `-k, --api-key <key>` | Override API key for this request |
-| `--timing` | Show request timing info |
-| `-v, --version` | Show CLI version |
+| `--timing`            | Show request timing info          |
+| `-v, --version`       | Show CLI version                  |
 
 ---
 
@@ -33,13 +33,14 @@ These flags work with any command:
 
 Authenticate with Bright Data. Opens the browser for OAuth by default.
 
-| Flag | Description |
-|------|-------------|
-| `-k, --api-key <key>` | Use API key directly (skips browser) |
-| `-c, --customer-id <id>` | Bright Data account ID (optional) |
-| `-d, --device` | Use device flow for SSH/headless environments |
+| Flag                     | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| `-k, --api-key <key>`    | Use API key directly (skips browser)          |
+| `-c, --customer-id <id>` | Bright Data account ID (optional)             |
+| `-d, --device`           | Use device flow for SSH/headless environments |
 
 **What happens on login:**
+
 1. Opens browser for OAuth (or uses device flow / direct API key)
 2. Validates the API key
 3. Saves credentials locally (`~/.config/brightdata-cli/credentials.json`)
@@ -69,16 +70,16 @@ bdata logout
 
 Scrape any URL using Bright Data's Web Unlocker. Handles CAPTCHAs, JavaScript rendering, and anti-bot protections automatically.
 
-| Flag | Description |
-|------|-------------|
-| `-f, --format <fmt>` | `markdown` (default), `html`, `screenshot`, `json` |
-| `--country <code>` | ISO country code for geo-targeting (e.g. `us`, `de`, `jp`) |
-| `--zone <name>` | Web Unlocker zone name |
-| `--mobile` | Use a mobile user agent |
-| `--async` | Submit async, return a snapshot ID |
-| `-o, --output <path>` | Write output to file |
-| `--json` | Force JSON output |
-| `--pretty` | Pretty-print JSON output |
+| Flag                  | Description                                                |
+| --------------------- | ---------------------------------------------------------- |
+| `-f, --format <fmt>`  | `markdown` (default), `html`, `screenshot`, `json`         |
+| `--country <code>`    | ISO country code for geo-targeting (e.g. `us`, `de`, `jp`) |
+| `--zone <name>`       | Web Unlocker zone name                                     |
+| `--mobile`            | Use a mobile user agent                                    |
+| `--async`             | Submit async, return a snapshot ID                         |
+| `-o, --output <path>` | Write output to file                                       |
+| `--json`              | Force JSON output                                          |
+| `--pretty`            | Pretty-print JSON output                                   |
 
 ```bash
 bdata scrape https://news.ycombinator.com
@@ -98,18 +99,18 @@ Search Google, Bing, or Yandex via Bright Data's SERP API.
 Google returns structured JSON with: organic results, ads, People Also Ask, related searches.
 Bing/Yandex return markdown by default.
 
-| Flag | Description |
-|------|-------------|
-| `--engine <name>` | `google` (default), `bing`, `yandex` |
-| `--country <code>` | Localized results (e.g. `us`, `de`) |
-| `--language <code>` | Language code (e.g. `en`, `fr`) |
-| `--page <n>` | Page number, 0-indexed (default: `0`) |
-| `--type <type>` | `web` (default), `news`, `images`, `shopping` |
-| `--device <type>` | `desktop`, `mobile` |
-| `--zone <name>` | SERP zone name |
-| `-o, --output <path>` | Write output to file |
-| `--json` | Force JSON output |
-| `--pretty` | Pretty-print JSON output |
+| Flag                  | Description                                   |
+| --------------------- | --------------------------------------------- |
+| `--engine <name>`     | `google` (default), `bing`, `yandex`          |
+| `--country <code>`    | Localized results (e.g. `us`, `de`)           |
+| `--language <code>`   | Language code (e.g. `en`, `fr`)               |
+| `--page <n>`          | Page number, 0-indexed (default: `0`)         |
+| `--type <type>`       | `web` (default), `news`, `images`, `shopping` |
+| `--device <type>`     | `desktop`, `mobile`                           |
+| `--zone <name>`       | SERP zone name                                |
+| `-o, --output <path>` | Write output to file                          |
+| `--json`              | Force JSON output                             |
+| `--pretty`            | Pretty-print JSON output                      |
 
 ```bash
 bdata search "typescript best practices"
@@ -126,13 +127,13 @@ bdata search "bright data pricing" --engine bing
 
 Extract structured data from 40+ platforms. Triggers an async collection job, polls until ready, returns results.
 
-| Flag | Description |
-|------|-------------|
-| `--format <fmt>` | `json` (default), `csv`, `ndjson`, `jsonl` |
-| `--timeout <seconds>` | Polling timeout (default: `600`) |
-| `-o, --output <path>` | Write output to file |
-| `--json` | Force JSON output |
-| `--pretty` | Pretty-print JSON output |
+| Flag                  | Description                                |
+| --------------------- | ------------------------------------------ |
+| `--format <fmt>`      | `json` (default), `csv`, `ndjson`, `jsonl` |
+| `--timeout <seconds>` | Polling timeout (default: `600`)           |
+| `-o, --output <path>` | Write output to file                       |
+| `--json`              | Force JSON output                          |
+| `--pretty`            | Pretty-print JSON output                   |
 
 ```bash
 bdata pipelines list                                           # List all types
@@ -152,12 +153,12 @@ See [pipelines.md](pipelines.md) for the full list of types and their parameters
 
 Check status of an async snapshot job.
 
-| Flag | Description |
-|------|-------------|
-| `--wait` | Poll until the job completes |
+| Flag                  | Description                      |
+| --------------------- | -------------------------------- |
+| `--wait`              | Poll until the job completes     |
 | `--timeout <seconds>` | Polling timeout (default: `600`) |
-| `-o, --output <path>` | Write output to file |
-| `--json` / `--pretty` | JSON output |
+| `-o, --output <path>` | Write output to file             |
+| `--json` / `--pretty` | JSON output                      |
 
 ```bash
 bdata status s_abc123xyz
@@ -192,18 +193,18 @@ View account balance and per-zone cost/bandwidth. Read-only.
 > free account is expected, not an error.
 > See: https://docs.brightdata.com/general/account/billing-and-pricing/free-tier
 
-| Subcommand | Description |
-|------------|-------------|
-| *(none)* | Quick account balance |
-| `balance` | Balance + pending charges |
-| `zones` | Cost & bandwidth table for all zones |
+| Subcommand    | Description                            |
+| ------------- | -------------------------------------- |
+| _(none)_      | Quick account balance                  |
+| `balance`     | Balance + pending charges              |
+| `zones`       | Cost & bandwidth table for all zones   |
 | `zone <name>` | Detailed cost & bandwidth for one zone |
 
-| Flag | Description |
-|------|-------------|
-| `--from <datetime>` | Start of date range (e.g. `2024-01-01T00:00:00`) |
-| `--to <datetime>` | End of date range |
-| `--json` / `--pretty` | JSON output |
+| Flag                  | Description                                      |
+| --------------------- | ------------------------------------------------ |
+| `--from <datetime>`   | Start of date range (e.g. `2024-01-01T00:00:00`) |
+| `--to <datetime>`     | End of date range                                |
+| `--json` / `--pretty` | JSON output                                      |
 
 ```bash
 bdata budget
@@ -219,18 +220,18 @@ bdata budget zones --from 2024-01-01T00:00:00 --to 2024-02-01T00:00:00
 
 View and manage CLI configuration.
 
-| Subcommand | Description |
-|------------|-------------|
-| *(none)* | Show all config |
-| `get <key>` | Get a single value |
-| `set <key> <value>` | Set a value |
+| Subcommand          | Description        |
+| ------------------- | ------------------ |
+| _(none)_            | Show all config    |
+| `get <key>`         | Get a single value |
+| `set <key> <value>` | Set a value        |
 
-| Config Key | Description |
-|------------|-------------|
-| `default_zone_unlocker` | Default zone for `scrape` and `search` |
-| `default_zone_serp` | Override zone for `search` only |
-| `default_format` | Default output format: `markdown` or `json` |
-| `api_url` | Override API base URL |
+| Config Key              | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `default_zone_unlocker` | Default zone for `scrape` and `search`      |
+| `default_zone_serp`     | Override zone for `search` only             |
+| `default_format`        | Default output format: `markdown` or `json` |
+| `api_url`               | Override API base URL                       |
 
 ```bash
 bdata config
@@ -245,10 +246,10 @@ bdata config get default_zone_unlocker
 
 Interactive setup wizard. Walks through authentication, zone selection, and default configuration.
 
-| Flag | Description |
-|------|-------------|
-| `--skip-auth` | Skip the authentication step |
-| `-k, --api-key <key>` | Provide API key directly |
+| Flag                  | Description                  |
+| --------------------- | ---------------------------- |
+| `--skip-auth`         | Skip the authentication step |
+| `-k, --api-key <key>` | Provide API key directly     |
 
 ```bash
 bdata init
@@ -260,11 +261,11 @@ bdata init
 
 Install Bright Data AI agent skills into coding agents (Claude Code, Cursor, Copilot, etc.).
 
-| Subcommand | Description |
-|------------|-------------|
-| `add` | Interactive picker — choose skills + target agents |
-| `add <name>` | Install a specific skill directly |
-| `list` | List all available skills |
+| Subcommand   | Description                                        |
+| ------------ | -------------------------------------------------- |
+| `add`        | Interactive picker — choose skills + target agents |
+| `add <name>` | Install a specific skill directly                  |
+| `list`       | List all available skills                          |
 
 Available skills: `search`, `scrape`, `data-feeds`, `bright-data-mcp`, `bright-data-best-practices`
 
@@ -278,13 +279,14 @@ bdata skill list             # See what's available
 
 ## Configuration Storage
 
-| OS | Path |
-|----|------|
-| macOS | `~/Library/Application Support/brightdata-cli/` |
-| Linux | `~/.config/brightdata-cli/` |
-| Windows | `%APPDATA%\brightdata-cli\` |
+| OS      | Path                                            |
+| ------- | ----------------------------------------------- |
+| macOS   | `~/Library/Application Support/brightdata-cli/` |
+| Linux   | `~/.config/brightdata-cli/`                     |
+| Windows | `%APPDATA%\brightdata-cli\`                     |
 
 Two files:
+
 - `credentials.json` — API key (mode 0o600)
 - `config.json` — Zones, output format, preferences
 

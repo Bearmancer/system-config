@@ -16,13 +16,13 @@ Locator: `report.html #ch5` — heading "Steroids, braggadocio, volume", chapmet
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet | Corrected | Basis |
-|---|---|---|
-| 228v58 cited as White House fact | RollCall count, qualified — no WH primary | report #ch5 subgraph legend "228v58: RollCall count, no WH primary"; glossary 228v58 entry; pointers [C10][O21]; claim-graph lock C10 qualified |
-| Perry braggadocio recalled as bare quote | quote supported [C10][O21], count travels with qualifier | report #ch5 pointers "Perry quote supported; 228v58 count qualified" |
-| Naftali CNN primary treated as missing | resolved on wave-4 retry [C9][O13] — cite CNN day-one primary with PBS sub corroboration | report #ch6 pointers; manifest O13/O16; wave-3 digest "Naftali Mediaite+Fox CNN day-one + PBS … full" |
-| Beschloss long-form quoted | shorts only (O8); long-form transcript missing (O30) — lessons quote shorts, mark long-form unverified | manifest O8 + annex note; RESOURCES O30 gap; wave-3 digest annexed |
-| Greenberg/Suri frames recalled as consensus | single-voice frames, each with qualifier attached | report #ch5 sur + pointers [C9][O13]; claim-graph lock C9 attributed |
+| Heard / snippet                             | Corrected                                                                                              | Basis                                                                                                                                           |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| 228v58 cited as White House fact            | RollCall count, qualified — no WH primary                                                              | report #ch5 subgraph legend "228v58: RollCall count, no WH primary"; glossary 228v58 entry; pointers [C10][O21]; claim-graph lock C10 qualified |
+| Perry braggadocio recalled as bare quote    | quote supported [C10][O21], count travels with qualifier                                               | report #ch5 pointers "Perry quote supported; 228v58 count qualified"                                                                            |
+| Naftali CNN primary treated as missing      | resolved on wave-4 retry [C9][O13] — cite CNN day-one primary with PBS sub corroboration               | report #ch6 pointers; manifest O13/O16; wave-3 digest "Naftali Mediaite+Fox CNN day-one + PBS … full"                                           |
+| Beschloss long-form quoted                  | shorts only (O8); long-form transcript missing (O30) — lessons quote shorts, mark long-form unverified | manifest O8 + annex note; RESOURCES O30 gap; wave-3 digest annexed                                                                              |
+| Greenberg/Suri frames recalled as consensus | single-voice frames, each with qualifier attached                                                      | report #ch5 sur + pointers [C9][O13]; claim-graph lock C9 attributed                                                                            |
 
 ## Claim-tag coverage
 

@@ -24,13 +24,13 @@ Local Chrome (Stagehand) → cookie-sync.mjs → Stagehand (Browserbase) → Clo
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `BROWSERBASE_API_KEY` | Yes | API key from https://browserbase.com/settings |
-| `BROWSERBASE_CONTEXT_ID` | No | Reuse an existing context instead of creating a new one |
-| `CDP_URL` | No | Direct WebSocket URL to Chrome (e.g. `ws://127.0.0.1:9222`). Use when Chrome is launched with `--remote-debugging-port` and no `DevToolsActivePort` file exists |
-| `CDP_PORT_FILE` | No | Custom path to DevToolsActivePort file |
-| `CDP_HOST` | No | Custom host for local Chrome connection (default: `127.0.0.1`) |
+| Variable                 | Required | Description                                                                                                                                                     |
+| ------------------------ | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BROWSERBASE_API_KEY`    | Yes      | API key from https://browserbase.com/settings                                                                                                                   |
+| `BROWSERBASE_CONTEXT_ID` | No       | Reuse an existing context instead of creating a new one                                                                                                         |
+| `CDP_URL`                | No       | Direct WebSocket URL to Chrome (e.g. `ws://127.0.0.1:9222`). Use when Chrome is launched with `--remote-debugging-port` and no `DevToolsActivePort` file exists |
+| `CDP_PORT_FILE`          | No       | Custom path to DevToolsActivePort file                                                                                                                          |
+| `CDP_HOST`               | No       | Custom host for local Chrome connection (default: `127.0.0.1`)                                                                                                  |
 
 ## How It Works
 
@@ -48,6 +48,7 @@ Calls `context.cookies()` via Stagehand's Understudy layer (which uses `Storage.
 ### Step 3: Create Context and Session
 
 Creates a Browserbase Context via the SDK (persistent state container) and a Stagehand session attached to that context with `persist: true`. This means:
+
 - Cookies injected during this session are saved to the context
 - Future sessions using the same context ID start with those cookies
 - The session uses `keepAlive: true` so it stays open until explicitly closed
@@ -84,24 +85,26 @@ BROWSERBASE_CONTEXT_ID=ctx_abc123 node cookie-sync.mjs
 
 ### Supported Browsers
 
-| Browser | macOS | Linux | Windows |
-|---------|-------|-------|---------|
-| Google Chrome | Yes | Yes | Yes |
-| Chrome Beta | Yes | Yes | — |
-| Chrome for Testing | Yes | — | — |
-| Chromium | Yes | Yes | — |
-| Brave | Yes | Yes | Yes |
-| Microsoft Edge | Yes | Yes | Yes |
-| Vivaldi | — | Yes | — |
+| Browser            | macOS | Linux | Windows |
+| ------------------ | ----- | ----- | ------- |
+| Google Chrome      | Yes   | Yes   | Yes     |
+| Chrome Beta        | Yes   | Yes   | —       |
+| Chrome for Testing | Yes   | —     | —       |
+| Chromium           | Yes   | Yes   | —       |
+| Brave              | Yes   | Yes   | Yes     |
+| Microsoft Edge     | Yes   | Yes   | Yes     |
+| Vivaldi            | —     | Yes   | —       |
 
 ### Enabling Remote Debugging
 
 **Chrome 146+ (recommended)**:
+
 1. Navigate to `chrome://flags/#allow-remote-debugging`
 2. Set to "Enabled"
 3. Restart Chrome
 
 **Any Chrome version** (requires `--user-data-dir` and `CDP_URL`):
+
 ```bash
 # macOS
 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222 --user-data-dir=/tmp/chrome-debug

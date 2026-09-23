@@ -52,11 +52,11 @@ Always extract a specific topic from the user's question. For "How does React Su
 
 ## Parameters
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `library-id` | Yes | From search results, format `/vendor/library` |
-| `topic` | No | Focus area extracted from user query (e.g., `hooks`, `routing`, `validation`) |
-| `mode` | No | `code` (default) for API references; `info` for conceptual guides |
+| Parameter    | Required | Description                                                                   |
+| ------------ | -------- | ----------------------------------------------------------------------------- |
+| `library-id` | Yes      | From search results, format `/vendor/library`                                 |
+| `topic`      | No       | Focus area extracted from user query (e.g., `hooks`, `routing`, `validation`) |
+| `mode`       | No       | `code` (default) for API references; `info` for conceptual guides             |
 
 ## Examples
 

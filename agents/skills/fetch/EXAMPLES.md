@@ -23,9 +23,9 @@ curl -X POST "https://api.browserbase.com/v1/fetch" \
 
 ```typescript
 const response = await bb.fetchAPI.create({
-  url: "https://example.com",
+	url: "https://example.com",
 });
-console.log(response.content);  // full HTML
+console.log(response.content); // full HTML
 ```
 
 ### Python
@@ -52,7 +52,7 @@ curl -s -X POST "https://api.browserbase.com/v1/fetch" \
 
 ```typescript
 const response = await bb.fetchAPI.create({
-  url: "https://example.com/api/health",
+	url: "https://example.com/api/health",
 });
 
 console.log(`Status: ${response.statusCode}`);
@@ -77,12 +77,12 @@ curl -X POST "https://api.browserbase.com/v1/fetch" \
 
 ```typescript
 const response = await bb.fetchAPI.create({
-  url: "https://target-site.com/data",
-  proxies: true,
+	url: "https://target-site.com/data",
+	proxies: true,
 });
 
 if (response.statusCode === 200) {
-  console.log("Success with proxy:", response.content);
+	console.log("Success with proxy:", response.content);
 }
 ```
 
@@ -94,20 +94,20 @@ if (response.statusCode === 200) {
 
 ```typescript
 const urls = [
-  "https://example.com/page1",
-  "https://example.com/page2",
-  "https://example.com/page3",
-  "https://example.com/page4",
-  "https://example.com/page5",
+	"https://example.com/page1",
+	"https://example.com/page2",
+	"https://example.com/page3",
+	"https://example.com/page4",
+	"https://example.com/page5",
 ];
 
 const results = await Promise.all(
-  urls.map(url => bb.fetchAPI.create({ url, allowRedirects: true }))
+	urls.map((url) => bb.fetchAPI.create({ url, allowRedirects: true })),
 );
 
 for (const res of results) {
-  const titleMatch = res.content.match(/<title>(.*?)<\/title>/);
-  console.log(titleMatch?.[1] ?? "No title");
+	const titleMatch = res.content.match(/<title>(.*?)<\/title>/);
+	console.log(titleMatch?.[1] ?? "No title");
 }
 ```
 
@@ -146,7 +146,7 @@ curl -s -X POST "https://api.browserbase.com/v1/fetch" \
 
 ```typescript
 const response = await bb.fetchAPI.create({
-  url: "https://api.example.com/v1/data",
+	url: "https://api.example.com/v1/data",
 });
 
 const data = JSON.parse(response.content);

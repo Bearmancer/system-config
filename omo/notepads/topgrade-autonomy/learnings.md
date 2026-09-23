@@ -7,6 +7,7 @@
 - Notepad dir topgrade-autonomy did not exist, created.
 
 ## 2026-09-22 Task T5 maintenance topgrade Spectre command thin
+
 - CLI files already present as untracked work (MaintenanceTopgradeCommand.cs, MaintenanceCommandModule.cs, Program.cs wiring, csproj/slnx refs); only change needed: merged per-fail output from two lines (Warn Step + Info Hint) into one Warn line "{Step:l} Failed. Fix: {Hint:l}" to match spec one line per failed step plus fix hint.
 - --config option accepted plus existence-validated only; runner takes no config param so nothing passed through; keeps thin boundary with zero runner changes.
 - Publish to default dir blocked by stale toolbox.exe PID 17120 (started 04:33, 1 min CPU, locks on publish DLLs); verified via temp-dir publish instead, no kill, temp dir removed after. Both maintenance --help and maintenance topgrade --help exit 0.
@@ -19,8 +20,8 @@
 - install-scheduler.ps1 already registers Toolbox Topgrade weekly Sunday 9AM with StartWhenAvailable plus Bypass ExecutionPolicy action; git diff confirms Toolbox Sync daily block untouched (additions only); trigger object constructs Weekly DaysOfWeek Sunday; no live Register-ScheduledTask run (needs admin, left for T7 machine setup).
 - Cleanup: stale seed log removed from real state\logs\scheduler, TEMP dryrun dir and check scripts deleted; no src/tests/topgrade.toml touched, no commit.
 
-
 ## 2026-09-22 Task T7 topgrade.toml unattended + e2e live
+
 - Backup C:\Users\Lance\AppData\Roaming\topgrade.toml to topgrade.toml.bak first (hashes matched 496698E8...F81FC54D); edit only 3 keys in [misc]: assume_yes=true, ask_retry=false, auto_retry=1 (all uncommented). ignore_failures=["dotnet"] kept, legacy no_retry stays commented, disable/only/remote untouched.
 - Diff exactly 3 lines: -# assume_yes=true +assume_yes=true; -# ask_retry=true +ask_retry=false; -# auto_retry=0 +auto_retry=1.
 - Dry-run topgrade --dry-run --config <path> exit 0, zero prompts, 15 steps all OK (winget/rustup/.NET/cargo/vscode-insiders/pip3/tldr/npm/gcloud/gh-ext/claude/skills/bun/yazi + self-update).
