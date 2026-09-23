@@ -42,6 +42,14 @@ rp = check(os.path.join(BASE, "pass-real-footer.html"))
 if rp:
     fails.append(f"pass-real-footer.html expected [] got {rp}")
 
+hi = check(os.path.join(BASE, "index-home", "index.html"))
+if hi:
+    fails.append(f"index-home/index.html expected [] got {hi}")
+
+hu = check(os.path.join(BASE, "hub-home", "index.html"))
+if hu:
+    fails.append(f"hub-home/index.html expected [] got {hu}")
+
 rn = check(os.path.join(BASE, "fail-footer-nonav.html"))
 rnl = " | ".join(rn).lower()
 if not ("home" in rnl and "index.html" in rnl):
@@ -76,7 +84,7 @@ if fails:
     for f in fails:
         print("  - " + f)
     sys.exit(1)
-print("GREEN: all 5 fixtures behave per new spec")
+print("GREEN: all 7 fixtures behave per new spec")
 print("  pass issues:", p)
 print("  fail-old issues:", o)
 print("  fail-budget issues:", b)
