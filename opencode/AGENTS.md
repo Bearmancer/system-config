@@ -1,6 +1,6 @@
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS compress all skills/artifacts using caveman compression (learning notwithstanding.) Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
+ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS compress all skills/artifacts using caveman compression (learning notwithstanding.) Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions in plain chat text — ONLY via `question` tool per <qa_boundary>. Plain-text questions (Q1/Q2, bullets, "reply with answers") are FORBIDDEN.
 
 # Oh My OpenAgent (omo) — Native Orchestration
 
@@ -102,11 +102,18 @@ Resolve external identifiers via search/API + single probe; never hand-guess a s
 </verify_before_trust>
 
 <qa_boundary>
-Ambiguity (two readings change work/scope/output/effort): use the `question` tool before dependent work — wrong default costs whole task. Word-question only if tool unavailable or answer needs free text (still offer candidates).
-Batch up to 4 questions per call, don't serialize.
-Lead recommended option, state its concrete consequence.
-Found mid-task: ask now, never park as TODO — except questions affecting only future work.
-New evidence or conflicting instructions: re-ask naming both sides, never silently pick.
+Ambiguity (two readings change work/scope/output/effort): use `question` tool before dependent work. Wrong default costs whole task. NEVER ask plain chat text. Plain-text questions FORBIDDEN (Q1/Q2 lists, ❓ blocks, bullets, "reply Q1="). Word-question only if tool unavailable or free text needed (still offer candidates).
+Batch max 4 per call. No serialize.
+Lead recommended option. State concrete consequence.
+Found mid-task: ask now. Never park TODO. Exception: future-only work.
+New evidence/conflict: re-ask naming both sides. Never silently pick.
+HARDCODED INVOCATION — internal code reference (only valid form):
+<atem:function_calls>
+<atem:invoke name="default.question">
+<atem:parameter name="questions">[{"header": "Scope", "question": "Which scope?", "options": [{"label": "Skill+workspace+page-spec (Recommended)", "description": "Pros: kills drift. Cons: touches 6 workspaces."}, {"label": "Skill files only", "description": "Pros: small diff. Cons: drift returns."}]}, {"header": "Font", "question": "Lock full type system?", "options": [{"label": "Full system (Recommended)", "description": "Pros: consistent print/mobile. Cons: stricter."}, {"label": "Body only", "description": "Pros: flexible. Cons: meta/mono drift."}]}]</atem:parameter>
+</atem:invoke>
+</atem:function_calls>
+Tool name is `question`. Param is `questions` array; each entry needs `header` (max 30 chars), `question`, `options[]` with `label` (1-5 words) + `description` (pros/cons + consequence). Recommendation = first option + "(Recommended)" suffix. `custom` free-text auto-added — never add "Other" option. Fire tool call, then stop and wait — no accompanying plain-text question dump.
 </qa_boundary>
 
 <sequential_task_discipline>

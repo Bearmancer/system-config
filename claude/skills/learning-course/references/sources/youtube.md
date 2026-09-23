@@ -1,6 +1,6 @@
 # Source adapter — YouTube (and other chaptered video)
 
-The course engine is source-agnostic (see SKILL.md); this adapter covers everything YouTube-specific: fetching, slicing, description mining, caption quirks, and the corrections that auto-captions need. YouTube/transcript slices stay secondary unless user explicitly names video as spine; every chapter needs >= 1 non-YouTube primary.
+The course engine is source-agnostic (see SKILL.md); this adapter covers everything YouTube-specific: fetching, slicing, description mining, caption quirks, and the corrections that auto-captions need. YouTube/transcript slices stay secondary unless user explicitly names video as course source; every chapter needs >= 1 non-YouTube primary.
 
 ## Fetch metadata + captions
 

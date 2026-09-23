@@ -176,6 +176,16 @@
           }
         ]
       },
+      "deep": {
+        "model": "opencode/muse-spark-1.3-contributor-free",
+        "reasoning": "medium",
+        "fallback_models": [
+          {
+            "model": "opencode-go/muse-spark-1.3-contributor",
+            "reasoning": "high"
+          }
+        ]
+      },
       "artistry": {
         "model": "opencode/muse-spark-1.3-contributor-free",
         "reasoning": "medium",

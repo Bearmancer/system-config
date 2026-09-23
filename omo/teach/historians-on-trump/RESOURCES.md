@@ -1,11 +1,11 @@
 # Historians on Trump — Resources
 
-Trust tiers: **[C]** course spine · **[B]** books/records · **[D]** documents/survey instruments · **[S]** press/scholarship · **[W]** wisdom/communities. Every entry carries use + caution. URLs below are placeholders from `report.html` cited links only — verify against report bytes at Wave3 (bg full text pending).
+Trust tiers: **[C]** course source · **[B]** books/records · **[D]** documents/survey instruments · **[S]** press/scholarship · **[W]** wisdom/communities. Every entry carries use + caution. URLs below are placeholders from `report.html` cited links only — verify against report bytes at Wave3 (bg full text pending).
 
-## [C] Course spine
+## [C] Course source
 
 - Course report `report.html` (ulw-research 20260921-010000-historians-trump) **[C]**
-  Use: the only lesson source; sections map 1:1 to the 8-chapter map. Caution: report prose is the source's account — lessons check each claim per the claim-graph lock, never repeat as fact.
+  Use: the only lesson source; sections map 1:1 to the section map. Caution: report prose is the source's account — lessons check each claim per the claim-graph lock, never repeat as fact.
 
 ## [D] Survey instruments (primaries)
 

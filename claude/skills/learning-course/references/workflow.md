@@ -2,13 +2,12 @@
 
 ## Workspace discovery & creation
 
-1. Search `~/.omo/teach` (`fd -t d . ~/.omo/teach`) before creating anything. One workspace per source; its `MISSION.md` names the source and the user's position.
+1. Search `~/.omo/teach` (`fd -t d . ~/.omo/teach`) before creating anything. One workspace per source; its slug names the source directory.
 2. Topic slug: dash-case, content-based (`amway-tools-cult`, `putin-rise-to-power`); derive it from the topic.
 3. Layout:
    ```
    ~/.omo/teach/<slug>/
-   ├── MISSION.md            # provisional from first request; confirm at check-in
-   ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/status
+    ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/standing
    ├── RESOURCES.md          # tiered sources, every entry annotated, + Gaps
    ├── assets/lesson.css     # copy from this skill's assets/ (font-pinned)
    ├── index.html            # course home — chapters + reference pages, linked from the root hub
@@ -36,15 +35,11 @@
   `--chapters all` is the default; narrow to a subset only for a re-run or a targeted pass. Ranges come from the video's own `info.json` metadata, so hand-typed ranges stay override-only.
 - **Corrections log**: recurring garble patterns for this source (ASR mangling, OCR artifacts) and the canonical forms they resolve to.
 - **Quirks**: caption lag, missing captions, edition/translation notes, machine-specific findings.
-- **Queue & status**: what's done (with date + fact-check headline) and what's still queued.
-
-## MISSION.md (provisional pattern)
-
-Keep to a screen: Why (the user's real goal, best guess), Success looks like, Constraints (sequence discipline, terse chat, verification norm), Out of scope. Mark `Status: PROVISIONAL — drafted from the first request`, and confirm when the user is next around.
+- **Queue & standing**: what's done (with date + fact-check headline) and what's still queued.
 
 ## RESOURCES.md tiers
 
-`[C]` course source (the spine) · `[B]` books · `[D]` documents/records · `[S]` press/scholarship · `[W]` wisdom/communities — plus explicit **Gaps** (unlocated primaries, unfindable claims). Annotate every entry with use + caution; mark entries the source itself cites (`cited by the source`) because those are the first verification targets. Label advocacy sources as advocacy; treat distributor-run wikis as a second source alongside a primary.
+`[C]` course source · `[B]` books · `[D]` documents/records · `[S]` press/scholarship · `[W]` wisdom/communities — plus explicit **Gaps** (unlocated primaries, unfindable claims). Annotate every entry with use + caution; mark entries the source itself cites (`cited by the source`) because those are the first verification targets. Label advocacy sources as advocacy; treat distributor-run wikis as a second source alongside a primary.
 
 ## The treatise (per-chapter lesson structure)
 
@@ -55,7 +50,7 @@ Page structure, casing, citation, and timestamp rules: `references/page-design.m
 Lessons are stamped, never hand-authored. Shape lives in the template; content
 lives in YAML.
 
-- Template: `assets/lesson.stencil.html` (fixed section order, fixed footer).
+- Template: `assets/lesson.stencil.html` (conditional section order — §2 Cast only with explicit non-empty `cast` — fixed footer).
 - Schema + golden + corrupt-variant list: `references/lesson-schema.md`.
 - Contract (owners, row-id rule, parity test): `references/stencil-contract.md`.
 - Stamp: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`
@@ -87,17 +82,17 @@ Moved. The tier ladder, parallel-pass contract, pass budget, burn guards, and al
 
 ## Learning records
 
-Write one when the position advances with new insight, a verification norm emerges, or the user's preferences crystallize (depth, diagrams, method transparency). Format: title + Status + 1–3 sentences + evidence + implications. Verification findings use the per-chapter verdict format: claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote, one line per claim.
+Write one when the position advances with new insight, a verification norm emerges, or the user's preferences crystallize (depth, diagrams, method transparency). Format: title + standing + 1–3 sentences + evidence + implications. Verification findings use the per-chapter verdict format: claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote, one line per claim.
 
 ## Chat etiquette
 
-Terse status/pointers; the substance lives in the pages. Report as short lines: page path, live URL, the one or two headline fact-check findings. No queued-next lines, no closing questions, no offers to continue. Mention any standard step skipped as unnecessary (optionality rule) — as a statement, not a question.
+Terse position/pointers; the substance lives in the pages. Report as short lines: page path, live URL, the one or two headline fact-check findings. No queued-next lines, no closing questions, no offers to continue. Mention any standard step skipped as unnecessary (optionality rule) — as a statement, not a question.
 
 ## Standing behaviours
 
 - **Subagent-first.** Chapter production and the verification passes run as subagent tasks; the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
 - **Gates scale with the artifact.** (1) `check_lesson.py` on any lesson written or changed → exit 0 (no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; hyperlinked sources with no bare URLs; max-twice hyperlink rule; no teacher/method/primary-source tail blocks; links and assets resolve; dangling section references). (2) `check_map_geometry.py` on any SVG visual changed → exit 0 (edges through boxes, box overlaps including a node drawn inside another node, merged arrowheads, labels covering a box they do not belong to; label-on-line warnings reviewed and fixed when they matter) — and after editing the checker itself, re-run it on `evals/fixtures/geom-fixture.html`, which must report exactly one box overlap and one label-on-box. (3) A screenshot of any changed visual, looked at — keep the window height ≤2400, quote the `--window-size` value, verify the PNG is not a 756x488 fallback, and use iframe bands for long pages (details in `references/diagram-spec.md`). Each gate exists because a defect class shipped past the others: stray timestamps, edges through boxes, merged arrowheads, caption overflow, wrong cross-reference targets.
-- **Auto-open** every newly written/updated page (`Start-Process <file>`).
+- **Auto-open** every newly written/updated page — each via its own `Start-Process <file>` call so every page opens as a separate tab.
 - **Publish** when a teaching task completes (`~/.omo/scripts/publish_teach.py`), probe new URLs for 200, and on later visits verify the live bytes alongside the status code. Report without queued-next lines.
 - **Stay at the user's chapter position.** Teach chapter-and-earlier facts only — as internal discipline; the page itself never narrates the boundary.
 

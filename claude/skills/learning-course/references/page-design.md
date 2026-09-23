@@ -6,14 +6,12 @@ One visual language for every page this skill produces: lesson pages, `reference
 
 Fixed by `assets/lesson.stencil.html`; identical on every lesson page.
 
-1. **Home link** — `<p class="home-link">`, small text, first element in `<body>`, above the kicker. `../../index.html`.
-2. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
-3. **H1** — chapter title.
-4. **Surtitle** — `Chapter N of M`. No time range, no timestamp anywhere on the page — not the surtitle, not the meta line, not narrative/machinery/lead.
-5. **Top nav** — Chapter Index · Glossary, directly below the surtitle. Not the footer.
-6. **Meta line** — `Lesson NN · cast map · glossary`. No transcript link — `transcript` is an admin-only schema field (correction sourcing), never rendered.
-7. **§1–§4 numbered sections** — Summary, Cast, Narrative, Machinery. Fixed order, fixed Title Case headings.
-8. **Footer** — previous/next lesson links only. No home, no glossary, no chapter index, no Sources/bibliography block, no workspace line.
+1. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
+2. **H1** — chapter title.
+3. **Merged nav** — Home · Chapter Index · Glossary · Cast Map in one `<nav class="top-nav">`, Title Case, directly under the H1. Zero dupe links, no meta paragraph anywhere.
+4. **Surtitle** — `Chapter N of M`. No time range, no timestamp anywhere on the page — not the surtitle, not narrative/machinery/lead.
+5. **Numbered sections** — 1 Summary, [2 Cast only when `cast` is an explicit non-empty list,] 3 Narrative, 4 Machinery. Fixed Title Case headings, no renumbering when §2 omitted.
+6. **Footer** — previous/next lesson links only. No home, no glossary, no chapter index, no Sources/bibliography block, no workspace line.
 
 Reference and hub/index pages reuse the same typography and color tokens (below) but drop the lesson-specific nav elements they don't need — a hub page has no chapter to back-link to, no glossary of its own.
 
@@ -21,13 +19,13 @@ Reference and hub/index pages reuse the same typography and color tokens (below)
 
 Canonical values live in `assets/lesson.css`'s `:root` block — this section names what they're *for*, not the values themselves, so the two never disagree:
 
-- `--ink` / `--ink-soft` — body text / de-emphasized text (meta lines, surtitle, footer).
+- `--ink` / `--ink-soft` — body text / de-emphasized text (surtitle, footer, nav).
 - `--paper` — page background.
 - `--rule` — hairline borders (headings' top rule, table borders, footer top rule).
 - `--accent` — links, kicker, table `.when` column. The one accent color on the page.
 - `--mono` — the rare monospace run (timeline `.when`, inline code-like tokens).
 
-Serif body text (`"Sitka Text", Constantia, Charter, Georgia`), sans-serif for small UI text (kicker, meta, surtitle, top-nav, footer) — that split is the whole typographic system. No third typeface.
+Serif body text (`"Sitka Text", Constantia, Charter, Georgia`), sans-serif for small UI text (kicker, surtitle, top-nav, footer) — that split is the whole typographic system. No third typeface.
 
 ## Casing
 
@@ -43,24 +41,25 @@ Inline-only, forever — no Sources block, no bibliography, no footer citation l
 - First mention of a source in a chapter: a full inline `<a href="https://...">`.
 - Every later mention of the *same* URL: a superscript character that is itself the link — `<sup><a href="...">n</a></sup>`. Never a bare superscript marker, never an unlinked repeat.
 - Gate: `check_lesson.py` flags any heading matching `/sources|references|bibliography/i` and any `<sup>` not wrapped in `<a>`; `stamp_lesson.py` refuses at write time if a repeat isn't wrapped.
+- No bare tag codes: claim/observation shorthands like `[C4]` or `[O2]` point nowhere — numerals stand alone in prose and every claim carries a real hyperlink beside it.
 
 ## Rendered example (annotated skeleton)
 
 ```html
 <body>
-  <p class="home-link"><a href="../../index.html">Home</a></p>      <!-- 1. above the kicker -->
-  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 2. series name -->
-  <h1>1996</h1>                                                      <!-- 3. chapter title -->
-  <p class="surtitle">Chapter 13 of 18</p>                          <!-- 4. no time range -->
-  <nav class="top-nav">                                              <!-- 5. below surtitle, not footer -->
+  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 1. series name -->
+  <h1>1996</h1>                                                      <!-- 2. chapter title -->
+  <nav class="top-nav">                                              <!-- 3. merged nav under H1, Title Case, zero dupes -->
+    <a href="../../index.html">Home</a>
     <a href="../index.html#ch13">Chapter Index</a>
     <a href="../reference/glossary.html">Glossary</a>
+    <a href="../reference/cast-map.html">Cast Map</a>
   </nav>
-  <p class="meta">Lesson 07 · <a href="../reference/cast-map.html">cast map</a> · <a href="../reference/glossary.html">glossary</a></p>
+  <p class="surtitle">Chapter 13 of 18</p>                          <!-- 4. no time range -->
 
-  <h2>1. Summary</h2> ... <h2>2. Cast</h2> ... <h2>3. Narrative</h2> ... <h2>4. Machinery</h2>
+  <h2>1. Summary</h2> ... [<h2>2. Cast</h2> only when humans involved] ... <h2>3. Narrative</h2> ... <h2>4. Machinery</h2>
 
-  <footer class="lesson-footer">                                     <!-- 8. previous/next only -->
+  <footer class="lesson-footer">                                     <!-- 7. previous/next only -->
     <nav><a href="...">Previous: ...</a> <a href="...">Next: ...</a></nav>
   </footer>
 </body>

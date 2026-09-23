@@ -12,7 +12,7 @@ with `publish_teach.py`.
 - Index row id = `chK`. The publisher derives it with
   `(?i)-ch0*(\d+)` → `ch$1` (fallback `^(\d+)` → `lesson-$1`, then
   `lesson-$fallbackNum` for legacy files only).
-- Lesson backlink (top nav, below the heading) = `../index.html#chK`, derived
+- Lesson backlink (merged top nav, under the H1 above the surtitle) = `../index.html#chK`, derived
   from the same capture. One regex, one meaning, both sides.
 
 ## Owner table
@@ -28,36 +28,37 @@ with `publish_teach.py`.
 | 7  | ≥1 hyperlinked source                                  | Content + stamp        | first citation is a full inline `<a href="https://...">` in narrative/machinery; stamp requires it                |
 | 8  | No bare URL text                                       | Content + stamp + gate | stamp scans & fails; gate backstop                                                                                 |
 | 9  | Link target ≤2 occurrences, repeats superscripted      | Stamp + gate           | first mention bare `<a>`, every repeat `<sup><a>`; stamp pre-counts; gate backstop                                 |
+| 9b | No bare tag codes (`[C4]`/`[O2]` outside a link)        | Stamp + gate           | numerals stand alone; every claim carries a real hyperlink; stamp refuses at write time, gate backstop              |
 | 10 | No fact-check H2 / box-fact / box-record               | Template               | none exist; verdicts live inline                                                                                   |
 | 11 | No "Open Threads"                                      | Template               | none exists                                                                                                        |
 | 12 | No Sources/References/Bibliography heading, anywhere   | Template + gate        | citations are inline-only — no separate section ever; gate scans every heading                                    |
 | 13 | ≥2 inline verdict words in narrative                   | Content + stamp        | stamp requires ≥2 in `narrative`; gate backstop                                                                    |
 | 14 | Footer present (`lesson-footer`)                       | Template               | fixed block, nav = previous/next lesson only                                                                       |
-| 15 | Glossary link in top nav                               | Template               | fixed anchor below the heading, not the footer                                                                     |
-| 16 | Home link at top, above the kicker, small text         | Template               | fixed `<p class="home-link">` anchor, `../../index.html`, first thing in `<body>`                                  |
-| 17 | Chapter-index backlink in top nav                      | Template               | derived from filename via row-id contract, `../index.html#chK`                                                    |
-| 18 | Section refs (§N) match headings                       | Template + stamp       | template fixes section numbers 1–4; stamp scans § refs                                                             |
-| 19 | No dangling links (except publish-generated)           | Template + stamp       | only `../../index.html` + `../index.html#chK` are allowlisted; every other href must resolve on disk (stamp scans) |
+| 15 | Single merged nav row, Title Case, zero dupes | Template + gate | one `<nav class="top-nav">`: Home + Chapter Index + Glossary + Cast Map; gate refuses a second nav row or any `<p class="meta">` |
+| 16 | Home link in merged nav, budget x1 | Template + gate | fixed anchor `../../index.html`, text `Home`, at most once on the page |
+| 17 | Chapter-index backlink in merged nav, budget x1 | Template + gate | derived from filename via row-id contract, `../index.html#chK`, text `Chapter Index`, at most once |
+| 17b | Glossary link in merged nav, budget x1 | Template + gate | fixed anchor `../reference/glossary.html`, text `Glossary`, at most once on the page |
+| 17c | Cast Map link in merged nav, budget x1 | Template + gate | fixed anchor `../reference/cast-map.html`, text `Cast Map`, at most once on the page; no Lesson NN cell anywhere |
+| 18 | Section refs (§N) match headings; no §2 ref when Cast omitted | Template + stamp + gate | headings are 1 Summary, 2 Cast (only when `cast: []` absent — explicit non-empty list), 3 Narrative, 4 Machinery; stamp refuses §2 refs when Cast omitted; gate matches refs against existing headings |
+| 19 | No dangling links (except publish-generated)           | Template + stamp       | `../../index.html`, `../index.html#chK`, `../reference/glossary.html`, `../reference/cast-map.html` are allowlisted; every other href must resolve on disk (stamp scans) |
 | 20 | Assets resolve                                         | Template               | template emits no `src` (optional subgraph slot is inline SVG)                                                     |
-| 21 | Max-twice budget for index targets                     | Stamp                  | `../../index.html` ×1; `../index.html*` ×1 (the top-nav backlink)                                                  |
+| 21 | x1 budget per nav target                            | Stamp + gate           | `../../index.html` ×1; `../index.html*` ×1; `../reference/glossary.html` ×1; `../reference/cast-map.html` ×1 (merged nav only, zero dupes) |
 | 22 | No YouTube URL, anywhere                                | Stamp + gate           | a YouTube URL is never a source; stamp refuses at write time, gate backstop                                        |
-| 23 | Headings below H1 use Title Case                       | Template                | `Summary`, `Cast`, `Narrative`, `Machinery`, `Role This Chapter` — fixed text in the template                     |
+| 23 | Headings and nav cells use Title Case                 | Template                | `Summary`, `Cast`, `Narrative`, `Machinery`, `Role This Chapter`, nav `Home`, `Chapter Index`, `Glossary`, `Cast Map` — fixed text in the template |
 
-## Section order (fixed by template)
+## Section order (conditional)
 
-1. Summary · 2. Cast · 3. Narrative · 4. Machinery · footer (previous/next
-   nav only).
+1. Summary · 2. Cast (only when `cast` is an explicit non-empty list — humans involved) · 3. Narrative · 4. Machinery · footer (previous/next
+   nav only). When `cast: []`, §2 is omitted and headings run 1, 3, 4 with no renumbering.
 
 ## Page structure (top to bottom)
 
-1. Home link (`<p class="home-link">`, small text) — first element in `<body>`.
-2. Kicker (series name).
-3. H1 (chapter title).
+1. Kicker (series name).
+2. H1 (chapter title).
+3. Merged nav — Home · Chapter Index · Glossary · Cast Map in one `<nav class="top-nav">`, Title Case, directly under the H1.
 4. Surtitle — `Chapter N of M`, no time range.
-5. Top nav — Chapter Index · Glossary, directly below the surtitle.
-6. Meta line — Lesson NN · cast map · glossary.
-7. §1–§4 numbered sections.
-8. Footer — previous/next lesson links only.
+5. §1 Summary, [§2 Cast only when humans involved,] §3 Narrative, §4 Machinery.
+6. Footer — previous/next lesson links only. No meta paragraph anywhere.
 
 Full rationale + rendered example: `references/page-design.md`.
 
