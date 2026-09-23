@@ -1,0 +1,49 @@
+kicker: "Control: Story Explained"
+title: "Containment"
+chapter: 7
+chapters_total: 13
+time_range: "29:13–30:36"
+transcript: "containment-29m13s-30m36s.md"
+lead: "The Panopticon locks away what the Bureau cannot kill, and it held Dylan until the Hiss turned the prison into a hunting ground."
+cast:
+  - name: "Dylan Faden"
+    role: "Held in the P6 cell after killing agents"
+    ref: 10
+  - name: "Jesse Faden"
+    role: "Fights inward through the breach to reach him"
+    ref: 2
+  - name: "Helen Marshall"
+    role: "Security doctrine; her sector falls first"
+    ref: 3
+  - name: "Casper Darling"
+    role: "Built the HRA ward from Hedron resonance"
+    ref: 11
+  - name: "Emily Pope"
+    role: "Explains what the cells hold and why"
+    ref: 7
+  - name: "Frederick Langston"
+    role: "Panopticon supervisor chasing runaways"
+  - name: "The Hiss"
+    role: "Turns containment inside out"
+    ref: 8
+narrative: |
+  <p>The sector's purpose is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Containment_Sector">the Containment Sector page</a>: the Panopticon stores Altered Items and Objects of Power, including the Arctic Queen refrigerator and the Benicoff TV, behind cells built for things that cannot be killed.</p>
+  <p>Dylan's place in that system is a cell of his own:</p>
+  <blockquote>"Relocated to a containment cell in the Panopticon, considered a lost cause."</blockquote>
+  <p>The P6 cell and the lost-cause judgment are <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Dylan_Faden">Dylan's page</a>, which records the agent killings that put him there after Darling's protection ran out.</p>
+  <p>Dylan's own account of his loyalties is blunter:</p>
+  <blockquote>"I welcomed the Hiss. I let it in. The Hiss set me free."</blockquote>
+  <p>The embrace is <strong>confirmed</strong> as his stated position, while his claim that Polaris uses Jesse stays <strong>unverified</strong>: it reads as anger at abandonment rather than evidence.</p>
+machinery: |
+  <p>Containment runs on two tools. Cells hold objects, and HRAs hold minds, since the Hiss takes people rather than things.</p>
+  <p>Darling's amplifiers only work while Hedron sings, which ties this sector's safety to a god in another chapter.</p>
+sources:
+  - label: "Control Wiki Containment Sector page"
+    url: "https://control.fandom.com/wiki/Containment_Sector"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Dylan Faden page"
+    url: "https://control.fandom.com/wiki/Dylan_Faden"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Panopticon via sector page"
+    url: "https://control.fandom.com/wiki/Panopticon"
+    note: "accessed 2026-09-21"

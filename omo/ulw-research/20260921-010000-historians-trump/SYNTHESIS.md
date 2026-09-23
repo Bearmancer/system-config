@@ -1,0 +1,4 @@
+# SYNTHESIS locked — see bg_7f09dd81 full text
+Header Workers converge bg_66eab35b verify bg_8e30dca9 expand bg_bb98641e. Waves wave-3 20 queries wave-4 freeze. Sources NYT Apr30 35 + Dec22 36 BrightData, C-SPAN 142, PGP 154, Siena 141, NPR/PBS/NBC transcripts. Verifications 2-domain+primary+counter C4 C5 C6 C7 C10b, attributed C8 C9, qualified C10, annex A1-A3 barred. Elapsed Apr30 2025-Dec22 2025-Meacham 2026-02-16-Brinkley 2025-05-07-freeze 2026-09-21.
+Exec summary: NYT split 4 buckets no single verdict; rankings firmest unprecedented signal C-SPAN41st 312 PGP last10.92 Lincoln95.03 Biden62.66 Siena category-last overall third-worst 2018 displaces Buchanan; Trump I denial degree-kind +228v58 qualified, Trump II no-firewall Brinkley +steroids Riley attributed, Fed boats pardons annexed framing only.
+Full sections rankings-table verdict-table contradictions gaps trace sources in bg_7f09dd81 output — cite [C#][O#] only.

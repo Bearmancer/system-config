@@ -1,0 +1,44 @@
+kicker: "Control: Story Explained"
+title: "Ahti"
+chapter: 12
+chapters_total: 13
+time_range: "41:55–43:22"
+transcript: "who-is-ahti-41m55s-43m22s.md"
+lead: "A janitor with a mop, a song, and clearance no one gave him shepherds the Director through the impossible, then clocks out beyond explanation."
+cast:
+  - name: "Ahti"
+    role: "Janitor; helper, guide, and open question"
+  - name: "Jesse Faden"
+    role: "Taken on as his assistant"
+    ref: 2
+  - name: "The Board"
+    role: "Lets him roam where it bars others"
+    ref: 5
+  - name: "Dylan Faden"
+    role: "Never got an Ahti; got a cell instead"
+    ref: 10
+  - name: "Casper Darling"
+    role: "Documented entities; never documented him"
+    ref: 11
+  - name: "The Hiss"
+    role: "Seems unable to touch him"
+    ref: 8
+narrative: |
+  <p>Ahti hires Jesse before the Board finishes choosing her:</p>
+  <blockquote>"You will be my assistant."</blockquote>
+  <p>The title is <strong>confirmed</strong> as his standing term for Jesse, while the exact line as quoted here stays <strong>unverified</strong> outside the video's captions.</p>
+  <p>His maze privileges are the hard fact. The Ashtray belongs to Trench's binding, yet Ahti crosses it at will and lends Jesse the passage via his cassette player. That freedom is <strong>confirmed</strong> in the maze record, which also notes the maze shields its privileged walkers from the Hiss mid-crossing.</p>
+  <p>Then the holiday. Ahti departs on unexplained leave, immune and unbothered to the last, and the Finnish Tango mission that fetches him back only deepens the joke. Theories call him god, entity, or the House itself, and every one of them is <strong>unverified</strong>. The canon cited on <a href="https://control.fandom.com/wiki/Ashtray_Maze">the maze page</a> and <a href="https://www.eurogamer.net/control-walkthrough-guide-tips-6043?page=17">the maze guide</a> describes what he does, never what he is.</p>
+machinery: |
+  <p>Ahti works as a key dispenser with personality. Repairs unlock sectors, music unlocks the maze, and absence unlocks questions.</p>
+  <p>His cassette player is the only object in the game that overrules a Director's binding, which is the strongest hint about him on record.</p>
+sources:
+  - label: "Control Wiki Ashtray Maze page"
+    url: "https://control.fandom.com/wiki/Ashtray_Maze"
+    note: "accessed 2026-09-21"
+  - label: "Eurogamer Ashtray Maze guide"
+    url: "https://www.eurogamer.net/control-walkthrough-guide-tips-6043?page=17"
+    note: "accessed 2026-09-21"
+  - label: "Polygon Ashtray Maze guide"
+    url: "https://www.polygon.com/control-guide/2019/8/28/20837584/ashtray-maze"
+    note: "accessed 2026-09-21"

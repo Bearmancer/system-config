@@ -1,0 +1,44 @@
+kicker: "Control: Story Explained"
+title: "Darling"
+chapter: 11
+chapters_total: 13
+time_range: "40:14–41:55"
+transcript: "dr-darling-40m14s-41m55s.md"
+lead: "The Bureau's showman scientist found a god in a slide, built armor from its song, and vanished before the curtain fell."
+cast:
+  - name: "Casper Darling"
+    role: "Head of Research; speaks only through recordings"
+  - name: "Jesse Faden"
+    role: "Inherits his labs, his tapes, and his mess"
+    ref: 2
+  - name: "Zachariah Trench"
+    role: "Joined the expeditions; returned carrying the Hiss"
+    ref: 4
+  - name: "Hedron"
+    role: "Darling's find; his greatest discovery and doom"
+    ref: 8
+  - name: "Emily Pope"
+    role: "Continues his research after he is gone"
+    ref: 7
+  - name: "Dylan Faden"
+    role: "His supervised candidate turned lost cause"
+    ref: 10
+narrative: |
+  <p>Darling never appears alive; he presents. His tapes guide Jesse through Dimensional Research to the chamber, and the find they describe is:</p>
+  <blockquote>"A polyhedron-shaped organism he coined the Hedron."</blockquote>
+  <p>The naming is <strong>confirmed</strong> in <a href="https://control.fandom.com/wiki/Control">the wiki plot record</a>: several expeditions into the one surviving slide dimension, a living source of HRA resonance, and a name Darling invented on the spot.</p>
+  <p>The assumption that these presentations are live briefings is <strong>corrected</strong> by their placement. They are recordings Jesse finds after Darling is already gone, which is why every tape feels one step behind the disaster.</p>
+  <p>His end is the gap this lesson refuses to fill. Whether he died, transformed, or walked somewhere unmappable is <strong>unverified</strong> across <a href="https://control.fandom.com/wiki/Casper_Darling">his page</a> and every file cited here. No tape says where he went, and this pass invents nothing.</p>
+machinery: |
+  <p>Darling's machine is the presentation itself: cheerful videos that convert apocalypse into procedure, one threshold at a time.</p>
+  <p>The HRAs are his legacy hardware. Every agent Jesse meets alive wears his work.</p>
+sources:
+  - label: "Control Wiki plot record"
+    url: "https://control.fandom.com/wiki/Control"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Darling page"
+    url: "https://control.fandom.com/wiki/Casper_Darling"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Hedron research page"
+    url: "https://control.fandom.com/wiki/Hedron"
+    note: "accessed 2026-09-21"

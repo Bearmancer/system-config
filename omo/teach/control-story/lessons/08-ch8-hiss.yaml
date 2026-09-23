@@ -1,0 +1,50 @@
+kicker: "Control: Story Explained"
+title: "The Hiss"
+chapter: 8
+chapters_total: 13
+time_range: "30:36–33:06"
+transcript: "the-hiss-invasion-30m36s-33m06s.md"
+lead: "A resonance from behind slide 36 that wears voices, repeats one sentence forever, and kills everything it cannot convert."
+cast:
+  - name: "The Hiss"
+    role: "Corrupting resonance; entered through Trench's slide"
+  - name: "Zachariah Trench"
+    role: "First possessed; opened the door from inside"
+    ref: 2
+  - name: "Dylan Faden"
+    role: "Welcomed it and aimed it at the Bureau"
+    ref: 10
+  - name: "Casper Darling"
+    role: "Found its source world while hunting Hedron"
+    ref: 11
+  - name: "Helen Marshall"
+    role: "Held lines against it until the sectors fell"
+    ref: 3
+  - name: "Emily Pope"
+    role: "Names it resonance and builds the counter-doctrine"
+    ref: 7
+  - name: "The Board"
+    role: "Nearly lost its Plane to Dylan's Hiss bid"
+    ref: 5
+narrative: |
+  <p>The invasion looks external until the tapes play. The first impression of an outside attack is <strong>corrected</strong> by <a href="https://control.fandom.com/wiki/Hiss_invasion">the invasion record</a>: Trench, already under influence, worked the projector himself, so the door opened from inside.</p>
+  <p>What came through announces itself endlessly:</p>
+  <blockquote>"You are a worm through time."</blockquote>
+  <p>The sentence is <strong>confirmed</strong> as the Hiss incantation, repeated by the possessed and by Trench on the Hotline alike.</p>
+  <p>The counter-frequency has a name and a shape. Darling's expeditions into the surviving slide dimension found a polyhedron organism he dubbed Hedron, the source of HRA resonance. That find is <strong>confirmed</strong> in the plot record, and so is the price: when the Hiss destroys Hedron, Jesse's mind nearly follows, until she rediscovers Polaris within herself. Dylan's boast that the Hiss set him free stays <strong>unverified</strong> as anything but his own allegiance, and <a href="https://control.fandom.com/wiki/The_Hiss">the Hiss page</a> keeps the entity's own origins blank.</p>
+machinery: |
+  <p>Hiss mechanics are resonance mechanics. Exposure converts, HRAs jam the signal, and Hedron out-sang the invasion until it died.</p>
+  <p>Polaris inside Jesse is the last transmitter standing, which is why the ending can turn on an inner voice rather than a bigger gun.</p>
+sources:
+  - label: "Control Wiki Hiss invasion page"
+    url: "https://control.fandom.com/wiki/Hiss_invasion"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Hiss page"
+    url: "https://control.fandom.com/wiki/The_Hiss"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Hedron via Polaris page"
+    url: "https://control.fandom.com/wiki/Polaris"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Hedron research page"
+    url: "https://control.fandom.com/wiki/Hedron"
+    note: "accessed 2026-09-21"

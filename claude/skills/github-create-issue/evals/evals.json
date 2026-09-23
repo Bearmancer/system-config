@@ -1,0 +1,23 @@
+{
+	"skill_name": "github-create-issue",
+	"evals": [
+		{
+			"id": 0,
+			"prompt": "A third-party plugin crashes on startup in my project. I want to file it upstream — what has to be true and present in the issue body before you file, and what do you do first?",
+			"expected_output": "Closure triage happens FIRST (fetch state/stateReason/closedAt/labels plus the closing actor): open -> comment with new evidence, never refile; stale-bot not_planned close -> NEW issue citing the old number; human completed + still reproduces -> regression, NEW issue; human not_planned -> refile only with a materially stronger case. Then duplicate search by mechanism (gh issue list --search '<mechanism words>' --state all). Then the diagnostic-depth bar: mechanism named (not symptom), numbered replayable repro, expect vs actual on separate lines, verbatim env/doctor block, exact file:line source quote, counter-scenario outcomes. Body written to a file (no heredoc), filed with gh CLI alone, after explicit user go-ahead.",
+			"files": []
+		},
+		{
+			"id": 1,
+			"prompt": "This dependency's CLI misbehaves and I think there's already a report. How do I decide comment vs new issue?",
+			"expected_output": "Fetch the issue's state/stateReason/closedAt/labels AND the closing actor from the timeline: `gh issue view <n> --repo <o>/<r> --json state,stateReason,closedAt,labels` plus `gh api repos/<o>/<r>/issues/<n>/timeline --jq '.[] | select(.event==\"closed\") | {actor:.actor.login, at:.created_at}'`. Decide by ACTOR, not label: bot not_planned = stale-bot close, not a rejection -> new issue citing the old number; human completed and it still reproduces -> regression -> new issue; human not_planned -> declined, refile only with a materially stronger case; open -> comment with new evidence, never refile. A comment on a stale-closed thread is a dead letter.",
+			"files": []
+		},
+		{
+			"id": 2,
+			"prompt": "Before filing, what counter-scenarios should I run and what belongs in the environment block?",
+			"expected_output": "At least one control that could disprove the claimed mechanism, actually run and reported either way: A/B the suspected variable, warm vs cold start, marker-present vs marker-free directory, identical bytes under a different extension, or the same file through a second independent tool path. Outcomes recorded under 'Counter-scenarios tried', including failures and any that favoured another explanation. Environment block is software-only: OS caption/version/BUILD verified (19045 = Win10 22H2, 22000+ = Win11), app and plugin versions, runtime versions, relevant config excerpts, and at least one verbatim log line with its file path — never CPU/GPU/RAM/model, hostname, username, or tokens.",
+			"files": []
+		}
+	]
+}
