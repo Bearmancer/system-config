@@ -24,13 +24,6 @@ cast:
   - name: "Broderick Northmoor"
     role: "Yardstick Dylan was measured against"
     ref: 4
-essentials:
-  - "Dylan is P6 and Jesse is P7; the designations are documented."
-  - "Dylan killed agents, was isolated, and landed in the Panopticon."
-  - "Jesse grew up watched but free, the control to Dylan's test."
-skippables:
-  - "Fates of P1 through P5 beyond what the files state."
-  - "Numbering trivia and collectible ordering."
 narrative: |
   <p>The numbering is the one hard fact in a soft file:</p>
   <blockquote>"Dylan and Jesse were dubbed P6 and P7."</blockquote>

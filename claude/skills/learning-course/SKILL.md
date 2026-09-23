@@ -89,7 +89,7 @@ Open every newly written/updated page — the newest lesson + each new/updated r
 
 ## Verification gates
 
-Gates scale with artifact: `check_lesson.py` on each lesson written or changed; `check_map_geometry.py` on each SVG visual changed; screenshot pass on each visual changed. Gates run on changed files.
+Gates scale with artifact: `check_lesson.py` on each page written or changed (lesson, index, or reference mode by path); `check_map_geometry.py` on each SVG visual changed; screenshot pass on each visual changed. Gates run on changed files.
 
 ## Rules
 

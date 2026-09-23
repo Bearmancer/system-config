@@ -23,13 +23,6 @@ cast:
   - name: "Dylan Faden"
     role: "Sought the Board's seat through the Hiss"
     ref: 10
-essentials:
-  - "The Board speaks through the inverted pyramid and Jesse alone parses it."
-  - "Darling's note limits them: they control the pyramid, not the whole Plane."
-  - "The Former was cast out and now builds an opposition."
-skippables:
-  - "The fridge-watch side mission beat by beat."
-  - "Every Board utterance transcribed in full."
 narrative: |
   <p>The video states the setup plainly, in its own words:</p>
   <blockquote>"A group of paranatural entities, pretty much invisible, living in the Astral Plane."</blockquote>

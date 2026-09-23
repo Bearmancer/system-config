@@ -22,13 +22,6 @@ cast:
   - name: "C-SPAN instrument (contrast)"
     role: "Ranking survey; a different instrument from asked-framing"
     ref: 3
-essentials:
-  - "The April round split four ways: no precedent as asked, modern-era precedent, different degree-kind, not uncommon [C4][O1]."
-  - "The survey asked about precedent; that method line is not itself a verdict [C4][O1]."
-  - "Fed firing, drug boats and pardons stay asked-framing only, never fact claims [C4][O1]."
-skippables:
-  - "Respondent-by-respondent tally colour."
-  - "Any single-label summary of the round."
 narrative: |
   <p>On Apr 30 2025 the report states thirty-five historians were asked about twenty-two actions, and that count is <strong>confirmed</strong> against the frozen verdict record described in <a href="https://www.nytimes.com/2025/04/30/us/politics/trump-historians-presidency.html">the April write-up</a>. The double witness holds: the report pointers and the cast table beside them agree on 35 historians and 22 actions, so the December 36 must never be swapped into this round, a misreading <strong>corrected</strong> at the start.</p>
   <blockquote>"whether 22 Trump actions had precedent"</blockquote>

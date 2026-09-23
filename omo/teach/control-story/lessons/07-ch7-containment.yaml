@@ -26,13 +26,6 @@ cast:
   - name: "The Hiss"
     role: "Turns containment inside out"
     ref: 8
-essentials:
-  - "The Panopticon cells hold Altered Items and once held Dylan."
-  - "HRAs are the only portable ward against Hiss seizure."
-  - "The Hiss breach forces Jesse to fight inward toward her brother."
-skippables:
-  - "Individual Altered Item files."
-  - "Runaway roundup errands."
 narrative: |
   <p>The sector's purpose is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Containment_Sector">the Containment Sector page</a>: the Panopticon stores Altered Items and Objects of Power, including the Arctic Queen refrigerator and the Benicoff TV, behind cells built for things that cannot be killed.</p>
   <p>Dylan's place in that system is a cell of his own:</p>

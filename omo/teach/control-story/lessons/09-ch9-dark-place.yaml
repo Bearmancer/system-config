@@ -26,13 +26,6 @@ cast:
   - name: "Casper Darling"
     role: "His sealed archives hold the AWE cases"
     ref: 11
-essentials:
-  - "The AWE expansion opens the sealed Investigations Sector."
-  - "Hartman plus Darkness plus Hiss makes the Third Thing."
-  - "Wake's messages point Jesse at the Dark Place and a future date."
-skippables:
-  - "Surge weapon-form statistics."
-  - "Arcade-cabinet boss replays."
 narrative: |
   <p>The sector was sealed after its AWE work went wrong, and Jesse pries it open following visions of Wake. That setup is <strong>confirmed</strong> in <a href="https://www.gamespot.com/reviews/control-awe-dlc-review-haunted-oldest-house/1900-6417549">the AWE review</a>, which names Hartman, consumed by darkness and worsened by Hiss interference, as the horror at its center.</p>
   <p>Wake's own warning about his double survives in the coverage:</p>

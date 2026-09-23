@@ -34,14 +34,6 @@ cast:
   - name: "Ahti"
     role: "Guides repairs and grants maze passage"
     ref: 12
-essentials:
-  - "Jesse binds the Service Weapon and the Board names her Director."
-  - "Dylan embraced the Hiss; the Slide Projector is its door into the House."
-  - "Hedron is Polaris, and its death nearly takes Jesse with it."
-  - "Jesse shuts the projector, cleanses Dylan into a coma, and takes the chair."
-skippables:
-  - "Side missions and collectible order."
-  - "Power upgrade sequence and weapon-form tuning."
 narrative: |
   <p>Jesse arrives pulled by Polaris, finds Trench dead of a gunshot, and lifts the Service Weapon. The Astral ritual that follows is <strong>confirmed</strong> against <a href="https://control.fandom.com/wiki/Control">the wiki plot record</a>: the Board selects her as Director on the spot, and she steps out into a House already wearing the Hiss.</p>
   <p>The Hiss announces itself with one endlessly repeated sentence:</p>

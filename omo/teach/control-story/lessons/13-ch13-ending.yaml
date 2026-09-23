@@ -27,13 +27,6 @@ cast:
   - name: "Emily Pope"
     role: "Stays to run the long cleanup"
     ref: 7
-essentials:
-  - "The projector goes dark and Dylan is cleansed into a coma."
-  - "Jesse accepts the Director's seat without conditions."
-  - "The lockdown holds until the remaining Hiss dies."
-skippables:
-  - "Post-credit cleanup missions."
-  - "DLC hooks beyond one line each."
 narrative: |
   <p>The climax runs through the Astral Plane: Dylan tries to hand the Board's seat to the Hiss, Jesse pulls him back, and the projector goes dark. That sequence is <strong>confirmed</strong> in <a href="https://www.ign.com/articles/2019/09/19/controls-ending-explained-in-depth-answers-for-all-your-questions">the ending breakdown</a>, which also confirms the price and the aftermath: Dylan comatose, Jesse seated, and the lockdown still in force.</p>
   <p>The false defeat first: Jesse falls, the credits roll early, and she wakes a bureaucrat in a Hiss dream. The despair is <strong>corrected</strong> by the Oceanview return, where Polaris turns out to have ridden inside her all along. The dream-office beat is <strong>confirmed</strong> in the same breakdown.</p>

@@ -11,14 +11,11 @@ from pathlib import Path
 
 MD_LINK_PATTERN = re.compile(r'(?s)<a\s+[^>]*href="[^"]*\.md"[^>]*>(.*?)</a>')
 TITLE_PATTERN = re.compile(r"(?s)<title>(.*?)</title>")
-MISSION_H1_PATTERN = re.compile(r"(?m)^#\s+(.+)$")
 CHAPTER_ROW_CH_PATTERN = re.compile(r"(?i)-ch0*(\d+)")
 CHAPTER_ROW_LESSON_PATTERN = re.compile(r"^(\d+)")
 CHAPTER_NUM_PATTERN = re.compile(r"(?i)ch(?:apter)?\.?\s*0*(\d+)")
 LESSON_PATH_PATTERN = re.compile(r"(?i)^[^/]+/lessons/")
 REFERENCE_PATH_PATTERN = re.compile(r"(?i)^[^/]+/reference/")
-COURSE_HOME_TITLE_PATTERN = re.compile(r"(?i)^course home")
-MISSION_PREFIX_PATTERN = re.compile(r"(?i)^mission\s*[:—-]\s*")
 
 CANONICAL_CSS = (
     Path.home() / ".claude" / "skills" / "learning-course" / "assets" / "lesson.css"

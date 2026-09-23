@@ -23,13 +23,6 @@ cast:
   - name: "The Hiss"
     role: "Seems unable to touch him"
     ref: 8
-essentials:
-  - "Ahti guides the repairs and grants maze passage with the cassette player."
-  - "He walks the maze freely though Trench bound it."
-  - "His nature is never established; the lesson keeps it that way."
-skippables:
-  - "Song lyric catalogues."
-  - "Janitor-complaint gags."
 narrative: |
   <p>Ahti hires Jesse before the Board finishes choosing her:</p>
   <blockquote>"You will be my assistant."</blockquote>

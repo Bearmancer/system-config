@@ -25,13 +25,6 @@ cast:
   - name: "Ahti"
     role: "Predates every org chart shown"
     ref: 12
-essentials:
-  - "The Bureau formed around the Oldest House after its mid-century discovery."
-  - "Northmoor's accumulated power forced his containment; Trench followed him into the chair."
-  - "The Prime Candidate Program hunted successors long before Jesse arrived."
-skippables:
-  - "Full director chronology with dates."
-  - "Collectible file numbers behind each claim."
 narrative: |
   <p>The Bureau's own files date the Oldest House discovery to the nineteen-sixties, and the agency grew up around the building rather than the other way round. That founding order is <strong>confirmed</strong> on <a href="https://control.fandom.com/wiki/Federal_Bureau_of_Control">the Bureau page</a>, while exact dates stay <strong>unverified</strong> in this pass.</p>
   <p>Northmoor is the cautionary tale the Bureau keeps locked up: a Director whose paranatural strength outgrew the chair until containment became the only option. The containment itself is <strong>confirmed</strong> in the canon summaries, and Dylan's later comparison to Northmoor shows the Bureau still measures candidates against him.</p>
