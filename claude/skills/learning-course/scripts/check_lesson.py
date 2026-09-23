@@ -159,7 +159,7 @@ def check(path):
             issues.append(f"top-nav: missing Title Case cell '{label}' in merged nav")
     if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
         issues.append(
-            "meta row present: lessons carry no <p class=meta>, nav holds Lesson NN"
+            "meta row present: lessons carry no <p class=meta>; the merged nav holds Home · Chapter Index · Glossary · Cast Map"
         )
     if re.search(r"\bspine\b", low):
         issues.append("spine wording present: use 'course source', never 'spine'")
