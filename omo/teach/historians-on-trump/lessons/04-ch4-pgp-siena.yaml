@@ -1,0 +1,43 @@
+kicker: "Historians on Trump"
+title: "Two More Instruments: Greatness Last and the Siena Split"
+chapter: 4
+chapters_total: 8
+time_range: "Section 4 of 8 · 2022–2024"
+transcript: "sec4-pgp-siena.md"
+lead: "The Greatness Project put Trump last at 10.92 while Siena split its answer, and the two instruments teach different lessons about how to cite a number. The white-paper PDF carries the PGP figures; the Siena PDF carries the category grades; homepages carry neither."
+cast:
+  - name: "PGP team"
+    role: "2024 survey owners; 154 usable replies of 525 invited on a greatness scale"
+  - name: "Siena team"
+    role: "2022 survey owners; 141 scholars across 20 categories"
+  - name: "154 usable respondents"
+    role: "Replies behind the 10.92 total; Qualtrics late 2023 into December"
+  - name: "141 Siena scholars"
+    role: "Scholars behind the category grades and the split verdict"
+  - name: "Brandon Rottinghaus"
+    role: "PGP scholar; peer-review layer behind the white paper"
+    ref: 1
+  - name: "Justin Vaughn"
+    role: "Rankings scholar; method voice across the companion instruments"
+    ref: 3
+  - name: "Buchanan (anchor)"
+    role: "Offstage president; displaced as last in the 2018 anchor story"
+  - name: "C-SPAN team (contrast)"
+    role: "Companion 2021 instrument; trait grades, not a greatness scale"
+narrative: |
+  <p>The report gives Trump last at 10.92 beside Biden at 62.66 and Lincoln at 95.03, from 154 usable replies of 525 invited, and those figures are <strong>confirmed</strong> against the frozen white-paper record. The double witness holds: report pointers, glossary entry, manifest and synthesis agree on all three numerals, while the Qualtrics window of late 2023 into December with 525 invited and 154 usable is <strong>confirmed</strong> the same way.</p>
+  <blockquote>"Trump last 10.92; Biden 62.66; Lincoln 95.03"</blockquote>
+  <p>The quoted triple is the citable unit, and the stale Lincoln 93.87 from snippet drift is <strong>corrected</strong> to 95.03. The 93.87 figure appears only in snippet output, never in the frozen primary, so any retelling that carries it repeats drift, not record; the project homepage is never the numbers citation either, a habit <strong>corrected</strong> toward the white-paper PDF described at <a href="https://presidentialgreatnessproject.com/">the project home</a> only as signpost.</p>
+  <blockquote>"category-last on integrity; overall third-worst"</blockquote>
+  <p>Siena 2022 reads that split: last in the integrity category with third-worst overall, a reading <strong>confirmed</strong> against the frozen Siena PDF. The shortened overall-last version is best called <strong>partially correct</strong>, right about the category and <strong>wrong</strong> about the overall, while the plain overall-last label stays <strong>wrong</strong>; the 2018 anchor where Trump displaces Buchanan as last belongs to its own story, <strong>confirmed</strong> apart. Siena site copy stays summary, and grades cite the Siena PDF per <a href="https://sri.siena.edu/american-presidents/">the Siena page</a> note.</p>
+  <p>Figure variants outside the frozen white-paper PDF stay <strong>unverified</strong>, and the peer-review layer behind the PGP numbers travels beside every citation without replacing the PDF. Two instruments, two primaries, one rule: cite the paper, never the homepage.</p>
+machinery: |
+  <p>PGP ran a Qualtrics greatness scale from zero to one hundred across late 2023 into December, while Siena asked scholars to grade twenty categories and aggregate separately. Different scales produce different kinds of last: PGP overall-last against the full field, Siena category-last with third-worst overall.</p>
+  <p>The white-paper PDF carries the PGP numbers and the Siena PDF carries the category grades; homepages and site copy stay signposts, never primaries. Counts travel with their provenance line: who counted, from what source, and which primary still holds the figure.</p>
+sources:
+  - label: "Presidential Greatness Project 2024 home"
+    url: "https://presidentialgreatnessproject.com/"
+    note: "signpost only; numbers cite the white-paper PDF per O5"
+  - label: "Siena 2022 survey page"
+    url: "https://sri.siena.edu/american-presidents/"
+    note: "summary only; grades cite the Siena PDF per O22"

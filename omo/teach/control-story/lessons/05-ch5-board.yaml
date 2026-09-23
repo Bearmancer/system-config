@@ -1,0 +1,46 @@
+kicker: "Control: Story Explained"
+title: "The Board"
+chapter: 5
+chapters_total: 13
+time_range: "25:02–26:39"
+transcript: "the-board-25m02s-26m39s.md"
+lead: "Invisible residents of the Astral Plane speak through an upside-down pyramid, choose every Director, and may only rent the power they claim to own."
+cast:
+  - name: "The Board"
+    role: "Appoints Directors; speaks in fragments Jesse alone parses"
+  - name: "The Former"
+    role: "Cast-out member building an opposition"
+    ref: 3
+  - name: "Jesse Faden"
+    role: "The one listener who grasps their gist"
+    ref: 2
+  - name: "Casper Darling"
+    role: "Surmised the Board rents the pyramid, not the Plane"
+    ref: 11
+  - name: "Zachariah Trench"
+    role: "Proved even a chosen Director can fall"
+    ref: 4
+  - name: "Dylan Faden"
+    role: "Sought the Board's seat through the Hiss"
+    ref: 10
+narrative: |
+  <p>The video states the setup plainly, in its own words:</p>
+  <blockquote>"A group of paranatural entities, pretty much invisible, living in the Astral Plane."</blockquote>
+  <p>The pyramid link is <strong>confirmed</strong> in the canon summaries: a massive upside-down black pyramid carries their speech, and Jesse grasps the gist where others hear noise.</p>
+  <p>Then comes Darling's cut-down, again in the video's words:</p>
+  <blockquote>"The Board only control the pyramid rather than the entirety of the Astral Plane."</blockquote>
+  <p>That limit is <strong>confirmed</strong> as Darling's in-game hypothesis on <a href="https://control.fandom.com/wiki/The_Board">the Board page</a>. The assumption that the Board owns the Plane is <strong>corrected</strong> by it: they may be tenants with a loud artifact rather than landlords.</p>
+  <p>The Former's exile fills out the warning. It was cast out, it says it was blamed for something, and the Board's anger when Jesse takes its gift is real. The backstory details stay <strong>unverified</strong>, and Board origins are never established anywhere in the canon cited here. The <a href="https://control.fandom.com/wiki/Astral_Plane">Astral Plane page</a> documents the place without naming its makers.</p>
+machinery: |
+  <p>The Board governs through appointment and ritual. Service Weapon bindings, Directorial Overrides, and pyramid audiences are all Board-mediated acts.</p>
+  <p>The Former matters as proof the Board can lose members, which makes Jesse's later defiance thinkable.</p>
+sources:
+  - label: "Control Wiki Board page"
+    url: "https://control.fandom.com/wiki/The_Board"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Astral Plane page"
+    url: "https://control.fandom.com/wiki/Astral_Plane"
+    note: "accessed 2026-09-21"
+  - label: "Control Wiki Director page"
+    url: "https://control.fandom.com/wiki/Director_of_the_Federal_Bureau_of_Control"
+    note: "accessed 2026-09-21"

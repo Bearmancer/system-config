@@ -1,0 +1,61 @@
+kicker: "Control: Story Explained"
+title: "Full plot walk"
+chapter: 2
+chapters_total: 13
+time_range: "1:09–17:39"
+transcript: "plot-1m09s-17m39s.md"
+lead: "Jesse Faden walks into the Oldest House looking for her brother and walks out its Director, then spends the game earning the title while the Hiss eats the Bureau from inside."
+cast:
+  - name: "Jesse Faden"
+    role: "New Director; binds the Service Weapon in Trench's office"
+  - name: "Dylan Faden"
+    role: "Her brother; embraced the Hiss and opened its door"
+    ref: 10
+  - name: "Zachariah Trench"
+    role: "Late Director; speaks from the Hotline after death"
+    ref: 4
+  - name: "Helen Marshall"
+    role: "Head of Operations; holds the Research Sector"
+    ref: 3
+  - name: "Emily Pope"
+    role: "Researcher who decodes the Hiss for Jesse"
+    ref: 7
+  - name: "The Board"
+    role: "Names Jesse Director through the Astral ritual"
+    ref: 5
+  - name: "Polaris"
+    role: "Jesse's lifelong passenger; later revealed as Hedron"
+  - name: "The Hiss"
+    role: "Invading resonance wearing Bureau staff"
+    ref: 8
+  - name: "Casper Darling"
+    role: "Led the expeditions that found Hedron"
+    ref: 11
+  - name: "Ahti"
+    role: "Guides repairs and grants maze passage"
+    ref: 12
+narrative: |
+  <p>Jesse arrives pulled by Polaris, finds Trench dead of a gunshot, and lifts the Service Weapon. The Astral ritual that follows is <strong>confirmed</strong> against <a href="https://control.fandom.com/wiki/Control">the wiki plot record</a>: the Board selects her as Director on the spot, and she steps out into a House already wearing the Hiss.</p>
+  <p>The Hiss announces itself with one endlessly repeated sentence:</p>
+  <blockquote>"You are a worm through time."</blockquote>
+  <p>The chant is <strong>confirmed</strong> as the Hiss incantation that Trench himself repeats on the Hotline tapes.</p>
+  <p>Dylan, found voluntarily contained, warns Jesse against the voice inside her own head:</p>
+  <blockquote>"Do not trust Polaris."</blockquote>
+  <p>The warning itself is <strong>confirmed</strong> in the wiki plot record, while the exact wording here stays <strong>unverified</strong> outside the video's captions.</p>
+  <p>The first impression that Trench simply took his own life is <strong>corrected</strong> by the tapes. The Hiss reached him during Darling's expeditions, and he opened the door himself with a kept burned slide. Jesse's counterstroke, shutting the projector and pulling Dylan back from the Hiss at the cost of his waking mind, is <strong>confirmed</strong> in <a href="https://www.ign.com/articles/2019/09/19/controls-ending-explained-in-depth-answers-for-all-your-questions">the ending breakdown</a>, which also notes the lockdown holds until the remaining Hiss dies.</p>
+machinery: |
+  <p>Three objects carry the plot. The Service Weapon binds and appoints. The Hotline carries Trench's lingering orders. The Slide Projector moves the invasion from backstory to present tense.</p>
+  <p>Ahti's cassette player earns its own mission later; it is the only key to the maze guarding the projector's chamber.</p>
+sources:
+  - label: "Control Wiki plot record"
+    url: "https://control.fandom.com/wiki/Control"
+    note: "accessed 2026-09-21"
+  - label: "IGN ending explained"
+    url: "https://www.ign.com/articles/2019/09/19/controls-ending-explained-in-depth-answers-for-all-your-questions"
+    note: "accessed 2026-09-21"
+  - label: "Wikipedia Control overview"
+    url: "https://en.wikipedia.org/wiki/Control_(video_game)"
+    note: "accessed 2026-09-21"
+  - label: "Remedy official Control page"
+    url: "https://www.remedygames.com/games/control"
+    note: "accessed 2026-09-21"

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="400" viewBox="0 0 760 400" role="img" aria-labelledby="tt ttd">
+<title id="tt">Timeline: NYT rounds, rankings, interviews, freeze</title>
+<desc id="ttd">Horizontal timeline from Siena 2022 through freeze 2026-09-21. Legend explains node shapes and line meaning.</desc>
+<rect width="760" height="400" fill="#faf8f2"/>
+<text x="24" y="34" font-family="Georgia,serif" font-size="20" fill="#1c1a16">Elapsed: survey rounds to freeze</text>
+<line x1="40" y1="140" x2="720" y2="140" stroke="#1c1a16" stroke-width="2"/>
+<g font-family="system-ui,sans-serif" font-size="11">
+<circle cx="90" cy="140" r="8" fill="#1d4e5f"/><text x="60" y="170" fill="#1c1a16">Siena 2022</text><text x="52" y="184" fill="#6b6459">category-last</text>
+<circle cx="230" cy="140" r="8" fill="#1d4e5f"/><text x="190" y="170" fill="#1c1a16">PGP 2024</text><text x="188" y="184" fill="#6b6459">10.92 last</text>
+<rect x="342" y="132" width="16" height="16" fill="#8c2f1b"/><text x="310" y="170" fill="#1c1a16">NYT Apr30 2025</text><text x="322" y="184" fill="#6b6459">35 / 22 actions</text>
+<rect x="452" y="132" width="16" height="16" fill="#8c2f1b"/><text x="418" y="170" fill="#1c1a16">NYT Dec22 2025</text><text x="432" y="184" fill="#6b6459">36 experts</text>
+<circle cx="560" cy="140" r="8" fill="#b98a2f"/><text x="512" y="170" fill="#1c1a16">Brinkley 2025-05-07</text><text x="524" y="184" fill="#6b6459">no-firewall</text>
+<circle cx="650" cy="140" r="8" fill="#b98a2f"/><text x="606" y="170" fill="#1c1a16">Meacham 2026-02-16</text><text x="618" y="184" fill="#6b6459">degree-kind</text>
+<rect x="690" y="132" width="16" height="16" fill="#3d392f"/><text x="662" y="205" fill="#1c1a16">Freeze 2026-09-21</text>
+<text x="40" y="238" fill="#1c1a16">Also on record: C-SPAN 2021 (41st, 312, n=142) precedes this axis;</text>
+<text x="40" y="252" fill="#1c1a16">Goodwin MTP 2026-07-05; Riley Apr29 2025; Perry NPR 2026-04-03; Naftali CNN 2025-01-20.</text>
+</g>
+<g font-family="system-ui,sans-serif" font-size="11">
+<rect x="24" y="270" width="712" height="106" fill="#ffffff" stroke="#e2dccf"/>
+<text x="36" y="292" font-weight="bold" fill="#1c1a16">Legend (complete)</text>
+<circle cx="43" cy="306" r="6" fill="#1d4e5f"/><text x="54" y="310" fill="#3d392f">circle teal = ranking or interview record (supported or attributed)</text>
+<rect x="374" y="300" width="12" height="12" fill="#8c2f1b"/><text x="390" y="310" fill="#3d392f">square rust = NYT survey round [O1][O2]</text>
+<circle cx="43" cy="328" r="6" fill="#b98a2f"/><text x="54" y="332" fill="#3d392f">circle ochre = single-voice interview frame (attributed, partial)</text>
+<rect x="374" y="322" width="12" height="12" fill="#3d392f"/><text x="390" y="332" fill="#3d392f">square ink = freeze 2026-09-21</text>
+<text x="36" y="356" fill="#6b6459">Line = elapsed order only, not causation. C-SPAN 2021 sits before axis start; C-SPAN 2025 postponed (no data).</text>
+</g>
+</svg>
