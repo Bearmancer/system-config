@@ -2,33 +2,37 @@ import argparse
 import os
 import re
 import sys
+from pathlib import Path
 
-HREF = re.compile(r'href="([^"]+)"')
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lesson_rules import (
+    ANCHOR,
+    HREF,
+    SECTION_REF,
+    TAG_CODE,
+    TIMESTAMP,
+    find_unsuperscripted_repeats,
+)
+
 SRC = re.compile(r'src="([^"]+)"')
 HEADING = re.compile(r"<h2[^>]*>\s*(\d+)[.)]")
-SECTION_REF = re.compile(
-    r"(?:§|\bsections?\b)\s*(\d+(?:\s*(?:,|and|&|through)\s*\d+)*)", re.I
-)
 SURTITLE = re.compile(r'<p[^>]*class="[^"]*surtitle[^"]*"[^>]*>.*?</p>', re.S | re.I)
-TIMESTAMP = re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\b")
-ANCHOR = re.compile(r"<a\b.*?</a>", re.S | re.I)
 QUIZ = re.compile(r'<div[^>]*class="[^"]*quiz[^"]*"', re.I)
 FOOTER_RE = re.compile(
     r"<[^>]*lesson-footer[^>]*>(.*?)(?:</footer>|</div>)", re.S | re.I
 )
 SUP_BLOCK = re.compile(r"<sup>.*?</sup>", re.S | re.I)
-SUP_WRAP = re.compile(r"<sup>\s*$")
 CAPS_RUN = re.compile(r"\b(?:[A-Z]{2,}\s+){2,}[A-Z]{2,}\b")
-TAG_CODE = re.compile(r"\[[A-Z]{1,3}\d+[a-z]?\]")
 META_P = re.compile(r'<p[^>]*class="[^"]*meta[^"]*"[^>]*>(.*?)</p>', re.S | re.I)
 KICKER_P = re.compile(r'<p[^>]*class="[^"]*kicker[^"]*"', re.I)
+HTML_COMMENT = re.compile(r"<!--(.*?)-->", re.S)
+REVIEW_COMMENT_TEXT = re.compile(r"stray content flag|flagged for (?:human )?review", re.I)
 
 
-def stray_timestamps(html):
-    text = re.sub(r"<[^>]*>", " ", html)
+def stray_timestamps(tag_stripped):
     stray = []
-    for m in TIMESTAMP.finditer(text):
-        tail = text[m.end() : m.end() + 4]
+    for m in TIMESTAMP.finditer(tag_stripped):
+        tail = tag_stripped[m.end() : m.end() + 4]
         if re.match(r"-c[rv]\b", tail):
             continue
         stray.append(m.group(0))
@@ -59,6 +63,14 @@ def check(path):
         html = fh.read()
     low = html.lower()
     ptype = page_type(path)
+    href_all = HREF.findall(html)
+    anchor_stripped = ANCHOR.sub(" ", html)
+    tag_stripped = re.sub(r"<[^>]*>", " ", html)
+
+    if any(REVIEW_COMMENT_TEXT.search(c) for c in HTML_COMMENT.findall(html)):
+        issues.append(
+            "internal review-comment HTML leaked into the page — resolve or remove before publishing, never ship as an HTML comment"
+        )
 
     if QUIZ.search(html):
         issues.append("quiz block present: no quizzes/questionnaires in lessons")
@@ -83,7 +95,7 @@ def check(path):
             'missing surtitle: <p class="surtitle">Chapter N of M</p> under the H1'
         )
     if ptype == "lesson":
-        stray = stray_timestamps(html)
+        stray = stray_timestamps(tag_stripped)
         if stray:
             issues.append(
                 f"timestamps found (no timestamps anywhere on the page): {stray[:5]}"
@@ -107,30 +119,20 @@ def check(path):
         issues.append(
             "no hyperlinked sources (each cited source links to its actual page)"
         )
-    bare = re.findall(r"https?://\S+", ANCHOR.sub(" ", html))
+    bare = re.findall(r"https?://\S+", anchor_stripped)
     if bare:
         issues.append(f"bare URL text (wrap it in a link): {bare[:3]}")
-    tag_hit = TAG_CODE.findall(ANCHOR.sub(" ", html))
+    tag_hit = TAG_CODE.findall(anchor_stripped)
     if tag_hit:
         issues.append(
             f"bare tag code (points nowhere — use a real hyperlink beside bare numerals): {sorted(set(tag_hit))[:5]}"
         )
 
     if ptype == "lesson":
-        seen_citations = set()
-        for m in ANCHOR.finditer(html):
-            hrefs = HREF.findall(m.group(0))
-            if not hrefs or not hrefs[0].startswith(("http://", "https://")):
-                continue
-            target = hrefs[0].split("#")[0]
-            if target in seen_citations:
-                preceding = html[: m.start()]
-                if not SUP_WRAP.search(preceding):
-                    issues.append(
-                        f"repeat citation not superscripted: {target} - every mention after the first must be <sup><a href=...>"
-                    )
-            else:
-                seen_citations.add(target)
+        for target, _ in find_unsuperscripted_repeats(html):
+            issues.append(
+                f"repeat citation not superscripted: {target} - every mention after the first must be <sup><a href=...>"
+            )
         for m in SUP_BLOCK.finditer(html):
             if not ANCHOR.search(m.group(0)):
                 issues.append(
@@ -151,7 +153,7 @@ def check(path):
         issues.append(
             "Sources/References/Bibliography heading present: citations are inline-only, no footer block anywhere"
         )
-    caps_hits = CAPS_RUN.findall(re.sub(r"<[^>]*>", " ", html))
+    caps_hits = CAPS_RUN.findall(tag_stripped)
     if caps_hits:
         issues.append(f"all-caps text run (3+ words): {caps_hits[:3]}")
     if ptype == "lesson":
@@ -241,7 +243,7 @@ def check(path):
             issues.append("provisional wording present: no draft-status labels")
         if (
             not re.search(r'href="lessons/', html)
-            and len([h for h in HREF.findall(html) if h.endswith("/index.html")]) < 2
+            and len([h for h in href_all if h.endswith("/index.html")]) < 2
         ):
             issues.append(
                 "index: no chapter links (index lists its lessons or workspace homes)"
@@ -305,30 +307,28 @@ def check(path):
     if ptype == "index":
         allow.append("index.html")
 
-    home_hrefs = [h for h in HREF.findall(html) if h == "../../index.html"]
+    home_hrefs = [h for h in href_all if h == "../../index.html"]
     if ptype == "lesson" and len(home_hrefs) > 1:
         issues.append(
             f"home link repeated {len(home_hrefs)}x (budget: ../../index.html at most once)"
         )
-    backlink_hrefs = [
-        h for h in HREF.findall(html) if h.split("#")[0] == "../index.html"
-    ]
+    backlink_hrefs = [h for h in href_all if h.split("#")[0] == "../index.html"]
     if ptype == "lesson" and len(backlink_hrefs) > 1:
         issues.append(
             f"chapter-index link repeated {len(backlink_hrefs)}x (budget: ../index.html* at most once)"
         )
-    gloss_hrefs = [h for h in HREF.findall(html) if "glossary" in h.lower()]
+    gloss_hrefs = [h for h in href_all if "glossary" in h.lower()]
     if ptype == "lesson" and len(gloss_hrefs) > 1:
         issues.append(
             f"glossary link repeated {len(gloss_hrefs)}x (budget: glossary at most once, merged nav only)"
         )
-    castmap_hrefs = [h for h in HREF.findall(html) if "cast-map" in h.lower()]
+    castmap_hrefs = [h for h in href_all if "cast-map" in h.lower()]
     if ptype == "lesson" and len(castmap_hrefs) > 1:
         issues.append(
             f"cast-map link repeated {len(castmap_hrefs)}x (budget: cast-map at most once, merged nav only)"
         )
 
-    for href in HREF.findall(html):
+    for href in href_all:
         if href.startswith(("http://", "https://", "#", "mailto:", "data:")):
             continue
         if href in allow or href.split("#")[0] in allow:

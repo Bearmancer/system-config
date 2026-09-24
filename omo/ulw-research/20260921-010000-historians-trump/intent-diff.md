@@ -1,5 +1,4 @@
 # intent-diff close
-
 - Expected 4-bucket NYT verdict: observed split no-precedent/modern/different/not-uncommon, status true [C4 O1 O2].
 - Expected rankings proof: observed C-SPAN41st312 PGP10.92 Siena split 2018 anchor, status true [C5 C6 C7 C10b].
 - Expected denial unique: observed partial degree-kind, protest precedents exist, status partial [C4 O6].

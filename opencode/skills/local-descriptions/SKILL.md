@@ -17,7 +17,6 @@ description: USE FOR getting AI-generated POI text descriptions. Requires POI ID
 ## Quick Start (cURL)
 
 ### Get POI Description
-
 ```bash
 curl -s "https://api.search.brave.com/res/v1/local/descriptions?ids=loc4CQWMJWLD4VBEBZ62XQLJTGK6YCJEEJDNAAAAAAA%3D" \
   -H "Accept: application/json" \
@@ -26,7 +25,6 @@ curl -s "https://api.search.brave.com/res/v1/local/descriptions?ids=loc4CQWMJWLD
 ```
 
 ### Multiple POIs
-
 ```bash
 curl -s "https://api.search.brave.com/res/v1/local/descriptions" \
   -H "Accept: application/json" \
@@ -49,34 +47,34 @@ GET https://api.search.brave.com/res/v1/local/descriptions
 
 ## Parameters
 
-| Parameter | Type     | Required | Default | Description                                                                       |
-| --------- | -------- | -------- | ------- | --------------------------------------------------------------------------------- |
-| `ids`     | string[] | **Yes**  | —       | POI IDs from web search `locations.results[].id` (1-20, repeated: `?ids=a&ids=b`) |
+| Parameter | Type | Required | Default | Description |
+|--|--|--|--|--|
+| `ids` | string[] | **Yes** | — | POI IDs from web search `locations.results[].id` (1-20, repeated: `?ids=a&ids=b`) |
 
 ## Response Format
 
 ### Response Fields
 
-| Field                   | Type    | Description                                                 |
-| ----------------------- | ------- | ----------------------------------------------------------- |
-| `type`                  | string  | Always `"local_descriptions"`                               |
-| `results`               | array   | List of description objects (entries may be `null`)         |
-| `results[].type`        | string  | Always `"local_description"`                                |
-| `results[].id`          | string  | POI identifier matching the request                         |
+| Field | Type | Description |
+|--|--|--|
+| `type` | string | Always `"local_descriptions"` |
+| `results` | array | List of description objects (entries may be `null`) |
+| `results[].type` | string | Always `"local_description"` |
+| `results[].id` | string | POI identifier matching the request |
 | `results[].description` | string? | AI-generated markdown description, or `null` if unavailable |
 
 ### Example Response
 
 ```json
 {
-	"type": "local_descriptions",
-	"results": [
-		{
-			"type": "local_description",
-			"id": "loc4CQWMJWLD4VBEBZ62XQLJTGK6YCJEEJDNAAAAAAA=",
-			"description": "### Overview\nA cozy neighborhood cafe known for its **artisanal coffee**..."
-		}
-	]
+  "type": "local_descriptions",
+  "results": [
+    {
+      "type": "local_description",
+      "id": "loc4CQWMJWLD4VBEBZ62XQLJTGK6YCJEEJDNAAAAAAA=",
+      "description": "### Overview\nA cozy neighborhood cafe known for its **artisanal coffee**..."
+    }
+  ]
 }
 ```
 
@@ -102,7 +100,7 @@ curl -s "https://api.search.brave.com/res/v1/web/search?q=restaurants+san+franci
 
 ## Notes
 
-- **Always markdown**: Descriptions use `###` headings, bullet lists, **bold**/_italics_ — always formatted as markdown
+- **Always markdown**: Descriptions use `###` headings, bullet lists, **bold**/*italics* — always formatted as markdown
 - **Travel-guide tone**: Typically 200-400 words covering what makes the POI notable
 - **AI-generated**: Descriptions are AI-generated based on web search context, not sourced from business profiles
 - **Availability**: Not all POIs have descriptions — `description` may be `null`

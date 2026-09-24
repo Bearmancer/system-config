@@ -56,7 +56,7 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 - Geometry arithmetic precedes writing: each segment gets computed against every box rectangle. Reroute around, or move boxes. One line-line crossing in differing colours reads acceptably; two plus calls for layout revision.
 - Draw edges as `<line>`, `<polyline>`, or `<path>` (M/L/H/V, absolute or relative) for checker visibility; reroute or move, then re-run.
 - Boxes hold separation. Containment serves group frames around members alone; all else counts as clash, flagged by the checker.
-- Figure wrapper for readable render: `<figure class="map">` plus page CSS `figure.map svg { width: 100%; height: auto; } @media (min-width: 1380px) { figure.map { width: 1260px; margin-left: calc(50% - 630px); } }`.
+- Figure wrapper for readable render: `<figure class="map">` — the sizing rule lives once in `assets/lesson.css` (`figure.map`/`figure.map svg`); never hand-inline it per page.
 - **Labels**: short labels placed in wedges between lines, clear of boxes and lines. Each edge carries a short label clear of boxes; diagonals rotate along the line (`transform="rotate(angle cx cy)"`). Explicit `font-size` plus `text-anchor` on all labels; the checker reads attributes, plus CSS stays secondary.
 - Coordinate plan stays consistent within a cluster so later chapters extend the layout.
 
@@ -65,7 +65,7 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 1. H1 "Cast roster — as of chapter N"; short cross-link line (cast roster · glossary · chapter index, no lesson list). No kicker on reference pages.
 2. Roster — grouped prose list: every node, one to three lines, relations spelled out in words, each entry carrying its introduction chapter `(chN)` (absolute) plus an anchor link toward that chapter's lesson.
 3. Context section for parallels and offstage actors, with reason for table-only coverage.
-4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown.
+4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown. Render each row's colour with `<span class="swatch" style="background:#hex"></span>`, row text with `class="legend-row"` — both classes live in `assets/lesson.css`; never a per-row inline SVG marker or a hand-copied `<style>` block for this.
 
 ### Updating per chapter
 

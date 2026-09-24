@@ -203,6 +203,36 @@ td {
 	vertical-align: top;
 }
 
+/* Chapter subgraph + cast-map figures */
+figure.map {
+	margin: 1.4rem 0;
+}
+figure.map svg {
+	width: 100%;
+	height: auto;
+}
+@media (min-width: 1380px) {
+	figure.map {
+		width: 1260px;
+		margin-left: calc(50% - 630px);
+	}
+}
+
+/* Palette/legend colour swatch — one shared pattern for cast-map + legend rows */
+.swatch {
+	display: inline-block;
+	width: 0.85em;
+	height: 0.85em;
+	border-radius: 2px;
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+.legend-row {
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+}
+
 /* Timeline */
 .tl {
 	list-style: none;

@@ -19,13 +19,13 @@ Locator: `report.html #ch6` whole ("Annex: where the record stops", chapmeta Cha
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet                                | Corrected                                                                                | Basis                                                                                                                       |
-| ---------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| A1–A3 taught as fact                           | barred from fact teaching; ch8 framing-only                                              | claim-graph lock "annex A1 Fed A2 boats A3 pardons barred"; MISSION out-of-scope; RESOURCES annex note; report #ch6 verdict |
-| Siena recalled as overall-last                 | third-worst, not last (SVG legend in #ch6: "Siena misread fixed: third-worst, not last") | report #ch6 pointers [C7][O22] + SVG legend bytes; manifest O22                                                             |
-| Lincoln 93.87 snippet carried into method      | Lincoln 95.03 canonical                                                                  | NOTES canonical numerals; #ch2 pointers + #glossary PGP entry; manifest O5                                                  |
-| C-SPAN 2025 cited as data                      | postponed, no data [O28]; punditry frozen, pending instrument (O33)                      | manifest O28; RESOURCES O33 gap; report hero figcaption "C-SPAN 2025 postponed with no data [C5][O28]"                      |
-| Rice Heritage lecture cited for Trump verdicts | year-mismatch — excluded as support [C10b][O18]                                          | report #ch6 pointers; RESOURCES O35; wave-3 digest annexed                                                                  |
+| Heard / snippet | Corrected | Basis |
+|---|---|---|
+| A1–A3 taught as fact | barred from fact teaching; ch8 framing-only | claim-graph lock "annex A1 Fed A2 boats A3 pardons barred"; MISSION out-of-scope; RESOURCES annex note; report #ch6 verdict |
+| Siena recalled as overall-last | third-worst, not last (SVG legend in #ch6: "Siena misread fixed: third-worst, not last") | report #ch6 pointers [C7][O22] + SVG legend bytes; manifest O22 |
+| Lincoln 93.87 snippet carried into method | Lincoln 95.03 canonical | NOTES canonical numerals; #ch2 pointers + #glossary PGP entry; manifest O5 |
+| C-SPAN 2025 cited as data | postponed, no data [O28]; punditry frozen, pending instrument (O33) | manifest O28; RESOURCES O33 gap; report hero figcaption "C-SPAN 2025 postponed with no data [C5][O28]" |
+| Rice Heritage lecture cited for Trump verdicts | year-mismatch — excluded as support [C10b][O18] | report #ch6 pointers; RESOURCES O35; wave-3 digest annexed |
 
 ## Claim-tag coverage
 

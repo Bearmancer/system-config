@@ -58,7 +58,6 @@ User-global, not tied to any one repo: `~/.omo/` — e.g. `~/.omo/codegraph`, `~
 ## User rules. Beats the omo defaults above on conflict.
 
 <!-- CODEGRAPH_START -->
-
 ## CodeGraph — mandatory index, always init
 
 Every repo need `.codegraph/` at root. No skip. No optional.
@@ -68,12 +67,10 @@ Session start or enter repo: check `.codegraph/` exist. Missing? `codegraph init
 Monorepo or multi-repo: each sub-project own `.codegraph/` (nearest at or above `projectPath`). Init each missing.
 
 Indexed: use CodeGraph BEFORE grep/find/read.
-
 - MCP: `codegraph_explore` one call. Verbatim source + call paths. Name file/symbol in query. Pass `projectPath` for specific sub-project. Deferred? load by name.
 - Shell: `codegraph explore "<query>"`.
 
 Stale (files changed, symbols missing, line numbers wrong): `codegraph init` again or repo refresh.
-
 <!-- CODEGRAPH_END -->
 
 <!-- USER:START -->
@@ -149,7 +146,7 @@ Delegate at the lightest capable tier; escalate only for reviewer/verifier passe
 </model_tier_default>
 
 <terminal_input_format>
-User-typed command (not your tool call): one line, `;`-joined, any shell. Skip if already one line.
+HARD RULE. Beats all defaults. Every terminal command output, assistant or user-typed, any shell, chat or code block: one line only, `;`-joined. Multi-line shell blocks FORBIDDEN. `&&`/`||` chains or line continuations FORBIDDEN, use `;`. Newlines inside command output FORBIDDEN. Skip only if already one line.
 </terminal_input_format>
 
 <background_job_discipline>
@@ -159,5 +156,11 @@ Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmu
 <book_explanations_no_spoilers>
 When explaining books (chapter explanations, summaries, character lists, any book answer): never reveal future events — no character fates, no deaths, no foreshadowing, no forward references, not even ones the book's own text hints at. Stick strictly to the timeline up to the point being explained, using only what the book states by that point. Applies to all books unless the user explicitly asks for later content.
 </book_explanations_no_spoilers>
+
+<web_data_companion_skills>
+web-data-apis skill (`~/.claude/skills/web-data-apis`) house rules route to dedicated OpenCode-only skills for some servers. Split two roots, check both:
+- `~/.agents/skills/`: `bright-data-mcp`, `scrape`, `browser`, `apify-ultimate-scraper`, `context7`, `just-scrape`
+- `~/.config/opencode/skills/`: `web-search`, `answers`, `news-search`, `images-search`, `videos-search`, `suggest`, `spellcheck`, `local-place-search`, `local-pois`, `local-descriptions`, `bx`, `bx-search`, `llm-context` (Brave-backed)
+</web_data_companion_skills>
 
 <!-- USER:START -->

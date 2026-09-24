@@ -4,9 +4,7 @@ description: This skill should be used when the user asks to "wire Sonarr to SAB
 version: 0.3.0
 ---
 
-Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby all through HTTP APIs — no UI click need. All five have full REST/JSON-RPC-style APIs. Skill write down verified request shapes, auth, gotchas found while drive from PowerShell.
-
-**Scope.** Owns wiring/config/query for this five-app media stack (plus Bazarr) via their own APIs or on-disk locations only. General HTTP/API debugging outside this stack, general PowerShell foot-guns, and web research/fact-checking route to `shell-gotchas` and `rigorous-research`/`web-data-apis` respectively — not here.
+Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby (plus Bazarr) through their HTTP APIs or on-disk locations — no UI click needed. General HTTP/API debugging, PowerShell foot-guns, and web research route to `shell-gotchas` and `rigorous-research`/`web-data-apis` instead.
 
 ## Core pattern: schema-then-submit
 
@@ -20,18 +18,14 @@ Sonarr, Radarr, Prowlarr same mutation pattern for anything pluggable (download 
 3. `POST`/`PUT` whole object back (not just changed field) — API want
    full resource
 
-**PowerShell gotcha:** mutate fields with `foreach` loop, not
-`Where-Object` pipeline assign. `($obj.fields | Where-Object
-{...}).value = "x"` hit pipeline copy, fail silent; `foreach ($f in
-$obj.fields) { if ($f.name -eq "x") { $f.value = "y" } }` mutate in
-place, correct way.
-
 See [[shell-gotchas]] for general PowerShell foot-gun (`$var?query=`
-interpolation, NTFS case-only rename) — also apply when script against
-these APIs.
+interpolation, NTFS case-only rename, `Where-Object`-pipeline field
+mutation) — also apply when script against these APIs.
 
-Read `references/api-reference.md` for exact endpoint, auth shape,
-field name per app.
+`references/api-reference.md` — single home for exact endpoint, auth
+header/param, request body, category code table
+(Movies/TV/Music/XXX/Books/etc.), and per-app quirk for Sonarr,
+Radarr, Prowlarr, SABnzbd, Emby, Bazarr.
 
 ## Category wiring — the thing that actually connects the stack
 
@@ -103,79 +97,13 @@ live even mid-download. Single `Rename-Item` sometimes no-op on
 case-only change — see [[shell-gotchas]] for two-step
 temp-name workaround.
 
-## Boot-time bind race, autostart inventory, stale-queue triage
+## Autostart and bind state
 
-Dated incident records (boot-time bind race fix, per-app autostart
-mechanism table, SABnzbd duplicate-process outage, stale-queue
-recovery) live in `references/incidents.md` — read before touching
-service config or debugging a stuck queue.
+Current wildcard-bind/firewall config, per-app autostart mechanism, and Bazarr's Windows Service registration: `references/stack-state.md` — read before touching service config.
 
-Before edit any live config here again: run `backup-arr`.
+Before edit any live config here again: run `python "$HOME\.claude\skills\arr-api-reference\scripts\backup_arr_stack.py"`.
 
-## Before hitting any app's API
-
-Confirm app really running first (`Get-Process <App>`). Down app give
-misleading "connection refused" — worse, call made while down can leave
-false "API key missing" entry in _its own_ health log once back up,
-since log just record request that arrive with no key attach (app not
-there to catch one, not real config problem). Don't chase that log
-entry like it live thing.
-
-**Stuck/zombie process look "running" but serve nothing.**
-`Get-Process` show exe no mean it listen —
-Sonarr/Radarr/Prowlarr `SingleInstancePolicy` self-kill fresh
-launch if see another instance already hold lock, but older
-instance itself can be zombie (crash past HTTP listener, mutex still
-hold). Symptom: process exist, `Get-NetTCPConnection -OwningProcess
-<pid>` give back nothing, `curl` get connection-refused. Fix:
-`Stop-Process -Id <pid> -Force`, relaunch.
-
-**SABnzbd duplicate-process outage (seen 2026-09-19).** Two
-`SABnzbd.exe` at once (one boot-time, one late-night manual launch),
-both bare cmdline `"C:\Program Files\SABnzbd\SABnzbd.exe"`, neither
-listen on 8080, log tail 3 day old. Meanwhile `sc.exe query` show
-all four service `STOPPED` while Sonarr/Prowlarr orphan process
-still serve API fine — SCM state and process table disagree, trust
-`Get-NetTCPConnection -State Listen` for port 8989/7878/9696/8080,
-not service state. Fix: `Stop-Process -Id <both> -Force`,
-`sc.exe start SABnzbd`, verify single PID listen `0.0.0.0:8080`
-before touch anything else. Sonarr-side client config need zero
-change after — outage was process, not setting.
-
-## "All download clients are unavailable due to failures" triage
-
-Health error almost always mean client app down, not client config
-wrong. Order: (1) confirm listener (`Get-NetTCPConnection -State
-Listen` for 8080), (2) read Sonarr log tail for exact cause —
-SAB-down look like `DownloadClientUnavailableException: Unable to
-connect to SABnzbd, No connection could be made because the target
-machine actively refused it. (100.86.121.94:8080)` under
-`DownloadMonitoringService|Unable to retrieve queue and history
-items from SABnzbd`, (3) fix process (see zombie section above),
-(4) `POST /api/v3/downloadclient/testall` — expect
-`[{id, isValid: True, validationFailures: []}]`, then re-`GET
-/api/v3/health` and confirm download-client error gone with no
-config edit.
-
-Stale queue entries with `status: downloadClientUnavailable` persist
-after client recover (they reference grab-time state). Don't hand-
-`POST /api/v3/queue/grab` with `{ids}` — it 405. Instead queue a
-`SeriesSearch`: `POST /api/v3/command`
-`{"name":"SeriesSearch","seriesId":<id>}` → `queued`, wait ~90s,
-then `GET /queue` group by `status` and SAB `mode=queue` show
-`Downloading` jobs. Verified 2026-09-19: 11 stale → 1
-`downloading`, SAB `jobs=2 status=Downloading`.
-
-Pause live SAB-side: Sonarr queue `status: paused` mirror SAB job
-status, so resume in SAB, not Sonarr:
-`mode=queue&name=resume&value=<nzo_id>&output=json&apikey=...` →
-`{"status":true}`, re-query queue confirm job `Downloading`.
-Find `nzo_id` per job from same `mode=queue` response (`.queue.slots[].nzo_id`).
-Duplicate-pause pattern (seen 2026-09-19): 8 Sonarr paused entries
-same release map to only 2 real SAB job (1 `Downloading`, 1
-`Paused`) — rest stale tracked ref to `nzo_id` lost in restart.
-Resume real one, stale ref drop on re-poll by itself, don't chase
-them.
+Live down/stuck/zombie-process/stale-queue diagnostic runbooks: `references/triage.md` — read there when the stack looks broken right now.
 
 ## Verifying, not assuming
 
@@ -225,30 +153,17 @@ already handle include dedupe/mutation gotcha above:
   - zip qBittorrent config dir (no backup API exist for it), rename
     each `<name> - <yyyy-MM-dd>.zip`, starts Google Drive if unmounted,
     drops all 5 in `Computer\Configs`. That folder must already exist —
-    never auto-created. Was wired into `$PROFILE` as `backup-arr` via
-    dot-source (PowerShell mechanism, now gone — script is Python).
-    Update `$PROFILE`'s `backup-arr` function to shell out instead:
-    `python "$HOME\.claude\skills\arr-api-reference\scripts\backup_arr_stack.py"`.
+    never auto-created. Run directly by full path — no `$PROFILE`
+    alias: `python "$HOME\.claude\skills\arr-api-reference\scripts\backup_arr_stack.py"`.
   - Partial-fail mode: down app backup fail loud per app but other
     still write (seen: SAB `mode=config` refuse + null-path
     `Copy-Item` error while Sonarr/Prowlarr zip fine; Radarr zip
     re-date with old content). Check each timestamp after run, don't
     trust "no red text".
 
-## Finishing an edit to this skill
-
-`~/.claude/skills/arr-api-reference/` is source of truth. The `agents-config` repo mirror it: after edit, run the sync script (`agents-config` repo's README.md, "Backup mechanism" section) to commit and push change. Before touch live app config, run `backup-arr`.
-
 ## Bazarr — subtitle manager, separate API quirks
 
 Bazarr connect to Sonarr + Radarr to manage subtitle, separate auth
 and form-encoded (not JSON) POST body. Full endpoint detail, wiring
 script, and gotchas: `references/api-reference.md`. Autostart
-mechanism still TBD — see `references/incidents.md`.
-
-## Additional Resources
-
-- **`references/api-reference.md`** — exact endpoint, auth
-  header/param, request body, category code table
-  (Movies/TV/Music/XXX/Books/etc.), per-app quirk for Sonarr, Radarr,
-  Prowlarr, SABnzbd, Emby.
+mechanism: `references/stack-state.md`.

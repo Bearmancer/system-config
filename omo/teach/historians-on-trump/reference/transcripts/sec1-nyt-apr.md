@@ -15,12 +15,12 @@ Locator: `report.html #ch1` — heading "Two survey rounds, four buckets", chapm
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet                          | Corrected                                                                       | Basis                                                                               |
-| ---------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| 36 experts (Dec number) applied to April | 35 historians for Apr30 round                                                   | report #ch1 cast row "Apr30 35 historians"; manifest O1; wave-1 digest NYT Apr30 35 |
-| "unprecedented" as single NYT verdict    | four-bucket split, no single verdict                                            | report #ch1 pointers + verdict div [C4][O1]; claim-graph lock C4 partial/qualified  |
-| April write-up recalled from memory      | https://www.nytimes.com/2025/04/30/us/politics/trump-historians-presidency.html | report #ch1 verdict div href bytes                                                  |
-| full-page body assumed readable          | frozen primary is BrightData full page (O1); NYT pages JS-walled                | NOTES quirks; wave-2 digest Apify 3/5 200, NYT fail; RESOURCES [D] caution          |
+| Heard / snippet | Corrected | Basis |
+|---|---|---|
+| 36 experts (Dec number) applied to April | 35 historians for Apr30 round | report #ch1 cast row "Apr30 35 historians"; manifest O1; wave-1 digest NYT Apr30 35 |
+| "unprecedented" as single NYT verdict | four-bucket split, no single verdict | report #ch1 pointers + verdict div [C4][O1]; claim-graph lock C4 partial/qualified |
+| April write-up recalled from memory | https://www.nytimes.com/2025/04/30/us/politics/trump-historians-presidency.html | report #ch1 verdict div href bytes |
+| full-page body assumed readable | frozen primary is BrightData full page (O1); NYT pages JS-walled | NOTES quirks; wave-2 digest Apify 3/5 200, NYT fail; RESOURCES [D] caution |
 
 ## Claim-tag coverage
 

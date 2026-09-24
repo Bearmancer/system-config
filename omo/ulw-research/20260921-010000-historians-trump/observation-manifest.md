@@ -1,5 +1,4 @@
 # observation-manifest freeze 2026-09-21 see bg_66eab35b
-
 O1 NYT Apr30 35 historians Vaughn/Rottinghaus asked precedent BrightData frozen
 O2 NYT Dec22 36 experts Bacevich Perry Sinha second round BrightData frozen
 O3 C-SPAN overall Trump 41st 26.5 Tavily+Exa frozen

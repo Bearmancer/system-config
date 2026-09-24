@@ -13,9 +13,9 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-DEFAULT_REPO_PATH = Path.home() / ".omo" / "agents-config"
+DEFAULT_REPO_PATH = Path.home() / "Dev" / "agents-config"
 DEFAULT_REMOTE_URL = "https://github.com/Bearmancer/agents-config.git"
-LOG_PATH = Path.home() / ".omo" / "agents-config-sync.log"
+LOG_PATH = Path.home() / "Dev" / "agents-config-sync.log"
 LOG_MAX_LINES = 500
 
 

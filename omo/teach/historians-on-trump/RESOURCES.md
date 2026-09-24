@@ -22,7 +22,7 @@ Trust tiers: **[C]** course source · **[B]** books/records · **[D]** documents
 
 ## [B] Books / long-form historian record
 
-- Meacham, _American Struggle_ scope (PRH page, 544pp, 1619–present) **[B]**
+- Meacham, *American Struggle* scope (PRH page, 544pp, 1619–present) **[B]**
   Use: scope/bounds for the Meacham denial claims. Caution: no full TOC on the PRH page (O34) — do not cite contents from the product page.
 - Riley, Miller Center dictatorship/steroids frame ([Miller Center](https://millercenter.org/)) **[B/S]**
   Use: constitutional-dictatorship + steroids attribution (O20). Caution: single-author frame — attributed, never verified-fact.

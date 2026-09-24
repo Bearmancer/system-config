@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import importlib.util
 import json
 import os
 import re
@@ -9,18 +8,8 @@ import shutil
 import sys
 import tempfile
 
-
-def _load_slice_module():
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "slice_chapter.py")
-    spec = importlib.util.spec_from_file_location("slice_chapter", path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"cannot load {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-sc = _load_slice_module()
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import slice_chapter as sc
 
 LEGACY_CACHES = (
     os.path.join(tempfile.gettempdir(), "opencode", "learning-course"),
@@ -85,7 +74,7 @@ def adopt_legacy(vid, dest):
     return False
 
 
-def fetch(source, dest, force):
+def fetch(source, vid, dest, force):
     have = os.path.exists(os.path.join(dest, "info.json")) and os.path.exists(
         os.path.join(dest, "subs.en.vtt")
     )
@@ -95,7 +84,7 @@ def fetch(source, dest, force):
     fetch_script = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "fetch_video.py"
     )
-    args = [sys.executable, fetch_script, source, "--outdir", dest]
+    args = [sys.executable, fetch_script, source, "--outdir", dest, "--id", vid]
     if force:
         args.append("--force")
     r = sc.run(args)
@@ -161,7 +150,7 @@ def main():
     dest = os.path.join(a.cache, vid)
     os.makedirs(dest, exist_ok=True)
     adopt_legacy(vid, dest)
-    fetch(a.source, dest, a.force)
+    fetch(a.source, vid, dest, a.force)
     vtt_path = os.path.join(dest, "subs.en.vtt")
     if not os.path.exists(vtt_path):
         print(

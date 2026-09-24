@@ -18,6 +18,7 @@
 
 ## Decision records (full text in docs/adr/; load-bearing ones listed here)
 - ADR-0001: adopt shipyard harness
+- ADR-0002: keep rigorous-research and web-data-apis separate
 
 ## Shared background
 - Glossary: CONTEXT.md ｜ Business knowledge: docs/business/ ｜ Decision context: docs/adr/
