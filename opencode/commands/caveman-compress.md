@@ -1,7 +1,6 @@
 ---
 description: Compress a markdown/text file into caveman format to save tokens
 ---
-
 Compress the file at: $ARGUMENTS
 
 Run the `caveman-compress` skill against the given filepath. The skill rewrites

@@ -5,8 +5,6 @@ description: "Tiered, multi-source verification engine: take a list of checkable
 
 # Rigorous Research
 
-Tiered, multi-source claim verification. Invoke via the `rigorous-research` skill, under OpenCode + oh-my-openagent (OMO) or under Claude Code alike.
-
 ## Input contract
 
 **The caller extracts the claims; this skill begins at "claim list in."** This skill does not read, segment, or mine source content — it receives an already-extracted list of checkable claims and returns a verdict per claim. Claim extraction from chapter text, transcripts, or any other source material belongs to the calling skill.
@@ -27,7 +25,7 @@ Output shape per claim: `claim → verdict (confirmed / partially correct / wron
 
 ### Scaling beyond 2 passes
 
-Default to **2 parallel passes** — the existing upper bound. A claim list large enough to need more than that (3+ distinct source territories, e.g. court records / contemporaneous press / scholarship, or unresolved claims by pass 3 of the 5-pass budget) is an orchestration decision for the calling session, not this skill: hand it the claim list, the source ordering below, and the output format, split by axis, one worker per axis. This skill states what to research and how to verify it; how many workers carry that out is the caller's call.
+Default to **2 parallel passes**. A claim list needing more (3+ distinct source territories, or unresolved claims by pass 3) is the calling session's orchestration call, not this skill's: hand it the claim list, source ordering, and output format, split by axis, one worker per axis.
 
 ## Source selection and handling
 
@@ -39,14 +37,12 @@ Single home for every source-choice rule:
 - **Labelling:** advocacy sources labelled as advocacy.
 - **Attribution hygiene:** "as quoted in the source", "attributed to X, primary not located".
 
+**Domain-supplied source order.** A caller with its own authoritative source ordering (e.g. `deep-cut-classical`'s Grove → publisher → program-notes → label order) passes that ordering as this pass's source list in place of the default preference ordering above. The tier ladder, pass protocol, and burn guards stay this skill's job regardless of whose source order is in effect.
+
 ## Burn guards
 
 Map before crawl with an explicit limit; never `raw_content` at scale; never request a summary for a large N that goes unused; pin agent effort and bound arrays; block media and fonts.
 
-## Tool routing — pointer only
+## Tool routing and failover — pointer only
 
-Do not choose servers here. Load the `web-data-apis` skill and pick from its capability table, citing the row you used.
-
-## Failover — pointer only
-
-Credit exhaustion during a research pass: the rotation mechanics, the hard-stop rule, and the never-read-`~/.secrets/.env` prohibition live in `web-data-apis` skill's "API key failover" section. Consult it there — not restated here.
+Do not choose servers here: load the `web-data-apis` skill, pick from its capability table (citing the row used), and consult its "API key failover" section for credit-exhaustion rotation — not restated here.

@@ -9,21 +9,21 @@ and `machinery` accept a restricted HTML subset: `<p> <blockquote> <ul> <ol>
 
 ## Fields
 
-| Field            | Type   | Required | Notes                                                                                                                                                            |
-| ---------------- | ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `kicker`         | string | yes      | series line, e.g. `Putin: The Rise to Power`                                                                                                                     |
-| `title`          | string | yes      | H1 text                                                                                                                                                          |
-| `chapter`        | int    | yes      | absolute chapter; MUST equal the `<K>` in the filename                                                                                                           |
-| `chapters_total` | int    | yes      | surtitle denominator                                                                                                                                             |
-| `chapter_label`  | string | no       | defaults to plain number; e.g. `7` or `14`                                                                                                                       |
-| `time_range`     | string | yes      | `1:55:38–2:08:19` (en dash) — admin-only: feeds NOTES.md chapter map + correction tracking; the stamp never renders it on the page                               |
-| `transcript`     | string | yes      | slice filename under `reference/transcripts/` — admin-only: correction sourcing; the stamp never renders a link to it                                            |
-| `lead`           | string | yes      | §1 paragraph (plain text)                                                                                                                                        |
-| `cast`           | list   | explicit | `{name, role, ref?}` — `ref` = chapter number for the `(chapter N)` link. Absent/`null`/`""` refuses; explicit `cast: []` omits §2 Cast (no humans this chapter) |
-| `subgraph`       | bool   | no       | default false; true renders a placeholder comment slot                                                                                                           |
-| `narrative`      | text   | yes      | §3 restricted HTML; MUST carry ≥2 verdict words (confirmed / corrected / partially correct / wrong / unfindable / unverified / allegation)                       |
-| `machinery`      | text   | yes      | §4 restricted HTML                                                                                                                                               |
-| `sources`        | list   | yes      | `{label, url, note?}` — non-empty; every `url` starts `https://`; a `youtube.com`/`youtu.be` url refuses — a YouTube video is never a source                     |
+| Field            | Type   | Required | Notes                                                                                                                                      |
+| ---------------- | ------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `kicker`         | string | yes      | series line, e.g. `Putin: The Rise to Power`                                                                                               |
+| `title`          | string | yes      | H1 text                                                                                                                                    |
+| `chapter`        | int    | yes      | absolute chapter; MUST equal the `<K>` in the filename                                                                                     |
+| `chapters_total` | int    | yes      | surtitle denominator                                                                                                                       |
+| `chapter_label`  | string | no       | defaults to plain number; e.g. `7` or `14`                                                                                                 |
+| `time_range`     | string | yes      | `1:55:38–2:08:19` (en dash) — admin-only: feeds NOTES.md chapter map + correction tracking; the stamp never renders it on the page          |
+| `transcript`     | string | yes      | slice filename under `reference/transcripts/` — admin-only: correction sourcing; the stamp never renders a link to it                       |
+| `lead`           | string | yes      | §1 paragraph (plain text)                                                                                                                  |
+| `cast`           | list   | explicit  | `{name, role, ref?}` — `ref` = chapter number for the `(chapter N)` link. Absent/`null`/`""` refuses; explicit `cast: []` omits §2 Cast (no humans this chapter) |
+| `subgraph`       | string | no       | inline `<svg>…</svg>` fragment (must start `<svg`, end `</svg>`, no external `href`/`src`); omitted/blank renders no subgraph; refuses with `cast: []` (no subgraph without a cast)                                                                                     |
+| `narrative`      | text   | yes      | §3 restricted HTML; MUST carry ≥2 verdict words (confirmed / corrected / partially correct / wrong / unfindable / unverified / allegation) |
+| `machinery`      | text   | yes      | §4 restricted HTML                                                                                                                         |
+| `sources`        | list   | yes      | `{label, url, note?}` — non-empty; every `url` starts `https://`; a `youtube.com`/`youtu.be` url refuses — a YouTube video is never a source |
 
 Derived by the stamp (never authored): page `<title>`, merged top nav
 (Home + Chapter Index + Glossary + Cast Map, Title Case,
@@ -52,12 +52,12 @@ be a bare `<a>`; every occurrence after the first must be wrapped in
 4. `sources` empty or a source lacks `label`/`url` → refuse.
 5. Narrative verdict words < 2 → refuse.
 6. Any link target's occurrence after the first not wrapped in `<sup>...</sup>` → refuse (first occurrence may be bare; every repeat must be a live superscript link).
-   6b. Bare claim/observation tag code (`[C4]`, `[O2]`, or clusters) outside a hyperlink → refuse. Numerals stand alone; every claim carries a real `<a href="https://…">` beside it.
+6b. Bare claim/observation tag code (`[C4]`, `[O2]`, or clusters) outside a hyperlink → refuse. Numerals stand alone; every claim carries a real `<a href="https://…">` beside it.
 7. Bare `http(s)://` text outside an anchor in any field → refuse.
 8. §-reference to a section number outside 1–4 → refuse; §2 ref when `cast: []` → refuse (no §2 Cast on the page).
 9. Timestamp pattern in narrative/machinery/lead → refuse. No timestamp
    renders anywhere on the page, including the surtitle.
-   10a. `subgraph` present with `cast: []` → refuse (omit subgraph when no cast).
+10a. `subgraph` present with `cast: []` → refuse (omit subgraph when no cast).
 10. `cast[].ref` pointing at a chapter with no sibling lesson file → refuse.
 11. Write target outside `<workspace>/lessons/` → refuse.
 12. A `sources[].url` matching `youtube.com`/`youtu.be` → refuse. A YouTube

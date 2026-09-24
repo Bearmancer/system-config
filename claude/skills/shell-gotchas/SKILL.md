@@ -36,6 +36,10 @@ before debugging a shell error from scratch.
   drive variable, silently empty). Always brace the var:
   `"#${n}: $r"` or `"#$($n): $r"`. Same trap hits any char that is a
   legal scope/drive prefix (letters, underscore).
+- Mutating fields of objects piped through `Where-Object` doesn't
+  persist — pipeline output is a copy. `($items | Where-Object
+  {...}).value = "x"` hits the copy, fails silent. Use `foreach ($i in
+  $items) { if (<condition>) { $i.value = "x" } }` to mutate in place.
 - `jq`/`jaq` cannot sit in the middle of a PowerShell pipeline:
   `... | jq .id` throws `InvalidOperation: Cannot run a document in the
   middle of a pipeline`. Native executables that read stdin only work at
@@ -79,9 +83,6 @@ before debugging a shell error from scratch.
   harness layer has already eaten one level. Cheapest fix: forward
   slashes in the test JSON, always — sidesteps the whole
   stacked-escaping problem instead of counting backslash layers.
-- Prefer extracting one JSON field with `sed -n 's/.*"key" *:
-  *"\([^"]*\)".*/\1/p'` over pulling in a JSON-parser dependency
-  (`jaq`/`jq`) for a single-field grab.
 - Piping a real command's stdout through bash's `>` file redirect
   (git-bash on Windows) can introduce line-ending artifacts a downstream
   tool doesn't see when the same data stays in-process —

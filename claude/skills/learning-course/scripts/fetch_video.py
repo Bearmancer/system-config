@@ -1,26 +1,16 @@
 #!/usr/bin/env python3
 
-import importlib.util
 import json
 import os
 import sys
 
-MARKERS = ["@@TITLE@@", "@@DURATION@@", "@@CHAPTERS@@", "@@DESCRIPTION@@", "@@URL@@"]
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import slice_chapter as sc
 
-
-def _load_slice_module():
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "slice_chapter.py")
-    spec = importlib.util.spec_from_file_location("slice_chapter", path)
-    if spec is None or spec.loader is None:
-        raise ImportError(f"cannot load {path}")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-sc = _load_slice_module()
 run = sc.run
 fmt_time = sc.fmt_clock
+
+MARKERS = ["@@TITLE@@", "@@DURATION@@", "@@CHAPTERS@@", "@@DESCRIPTION@@", "@@URL@@"]
 
 
 def report(info, info_path, vtt, chapters):
@@ -61,11 +51,14 @@ def main():
     if "--outdir" in sys.argv:
         outdir = sys.argv[sys.argv.index("--outdir") + 1]
 
-    r = run(["yt-dlp", "--no-warnings", "--skip-download", "--print", "%(id)s", url])
-    if r.returncode != 0:
-        print("yt-dlp failed to resolve the video:\n" + r.stderr)
-        sys.exit(1)
-    vid = r.stdout.strip().splitlines()[-1].strip()
+    if "--id" in sys.argv:
+        vid = sys.argv[sys.argv.index("--id") + 1]
+    else:
+        r = run(["yt-dlp", "--no-warnings", "--skip-download", "--print", "%(id)s", url])
+        if r.returncode != 0:
+            print("yt-dlp failed to resolve the video:\n" + r.stderr)
+            sys.exit(1)
+        vid = r.stdout.strip().splitlines()[-1].strip()
 
     if outdir is None:
         outdir = os.path.join(

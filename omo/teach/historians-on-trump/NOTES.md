@@ -2,16 +2,16 @@
 
 ## Chapter map (Wave1 decision)
 
-| # | Section                                                     | Date-span | Essential? |
-| - | ----------------------------------------------------------- | --------- | ---------- |
-| 1 | NYT April survey — 35 historians, 22 actions, 4 buckets     | Apr 2025  | yes        |
-| 2 | NYT December survey — 36 experts, second round              | Dec 2025  | yes        |
-| 3 | C-SPAN 2021 survey — 142 historians, 10 traits, 41/44       | 2021      | yes        |
-| 4 | PGP 2024 + Siena 2022 — ranking instruments compared        | 2022–2024 | yes        |
-| 5 | The denial claim — Meacham degree-vs-kind                   | 2020–2026 | yes        |
-| 6 | No-firewall + steroids — Brinkley monetization, Riley frame | 2025      | yes        |
-| 7 | Historian frames — dictatorship, braggadocio, norms rupture | 2025–2026 | yes        |
-| 8 | Annex + method — A1–A3 barred, how the instruments differ   | 2021–2026 | skippable  |
+| # | Section | Date-span | Essential? |
+|---|---------|-----------|------------|
+| 1 | NYT April survey — 35 historians, 22 actions, 4 buckets | Apr 2025 | yes |
+| 2 | NYT December survey — 36 experts, second round | Dec 2025 | yes |
+| 3 | C-SPAN 2021 survey — 142 historians, 10 traits, 41/44 | 2021 | yes |
+| 4 | PGP 2024 + Siena 2022 — ranking instruments compared | 2022–2024 | yes |
+| 5 | The denial claim — Meacham degree-vs-kind | 2020–2026 | yes |
+| 6 | No-firewall + steroids — Brinkley monetization, Riley frame | 2025 | yes |
+| 7 | Historian frames — dictatorship, braggadocio, norms rupture | 2025–2026 | yes |
+| 8 | Annex + method — A1–A3 barred, how the instruments differ | 2021–2026 | skippable |
 
 - Course-source note: primary source is `report.html` in the source dir (ulw-research 20260921-010000-historians-trump). SYNTHESIS pointer: `bg_7f09dd81` full text (local SYNTHESIS.md carries the lock header only). Claim-graph lock: verified C4–C10b / A1–A3 per `claim-graph.md` (from `bg_8e30dca9`); O1–O28 frozen per observation-manifest.
 - Ch8 is reference/annex: barred claims stay framing-only; method comparison is the teachable core.
@@ -41,5 +41,5 @@ Lessons use `Section N of 8 · <date-span>` in the surtitle slot (the page's onl
 ## Queue & standing
 
 - 2026-09-21 — scaffold only (this pass). No lessons, no slices (Wave3), no stamp/check/publish runs.
-- Next: Wave3 slices sec1–sec8 DONE 2026-09-21 → lesson 01 (ch1 NYT April) with verification fan-out per claim-graph lock.
+ - Next: Wave3 slices sec1–sec8 DONE 2026-09-21 → lesson 01 (ch1 NYT April) with verification fan-out per claim-graph lock.
 - Skippable: ch8 (annex+method) — build last, reference-first.

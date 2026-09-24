@@ -15,12 +15,12 @@ Locator: `report.html #ch3` — heading "Denial: degree becomes kind", chapmeta 
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet                                       | Corrected                                                                                                    | Basis                                                                                                                                      |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| "Meacham says first ever to contest" (absolute-first) | degree-kind qualifier required, not absolute first                                                           | report #ch3 pointers + verdict "partial, qualified"; manifest O7 "degree-kind"; claim-graph lock C4 partial qualified                      |
-| Meacham voice cited to PBS only                       | Fresh Air 2026-02-16 is the claim source [O6]; PBS 2026-05-26 [O7] is the qualifier that must travel with it | report #ch3 verdict div "cite Fresh Air … plus PBS"; manifest O6 vs O7; RESOURCES [S] caution "degree-vs-kind counter must travel with it" |
-| Jackson/Nixon/Gore recalled as refusal precedents     | protest precedents via archives/telegram/SCOTUS-accept — they differ from refusal                            | report #ch3 pointers "protests differ"; cast table counter labels; SYNTHESIS counter-search note                                           |
-| Goodwin quote treated as denial proof                 | hope-character corroborates culture-grip point only [O11]                                                    | report #ch3 pointers; manifest O11 MTP 2026-07-05 hope/character                                                                           |
+| Heard / snippet | Corrected | Basis |
+|---|---|---|
+| "Meacham says first ever to contest" (absolute-first) | degree-kind qualifier required, not absolute first | report #ch3 pointers + verdict "partial, qualified"; manifest O7 "degree-kind"; claim-graph lock C4 partial qualified |
+| Meacham voice cited to PBS only | Fresh Air 2026-02-16 is the claim source [O6]; PBS 2026-05-26 [O7] is the qualifier that must travel with it | report #ch3 verdict div "cite Fresh Air … plus PBS"; manifest O6 vs O7; RESOURCES [S] caution "degree-vs-kind counter must travel with it" |
+| Jackson/Nixon/Gore recalled as refusal precedents | protest precedents via archives/telegram/SCOTUS-accept — they differ from refusal | report #ch3 pointers "protests differ"; cast table counter labels; SYNTHESIS counter-search note |
+| Goodwin quote treated as denial proof | hope-character corroborates culture-grip point only [O11] | report #ch3 pointers; manifest O11 MTP 2026-07-05 hope/character |
 
 ## Claim-tag coverage
 

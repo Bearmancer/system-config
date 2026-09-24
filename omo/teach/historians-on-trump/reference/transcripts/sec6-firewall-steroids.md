@@ -17,12 +17,12 @@ Locator: `report.html #ch4` whole ("No firewall: monetization frame", chapmeta C
 
 ## Corrections table (heard -> corrected -> basis)
 
-| Heard / snippet                                      | Corrected                                                                    | Basis                                                                                                         |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Brinkley MTP 2026-01-20 quoted beyond snippet        | video-only snippet, no transcript (O32) — do not quote beyond frozen snippet | report #ch4 pointers + subgraph dashed "MTP video-only"; NOTES quirks; RESOURCES O32 gap                      |
-| Roosevelt House / CNN treated as Brinkley transcript | context only — no single Brinkley imperial transcript exists (O18)           | manifest O18; NOTES quirks; wave-1 librarian docs "context only, no single transcript"; RESOURCES [S] caution |
-| Riley steroids recalled as verified fact             | attribution only, not fact [C9][O20]                                         | report #ch5 pointers + verdict "supported-as-attribution"; claim-graph lock C9 attributed                     |
-| Crossroads date recalled vaguely 2026                | Crossroads 2025-05-07                                                        | report #ch4 cast-adjacent blockquote attribution; SYNTHESIS elapsed line "Brinkley 2025-05-07"                |
+| Heard / snippet | Corrected | Basis |
+|---|---|---|
+| Brinkley MTP 2026-01-20 quoted beyond snippet | video-only snippet, no transcript (O32) — do not quote beyond frozen snippet | report #ch4 pointers + subgraph dashed "MTP video-only"; NOTES quirks; RESOURCES O32 gap |
+| Roosevelt House / CNN treated as Brinkley transcript | context only — no single Brinkley imperial transcript exists (O18) | manifest O18; NOTES quirks; wave-1 librarian docs "context only, no single transcript"; RESOURCES [S] caution |
+| Riley steroids recalled as verified fact | attribution only, not fact [C9][O20] | report #ch5 pointers + verdict "supported-as-attribution"; claim-graph lock C9 attributed |
+| Crossroads date recalled vaguely 2026 | Crossroads 2025-05-07 | report #ch4 cast-adjacent blockquote attribution; SYNTHESIS elapsed line "Brinkley 2025-05-07" |
 
 ## Claim-tag coverage
 

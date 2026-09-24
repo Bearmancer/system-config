@@ -28,14 +28,14 @@ Claude settings files, hooks, plugins and marketplaces, `node_modules`, caches, 
 
 A weekly scheduled task (`AgentsConfigSync`, Sundays) runs `scripts/sync_agents_config.py`:
 
-1. Mirrors the whitelisted local paths into a clone at `~/.omo/agents-config`. Copies only: local files are never moved, replaced, or symlinked.
+1. Mirrors the whitelisted local paths into a clone at `~/Dev/agents-config`. Copies only: local files are never moved, replaced, or symlinked.
 2. Commits and pushes to `Bearmancer/agents-config` when something changed.
-3. Appends a line to `~/.omo/agents-config-sync.log`.
+3. Appends a line to `~/Dev/agents-config-sync.log`.
 
 Run it manually any time:
 
 ```powershell
-python ~/.omo/agents-config/scripts/sync_agents_config.py
+python ~/Dev/agents-config/scripts/sync_agents_config.py
 ```
 
 ## Restore

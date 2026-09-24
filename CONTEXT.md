@@ -25,3 +25,13 @@ One entry per term: definition, boundaries, one resolved ambiguity. Agents write
 - Definition: two different files with the same base name. Root `AGENTS.md` is this shipyard harness's thin pointer to `CLAUDE.md`. `opencode/AGENTS.md` is the mirrored copy of the real `~/.config/opencode/AGENTS.md` — OpenCode's own instruction file.
 - Boundary: editing one never affects the other. Root `AGENTS.md` is shipyard scaffolding; `opencode/AGENTS.md` is backup content.
 - Resolved ambiguity: none yet needed beyond this note — flagged here specifically so a future agent doesn't conflate the two by name alone.
+
+## workflow skill / verification-protocol skill / tool-routing skill
+- Definition: three distinct roles a `claude/skills/*` entry can play. A **workflow skill** (`learning-course`) owns an end-to-end pedagogy/publishing process and calls the other two. A **verification-protocol skill** (`rigorous-research`) owns the claim → tier ladder → verdict pass, independent of any one domain. A **tool-routing skill** (`web-data-apis`) owns which MCP server/tool answers a given capability need, independent of what the caller is verifying.
+- Boundary: a skill in one role does not duplicate another role's job — `rigorous-research` never picks a server itself (it loads `web-data-apis`'s capability table), and `web-data-apis` never runs a verification pass itself.
+- Resolved ambiguity: `rigorous-research` is always invoked through the same chain as `web-data-apis` (a caller loads `rigorous-research`, which loads `web-data-apis`), but the two are kept as separate skills, not merged — see ADR-0002.
+
+## domain-supplied source order
+- Definition: the mechanism by which a domain skill (e.g. `deep-cut-classical`) hands `rigorous-research` its own authoritative source ordering (e.g. Grove → publisher → program-notes → label) in place of `rigorous-research`'s generic web-claim preference ordering, for one verification pass.
+- Boundary: only the source list changes — `rigorous-research`'s tier ladder, pass protocol, and burn guards apply exactly as they do for the default ordering. This is not a fork of the verification protocol, just a parameter to it.
+- Resolved ambiguity: a domain skill that has its own source order still calls `rigorous-research` rather than running a fully separate research pass — `deep-cut-classical`'s `ulw-research` mode was rewritten to do this instead of self-running research outside the shared protocol.
