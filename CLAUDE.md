@@ -26,4 +26,4 @@
 ## Agent guide
 - Delivery follows the canonical workflow plan → execute → review → verify; `/oh-my-claudecode:launch` is an optional governed delivery pipeline (opt-in, invoke explicitly)
 - On term conflicts CONTEXT.md wins; new terms are recorded the moment they settle
-- Reusable capability goes to .omc/skills/; this repo has no UI, so design-system/ stays a stub
+- Reusable capability goes to native .claude/skills/; this repo has no UI, so design-system/ stays a stub
