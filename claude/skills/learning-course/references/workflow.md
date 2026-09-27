@@ -43,20 +43,14 @@
 
 ## The treatise (per-chapter lesson structure)
 
-Page structure, casing, citation, and timestamp rules: `references/page-design.md` (the single style doc). Content-field contract: `references/lesson-schema.md`.
+Page structure, casing, citation, timestamp, and stamp-contract rules: `references/page-design.md` (the single style + contract doc). Content-field contract: `references/lesson-schema.md`.
 
 ## The stencil (stamp-only lesson writing)
 
-Lessons are stamped, never hand-authored. Shape lives in the template; content
-lives in YAML.
+Lessons are stamped, never hand-authored. Shape lives in `assets/lesson.stencil.html`; content lives in `<workspace>/lessons/<NN>-chK-<slug>.yaml` (filename carries the chapter; stamp refuses names without `-chK-`).
 
-- Template: `assets/lesson.stencil.html` (conditional section order — §2 Cast only with explicit non-empty `cast` — fixed footer).
-- Schema + golden + corrupt-variant list: `references/lesson-schema.md`.
-- Contract (owners, row-id rule, parity test): `references/stencil-contract.md`.
 - Stamp: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`
   — stdlib only, fails closed, writes repo paths only, prints a diff stat.
-- Content: one `<workspace>/lessons/<NN>-chK-<slug>.yaml` per lesson. The
-  filename carries the chapter; the stamp refuses names without `-chK-`.
 - Writer rule: **no hand-written lesson HTML.** A lesson task's report must
   carry the stamp output (repo path + diff stat + mtime) and the gate exit —
   self-reports without both are rejected at review.
@@ -81,22 +75,17 @@ lives in YAML.
 
 Write one when the position advances with new insight, a verification norm emerges, or the user's preferences crystallize (depth, diagrams, method transparency). Format: title + standing + 1–3 sentences + evidence + implications. Verification findings use the per-chapter verdict format: claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote, one line per claim.
 
-## Chat etiquette
-
-Terse position/pointers; the substance lives in the pages. Report as short lines: page path, live URL, the one or two headline fact-check findings. No queued-next lines, no closing questions, no offers to continue. Mention any standard step skipped as unnecessary (optionality rule) — as a statement, not a question.
-
 ## Standing behaviours
 
 - **Subagent-first.** Chapter production and the verification passes run as subagent tasks; the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
-- **Gates scale with the artifact.** (1) `check_lesson.py` on any lesson written or changed → exit 0 (no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; hyperlinked sources with no bare URLs; max-twice hyperlink rule; no teacher/method/primary-source tail blocks; links and assets resolve; dangling section references). (2) `check_map_geometry.py` on any SVG visual changed → exit 0 (edges through boxes, box overlaps including a node drawn inside another node, merged arrowheads, labels covering a box they do not belong to; label-on-line warnings reviewed and fixed when they matter) — and after editing the checker itself, re-run it on `evals/fixtures/geom-fixture.html`, which must report exactly one box overlap and one label-on-box. (3) A screenshot of any changed visual, looked at — keep the window height ≤2400, quote the `--window-size` value, verify the PNG is not a 756x488 fallback, and use iframe bands for long pages (details in `references/diagram-spec.md`). Each gate exists because a defect class shipped past the others: stray timestamps, edges through boxes, merged arrowheads, caption overflow, wrong cross-reference targets.
-- **Auto-open** every newly written/updated page — each via its own `Start-Process <file>` call so every page opens as a separate tab.
-- **Publish** when a teaching task completes (`~/.omo/scripts/publish_teach.py`), probe new URLs for 200, and on later visits verify the live bytes alongside the status code. Report without queued-next lines.
 - **Stay at the user's chapter position.** Teach chapter-and-earlier facts only — as internal discipline; the page itself never narrates the boundary.
+
+Gates, chat/report etiquette, publish, and auto-open: SKILL.md Steps 6-9 and `references/publishing.md`.
 
 ## Sandbox / eval runs
 
-When told to work in test mode: copy the existing workspace into the outputs folder and write everything for the task into **one tree** — either directly at the outputs root or in a single named subfolder; pick one and keep the whole task inside it. A second copy of the same workspace is the most common artifact problem in these runs: three of six continuation runs in the 2026-09 eval batches produced two trees, and every one of them then spent time reconciling or cleaning them.
+Test mode: copy the existing workspace into the outputs folder; write everything for the task into **one tree** (outputs root, or one named subfolder — pick one, keep the whole task inside it). Two trees for one workspace = the recurring failure mode here.
 
-If files are already in the outputs folder that you did not create this session, leave them untouched and say so in your report — they are usually residue from an earlier attempt of the same task or from a sibling run, and deleting someone else's evidence is worse than leaving it. If your own earlier attempt left a partial tree, say plainly which tree is the deliverable so nobody has to guess.
+Pre-existing files in the outputs folder you didn't create this session: leave untouched, say so in the report (usually residue from an earlier/sibling attempt; deleting someone else's evidence is worse than leaving it). Own earlier partial tree: state plainly which tree is the deliverable.
 
-Throughout: confine all writes to the outputs tree; leave `~/.omo/teach` untouched and the publish/open steps for live runs.
+Confine all writes to the outputs tree; leave `~/.omo/teach` untouched; publish/open steps are for live runs only.

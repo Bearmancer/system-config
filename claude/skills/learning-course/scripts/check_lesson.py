@@ -7,10 +7,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lesson_rules import (
     ANCHOR,
+    BARE_URL,
     HREF,
     SECTION_REF,
     TAG_CODE,
     TIMESTAMP,
+    VERDICT,
+    YOUTUBE,
     find_unsuperscripted_repeats,
 )
 
@@ -101,7 +104,7 @@ def check(path):
                 f"timestamps found (no timestamps anywhere on the page): {stray[:5]}"
             )
 
-    if re.search(r"youtube\.com|youtu\.be", html, re.I):
+    if YOUTUBE.search(html):
         issues.append("YouTube URL present: a YouTube video is never a source")
     if "canon-checked" in low or "canon checked" in low:
         issues.append(
@@ -119,7 +122,7 @@ def check(path):
         issues.append(
             "no hyperlinked sources (each cited source links to its actual page)"
         )
-    bare = re.findall(r"https?://\S+", anchor_stripped)
+    bare = BARE_URL.findall(anchor_stripped)
     if bare:
         issues.append(f"bare URL text (wrap it in a link): {bare[:3]}")
     tag_hit = TAG_CODE.findall(anchor_stripped)
@@ -157,10 +160,7 @@ def check(path):
     if caps_hits:
         issues.append(f"all-caps text run (3+ words): {caps_hits[:3]}")
     if ptype == "lesson":
-        verdicts = re.findall(
-            r"\b(confirmed|corrected|partially correct|wrong|unfindable|unverified|allegation)\b",
-            low,
-        )
+        verdicts = VERDICT.findall(low)
         if len(verdicts) < 2:
             issues.append(
                 "no inline verdicts in narrative (verdict words like confirmed/corrected/unfindable beside the quoted wording)"
@@ -286,10 +286,6 @@ def check(path):
             )
 
     if ptype == "lesson":
-        footer_m = FOOTER_RE.search(html)
-        footer_block = footer_m.group(1) if footer_m else ""
-        footer_hrefs = HREF.findall(footer_block)
-
         headings = {int(n) for n in HEADING.findall(html)}
         if headings:
             for match in SECTION_REF.findall(html):
@@ -302,8 +298,6 @@ def check(path):
     base = os.path.dirname(os.path.abspath(path))
 
     allow = ["../../index.html", "../index.html"]
-    if ptype in ("index", "reference", "timeline"):
-        allow.append("../index.html")
     if ptype == "index":
         allow.append("index.html")
 

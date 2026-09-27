@@ -19,6 +19,7 @@ from lesson_rules import (
     TIMESTAMP as TS,
     VERDICT,
     BARE_URL as BARE,
+    YOUTUBE,
     find_unsuperscripted_repeats,
 )
 
@@ -148,7 +149,7 @@ def stamp(yaml_path, lessons_dir, stencil_path):
     for s in sources:
         if not isinstance(s, dict) or not s.get("label") or not s.get("url"):
             raise StampError("sources: every entry needs label and url")
-        if re.search(r"youtube\.com|youtu\.be", s["url"], re.I):
+        if YOUTUBE.search(s["url"]):
             raise StampError(
                 "sources: a YouTube URL is not a source — cite the non-YouTube primary"
             )

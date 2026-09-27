@@ -7,7 +7,7 @@ description: "Build and maintain a per-chapter learning course from a long sourc
 
 Turn one long source into a per-chapter course. User walks sequentially across sessions; each chapter gets a treatise page: deeper than source, claims checked against record, published. Source-agnostic; acquisition + segmentation adapters live in `references/sources/`.
 
-Independent of the bundled `teach` skill: `teach` is user-invoked only (`disable-model-invocation: true` in both installed copies) and cannot be called from here, so there is no precedence relationship to resolve. This skill owns its own pedagogy, workspace layout, acquisition, slicing, corrections, verification, visuals, publishing, and auto-open.
+Independent of the bundled `teach` skill (user-invoked only, cannot be called from here). This skill owns its own pedagogy, workspace layout, acquisition, slicing, corrections, verification, visuals, publishing, and auto-open.
 
 **Workspace/cache paths.** Reference files reference `~/.omo/teach/` and `~/.omo/cache/learning-course/` paths — these apply when running under OpenCode + OMO. Under Claude Code, use an equivalent local workspace directory (e.g. in the project root or `~/.claude/`) — a machine with both runtimes installed has `~/.omo/` present, but this skill's own workspace under Claude Code stays separate from OMO's; one workspace per source, same layout.
 
@@ -56,7 +56,7 @@ ASR/OCR pass before quoting: candidate list from metadata + glossary + domain; l
 
 ### Step 5: Teach the chapter
 
-Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`. Shape lives in `assets/lesson.stencil.html`; content in the lesson YAML (`references/lesson-schema.md`); contract + row-id rule in `references/stencil-contract.md`; full style doc in `references/page-design.md`. One HTML page per chapter per `references/workflow.md` treatise structure. Head order: kicker (series name), H1 (chapter title), merged nav (Home · Chapter Index · Glossary · Cast Map, Title Case, zero dupes) under the H1, surtitle (small text: "Chapter N of M" — no time range, no timestamp anywhere on the page). No meta paragraph anywhere.
+Stamp the page, never hand-author it: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`. Shape lives in `assets/lesson.stencil.html`; content in the lesson YAML (`references/lesson-schema.md`); page structure, owner table, row-id rule in `references/page-design.md`.
 
 - **Cast block, only when humans involved.** Explicit non-empty `cast` list renders the on-stage table, 5-12 rows, columns Name | Role this chapter. New player: full role line. Returning player: fresh role line ending in its "(chapter N)" link to the lesson holding the full entry. No "first appears" column or label. Spec: `references/diagram-spec.md`.
 - **Chapter subgraph, only with active ties among an explicit cast.** Small inline SVG scoped to this chapter's on-stage nodes + active edges; colour-only edges; complete legend. Solo-narration chapter without active ties carries a one-line scope line in place of art. Spec: `references/diagram-spec.md`.
@@ -113,19 +113,18 @@ Credit/quota exhaustion on any research call (Tavily, Firecrawl, Exa, or any poo
 - `scripts/extract_chapters.py`: default Step-2 segmentation — derives ranges from `info.json`'s own chapter metadata; `--dry-run` previews, `--list` prints table.
 - `scripts/slice_chapter.py`: hand-range overrides only (not the default) — per-chapter VTT slicing with rolling-caption collapse + boundary report.
 - `scripts/check_lesson.py`: no quizzes/questionnaires; no boundary narration; no timestamps anywhere on the page; sources hyperlinked (no bare URLs); link targets at most twice per page; no teacher/method/primary-source tail blocks; relative links and assets resolve; section references; run before opening lesson. Flags any heading matching `/sources|references|bibliography/i` and any `<sup>` not wrapped in `<a>` (repeat citations must be a live superscript link, never a bare marker).
-- `scripts/stamp_lesson.py`: stamp a lesson HTML from its YAML content (`references/lesson-schema.md`) + the stencil (`assets/lesson.stencil.html`, contract in `references/stencil-contract.md`) — stdlib, fails closed, repo paths only, diff stat; pair with `scripts/fixtures/stencil/run_stencil_tests.py` (stamped golden passes the gate; corrupt variants fail) and `run_parity_test.py` (row-id parity with the publisher).
+- `scripts/stamp_lesson.py`: stamp a lesson HTML from its YAML content (`references/lesson-schema.md`) + the stencil (`assets/lesson.stencil.html`, contract in `references/page-design.md`) — stdlib, fails closed, repo paths only, diff stat; pair with `scripts/fixtures/stencil/run_stencil_tests.py` (stamped golden passes the gate; corrupt variants fail) and `run_parity_test.py` (row-id parity with the publisher).
 - `scripts/check_map_geometry.py`: edge/box/label defects (edges through boxes, overlaps incl. node inside node, merged arrowheads, labels covering boxes); run before opening or publishing SVG visual.
 - `scripts/verify_live.py`: probes published URLs for 200 + downloads live bytes for the Step 8 publish gate.
 - `scripts/fixtures/`: fixture pages for `check_lesson.py`/`run_gate.py` (pass/fail HTML samples, `hub-home`, `index-home`) and for `stamp_lesson.py` (`fixtures/stencil/`: golden YAML + rendered workspace).
 - `evals/fixtures/geom-fixture.html`: checker regression fixture: must report exactly one node-inside-node plus one label-on-box, everything else clean.
 - `references/workflow.md`: workspace templates, treatise structure, glossary conventions.
 - `references/lesson-schema.md`: YAML schema for a lesson's content, consumed by `stamp_lesson.py`.
-- `references/stencil-contract.md`: the stamping contract + row-id rule between the YAML and `assets/lesson.stencil.html`.
 - `references/sources/youtube.md`: YouTube adapter: fetch/slice commands, description mining, caption quirks, correction specifics.
 - `references/sources/text-sources.md`: books/articles/papers/lecture-notes adapter: extraction, TOC segmentation, bibliography mining, OCR corrections.
 - `references/diagram-spec.md`: visuals spec: cast map + timeline taxonomy, authoring rules, legends, QA gates.
 - `references/publishing.md`: publish script flow, generic fallback, live verification.
-- `references/page-design.md`: the single style doc — page structure, CSS class contract, typography/color tokens, casing rules.
+- `references/page-design.md`: the single style + stamp-contract doc — page structure, CSS tokens, casing, citations, owner table, row-id rule, publisher parity test.
 - `assets/lesson.css`: canonical styles (font-pinned) to copy into each workspace.
 - `assets/lesson.stencil.html`: the shape `stamp_lesson.py` fills from a lesson YAML.
 

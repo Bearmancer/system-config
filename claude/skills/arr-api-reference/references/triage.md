@@ -1,6 +1,6 @@
 # Triage — live runbooks for stuck/down symptoms
 
-Active diagnostic playbooks for this media stack. Read when the stack looks broken right now (down app, stuck queue, health error) — not needed for normal wiring/config work. `stack-state.md` in this same directory holds current bind/firewall/autostart config instead.
+Active diagnostic playbooks for this media stack. Read when the stack looks broken right now (down app, stuck queue, health error) — not needed for normal wiring/config work.
 
 ## Before hitting any app's API
 

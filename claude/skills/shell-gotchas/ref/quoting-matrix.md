@@ -1,26 +1,12 @@
 # Quoting matrix: pwsh7 → pwsh7 / pwsh5 / cmd / python / bash / dotnet
 
-Scope: variable-value transmission across runtime boundary. Payload live in
-PowerShell variable (single-quote literal), passed as arg to helper, helper
-echo back `[arg]`. Cell `ok` mean byte-identical return. This isolate
-transmission layer, not keystroke parsing.
+Scope: variable-value transmission across runtime boundary only, not keystroke parsing. Payload lives in a PowerShell variable (single-quote literal), passed as arg to a helper, helper echoes back `[arg]`. Cell `ok` = byte-identical return.
 
-Runtimes: `pwsh` 7.6.5 (child), `powershell` 5.1, `cmd`, `python`,
-`C:/Program Files/Git/bin/bash.exe`, `dotnet` 11 (`echoarg.dll`, build once
-from C# source below).
+Runtimes: `pwsh` 7.6.5 (child), `powershell` 5.1, `cmd`, `python`, `C:/Program Files/Git/bin/bash.exe`, `dotnet` 11 (`echoarg.dll`, built once from C# below).
 
-## Helpers (exact sources)
+Helpers (exact sources): `echo-arg.ps1` `param([string]$a)` → `'[' + $a + ']'`. `echo-arg.bat` `@echo off` / `echo [%1]` (raw `%1`, no tilde-strip). `echo-arg.py` `import sys` / `print('[' + sys.argv[1] + ']')`. `echo-arg.sh` `printf '[%s]' "$1"`. C# (`echoarg.csproj` net11.0 + `Program.cs`) `System.Console.Write("[" + args[0] + "]");`, run as `dotnet echoarg.dll <payload>`.
 
-`echo-arg.ps1`: `param([string]$a)` then `'[' + $a + ']'`.
-`echo-arg.bat`: `@echo off` newline `echo [%1]` (raw `%1`, no tilde-strip).
-`echo-arg.py`: `import sys` newline `print('[' + sys.argv[1] + ']')`.
-`echo-arg.sh`: `printf '[%s]' "$1"`.
-C# (`echoarg.csproj` net11.0 + `Program.cs`):
-`System.Console.Write("[" + args[0] + "]");` via `GetCommandLineArgs`-style
-`args[0]` (first user arg; dll run as `dotnet echoarg.dll <payload>`).
-
-Probe: for each payload × runtime, run helper with payload variable,
-grab stdout, compare case-sensitive against `[payload]`.
+Probe: for each payload × runtime, run helper with payload, compare stdout case-sensitive against `[payload]`.
 
 ## Results
 
@@ -41,10 +27,8 @@ grab stdout, compare case-sensitive against `[payload]`.
 
 ## Findings
 
-- ps5 block script by default (`UnauthorizedAccess`); probe add `-ExecutionPolicy Bypass` fix um.
-- bash eat single quote (`it's` → `[its]`); all other payload survive bash fine.
-- cmd keep inner double quote, add outer ones too (`["say "hi""]`).
-- cmd treat `=` as arg splitter (`a?b=c` → `[a?b]`).
-- cmd metachar `;||&` split/pipe even with caller quote (`/c` strip quote); payload run as command, bad.
-- Backslash transmit clean everywhere, even doubled and trailing kind.
-- `$HOME`, `100%`, `a?b=c` (outside cmd) transmit literal everywhere, no trouble.
+- ps5 blocks script by default (`UnauthorizedAccess`); probe needs `-ExecutionPolicy Bypass`.
+- bash eats single quote (`it's` → `[its]`); all other payloads survive bash fine.
+- cmd keeps inner double quote and adds outer ones too (`["say "hi""]`).
+- cmd treats `=` as arg splitter (`a?b=c` → `[a?b]`).
+- cmd metachars `;||&` split/pipe even with caller quoting (`/c` strips quote) — payload runs as a command, bad.
