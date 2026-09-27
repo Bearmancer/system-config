@@ -19,10 +19,10 @@ The course engine is source-agnostic (see SKILL.md); this adapter covers text so
 
 ## Apparatus mining (mandatory)
 
-- Bibliography, footnotes, endnotes, reference list = the source's own citations → per-chapter Sources block entries (hyperlinked to the actual page, no bare URLs) and the **first** verification targets. RESOURCES stays split-source retained until migration.
+- Bibliography, footnotes, endnotes, reference list = the source's own citations → inline citation entries (hyperlinked to the actual page, no bare URLs — `references/page-design.md`) and the **first** verification targets. RESOURCES stays split-source retained until migration.
 - Preface/introduction usually states method and sources; the abstract does it for papers.
 - Editions and translations matter: record translator and edition in NOTES.md, and name the translation when quoting.
-- Integrate: corrections land as inline verdicts in the narrative beside the quoted wording, with their citations in the Sources block; unfindables read "the source's account, unverified" in narrative and land in RESOURCES Gaps too. Max-twice hyperlink rule: each target at most twice per page, once in context and once in the Sources block.
+- Integrate: corrections land as inline verdicts in the narrative beside the quoted wording, cited inline; unfindables read "the source's account, unverified" in narrative and land in RESOURCES Gaps too.
 
 ## Corrections pass (mandatory — SKILL.md Step 3)
 

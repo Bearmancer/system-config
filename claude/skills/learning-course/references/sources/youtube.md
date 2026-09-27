@@ -41,10 +41,9 @@ Batch extraction is safe here because the ranges come from metadata; it is _teac
 
 The description is where creators put their citations, sources, corrections, and chapter lists. Read it every time, before verification:
 
-- Extract every link/source it cites into the per-chapter Sources block (annotated hyperlink to the actual page, no bare URLs) and treat them as the **first** verification targets — what the creator leaned on is the fastest route to the record. RESOURCES stays split-source retained until migration.
-- Watch for errata ("correction:", pinned notes, "edit:"): those override the spoken claim; state the correction as inline verdicts in the narrative beside the quoted wording, citing both the claim and the erratum in the Sources block.
-- Sponsors and advocacy: label them as such in the Sources block so the course keeps promotional framing visible as promotion.
-- Max-twice hyperlink rule: each citation target appears at most twice per page — once in context, once in the Sources block.
+- Extract every link/source it cites into inline citations (annotated hyperlink to the actual page, no bare URLs — `references/page-design.md`) and treat them as the **first** verification targets — what the creator leaned on is the fastest route to the record. RESOURCES stays split-source retained until migration.
+- Watch for errata ("correction:", pinned notes, "edit:"): those override the spoken claim; state the correction as an inline verdict in the narrative beside the quoted wording, citing both claim and erratum inline.
+- Sponsors and advocacy: label them as such inline so the course keeps promotional framing visible as promotion.
 - The description's chapter list is also a second witness for `chapters[]`.
 
 ## Machine-caption correction (mandatory pass — SKILL.md Step 3)

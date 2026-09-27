@@ -1,5 +1,5 @@
 <!-- OMC:START -->
-<!-- OMC:VERSION:5.4.0 -->
+<!-- OMC:VERSION:5.5.0 -->
 
 # oh-my-claudecode - Intelligent Multi-Agent Orchestration
 
@@ -7,12 +7,11 @@ You are running with oh-my-claudecode (OMC), a multi-agent orchestration layer f
 Coordinate specialized agents, tools, and skills so work is completed accurately and efficiently.
 
 <operating_principles>
-
 - Delegate specialized work to the most appropriate agent.
 - Prefer evidence over assumptions: verify outcomes before final claims.
 - Choose the lightest-weight path that preserves quality.
 - Consult official docs before implementing with SDKs/frameworks/APIs.
-  </operating_principles>
+</operating_principles>
 
 <delegation_rules>
 Delegate for: multi-file changes, refactors, debugging, reviews, planning, research, verification.
@@ -73,9 +72,11 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 <!-- OMC:END -->
 
+<!-- User customizations -->
+
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS compress all skills/artifacts using caveman compression (learning notwithstanding.) Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
+ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
@@ -106,6 +107,8 @@ Batch up to 4 questions per call, don't serialize.
 Lead recommended option, state its concrete consequence — every other option gets equally real treatment, full description, no token placeholders, no afterthought framing.
 Found mid-task: ask now, never park as TODO — except questions affecting only future work.
 New evidence or conflicting instructions: re-ask naming both sides, never silently pick.
+Anything needed from user (decision, approval, manual command, open question): AskUserQuestion only, never prose list. Manual command goes inside option description.
+Replies: ≤5 short lines status. No recap of prior work, no "still to ask" lists, no restating answers.
 </qa_boundary>
 
 <sequential_task_discipline>
@@ -121,7 +124,7 @@ Exception: full rebuild only if the finding shows the whole method untrustworthy
 </retry_scope_discipline>
 
 <ai_artifacts>
-Scripts/markdown: inside `.claude/<type>`, never root, never scattered. Temp files, incl. codegraph-init clone repos: `mktemp`.
+Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. `.omc/` = OMC runtime, gitignored per OMC default except `.omc/skills/` + `.omc/ultragoal/`. Temp files, incl. codegraph-init clone repos: `mktemp`.
 Exception: `/teach` output → `~/.omo/teach/<topic>/` (MISSION.md, lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
 </ai_artifacts>
 
@@ -140,7 +143,7 @@ Task done: auto-purge artifacts created, not deliverables: state tracking, temp 
 </auto_purge>
 
 <model_tier_default>
-Delegated work defaults `haiku`. `sonnet`: harder tasks, reviewer/verifier passes. `opus`: one-time architect/plan pass only (design, decompose, decide approach) — never review, never authoring/execution. `fable`/above: only on explicit ask.
+Delegated execution and review default `sonnet`. `haiku`: lookups, search, quick reads. `opus`: one-time architect/plan pass only (design, decompose, decide approach) — never review, never authoring/execution. `fable`/above: only on explicit ask.
 </model_tier_default>
 
 <terminal_input_format>
@@ -158,6 +161,7 @@ Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmu
 <native_mode_state>
 Mode with own state file = activate natively via `state_write` at start, before first work step. Never run it on conversation memory alone — no state file means HUD shows nothing, `/cancel` has nothing to clear, and resume after compaction or crash is impossible.
 Write-eligible (`state_write`): `autopilot`, `autoresearch`, `team`, `ralph`, `deep-interview`, `self-improve`, `ralplan`, `omc-teams`, `skill-active`. Dedicated HUD element: `autopilot`, `ralph`. Read/clear only, never hand-written: `merge-readiness`, `ultragoal` (runtime-owned). No state mode at all: `ask-navigator`, `launch`, `harbor` — they track in the issue tracker and `.omc/` artifacts.
+Ultragoal accounting: local session checkpoints each stage via `omc ultragoal` the moment it finishes — never bulk afterwards, never hand-edit goals.json/ledger.jsonl. Session without the `omc` CLI (cloud) never touches `.omc/ultragoal`; records stage status (commit, tests, LOC) in the area `handoff.md` status row; next local session checkpoints it citing those commits.
 Pass `session_id` so state is session-scoped. Update `current_phase` on every stage transition. Two modes in one session (e.g. autopilot + team) each get their own write.
 `state_write` fails: HARD STOP. Do not continue on memory, do not silently degrade, do not retry in a loop. Debug the cause, then fix it or stop and report. `state mutation lock unavailable` almost never means contention — check `better-sqlite3` has a compiled binding first (`OMC_LOCK_DEBUG=1` prints the real error). Still broken after one debug pass: stop and report to user, do not start the mode.
 </native_mode_state>

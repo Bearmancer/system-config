@@ -41,9 +41,18 @@ description: "Capability audit + house rules for the web-data MCP fleet wired in
 - Recurring page-change watching → `firecrawl_monitor_*` or ScrapeGraphAI `monitor_*`.
 - Context7 serves coding tasks only — not a fact-checking source for course verification.
 
+## URL audit — mandatory for every skill
+
+Single home; every skill points here. Applies to each URL emitted to the user or written to a file (citations, links, references, issue/PR bodies, lessons). Exempt: placeholders (`<owner>`, `XXXX`, `…`, `/example`), localhost/private-IP API endpoints, MCP server endpoints, URLs inside shell commands. The script skips these on its own.
+
+1. Run `python <web-data-apis>/scripts/check_urls.py <url>...` (or `-f <file>` to audit every URL in a draft). Only a final `200 OK` passes.
+2. `BLOCKED` (401/403/429/503) or `JS?` (JS shell, thin text): re-check with `firecrawl_scrape` (`maxAge: 0`); page must load and contain the cited claim. Firecrawl fails: Firefox DevTools MCP, then Browserbase.
+3. `BROKEN` (4xx/5xx, soft-404, deep link redirected to root): find the correct URL and re-audit, or drop the link and mark `[link unverified]`. Never emit an unaudited or failing URL.
+4. Report per URL: `URL | status | method (http / firecrawl) | pass`.
+
 ## Music metadata lookups
 
-Looking up a release, recording, or work's metadata (catalog number, credits, dates, discography)? `references/discography-search.md` covers entry points (MusicBrainz, Discogs), tracing each candidate to its underlying session, duration verification, and citation sources — genre-agnostic, reusable by any music task. `deep-cut-classical` points here for its own discography lookups.
+Release/recording/work metadata (catalog number, credits, dates, discography, durations): read `references/discography-search.md` first. Music streaming services (not YouTube): ignore entirely on any music task — exclude their domains on every search, discard results landing on them, never fetch, cite, link, or mention them. Service + domain list lives in that file.
 
 ## Keys + credit failover (11 keyed services)
 

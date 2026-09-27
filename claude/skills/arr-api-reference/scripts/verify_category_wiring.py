@@ -1,46 +1,27 @@
 #!/usr/bin/env python3
 """Cross-check category-string wiring across Sonarr/Radarr/Prowlarr/SABnzbd.
 
-The four apps share no real namespace for category strings (see SKILL.md
-"Category wiring" section) — each one just has to agree by convention.
-This mismatch fails silent (download lands in the wrong/default folder,
-no error anywhere), so it needs an active check instead of hand-reading
-four configs. Run after any category/download-client edit, or whenever
-a download lands somewhere unexpected.
-
 Usage: python verify_category_wiring.py
 Exit code 0 = all wired correctly, 1 = mismatch found (see stdout).
 """
 from __future__ import annotations
 
 import sys
-from typing import Any
 
 import requests
 
-from arr_scripts import HOST, get_arr_api_key, get_sab_api_key
+from arr_scripts import arr_base_and_headers, sab_api
 
 
 def get_sab_categories() -> set[str]:
-    url = f"http://{HOST}:8080/api"
-    params = {
-        "mode": "get_config",
-        "section": "categories",
-        "apikey": get_sab_api_key(),
-        "output": "json",
-    }
-    resp = requests.get(url, params=params, timeout=10)
-    resp.raise_for_status()
-    cats = resp.json()["config"]["categories"]
+    cats = sab_api(mode="get_config", section="categories")["config"]["categories"]
     return {c["name"] for c in cats if c["name"] != "*"}
 
 
-def get_arr_download_client_categories(
-    app: str, port: int, category_field: str
-) -> dict[str, str]:
+def get_arr_download_client_categories(app: str, category_field: str) -> dict[str, str]:
     """Returns {download_client_name: category_value}."""
-    headers = {"X-Api-Key": get_arr_api_key(app)}
-    resp = requests.get(f"http://{HOST}:{port}/api/v3/downloadclient", headers=headers, timeout=10)
+    base, headers = arr_base_and_headers(app)
+    resp = requests.get(f"{base}/downloadclient", headers=headers, timeout=10)
     resp.raise_for_status()
     out: dict[str, str] = {}
     for client in resp.json():
@@ -52,8 +33,8 @@ def get_arr_download_client_categories(
 
 def get_prowlarr_client_categories() -> dict[str, list[str]]:
     """Returns {download_client_name: [clientCategory, ...]}."""
-    headers = {"X-Api-Key": get_arr_api_key("Prowlarr")}
-    resp = requests.get(f"http://{HOST}:9696/api/v1/downloadclient", headers=headers, timeout=10)
+    base, headers = arr_base_and_headers("Prowlarr")
+    resp = requests.get(f"{base}/downloadclient", headers=headers, timeout=10)
     resp.raise_for_status()
     out: dict[str, list[str]] = {}
     for client in resp.json():
@@ -67,8 +48,8 @@ def main() -> int:
     problems: list[str] = []
 
     sab_cats = get_sab_categories()
-    sonarr_cats = get_arr_download_client_categories("Sonarr", 8989, "tvCategory")
-    radarr_cats = get_arr_download_client_categories("Radarr", 7878, "movieCategory")
+    sonarr_cats = get_arr_download_client_categories("Sonarr", "tvCategory")
+    radarr_cats = get_arr_download_client_categories("Radarr", "movieCategory")
     prowlarr_cats = get_prowlarr_client_categories()
 
     arr_cats: dict[str, str] = {**sonarr_cats, **radarr_cats}

@@ -17,6 +17,7 @@ TIMESTAMP = re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\b")
 SECTION_REF = re.compile(
     r"(?:§|\bsections?\b)\s*(\d+(?:\s*(?:,|and|&|through)\s*\d+)*)", re.I
 )
+YOUTUBE = re.compile(r"youtube\.com|youtu\.be", re.I)
 ANCHOR = re.compile(r"<a\b.*?</a>", re.S | re.I)
 HREF = re.compile(r'href="([^"]+)"')
 SUP_WRAP = re.compile(r"<sup>\s*$")

@@ -21,11 +21,11 @@ Table plus diagram both scope toward _this chapter alone_. That scope keeps dupl
 - Same hard rules as Part 1 (colour-only edges, clash-free geometry, direction-checked arrows) — the three hard rules apply here in full.
 - Canvas 700–950 wide, sized toward node count; cumulative-map size stays out of scope here.
 - A solo-narration chapter, or any chapter with `cast: []`, omits the whole §2 Cast block (table plus subgraph) with no renumbering; a solo-narration chapter with a cast list but no active ties carries a one-line coverage line in place of the subgraph, naming the chapter scope.
-- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citation hyperlinks live in the lesson narrative and its per-chapter Sources block; the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
+- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citations are inline-only in the lesson narrative (`references/page-design.md`); the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
 
 ## Part 1 — Roster-index (`reference/cast-map.html`)
 
-Full-course roster/index in table form, updated chapter by chapter. Readers follow a single chapter through its subgraph (Part 0); they come here for the whole picture, spelled out in words. The cumulative mega-SVG stands retired: the 71KB / 59-rect baseline taught that one huge cumulative diagram turns unreadable past a mid-size cast. Visual explanation lives in chapter subgraphs; cumulative state lives here as a table. Dry-run at cap 12 confirmed the split reads clean.
+Full-course roster/index in table form, updated chapter by chapter. Readers follow a single chapter through its subgraph (Part 0); they come here for the whole picture, spelled out in words. Cumulative mega-SVG retired — one huge cumulative diagram turns unreadable past a mid-size cast; visual explanation lives in chapter subgraphs, cumulative state lives here as a table.
 
 ### Three hard rules (hold for every subgraph; roster prose mirrors them in words)
 
@@ -96,4 +96,4 @@ A course workspace lacking `reference/timeline.html` gains a fresh build seeded 
   `msedge --headless=new --disable-gpu --hide-scrollbars --screenshot=out.png "--window-size=1500,2400" "file:///<path>"`
   then review that PNG (multimodal look serves) and fix weak reads. Three traps: window height at 2400 or below (Edge falls back toward a 756x488 default above it); always quote the `--window-size` value (unquoted inside a PowerShell loop it splits at the comma and drops); check PNG dimensions after capture — a 756x488 image means the flag dropped, and conclusions from it hold zero weight. Pages taller than one capture get banded screenshots through an iframe with a negative `top` offset.
 
-Why the gates hold: each caught a defect class the arithmetic and sibling checks missed — an eval run claimed edge clearance with three segments crossing boxes; two maps shipped arrowheads merged 5 px apart; two author captions overflowed their boxes; a lesson said "see section 4" where the fact-check box sat in section 6. Changed artifacts pass all gates each time; untouched files rest.
+Changed artifacts pass all gates each time; untouched files rest.

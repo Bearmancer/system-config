@@ -4,12 +4,12 @@ All endpoints verified working real instances. Auth key each app own config file
 
 ## Auth key locations
 
-| App      | Config file                                | Key path            |
-| -------- | -------------------------------------------- | -------------------- |
-| Sonarr   | `<AppData>\Sonarr\config.xml`                | `<Config><ApiKey>` |
-| Radarr   | `<AppData>\Radarr\config.xml`                | `<Config><ApiKey>` |
-| Prowlarr | `<AppData>\Prowlarr\config.xml`              | `<Config><ApiKey>` |
-| SABnzbd  | `<UserAppData>\Local\sabnzbd\sabnzbd.ini`    | `[misc] api_key =` |
+| App | Config file | Key path |
+| --- | --- | --- |
+| Sonarr | `<AppData>\Sonarr\config.xml` | `<Config><ApiKey>` |
+| Radarr | `<AppData>\Radarr\config.xml` | `<Config><ApiKey>` |
+| Prowlarr | `<AppData>\Prowlarr\config.xml` | `<Config><ApiKey>` |
+| SABnzbd | `<UserAppData>\Local\sabnzbd\sabnzbd.ini` | `[misc] api_key =` |
 
 Emby: no key on disk. Mint one in Dashboard → Advanced → API Keys, or trade username/password for a session token via `POST /Users/AuthenticateByName`.
 
@@ -25,7 +25,7 @@ $key = ([xml](Get-Content "C:\ProgramData\Sonarr\config.xml")).Config.ApiKey
 
 Sonarr/Radarr/Prowlarr force-lowercase `username` server-side no matter what you send (`user.Username = username.ToLowerInvariant()` in `UserService.Upsert`) — send `"Lance"`, it quiet-stores `"lance"`. qBittorrent's `web_ui_username` preference doesn't lowercase — case you send is case it keeps.
 
-**Change username without touching password:** `GET /api/v3/config/host` first, change only `username` in the object that comes back, `PUT` the whole thing back with `password` untouched (still the hash `GET` gave). Backend compares `resource.Password` to the stored hash byte-for-byte; equal means "unchanged," skip re-hash. Send the plaintext password instead and it double-hashes it, breaking login.
+**Change username without touching password:** `GET /api/v3/config/host`, change only `username`, `PUT` the whole object back with `password` untouched (still the hash `GET` gave — backend compares byte-for-byte, equal means skip re-hash). Send the plaintext password instead and it double-hashes, breaking login.
 
 - **qBittorrent:** `POST /api/v2/app/setPreferences` with body `json={"web_ui_username":"<name>"}` (URL-encoded).
 - **SABnzbd:** WebUI username/password live under `[misc]` in `sabnzbd.ini`, separate from `[[servers]]` block — those are per-provider Usenet account logins, not the local app credential; never mix up the two.
@@ -37,17 +37,19 @@ Sonarr/Radarr/Prowlarr force-lowercase `username` server-side no matter what you
 
 Auth: header `X-Api-Key: <key>`. Base: `http://<host>:<port>/api/v3`.
 
-| Action                                                               | Endpoint                       | Body                                                                                                                                                                  |
-| -------------------------------------------------------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| List root folders                                                    | `GET /rootfolder`              | —                                                                                                                                                                     |
-| Add root folder                                                      | `POST /rootfolder`             | `{"path": "C:\\Media\\Library\\TV"}`                                                                                                                                  |
-| Remove root folder                                                   | `DELETE /rootfolder/{id}`      | —                                                                                                                                                                     |
-| List download clients                                                | `GET /downloadclient`          | —                                                                                                                                                                     |
-| Get download client templates                                        | `GET /downloadclient/schema`   | —                                                                                                                                                                     |
-| Add download client                                                  | `POST /downloadclient`         | full object from schema, mutated (see below)                                                                                                                          |
-| Test all download clients                                            | `POST /downloadclient/testall` | empty body — returns `[{id, isValid, validationFailures}]`; re-`GET /health` after, download-client error should clear with no config edit if outage was process-side |
-| Trigger backup                                                       | `POST /command`                | `{"name": "Backup"}`                                                                                                                                                  |
-| Re-search one series (clear stale `downloadClientUnavailable` queue) | `POST /command`                | `{"name": "SeriesSearch", "seriesId": <id>}` → `queued`; `POST /queue/grab` with `{ids}` 405s, use this instead                                                       |
+| Action | Endpoint | Body |
+| --- | --- | --- |
+| List root folders | `GET /rootfolder` | — |
+| Add root folder | `POST /rootfolder` | `{"path": "C:\\Media\\Library\\TV"}` |
+| Remove root folder | `DELETE /rootfolder/{id}` | — |
+| List download clients | `GET /downloadclient` | — |
+| Get download client templates | `GET /downloadclient/schema` | — |
+| Add download client | `POST /downloadclient` | full object from schema, mutated (see below) |
+| Test all download clients | `POST /downloadclient/testall` | empty body — returns `[{id, isValid, validationFailures}]` |
+| Trigger backup | `POST /command` | `{"name": "Backup"}` |
+| Re-search one series (clear stale `downloadClientUnavailable` queue) | `POST /command` | `{"name": "SeriesSearch", "seriesId": <id>}` → `queued` |
+
+`testall`/health-recheck sequence and why `SeriesSearch` replaces `queue/grab` (405): `triage.md`.
 
 Download client add — filter schema to implementation, set fields, POST whole thing:
 
@@ -81,16 +83,16 @@ Note: `apiKey` field no `value` in schema template (secret field) — need `Add-
 
 Auth: header `X-Api-Key: <key>`. Base: `http://<host>:<port>/api/v1`.
 
-| Action                                               | Endpoint                   | Body                                                                    |
-| ---------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------- |
-| List applications (pushes indexers to Sonarr/Radarr) | `GET /applications`        | —                                                                       |
-| Get application templates                            | `GET /applications/schema` | —                                                                       |
-| Add application                                      | `POST /applications`       | full object from schema, mutated (same pattern as downloadclient above) |
-| List download clients                                | `GET /downloadclient`      | —                                                                       |
-| Get one download client                              | `GET /downloadclient/{id}` | —                                                                       |
-| Update download client                               | `PUT /downloadclient/{id}` | full object, `.fields` **and** `.categories`                            |
-| Force indexer→app sync (skip schedule)               | `POST /command`            | `{"name": "ApplicationIndexerSync"}`                                    |
-| Trigger backup                                       | `POST /command`            | `{"name": "Backup"}`                                                    |
+| Action | Endpoint | Body |
+| --- | --- | --- |
+| List applications (pushes indexers to Sonarr/Radarr) | `GET /applications` | — |
+| Get application templates | `GET /applications/schema` | — |
+| Add application | `POST /applications` | full object from schema, mutated (same pattern as downloadclient above) |
+| List download clients | `GET /downloadclient` | — |
+| Get one download client | `GET /downloadclient/{id}` | — |
+| Update download client | `PUT /downloadclient/{id}` | full object, `.fields` **and** `.categories` |
+| Force indexer→app sync (skip schedule) | `POST /command` | `{"name": "ApplicationIndexerSync"}` |
+| Trigger backup | `POST /command` | `{"name": "Backup"}` |
 
 Applications add uses `configContract: "SonarrSettings"` / `"RadarrSettings"`, fields `prowlarrUrl`, `baseUrl`, `apiKey`, `syncCategories` (array Prowlarr category codes, table below), `syncLevel: "fullSync"`.
 
@@ -115,30 +117,30 @@ $client.fields = @($deduped.Values)
 
 ### Prowlarr category codes (indexer categories, used in `syncCategories` and download-client `.categories` mapping)
 
-| Range     | Meaning                                                         |
-| --------- | --------------------------------------------------------------- |
-| 1000-1180 | Console                                                         |
+| Range | Meaning |
+| --- | --- |
+| 1000-1180 | Console |
 | 2000-2090 | Movies (2000 base, 2040 HD, 2045 UHD, 2050 BluRay, 2080 WEB-DL) |
-| 3000-3060 | Audio/Music                                                     |
-| 4000-4070 | PC                                                              |
-| 5000-5090 | TV (5000 base, 5040 HD, 5045 UHD, 5070 Anime)                   |
-| 6000-6090 | XXX                                                             |
-| 7000-7060 | Books                                                           |
-| 8000-8020 | Other                                                           |
+| 3000-3060 | Audio/Music |
+| 4000-4070 | PC |
+| 5000-5090 | TV (5000 base, 5040 HD, 5045 UHD, 5070 Anime) |
+| 6000-6090 | XXX |
+| 7000-7060 | Books |
+| 8000-8020 | Other |
 
 ## Emby
 
 Auth: query param `api_key=<key>` or header `X-Emby-Token: <key>` — either works. Base: `http://<host>:<port>` (no `/api` prefix, no version segment).
 
-| Action                       | Endpoint                                                                       | Body                               |
-| ---------------------------- | ------------------------------------------------------------------------------ | ---------------------------------- |
-| List libraries               | `GET /Library/VirtualFolders`                                                  | —                                  |
-| Add path to existing library | `POST /Library/VirtualFolders/Paths?id=<Guid>&path=<path>&refreshLibrary=true` | none — pure query string           |
-| Mint token from credentials  | `POST /Users/AuthenticateByName`                                               | `{"Username": "...", "Pw": "..."}` |
+| Action | Endpoint | Body |
+| --- | --- | --- |
+| List libraries | `GET /Library/VirtualFolders` | — |
+| Add path to existing library | `POST /Library/VirtualFolders/Paths?id=<Guid>&path=<path>&refreshLibrary=true` | none — pure query string |
+| Mint token from credentials | `POST /Users/AuthenticateByName` | `{"Username": "...", "Pw": "..."}` |
 
 `GET /Library/VirtualFolders` response per library: `Name`, `Locations` (array of paths), `CollectionType`, `ItemId` (decimal string, cosmetic only), `Guid` (32-hex no dashes — real id).
 
-**The id gotcha.** `Library/VirtualFolders/Paths` calls `LibraryManager.GetItemById` on whatever id passed — no name-based lookup server-side. Sending `name=<library name>` (several third-party scripts + intuitive API shape suggest should work) throws:
+**The id gotcha.** `Library/VirtualFolders/Paths` calls `LibraryManager.GetItemById` on whatever id passed — no name-based lookup server-side. Sending `name=<library name>` throws:
 
 ```
 System.FormatException: Unrecognized Guid format.
@@ -148,7 +150,14 @@ System.FormatException: Unrecognized Guid format.
 
 HTTP 500, no other hint in body. Fix: resolve library by `Name` from `GET /Library/VirtualFolders` first, pass its `Guid` as `id`. `ItemId` (decimal one) also fails same way — not Guid either.
 
-Process name `EmbyServer` (+ `embytray` notification-area helper), default port `8096`. Config dir `%AppData%\Emby-Server\programdata\config\system.xml` (server settings, no secrets). Logs: `%AppData%\Emby-Server\programdata\logs\embyserver.txt` — on any 500, tail this before re-guessing request shape; full .NET stack trace with exact failing call sits right there.
+```powershell
+$key = "<api key>"
+$libs = Invoke-RestMethod "http://localhost:8096/Library/VirtualFolders?api_key=$key"
+$target = $libs | Where-Object Name -eq "Home videos & photos"
+Invoke-RestMethod -Method Post "http://localhost:8096/Library/VirtualFolders/Paths?id=$($target.Guid)&path=C:\Media\Library\XXX&refreshLibrary=true&api_key=$key"
+```
+
+Config dir `%AppData%\Emby-Server\programdata\config\system.xml` (server settings, no secrets). On any 500, tail the log before re-guessing request shape — full .NET stack trace with exact failing call sits right there. Process/port/log path: "Logs, process, and live queue status" table below.
 
 ## SABnzbd
 
@@ -168,19 +177,17 @@ Auth: **query-string** `apikey=<key>` param, not header. Base: `http://<host>:<p
 
 **"Rename" a category** = delete old keyword then set_config new one; no in-place rename endpoint.
 
-**PowerShell string-interpolation gotcha.** `"$sabBase?mode=..."` resolves `$sabBase` empty since `?` not valid variable-name-terminator char at that spot — write `"${sabBase}?mode=..."` instead.
-
 **Wildcard/default category.** Literal `*` fallback for anything with no explicit category; URL-encode as `%2A` when used as `keyword` value in query string.
 
 ## Logs, process, and live queue status
 
-| App      | Log files                                                                                                                | Process name(s)                                           | Default port |
-| -------- | ------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- | ------------ |
-| Sonarr   | `C:\ProgramData\Sonarr\logs\sonarr.*.txt` (main), `sonarr.debug.*.txt`                                                   | `Sonarr`                                                  | 8989         |
-| Radarr   | `C:\ProgramData\Radarr\logs\radarr*.txt`                                                                                 | `Radarr` (windowless) / `Radarr.Console` (visible window) | 7878         |
-| Prowlarr | `C:\ProgramData\Prowlarr\logs\prowlarr*.txt`                                                                             | `Prowlarr`                                                | 9696         |
-| SABnzbd  | `<sabnzbd config dir>\logs\sabnzbd.log` (dir varies by install — this instance: `C:\Users\Lance\AppData\Local\sabnzbd\`) | `SABnzbd`                                                 | 8080         |
-| Emby     | `%AppData%\Emby-Server\programdata\logs\embyserver.txt`                                                                  | `EmbyServer`, `embytray`                                  | 8096         |
+| App | Log files | Process name(s) | Default port |
+| --- | --- | --- | --- |
+| Sonarr | `C:\ProgramData\Sonarr\logs\sonarr.*.txt` (main), `sonarr.debug.*.txt` | `Sonarr` | 8989 |
+| Radarr | `C:\ProgramData\Radarr\logs\radarr*.txt` | `Radarr` (windowless) / `Radarr.Console` (visible window) | 7878 |
+| Prowlarr | `C:\ProgramData\Prowlarr\logs\prowlarr*.txt` | `Prowlarr` | 9696 |
+| SABnzbd | `<sabnzbd config dir>\logs\sabnzbd.log` (dir varies by install — this instance: `C:\Users\Lance\AppData\Local\sabnzbd\`) | `SABnzbd` | 8080 |
+| Emby | `%AppData%\Emby-Server\programdata\logs\embyserver.txt` | `EmbyServer`, `embytray` | 8096 |
 
 All three *arr apps log to rolling numbered files (`.0.txt`, `.1.txt`, ...) — highest number or no-suffix file most recent; `*.debug.*` files verbose, only useful when `LogLevel` in `config.xml` set to `debug` (all three observed already running `debug` this setup).
 
@@ -210,7 +217,7 @@ Config-file edits (`config.xml`, `sabnzbd.ini`) made while app running get overw
 Bazarr connect to Sonarr + Radarr to manage subtitle. Port `6767`,
 config at `C:\ProgramData\Bazarr\config\config.yaml`, API key in
 `general.apikey` field of that file. Auth: header `X-API-KEY: <key>`
-OR query `?apikey=<key>` OR form field `apikey`.
+OR query `?apikey=<key>` OR form field `apikey`. (Verified 2026-09-06.)
 
 **`/system/settings` hide from swagger on purpose** — it exist
 but give back `null` from swagger path list. Only `GET` and `POST`
@@ -218,8 +225,7 @@ register; `PUT`/`PATCH` give 405.
 
 **Big gotcha: POST body must be `application/x-www-form-urlencoded`
 (form), not JSON.** Handler read `request.form` — send JSON body
-get quiet-ignore, setting no save. Earlier try with
-`ConvertTo-Json` body all fail for this reason.
+get quiet-ignore, setting no save.
 
 Field name pattern: `settings-<section>-<key>` (partial update OK —
 only key you give get write).
@@ -258,9 +264,3 @@ Bazarr **not** connect to Prowlarr or Emby — those not
 Bazarr integration target. Prowlarr feed Sonarr/Radarr (download
 source); Emby is playback front-end. Bazarr only talk
 Sonarr + Radarr for library metadata.
-
-### Inventory (verified 2026-09-06)
-
-| App    | Port | Config                                     | Auth                      |
-| ------ | ---- | ------------------------------------------ | ------------------------- |
-| Bazarr | 6767 | `C:\ProgramData\Bazarr\config\config.yaml` | `X-API-KEY` or `?apikey=` |
