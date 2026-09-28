@@ -19,5 +19,5 @@ One entry per term: definition, boundaries. Agents write here the moment a term 
 - Boundary: one-way, local → repo. Nothing in this repo flows back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically — restore is a manual reverse copy.
 
 ## foobar2000 mirror
-- Definition: one-way `robocopy /MIR` of the foobar2000 profile (`%APPDATA%\foobar2000-v2`) to Google Drive (`D:\My Drive\foobar2000-v2`).
-- Boundary: no history of its own. Google Drive's 30-day file versions are the only recovery path if the mirror propagates a corrupt profile.
+- Definition: one-way `rclone sync` of the foobar2000 profile (`%APPDATA%\foobar2000-v2`) to the `gdrive` rclone remote's `foobar2000-v2` folder.
+- Boundary: no history of its own. Google Drive's 30-day file versions are the only recovery path if the mirror propagates a corrupt profile. No local drive-letter mount is involved — rclone talks to the Drive API directly.

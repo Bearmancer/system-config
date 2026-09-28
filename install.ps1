@@ -16,4 +16,4 @@ $topgradeTrigger = New-ScheduledTaskTrigger -Daily -At 10:00am
 Register-ScheduledTask -TaskName 'Topgrade' -Action $topgradeAction -Trigger $topgradeTrigger -Principal $principal -Settings $settings -Force
 
 Write-Host 'Registered: Daily sync (09:00), Topgrade (10:00).'
-Write-Host 'One-time manual step: set Google Drive tray icon -> Preferences -> Drive letter to D.'
+Write-Host 'One-time manual step: run rclone config and create a remote named gdrive.'
