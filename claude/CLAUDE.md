@@ -124,8 +124,20 @@ Exception: full rebuild only if the finding shows the whole method untrustworthy
 </retry_scope_discipline>
 
 <ai_artifacts>
-Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. `.omc/` = OMC runtime, gitignored per OMC default except `.omc/skills/` + `.omc/ultragoal/`. Temp files, incl. codegraph-init clone repos: `mktemp`.
+Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. Temp files, incl. codegraph-init clone repos: `mktemp`.
 Exception: `/teach` output → `~/.omo/teach/<topic>/` (MISSION.md, lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
+
+Runtime-state roots, one per tool, purge-candidate by default unless it holds a listed exception:
+- `.omc/` (any repo, incl. `~/.omc` itself): OMC runtime — `state/`, `state/sessions/{id}/`, `notepad.md`, `project-memory.json`, `plans/`, `research/`, `logs/`, `artifacts/`, `handoffs/`, `ultragoal/`. Gitignored by OMC default except `.omc/skills/` + `.omc/ultragoal/` (durable, never purge).
+- `~/.claude/`: `settings.json`/`CLAUDE.md`/`keybindings.json` durable (never purge). `~/.claude/plugins/cache/**` and `~/.claude/plugins/marketplaces/**` are third-party/vendored — never touch (`content_provenance`), including any nested `.omc/`/`.claude/` inside a plugin's own repo checkout. Per-repo `.claude/state/`, `.claude/worktrees/`, `.claude/plans/` (durable, keep) are OMC/Claude-Code scoped.
+- `~/.omo/`: agent runtime for the `omo`/OmO CLI — `agent/` (auth.json, cache, logs, sessions, `*.bak-*`, `migrations-state.json`, `harness-detect-cache.json`, `OmO-debug.log`), `lsp-daemon/*.stamp`, `senpi-task/{children,locks,logs,tasks}`, `thread-tools/{mailbox,receipts}`. Purge-candidate. `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/` durable — keep.
+- `~/.codex/` and `~/.local/share/omo-codex/`: Codex CLI runtime/session state — purge-candidate.
+- `~/.config/opencode/`: opencode config + runtime — `AGENTS.md`/`opencode.jsonc`/`tui.json` durable, keep; `agents/`, `commands/`, `skills/` durable, keep; session/cache subpaths purge-candidate.
+- ChatGPT: no local runtime dir observed on this machine — n/a unless one appears.
+- Scratch/session dirs outside any repo: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**`, `~/AppData/Local/Temp/bunx-*`, `~/AppData/Local/Temp/opencode/**` — purge-candidate, session-scoped, never referenced after session ends.
+- Stray `*-state.json`, `*-state-tracking*.json`, `*.heartbeat.json`, `*.lock`, `*-sync.log` at a repo root outside a known runtime dir above: purge-candidate, treat as orphaned tool output.
+
+Never purge without listing exact paths + byte/file counts first (`auto_purge` governs timing and report format); `rm -rf` and other irreversible-destruction commands route through the user when the auto-mode classifier blocks them — hand back the exact command, don't retry via another tool.
 </ai_artifacts>
 
 <content_provenance>
