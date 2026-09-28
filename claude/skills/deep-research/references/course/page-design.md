@@ -6,9 +6,9 @@ One visual language, one owner table, for every page this skill produces: lesson
 
 Fixed by `assets/lesson.stencil.html`; identical on every lesson page.
 
-1. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
-2. **H1** — chapter title.
-3. **Merged nav** — Home · Chapter Index · Glossary · Cast Map in one `<nav class="top-nav">`, Title Case, directly under the H1. Zero dupe links, no meta paragraph anywhere.
+1. **Top bar** — sticky `<header class="A-bar">` above everything: chapter title, a chapter-index `<select>` (every chapter of this course plus Home, Chapter Index, Glossary, Cast Map), a font `<select>`, a size `<select>`. Chapter options are injected at runtime by `assets/shell.js` from `assets/course-index.js`; the four utility options are static markup.
+2. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
+3. **H1** — chapter title.
 4. **Surtitle** — `Chapter N of M`. No time range, no timestamp anywhere on the page.
 5. **Numbered sections** — 1 Summary, [2 Cast only when `cast` is an explicit non-empty list,] 3 Narrative, 4 Machinery. Fixed Title Case headings, no renumbering when §2 omitted.
 6. **Footer** — previous/next lesson links only. No home, no glossary, no chapter index, no Sources/bibliography block, no workspace line.
@@ -17,15 +17,17 @@ Reference and hub/index pages reuse the same typography/color tokens but drop le
 
 ## Typography & color tokens
 
-Canonical values live in `assets/lesson.css`'s `:root` block — named here by what they're *for*:
+Canonical values live in `assets/lesson.css`'s `:root` block — the single home for every font-size and font-family; no other file hardcodes one.
 
 - `--ink` / `--ink-soft` — body text / de-emphasized text (surtitle, footer, nav).
-- `--paper` — page background.
-- `--rule` — hairline borders (headings' top rule, table borders, footer top rule).
+- `--paper` / `--panel` — page background / A-bar background.
+- `--rule` — hairline borders (headings' top rule, table borders, footer top rule, A-bar bottom border).
 - `--accent` — links, kicker, table `.when` column. The one accent color on the page.
 - `--mono` — the rare monospace run (timeline `.when`, inline code-like tokens).
+- `--size-base` — the one size knob; every other size is a `calc()` ratio of it: `--size-kicker`, `--size-h1`, `--size-h2`, `--size-h3`, `--size-body`, `--size-lead`, `--size-table`, `--size-nav`, `--size-footer`, `--size-code`. `html[data-size="S|M|L|XL"]` sets `--size-base`; the A-bar's size `<select>` writes that attribute.
+- `--font-body` — set at runtime by the A-bar's font `<select>` (`assets/shell.js`), persisted to `localStorage`. Roster of 12, lazy-loaded from Google Fonts on selection (Charter is the one system font, no network fetch): Literata, Source Serif 4, Newsreader, Crimson Pro, EB Garamond, Merriweather, Lora, Libre Baskerville, Atkinson Hyperlegible, Inter, IBM Plex Sans, Charter.
 
-Serif body text (`"Sitka Text", Constantia, Charter, Georgia`), sans-serif for small UI text (kicker, surtitle, top-nav, footer). No third typeface.
+Sans-serif for small UI text (kicker, surtitle, A-bar, footer). No third typeface.
 
 ## Casing
 
@@ -46,21 +48,32 @@ Inline-only, forever — no Sources block, no bibliography, no footer citation l
 
 ```html
 <body>
-  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 1. series name -->
-  <h1>1996</h1>                                                      <!-- 2. chapter title -->
-  <nav class="top-nav">                                              <!-- 3. merged nav under H1, Title Case, zero dupes -->
-    <a href="../../index.html">Home</a>
-    <a href="../index.html#ch13">Chapter Index</a>
-    <a href="../reference/glossary.html">Glossary</a>
-    <a href="../reference/cast-map.html">Cast Map</a>
-  </nav>
+  <header class="A-bar">                                             <!-- 1. sticky top bar -->
+    <div class="row">
+      <span class="title">1996</span>
+      <select data-index data-current="ch13">                        <!-- chapter list injected by shell.js -->
+        <option value="../../index.html">Home</option>
+        <option value="../index.html#ch13">Chapter Index</option>
+        <option value="../reference/glossary.html">Glossary</option>
+        <option value="../reference/cast-map.html">Cast Map</option>
+      </select>
+      <select data-font-select>...12 fonts...</select>
+      <select data-size-select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+    </div>
+  </header>
+
+  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 2. series name -->
+  <h1>1996</h1>                                                      <!-- 3. chapter title -->
   <p class="surtitle">Chapter 13 of 18</p>                          <!-- 4. no time range -->
 
   <h2>1. Summary</h2> ... [<h2>2. Cast</h2> only when humans involved] ... <h2>3. Narrative</h2> ... <h2>4. Machinery</h2>
 
-  <footer class="lesson-footer">                                     <!-- 7. previous/next only -->
+  <footer class="lesson-footer">                                     <!-- previous/next only -->
     <nav><a href="...">Previous: ...</a> <a href="...">Next: ...</a></nav>
   </footer>
+
+  <script src="../assets/course-index.js"></script>
+  <script src="../assets/shell.js"></script>
 </body>
 ```
 
