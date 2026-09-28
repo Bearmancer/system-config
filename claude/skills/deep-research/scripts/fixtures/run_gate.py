@@ -50,6 +50,10 @@ hu = check(os.path.join(BASE, "hub-home", "index.html"))
 if hu:
     fails.append(f"hub-home/index.html expected [] got {hu}")
 
+rg = check(os.path.join(BASE, "index-home", "reference", "glossary.html"))
+if rg:
+    fails.append(f"index-home/reference/glossary.html expected [] got {rg}")
+
 rn = check(os.path.join(BASE, "fail-footer-nonav.html"))
 rnl = " | ".join(rn).lower()
 if not ("a-bar" in rnl and "top bar" in rnl):
@@ -84,11 +88,12 @@ if fails:
     for f in fails:
         print("  - " + f)
     sys.exit(1)
-print("GREEN: all 7 fixtures behave per new spec")
+print("GREEN: all fixtures behave per spec")
 print("  pass issues:", p)
 print("  fail-old issues:", o)
 print("  fail-budget issues:", b)
 print("  pass-real-footer issues:", rp)
 print("  fail-footer-nonav issues:", rn)
+print("  index-home/reference/glossary.html issues:", rg)
 print("  pass-real-footer hrefs:", ph)
 print("  fail-footer-nonav hrefs:", nh)
