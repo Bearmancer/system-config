@@ -59,4 +59,4 @@ Known shell foot-guns, verified in this environment. Check this list before debu
 ## Reference
 
 - Quoting matrix (`ref/quoting-matrix.md`): measured arg-transmission results for tricky payloads across pwsh7/pwsh5/cmd/python/bash/dotnet. Reach for it when passing quotes, backslashes, or shell metachars across a runtime boundary.
-- URL audit: any URL emitted passes `web-data-apis` SKILL.md "URL audit" (200 or firecrawl-verified) before it reaches the user.
+- URL audit: any URL emitted passes `deep-research` SKILL.md "URL audit" before it reaches the user.

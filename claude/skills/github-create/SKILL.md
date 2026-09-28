@@ -59,7 +59,7 @@ gh --version; git --version
 
 ## URL audit
 
-Every URL in a body or comment (links, prior art, docs) passes `web-data-apis` SKILL.md "URL audit" (200 or firecrawl-verified) before posting. Placeholder `<owner>/<repo>` URLs exempt.
+Every URL in a body or comment (links, prior art, docs) passes `deep-research` SKILL.md "URL audit" before posting. Placeholder `<owner>/<repo>` URLs exempt.
 
 ## Independent re-audit
 
