@@ -3,7 +3,7 @@
 One YAML per lesson: `<workspace>/lessons/<NN>-ch<K>-<slug>.yaml`. The stamp
 (`scripts/stamp_lesson.py`) reads schema + `assets/lesson.stencil.html` and
 writes the lesson HTML. Page structure, casing, and citation rendering rules:
-`references/page-design.md`. Plain text fields are HTML-escaped; only
+`references/course/page-design.md`. Plain text fields are HTML-escaped; only
 `narrative` and `machinery` accept a restricted HTML subset: `<p> <blockquote>
 <ul> <ol> <li> <strong> <em> <a>`.
 

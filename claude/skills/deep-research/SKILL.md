@@ -29,6 +29,10 @@ Plain fetch, no research asked: stop after fast path.
 | Claim list or URL list, no source | verdict | this file only |
 | "recommend/find me" classical works | recommend | `references/domains/music/classical/recommend.md` |
 
+Course mode step files, read when course.md step names them: `references/course/workflow.md`, `lesson-schema.md`, `page-design.md`, `diagram-spec.md`, `publishing.md`, `references/course/sources/youtube.md`, `text-sources.md`.
+
+Reference depth: every reference file is listed here, one hop from this file. A reference file never sends to another file for content it needs; it names the file only as a cross-check.
+
 Domain: before first search read `references/domains/<domain>/sources.md` + `exclusions.md`. Domains: `general` (non-music), `music/classical`, `music/popular`. Music domains also read `references/domains/music/rules.md` first. Domain source order replaces default preference order; domain bans always apply.
 
 ## Research rules: always on
