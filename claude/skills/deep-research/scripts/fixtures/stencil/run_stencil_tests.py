@@ -193,6 +193,37 @@ cases.append(
     )
 )
 
+def check_refresh_bar_idempotent():
+    tmp = Path(tempfile.mkdtemp(prefix="stencil-", dir=str(BASE)))
+    work = tmp / "ws"
+    shutil.copytree(WS, work)
+    bar_issue = re.compile(r"^A-bar", re.I)
+    for _ in range(2):
+        proc = subprocess.run(
+            [sys.executable, str(STAMP), "--refresh-bar", str(work)],
+            capture_output=True,
+            text=True,
+        )
+        if proc.returncode != 0:
+            shutil.rmtree(tmp, ignore_errors=True)
+            return False, f"refresh-bar: rc={proc.returncode}\n{proc.stdout + proc.stderr}"
+    refs = sorted((work / "reference").glob("*.html"))
+    bad = []
+    for ref in refs:
+        html = ref.read_text(encoding="utf-8")
+        if len(re.findall(r'<header[^>]*class="[^"]*A-bar', html)) != 1:
+            bad.append(f"{ref.name}: not exactly one A-bar after 2 refreshes")
+        issues = [i for i in check(str(ref)) if bar_issue.match(i)]
+        if issues:
+            bad.append(f"{ref.name}: {issues}")
+    shutil.rmtree(tmp, ignore_errors=True)
+    if bad:
+        return False, "refresh-bar: " + "; ".join(bad)
+    return True, f"refresh-bar: idempotent, bar OK on {[r.name for r in refs]}"
+
+
+cases.append(check_refresh_bar_idempotent())
+
 failed = 0
 for ok, msg in cases:
     print(("PASS " if ok else "FAIL ") + msg)
