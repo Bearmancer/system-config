@@ -7,7 +7,38 @@
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
-  <p class="home-link"><a href="../index.html">Home</a></p>
+  <header class="A-bar">
+    <div class="row">
+      <span class="title">Fixture Course</span>
+      <select aria-label="Chapter index" data-index data-base="lessons/">
+        <option value="../index.html">Home</option>
+        <option value="reference/glossary.html">Glossary</option>
+        <option value="reference/cast-map.html">Cast Map</option>
+      </select>
+      <div class="type-panel">
+        <select aria-label="Font" data-font-select>
+          <option>Literata</option>
+          <option>Source Serif 4</option>
+          <option>Newsreader</option>
+          <option>Crimson Pro</option>
+          <option>EB Garamond</option>
+          <option>Merriweather</option>
+          <option>Lora</option>
+          <option>Libre Baskerville</option>
+          <option>Atkinson Hyperlegible</option>
+          <option>Inter</option>
+          <option>IBM Plex Sans</option>
+          <option selected>Charter</option>
+        </select>
+        <select aria-label="Size" data-size-select>
+          <option>S</option>
+          <option selected>M</option>
+          <option>L</option>
+          <option>XL</option>
+        </select>
+      </div>
+    </div>
+  </header>
   <p class="kicker">Course Home</p>
   <h1>Fixture Course</h1>
   <h2>Chapter index</h2>
@@ -20,5 +51,7 @@
     <li><a href="reference/cast-map.html">Cast roster</a></li>
     <li><a href="reference/glossary.html">Glossary</a></li>
   </ul>
+  <script src="assets/course-index.js"></script>
+  <script src="assets/shell.js"></script>
 </body>
 </html>
