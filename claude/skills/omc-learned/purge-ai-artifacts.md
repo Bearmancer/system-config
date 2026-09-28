@@ -75,8 +75,8 @@ triggers:
 - `~/.bun`, `oh-my-opencode` etc. being *installed* is a different decision than their *caches* being stale — uninstalling live software is a separate, explicit ask, not implied by a cache purge.
 
 ## Verification evidence
-- `dust -d 0 <path>` before/after each deleted root, to confirm size actually dropped (not just files renamed/moved).
-- `ls <path>` after deletion should error "No such file or directory" for fully-removed leaf dirs.
+- Steps 5 and 8 (pre-check / post-check) are not optional — every deleted root needs both numbers in the final manifest, side by side, so a reviewer can see the drop without re-running anything.
+- `ls <path>` after deletion should error "No such file or directory" for fully-removed leaf dirs; if it doesn't, the delete didn't fully land — say so, don't round up to "done."
 
 ## Open questions
 - No general threshold was set for "how old counts as stale" for scratch-workspaces/session dirs — this session used ad hoc judgment per finding (today = keep, several days old = purge, unlabeled = inspect first). A future run should probably parameterize this (e.g. N days) rather than re-deriving it each time.
