@@ -4,34 +4,20 @@ documentLanguage: en
 
 # Glossary
 
-One entry per term: definition, boundaries, one resolved ambiguity. Agents write here the moment a term is settled. Vocabulary here is law for all specs, tickets, and code naming.
+One entry per term: definition, boundaries. Agents write here the moment a term is settled.
 
-## mirror direction
-- Definition: the direction data flows between this repo and the local machine. Currently one-way only: local → repo, via `robocopy`, on a weekly schedule (`AgentsConfigSync` task) — see README.md's "Backup mechanism" section for the script.
-- Boundary: is a backup mechanism, not a sync mechanism — nothing written into this repo (by a human, an agent, or a PR merge) ever flows back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically.
-- Resolved ambiguity: a root-level `.claude/` or similar dotfile created inside this repo (e.g. by running `omc-setup` here) is NOT part of the mirror — the sync script only ever reads/writes the plain `claude/`, `opencode/`, `omo/`, `agents/` folders (no leading dot). Any dotfile at repo root is an orphan, invisible to the backup/restore system.
+## Daily sync
+- Definition: the 09:00 scheduled task. Runs `run-sync.ps1`: lastfm sync, youtube sync, agent config backup, foobar2000 mirror, in that order.
+- Boundary: steps fail independently and are collected by name; one failure doesn't stop the rest. On any failure the window stays open (`Read-Host`) so it's seen, not silently retried.
 
-## restore procedure
-- Definition: the reverse of mirror direction — copying this repo's mirrored content back onto a machine's local config homes, to reproduce a working setup (e.g. after a fresh OS install or a new machine).
-- Boundary: is currently a MANUAL procedure only (README.md's "Restore" section: copy each folder back to its named local home). It is NOT automated, NOT AI-executable yet, and does NOT cover secrets.
-- Resolved ambiguity: "reproducible by an AI" (the open ask-navigator map's destination) means turning this manual copy-paste into something an AI agent can execute unattended — this is an open decision, not yet designed.
+## lastfm sync / youtube sync
+- Definition: `toolbox sync lastfm` and `toolbox sync youtube` — Toolbox pulls service data into its own DB. Toolbox also backs up its DB and redeploys its dashboard as part of these calls.
+- Boundary: system-config only invokes these two commands from PATH. It never reads Toolbox's `.env`, DB, or logs.
 
-## secret provisioning
-- Definition: getting working API keys/credentials into the environment so MCP servers configured in `opencode/opencode.jsonc` (via `{env:VAR}` references) actually function after a restore.
-- Boundary: is NOT covered by this repo's mirror at all — confirmed by reading the sync script in full (see README.md's "Backup mechanism" section): no credential, key, or secret-store reference exists anywhere in it. Distinct from mirror direction and restore procedure, which only move configuration, never secrets.
-- Resolved ambiguity: GitHub Secrets cannot serve this need — they are write-only outside a live GitHub Action/Codespace run, and this repo's consumption happens on a local Windows machine, not in CI. A local-machine secret store (candidates under evaluation: sops+age, Bitwarden CLI) is required instead.
+## Agent config backup
+- Definition: `backup-agents.ps1`'s robocopy mirror of whitelisted agent config (`claude/`, `opencode/`, `omo/`, `agents/`) into this repo, committed and pushed only when something changed.
+- Boundary: one-way, local → repo. Nothing in this repo flows back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically — restore is a manual reverse copy.
 
-## AGENTS.md (root) vs opencode/AGENTS.md
-- Definition: two different files with the same base name. Root `AGENTS.md` is this shipyard harness's thin pointer to `CLAUDE.md`. `opencode/AGENTS.md` is the mirrored copy of the real `~/.config/opencode/AGENTS.md` — OpenCode's own instruction file.
-- Boundary: editing one never affects the other. Root `AGENTS.md` is shipyard scaffolding; `opencode/AGENTS.md` is backup content.
-- Resolved ambiguity: none yet needed beyond this note — flagged here specifically so a future agent doesn't conflate the two by name alone.
-
-## workflow skill / verification-protocol skill / tool-routing skill
-- Definition: three distinct roles a `claude/skills/*` entry can play. A **workflow skill** (`learning-course`) owns an end-to-end pedagogy/publishing process and calls the other two. A **verification-protocol skill** (`rigorous-research`) owns the claim → tier ladder → verdict pass, independent of any one domain. A **tool-routing skill** (`web-data-apis`) owns which MCP server/tool answers a given capability need, independent of what the caller is verifying.
-- Boundary: a skill in one role does not duplicate another role's job — `rigorous-research` never picks a server itself (it loads `web-data-apis`'s capability table), and `web-data-apis` never runs a verification pass itself.
-- Resolved ambiguity: `rigorous-research` is always invoked through the same chain as `web-data-apis` (a caller loads `rigorous-research`, which loads `web-data-apis`), but the two are kept as separate skills, not merged — see ADR-0002.
-
-## domain-supplied source order
-- Definition: the mechanism by which a domain skill (e.g. `deep-cut-classical`) hands `rigorous-research` its own authoritative source ordering (e.g. Grove → publisher → program-notes → label) in place of `rigorous-research`'s generic web-claim preference ordering, for one verification pass.
-- Boundary: only the source list changes — `rigorous-research`'s tier ladder, pass protocol, and burn guards apply exactly as they do for the default ordering. This is not a fork of the verification protocol, just a parameter to it.
-- Resolved ambiguity: a domain skill that has its own source order still calls `rigorous-research` rather than running a fully separate research pass — `deep-cut-classical`'s `ulw-research` mode was rewritten to do this instead of self-running research outside the shared protocol.
+## foobar2000 mirror
+- Definition: one-way `robocopy /MIR` of the foobar2000 profile (`%APPDATA%\foobar2000-v2`) to Google Drive (`D:\My Drive\foobar2000-v2`).
+- Boundary: no history of its own. Google Drive's 30-day file versions are the only recovery path if the mirror propagates a corrupt profile.
