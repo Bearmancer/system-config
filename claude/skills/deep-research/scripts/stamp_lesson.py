@@ -131,6 +131,78 @@ def write_course_index(lessons_dir, order):
         shutil.copyfile(SHELL_JS, assets_dir / "shell.js")
 
 
+BAR_BLOCK_RE = re.compile(
+    r'<header[^>]*class="[^"]*A-bar[^"]*"[^>]*>.*?</header>', re.S | re.I
+)
+BODY_OPEN_RE = re.compile(r"(<body[^>]*>)", re.I)
+BODY_CLOSE_RE = re.compile(r"(</body>)", re.I)
+
+
+def upsert_bar(html_text, bar_html, scripts_html):
+    """Idempotent: replace an existing A-bar in place, else insert one right
+    after <body>; add the two script tags only if either is missing."""
+    if BAR_BLOCK_RE.search(html_text):
+        html_text = BAR_BLOCK_RE.sub(lambda m: bar_html, html_text, count=1)
+    else:
+        html_text = BODY_OPEN_RE.sub(
+            lambda m: m.group(1) + "\n\t\t" + bar_html, html_text, count=1
+        )
+    has_course_index = re.search(r'<script[^>]*src="[^"]*course-index\.js"', html_text)
+    has_shell = re.search(r'<script[^>]*src="[^"]*shell\.js"', html_text)
+    if not (has_course_index and has_shell):
+        html_text = BODY_CLOSE_RE.sub(
+            lambda m: scripts_html + "\n\t" + m.group(1), html_text, count=1
+        )
+    return html_text
+
+
+def refresh_bar(workspace: Path) -> list[Path]:
+    """Inject/refresh the A-bar (+shell.js/course-index.js) on a workspace's
+    hand-authored reference/index pages — the one shared path so those pages
+    never drift from the lesson stencil's shell by hand-editing."""
+    lessons_dir = workspace / "lessons"
+    order = []
+    if lessons_dir.is_dir():
+        order = sorted(
+            (p.name for p in lessons_dir.glob("*.html")),
+            key=lambda n: (lesson_number(n) or 10**6, n),
+        )
+        write_course_index(lessons_dir, order)
+
+    touched = []
+    ref_dir = workspace / "reference"
+    if ref_dir.is_dir():
+        for html in sorted(ref_dir.glob("*.html")):
+            title = html.stem.replace("-", " ").title()
+            options = [("Home", "../../index.html"), ("Course Index", "../index.html")]
+            for sibling in ("glossary.html", "cast-map.html", "timeline.html"):
+                if sibling != html.name and (ref_dir / sibling).exists():
+                    options.append((sibling.split(".")[0].replace("-", " ").title(), sibling))
+            bar = render_bar(title, options, base="../lessons/" if order else "")
+            text = upsert_bar(
+                html.read_text(encoding="utf-8"), bar, bar_scripts("../assets/")
+            )
+            html.write_text(text, encoding="utf-8")
+            touched.append(html)
+
+    index_html = workspace / "index.html"
+    if index_html.is_file():
+        options = [("Home", "../index.html")]
+        for sibling, label in (("glossary.html", "Glossary"), ("cast-map.html", "Cast Map")):
+            if (ref_dir / sibling).exists():
+                options.append((label, f"reference/{sibling}"))
+        bar = render_bar(
+            workspace.name.replace("-", " ").title(), options, base="lessons/" if order else ""
+        )
+        text = upsert_bar(
+            index_html.read_text(encoding="utf-8"), bar, bar_scripts("assets/")
+        )
+        index_html.write_text(text, encoding="utf-8")
+        touched.append(index_html)
+
+    return touched
+
+
 def chapter_sibling(lessons_dir, ref):
     try:
         ref_n = int(ref)
