@@ -32,17 +32,17 @@ One skill, every research ask. Match first row that fits.
 | Question, claim, claim list, URL list | "How true is it Putin is fucked?" | verdict | "Verdict mode" below |
 | Plain fetch/scrape, no research ask | "grab this page" | fast path only | none |
 
-## Verdict mode
-
-1. Operationalize: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes (e.g. war outcome, economy, regime stability, succession); state axes chosen in one line. Done when every axis has a binary observable.
-2. Pick domain; run passes (below). Done when every sub-claim has a verdict or pass cap hit.
-3. Reply: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence.
-
 Course mode step files, read when course.md step names them: `references/course/workflow.md`, `lesson-schema.md`, `page-design.md`, `diagram-spec.md`, `publishing.md`, `references/course/sources/youtube.md`, `text-sources.md`.
 
 Reference depth: every reference file is listed here, one hop from this file. A reference file never sends to another file for content it needs; it names the file only as a cross-check.
 
 Domain: before first search read `references/domains/<domain>/sources.md` + `exclusions.md`. Domains: `general` (non-music), `music/classical`, `music/popular`. Music domains also read `references/domains/music/rules.md` first. Domain source order replaces default preference order; domain bans always apply.
+
+## Verdict mode
+
+1. Operationalize: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes (e.g. war outcome, economy, regime stability, succession); state axes chosen in one line. Done when every axis has a binary observable.
+2. Pick domain; run passes (below). Done when every sub-claim has a verdict or pass cap hit.
+3. Reply: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence.
 
 ## Research rules: always on
 

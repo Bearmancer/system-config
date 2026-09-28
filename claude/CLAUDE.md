@@ -176,6 +176,14 @@ User-typed command (not your tool call): one line, `;`-joined, any shell. Skip i
 Prefer `fd`(find/gci), `dust`(du), `jaq`(jq/ConvertFrom-Json), `rg`(grep/Get-Content), `ouch`(Compress-Archive/tar).
 </shell_tool_preference>
 
+<python_packages>
+Python packages: `uv` only; never `pip`, `pip3`, `python -m pip`.
+- One-off script: `uv run --with <pkg> script.py`, or `uv run script.py` when it has a PEP 723 header.
+- Project: `uv venv`, then `uv pip install` inside it. Never `--user`, `--system`, global site-packages.
+- CLI tools: `uv tool install <pkg>`; never pipx or global pip.
+- Stray global pip package: delete its site-packages dir + dist-info (never run pip); verify import fails on bare `python`, works via `uv run --with`.
+</python_packages>
+
 <background_job_discipline>
 Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmux` — `tmux new-session -d -s <name> '<command>'`. Never `nohup ... &` or redirect output away — unobservable later. Check: `tmux capture-pane -t <name> -p`.
 </background_job_discipline>

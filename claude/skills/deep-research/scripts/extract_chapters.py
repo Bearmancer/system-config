@@ -4,18 +4,11 @@ import argparse
 import json
 import os
 import re
-import shutil
 import sys
-import tempfile
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slice_chapter as sc
 
-LEGACY_CACHES = (
-    os.path.join(os.path.expanduser("~"), ".omo", "cache", "learning-course"),
-    os.path.join(tempfile.gettempdir(), "opencode", "learning-course"),
-    os.path.join(tempfile.gettempdir(), "opencode", "yt-chapter-course"),
-)
 
 CLOCK_PREFIX = re.compile(r"^\s*(?:\d{1,2}:\d{2}(?::\d{2})?|\d+)\s*[-–—.:)]\s*")
 CHAPTER_PREFIX = re.compile(r"^\s*chapter\s*\d+\s*[-–—.:)]?\s*", re.I)
@@ -52,27 +45,6 @@ def resolve_id(source):
         print("yt-dlp could not resolve the video:\n" + r.stderr)
         sys.exit(1)
     return r.stdout.strip().splitlines()[-1].strip()
-
-
-def adopt_legacy(vid, dest):
-    if os.path.exists(os.path.join(dest, "info.json")) and os.path.exists(
-        os.path.join(dest, "subs.en.vtt")
-    ):
-        return False
-    for root in LEGACY_CACHES:
-        src = os.path.join(root, vid)
-        if not os.path.isdir(src):
-            continue
-        os.makedirs(dest, exist_ok=True)
-        moved = []
-        for name in ("info.json", "subs.en.vtt"):
-            if os.path.exists(os.path.join(src, name)):
-                shutil.copy2(os.path.join(src, name), os.path.join(dest, name))
-                moved.append(name)
-        if moved:
-            print(f"adopted from old cache {src}: {', '.join(moved)}")
-            return True
-    return False
 
 
 def fetch(source, vid, dest, force):
@@ -150,7 +122,6 @@ def main():
     vid = resolve_id(a.source)
     dest = os.path.join(a.cache, vid)
     os.makedirs(dest, exist_ok=True)
-    adopt_legacy(vid, dest)
     fetch(a.source, vid, dest, a.force)
     vtt_path = os.path.join(dest, "subs.en.vtt")
     if not os.path.exists(vtt_path):
