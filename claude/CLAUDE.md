@@ -125,7 +125,7 @@ Exception: full rebuild only if the finding shows the whole method untrustworthy
 
 <ai_artifacts>
 Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. Temp files, incl. codegraph-init clone repos: `mktemp`.
-Exception: `/teach` output → `~/.omo/teach/<topic>/` (MISSION.md, lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
+Exception: `deep-research` course data → `~/Dev/deep-research/<slug>/` (lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
 
 Runtime-state roots, one per tool, purge-candidate by default unless it holds a listed exception:
 - `.omc/` (any repo, incl. `~/.omc` itself): OMC runtime — `state/`, `state/sessions/{id}/`, `notepad.md`, `project-memory.json`, `plans/`, `research/`, `logs/`, `artifacts/`, `handoffs/`, `ultragoal/`. Gitignored by OMC default except `.omc/skills/` + `.omc/ultragoal/` (durable, never purge).
