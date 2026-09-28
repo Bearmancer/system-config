@@ -1,0 +1,23 @@
+{
+	"skill_name": "deep-research",
+	"evals": [
+		{
+			"id": 0,
+			"prompt": "https://www.youtube.com/watch?v=9_DJxgKeqdk – explain chapter 3",
+			"expected_output": "Fresh workspace in the sandbox: metadata, description, and captions fetched via yt-dlp; the description mined for cited sources; chapters extracted via extract_chapters.py --chapters all default; chapter 3 sliced with a corrections table for ASR garbles; full course stamped (every chapter, full work per pass); each treatise with merged nav (Home · Chapter Index · Glossary · Lesson NN plain · Cast Map, Title Case, zero dupes, no meta paragraph), inline verdicts plus inline-only citations, no quizzes or teacher apparatus; no timestamps anywhere; ADD-friendly prose (short sentences, pointers, no paragraph walls); cast block only with explicit non-empty cast (Name | Role, no 'first appears'); no method/teacher/primary-source/next-steps tail, no boundary narration, footer previous/next only; lesson files carry 2-digit lesson numbers (01-...); check_map_geometry.py exits 0 on changed SVG art; check_lesson.py exits 0; NOTES/RESOURCES present, no MISSION; RESOURCES carries at least one entry explicitly marked as cited by the source's description; dry-run only, nothing published or opened.",
+			"files": []
+		},
+		{
+			"id": 1,
+			"prompt": "https://www.youtube.com/watch?v=P9nA3pqSaf8&t=2247s – explain chapter 5",
+			"expected_output": "Existing amway-tools-cult workspace discovered and copied into the sandbox; chapters extracted via extract_chapters.py --chapters all default; chapter 5 (37:27-44:44) sliced with corrections applied; full course stamped per current spec (merged nav, no meta, inline verdicts, hyperlinked sources), no quizzes or teacher apparatus, no timestamps anywhere; ADD-friendly prose; cast block only with explicit cast plus '(chapter N)' links and no 'first appears'; no method/teacher/primary-source/next tail, no boundary narration, footer previous/next only; 2-digit lesson filenames; glossary reissued 'as of chapter 5' and stays titled Glossary (distinct from the cast map); chapter subgraph (only with cast, max 12 nodes) plus roster-index table (no cumulative mega-map); timeline text-only with standing words, no colour tags, no legend, no how-to-read box; arrow direction check passes; check_lesson.py and check_map_geometry.py both exit 0; full work per pass, no withheld chapters; the real workspace untouched; dry-run only, nothing published or opened.",
+			"files": []
+		},
+		{
+			"id": 2,
+			"prompt": "Start a learning course on Machiavelli's The Prince (https://www.gutenberg.org/ebooks/1232) – explain chapter 3",
+			"expected_output": "New workspace for a text source: The Prince acquired (Project Gutenberg), chapter map from the book's own chapters, chapter 3 ('Concerning Mixed Principalities') sliced into reference/transcripts via extract_chapters.py --chapters all default with conversion artifacts corrected; full course stamped per current spec (merged nav, no meta, inline verdicts with hyperlinked sources) and no quizzes or teacher apparatus; no timestamps anywhere; ADD-friendly prose; cast block only with explicit cast per spec (no 'first appears'); no method/teacher/primary-source tail, no boundary narration; footer prev/next only; 2-digit lesson filenames; chapter subgraph only with cast (max 12 nodes) plus roster-index table with text-only timeline; arrow direction check passes; check_lesson.py exits 0; workspace admin files NOTES/RESOURCES present, no MISSION; dry-run only, nothing published or opened.",
+			"files": []
+		}
+	]
+}
