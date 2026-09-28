@@ -46,11 +46,20 @@ triggers:
    - Batch up to 4 questions per call.
    - For anything with unknown purpose or age (a `stage-*`, an unlabeled scratch dir), always offer "inspect contents first" as a option, not just delete-or-leave.
 
-5. **Delete via `find -depth -type f -delete` + `find -depth -type d -empty -delete`**, not `rm -rf` — a project-directory guard hook blocks literal `rm -rf` pattern matches; the two-step find achieves the same result without tripping it.
+5. **Pre-check size before deleting anything**: `dust -d 0 "$path"` (or `du -sh` if dust unavailable) for every root about to be touched. Record the number — it's the only way step 8 can prove something actually happened.
 
-6. **Handle "Device or resource busy"**: means a live process holds the directory open (commonly: another running Claude Code session's active scratch-workspace). Don't force it. Retry once; if still busy, report it as blocked and move on — don't chase workarounds.
+6. **Delete via `fd -u`, never a shell glob (`*`), never `rm -rf`**:
+   - Use `fd -u -H` for every enumeration in this skill (unrestricted: crosses `.gitignore`, includes hidden dirs — both matter here, since `.omc`/`.omo`/`.claude` are all dot-dirs and are often gitignored by the repos that contain them).
+   - Delete files: `fd -u -H -t f . "$path" -X rm --` (fd's `-X`/`--exec-batch` passes the resolved file list as literal arguments to one `rm` call — no shell glob expansion involved, so no `rm -rf dir/*` footgun: a glob that matches nothing silently leaves `*` as a literal argument and either no-ops or errors unpredictably depending on `nullglob`).
+   - Delete the now-empty directories bottom-up: `fd -u -H -t d . "$path" | sort -r | while IFS= read -r d; do rmdir -- "$d" 2>&1; done` (deepest paths sort last alphabetically in most cases but depth, not alphabetical order, is what actually matters — prefer `fd -u -H -t d . "$path" -d <max-known-depth>` split into per-depth passes, deepest first, when nesting is uneven).
+   - Never use `rm -rf`, with or without a glob — the project-directory guard hook blocks the literal string, and `-f` suppresses the very errors that would tell you a delete didn't do what you expected.
+   - When the exact leaf path is already known (a single named dir, not a pattern), skip the `fd` enumeration step and go straight to `rmdir --` / `rm -- <file>` on that literal path — `fd` is for discovery, not a mandatory detour once discovery is done.
 
-7. **Write a directory-list manifest** (deleted / blocked / deliberately-left-alone, with one-line reasons) to the scratchpad and send it to the user via SendUserFile — the list itself is the audit trail, especially useful after a multi-GB pass.
+7. **Handle "Device or resource busy"**: means a live process holds the directory open (commonly: another running Claude Code session's active scratch-workspace). Don't force it. Retry once; if still busy, report it as blocked and move on — don't chase workarounds.
+
+8. **Post-check after every delete**: re-run the same `dust -d 0 "$path"` (or `ls "$path"`) that step 5 used. A fully-removed leaf dir must error "No such file or directory"; a partially-cleaned root must show a smaller number than the pre-check. Never report something as deleted without this — a busy-device failure, a permission error, or a `fd` pattern that matched zero files must all be caught here, not assumed away.
+
+9. **Write a directory-list manifest** (deleted / blocked / deliberately-left-alone, with one-line reasons, and the pre-check/post-check numbers side by side) to the scratchpad and send it to the user via SendUserFile — the list itself is the audit trail, especially useful after a multi-GB pass.
 
 ## Success criteria
 - Every deleted path is one of: (a) a documented cache the owning tool regenerates on demand, (b) confirmed orphaned (no live git worktree, no live process handle, no `.git`), or (c) explicitly approved by the user for that specific finding.
