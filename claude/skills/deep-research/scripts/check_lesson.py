@@ -18,6 +18,7 @@ from lesson_rules import (
 )
 
 SRC = re.compile(r'src="([^"]+)"')
+OPTION_VALUE = re.compile(r'<option[^>]*value="([^"]*)"')
 HEADING = re.compile(r"<h2[^>]*>\s*(\d+)[.)]")
 SURTITLE = re.compile(r'<p[^>]*class="[^"]*surtitle[^"]*"[^>]*>.*?</p>', re.S | re.I)
 QUIZ = re.compile(r'<div[^>]*class="[^"]*quiz[^"]*"', re.I)
@@ -170,40 +171,64 @@ def check(path):
         issues.append("missing lesson footer")
 
     if ptype == "lesson":
-        navs = re.findall(
-            r'<nav[^>]*class="[^"]*top-nav[^"]*"[^>]*>(.*?)</nav>', html, re.S | re.I
+        bars = re.findall(
+            r'<header[^>]*class="[^"]*A-bar[^"]*"[^>]*>(.*?)</header>', html, re.S | re.I
         )
-        if len(navs) != 1:
-            issues.append(
-                f"top-nav: expected exactly one merged nav row, found {len(navs)}"
-            )
-        nav = navs[0] if navs else ""
-        for label, pat in (
-            ("Home", r">Home<"),
-            ("Chapter Index", r">Chapter Index<"),
-            ("Glossary", r">Glossary<"),
-            ("Cast Map", r">Cast Map<"),
-        ):
-            if not re.search(pat, nav):
-                issues.append(
-                    f"top-nav: missing Title Case cell '{label}' in merged nav"
-                )
+        if len(bars) != 1:
+            issues.append(f"A-bar: expected exactly one top bar, found {len(bars)}")
+        bar = bars[0] if bars else ""
+        if not re.search(r'<span[^>]*class="[^"]*title[^"]*"[^>]*>\s*\S', bar):
+            issues.append("A-bar: missing non-empty chapter title")
+        idx_sel = re.search(r"<select[^>]*data-index[^>]*>(.*?)</select>", bar, re.S | re.I)
+        if not idx_sel:
+            issues.append("A-bar: missing chapter index select (data-index)")
+        else:
+            opts = OPTION_VALUE.findall(idx_sel.group(1))
+            for label, needle in (
+                ("Home", "../../index.html"),
+                ("Chapter Index", "#ch"),
+                ("Glossary", "glossary"),
+                ("Cast Map", "cast-map"),
+            ):
+                hits = [o for o in opts if needle in o]
+                if not hits:
+                    issues.append(f"A-bar: index select missing {label} option")
+                elif len(hits) > 1:
+                    issues.append(
+                        f"A-bar: index select repeats {label} option {len(hits)}x"
+                    )
+        font_sel = re.search(
+            r"<select[^>]*data-font-select[^>]*>(.*?)</select>", bar, re.S | re.I
+        )
+        if not font_sel:
+            issues.append("A-bar: missing font menu (data-font-select)")
+        elif len(re.findall(r"<option", font_sel.group(1))) < 12:
+            issues.append("A-bar: font menu has fewer than 12 fonts")
+        size_sel = re.search(
+            r"<select[^>]*data-size-select[^>]*>(.*?)</select>", bar, re.S | re.I
+        )
+        if not size_sel:
+            issues.append("A-bar: missing size menu (data-size-select)")
+        else:
+            sizes = [s.strip() for s in re.findall(r"<option[^>]*>([^<]+)", size_sel.group(1))]
+            if sorted(sizes) != ["L", "M", "S", "XL"]:
+                issues.append(f"A-bar: size menu must offer exactly S/M/L/XL, found {sizes}")
         if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
             issues.append(
-                "meta row present: lessons carry no <p class=meta>; the merged nav holds Home · Chapter Index · Glossary · Cast Map"
+                "meta row present: lessons carry no <p class=meta>; index/font/size live in the A-bar"
             )
-        if not re.search(r'href="[^"]*glossary[^"]*"', low):
-            issues.append(
-                "top-nav: no glossary link (glossary link sits in the merged top nav)"
-            )
-        if 'href="../../index.html"' not in html:
-            issues.append(
-                'top-nav: no home link (needs href="../../index.html" inside <nav class="top-nav">)'
-            )
-        if not re.search(r'href="\.\./index\.html#ch\d+"', html):
-            issues.append(
-                'top-nav: no chapter-index backlink (needs href="../index.html#chN")'
-            )
+        footer_m = FOOTER_RE.search(html)
+        if footer_m:
+            for h in HREF.findall(footer_m.group(1)):
+                base_h = h.split("#")[0]
+                if (
+                    base_h in ("../../index.html", "../index.html")
+                    or "glossary" in h.lower()
+                    or "cast-map" in h.lower()
+                ):
+                    issues.append(
+                        f"lesson footer holds a nav link (home/chapter-index/glossary/cast-map belong in the A-bar): {h}"
+                    )
 
     if ptype == "index":
         for phrase, fix in (
