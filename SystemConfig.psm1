@@ -129,25 +129,28 @@ function Invoke-DailySync {
 
 function Install-DailySyncTask {
     param([string]$RepoRoot = $PSScriptRoot)
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+    $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
     $action = New-ScheduledTaskAction -Execute 'pwsh' -Argument "-NoProfile -File `"$RepoRoot\run-sync.ps1`""
     $trigger = New-ScheduledTaskTrigger -Daily -At 9:00am
-    Register-ScheduledTask -TaskName 'Daily sync' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null
+    Register-ScheduledTask -TaskName 'Daily sync' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
 
 function Install-TopgradeTask {
-    $principal = New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest
+    $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
     $action = New-ScheduledTaskAction -Execute 'pwsh' -Argument '-NoProfile -Command "topgrade --yes --no-retry; if ($LASTEXITCODE) { Read-Host ''topgrade FAILED''; exit 1 }"'
     $trigger = New-ScheduledTaskTrigger -Daily -At 10:00am
-    Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null
+    Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
 
 function Install-SystemConfigTasks {
     param([string]$RepoRoot = $PSScriptRoot)
     Install-DailySyncTask -RepoRoot $RepoRoot
     Install-TopgradeTask
+    if (-not (Get-ScheduledTask -TaskName 'Daily sync', 'Topgrade' -ErrorAction SilentlyContinue)) {
+        throw 'Registration reported no error but neither task exists — verify manually.'
+    }
     Write-Host 'Registered: Daily sync (09:00), Topgrade (10:00).'
 }
 
