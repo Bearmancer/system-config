@@ -107,6 +107,28 @@ def sibling_title(lessons_dir, name):
     return Path(name).stem
 
 
+def write_course_index(lessons_dir, order):
+    """Refresh <workspace>/assets/course-index.js: the A-bar's chapter select
+    reads this at runtime, so adding a lesson updates one file instead of
+    restamping every already-stamped page."""
+    assets_dir = lessons_dir.parent / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    entries = []
+    for name in order:
+        stem = Path(name).stem
+        rid = row_id_from_filename(stem)
+        if not rid:
+            continue
+        num = rid[len("ch") :]
+        entries.append(
+            {"id": rid, "label": f"{num}. {sibling_title(lessons_dir, name)}", "href": name}
+        )
+    js = "window.COURSE_INDEX = " + json.dumps(entries) + ";\n"
+    (assets_dir / "course-index.js").write_text(js, encoding="utf-8")
+    if SHELL_JS.exists():
+        shutil.copyfile(SHELL_JS, assets_dir / "shell.js")
+
+
 def chapter_sibling(lessons_dir, ref):
     try:
         ref_n = int(ref)
