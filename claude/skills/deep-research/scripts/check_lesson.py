@@ -18,6 +18,7 @@ from lesson_rules import (
 )
 
 SRC = re.compile(r'src="([^"]+)"')
+OPTION_VALUE = re.compile(r'<option[^>]*value="([^"]*)"')
 HEADING = re.compile(r"<h2[^>]*>\s*(\d+)[.)]")
 SURTITLE = re.compile(r'<p[^>]*class="[^"]*surtitle[^"]*"[^>]*>.*?</p>', re.S | re.I)
 QUIZ = re.compile(r'<div[^>]*class="[^"]*quiz[^"]*"', re.I)
