@@ -52,10 +52,10 @@ if hu:
 
 rn = check(os.path.join(BASE, "fail-footer-nonav.html"))
 rnl = " | ".join(rn).lower()
-if not ("home" in rnl and "index.html" in rnl):
-    fails.append(f"fail-footer-nonav.html expected missing-home issue, got {rn}")
-if not ("ch" in rnl and "back" in rnl or "chapter" in rnl and "index.html" in rnl):
-    fails.append(f"fail-footer-nonav.html expected missing-backlink issue, got {rn}")
+if not ("a-bar" in rnl and "top bar" in rnl):
+    fails.append(f"fail-footer-nonav.html expected missing top-bar issue, got {rn}")
+if not ("footer" in rnl and "glossary" in rnl):
+    fails.append(f"fail-footer-nonav.html expected footer nav-link leak issue, got {rn}")
 
 
 ph = footer_hrefs(os.path.join(BASE, "pass-real-footer.html"))
