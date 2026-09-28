@@ -275,6 +275,7 @@ def stamp(yaml_path, lessons_dir, stencil_path):
                     )
 
     order = sorted_lessons(lessons_dir, f"{stem}.html")
+    write_course_index(lessons_dir, order)
     idx = order.index(f"{stem}.html")
     prev_link = next_link = ""
     if idx > 0:
