@@ -51,7 +51,7 @@ triggers:
    - Batch up to 4 questions per call.
    - Unknown purpose or age, or no established age rule yet (a `stage-*` dir, an unlabeled scratch dir): always offer inspect-first, never only delete-or-leave. For scratch-workspaces/session dirs with no user-given threshold, default to flagging anything modified in the last 24h as likely-active (offer leave-alone as the lead option) and anything older as a purge candidate — state this default explicitly when asking, since the user can override it per session.
 
-5. Pre-check size before deleting anything approved in step 4: `dust -P -d 0 "$path"` (`-P`/`--no-progress` suppresses streamed progress noise; `-d 0` if dust unavailable, `du -sh`) for every root about to be touched. Record the number — only way step 8 proves something happened.
+5. Pre-check size before deleting anything approved in step 4: `dust -P -d 0 "$path"` (`-P`/`--no-progress` suppresses streamed progress noise) for every root about to be touched, or `du -sh "$path"` if dust is unavailable. Record the number — only way step 8 proves something happened.
 
 6. Delete via `fd -u`. Never a shell glob (`*`). Never `rm -rf`.
    - Use `fd -u` for every enumeration in this skill — unrestricted crosses `.gitignore`, includes hidden dirs by default. Both matter: `.omc`/`.omo`/`.claude` are dot-dirs, often gitignored by their containing repos. (`-u` alone is sufficient; don't also add `-H`, they overlap.)
