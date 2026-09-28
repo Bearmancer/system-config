@@ -5,14 +5,39 @@
 		<title>Fixture pass real footer</title>
 	</head>
 	<body>
+		<header class="A-bar">
+			<div class="row">
+				<span class="title">Fixture</span>
+				<select data-index data-current="ch1">
+					<option value="../../index.html">Home</option>
+					<option value="../index.html#ch1">Chapter Index</option>
+					<option value="../reference/glossary.html">Glossary</option>
+					<option value="../reference/cast-map.html">Cast Map</option>
+				</select>
+				<select data-font-select>
+					<option>Literata</option>
+					<option>Source Serif 4</option>
+					<option>Newsreader</option>
+					<option>Crimson Pro</option>
+					<option>EB Garamond</option>
+					<option>Merriweather</option>
+					<option>Lora</option>
+					<option>Libre Baskerville</option>
+					<option>Atkinson Hyperlegible</option>
+					<option>Inter</option>
+					<option>IBM Plex Sans</option>
+					<option selected>Charter</option>
+				</select>
+				<select data-size-select>
+					<option>S</option>
+					<option selected>M</option>
+					<option>L</option>
+					<option>XL</option>
+				</select>
+			</div>
+		</header>
 		<h1>Fixture</h1>
 		<p class="surtitle">Chapter 1 of 18</p>
-		<nav class="top-nav">
-			<a href="../../index.html">Home</a>
-			<a href="../index.html#ch1">Chapter Index</a>
-			<a href="https://example.com/glossary">Glossary</a>
-			<a href="https://example.com/cast-map">Cast Map</a>
-		</nav>
 		<p>The record confirmed the date beside the quoted wording, against the <a href="https://example.com/a">official record</a>.</p>
 		<h2>1. What matters</h2>
 		<p>Confirmed in narrative prose, per the same <sup><a href="https://example.com/a">1</a></sup> record.</p>
@@ -21,5 +46,7 @@
 				<a href="https://example.com/next">Next: Something</a>
 			</nav>
 		</footer>
+		<script src="../assets/course-index.js"></script>
+		<script src="../assets/shell.js"></script>
 	</body>
 </html>
