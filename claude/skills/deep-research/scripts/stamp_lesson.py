@@ -398,12 +398,25 @@ def stamp(yaml_path, lessons_dir, stencil_path):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Stamp a lesson HTML from YAML + the canonical stencil."
+        description="Stamp a lesson HTML from YAML + the canonical stencil, "
+        "or refresh the A-bar on a workspace's reference/index pages."
     )
-    ap.add_argument("yaml")
-    ap.add_argument("--lessons-dir", required=True)
+    ap.add_argument("yaml", nargs="?")
+    ap.add_argument("--lessons-dir")
     ap.add_argument("--stencil", default=str(DEFAULT_STENCIL))
+    ap.add_argument(
+        "--refresh-bar",
+        metavar="WORKSPACE",
+        help="inject/refresh the A-bar + shell.js/course-index.js on "
+        "<workspace>/reference/*.html and <workspace>/index.html",
+    )
     args = ap.parse_args()
+    if args.refresh_bar:
+        for path in refresh_bar(Path(args.refresh_bar)):
+            print(f"refreshed {path}")
+        return
+    if not args.yaml or not args.lessons_dir:
+        ap.error("yaml and --lessons-dir are required unless --refresh-bar is given")
     try:
         stamp(Path(args.yaml), Path(args.lessons_dir), Path(args.stencil))
     except StampError as e:
