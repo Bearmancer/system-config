@@ -12,6 +12,9 @@ ArrApp = Literal["Sonarr", "Radarr", "Prowlarr"]
 DownloadClientApp = Literal["Sonarr", "Radarr"]
 
 HOST = "100.86.121.94"
+ARR_PORTS: dict[str, int] = {"Sonarr": 8989, "Radarr": 7878, "Prowlarr": 9696}
+ARR_API_VER: dict[str, str] = {"Sonarr": "v3", "Radarr": "v3", "Prowlarr": "v1"}
+SAB_URL = f"http://{HOST}:8080/api"
 
 
 def get_arr_api_key(app: ArrApp) -> str:
@@ -28,6 +31,19 @@ def get_sab_api_key() -> str:
         if m:
             return m.group(1).strip()
     raise ValueError(f"api_key not found in {ini_path}")
+
+
+def arr_base_and_headers(app: ArrApp) -> tuple[str, dict[str, str]]:
+    base = f"http://{HOST}:{ARR_PORTS[app]}/api/{ARR_API_VER[app]}"
+    return base, {"X-Api-Key": get_arr_api_key(app)}
+
+
+def sab_api(**params: Any) -> Any:
+    params.setdefault("apikey", get_sab_api_key())
+    params.setdefault("output", "json")
+    resp = requests.get(SAB_URL, params=params, timeout=10)
+    resp.raise_for_status()
+    return resp.json()
 
 
 def merge_arr_fields(fields: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -51,10 +67,8 @@ def add_arr_download_client(
     api_key: str,
     category_value: str,
 ) -> Any:
-    port = {"Sonarr": 8989, "Radarr": 7878}[app]
     category_field = {"Sonarr": "tvCategory", "Radarr": "movieCategory"}[app]
-    headers = {"X-Api-Key": get_arr_api_key(app)}
-    base = f"http://{HOST}:{port}/api/v3"
+    base, headers = arr_base_and_headers(app)
 
     resp = requests.get(f"{base}/downloadclient/schema", headers=headers, timeout=10)
     resp.raise_for_status()
@@ -97,8 +111,7 @@ def add_arr_download_client(
 def set_prowlarr_category_map(
     client_id: int, mapping: dict[str, Any], default_category: str | None = None
 ) -> Any:
-    headers = {"X-Api-Key": get_arr_api_key("Prowlarr")}
-    base = f"http://{HOST}:9696/api/v1"
+    base, headers = arr_base_and_headers("Prowlarr")
 
     resp = requests.get(f"{base}/downloadclient/{client_id}", headers=headers, timeout=10)
     resp.raise_for_status()
@@ -120,33 +133,11 @@ def set_prowlarr_category_map(
 
 
 def set_sab_category_dir(category: str, dir_: str) -> Any:
-    keyword = "*" if category == "*" else category
-    url = f"http://{HOST}:8080/api"
-    params = {
-        "mode": "set_config",
-        "section": "categories",
-        "keyword": keyword,
-        "dir": dir_,
-        "apikey": get_sab_api_key(),
-        "output": "json",
-    }
-    resp = requests.get(url, params=params, timeout=10)
-    resp.raise_for_status()
-    return resp.json()
+    return sab_api(mode="set_config", section="categories", keyword=category, dir=dir_)
 
 
 def remove_sab_category(category: str) -> Any:
-    url = f"http://{HOST}:8080/api"
-    params = {
-        "mode": "del_config",
-        "section": "categories",
-        "keyword": category,
-        "apikey": get_sab_api_key(),
-        "output": "json",
-    }
-    resp = requests.get(url, params=params, timeout=10)
-    resp.raise_for_status()
-    return resp.json()
+    return sab_api(mode="del_config", section="categories", keyword=category)
 
 
 def set_qbt_category_dir(category: str, dir_: str) -> None:
@@ -159,16 +150,7 @@ def set_qbt_category_dir(category: str, dir_: str) -> None:
 
 
 def find_arr_job(name_match: str) -> list[dict[str, Any]]:
-    url = f"http://{HOST}:8080/api"
-    params = {
-        "mode": "history",
-        "limit": 200,
-        "apikey": get_sab_api_key(),
-        "output": "json",
-    }
-    resp = requests.get(url, params=params, timeout=10)
-    resp.raise_for_status()
-    hist = resp.json()
+    hist = sab_api(mode="history", limit=200)
     pattern = re.compile(re.escape(name_match), re.IGNORECASE)
     return [
         {

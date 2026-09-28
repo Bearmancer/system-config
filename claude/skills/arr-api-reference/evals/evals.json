@@ -10,7 +10,7 @@
 		{
 			"id": 1,
 			"prompt": "Sonarr downloads complete but land in SABnzbd's default folder instead of my 'TV' category. Where do I look, and what's the likely cause?",
-			"expected_output": "Category-string chain: SABnzbd force-lowercases category identifiers (TV -> tv), Sonarr's download-client tvCategory must equal the stored lowercase string, and Prowlarr's clientCategory mapping lives on a separate top-level categories field (not .fields). Mismatch fails silently — no error anywhere, the job just lands at the default/wrong category, so re-reading config is not enough; check the SABnzbd history entry's category and storage path (or Find-ArrJob) for where it actually landed.",
+			"expected_output": "Category-string chain: SABnzbd force-lowercases category identifiers (TV -> tv), Sonarr's download-client tvCategory must equal the stored lowercase string, and Prowlarr's clientCategory mapping lives on a separate top-level categories field (not .fields). Mismatch fails silently — no error anywhere, the job just lands at the default/wrong category, so re-reading config is not enough; check the SABnzbd history entry's category and storage path (or find_arr_job) for where it actually landed.",
 			"files": []
 		},
 		{

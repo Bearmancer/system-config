@@ -1,89 +1,58 @@
 {
 	"plugin": [
-    "@slkiser/opencode-quota",
     "./plugins/caveman/plugin.js",
     "oh-my-openagent@latest"
   ],
 	"$schema": "https://opencode.ai/config.json",
 	"shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
 	"lsp": {
-		"biome": {
-			"disabled": true,
-		},
 		"typescript": {
-			"disabled": true,
-		},
-		"csharp": {
-			"disabled": true,
-		},
-		"pyright": {
-			"disabled": true,
-		},
-		"bash": {
-			"disabled": true,
-		},
-		"bash-ls": {
-			"disabled": true,
-		},
-		"global-shell": {
 			"command": [
-				"cmd",
-				"/c",
-				"bash-language-server",
-				"start",
-			],
-			"extensions": [
-				".sh",
-				".bash",
-			],
-		},
-		"powershell": {
-			"command": [
-				"pwsh",
-				"-NoLogo",
-				"-NoProfile",
-				"-Command",
-				"Import-Module PowerShellEditorServices; Start-EditorServices -HostName opencode -HostProfileId opencode -HostVersion 1.0.0 -BundledModulesPath 'C:/Users/Lance/Documents/PowerShell/Modules' -LogPath 'C:/Users/Lance/.omo/lsp-pses.log/powershell.log' -LogLevel Normal -SessionDetailsPath 'C:/Users/Lance/.omo/lsp-pses-session.json' -Stdio",
-			],
-			"extensions": [
-				".ps1",
-				".psm1",
-				".psd1",
-			],
-		},
-		"python": {
-			"command": [
-				"basedpyright-langserver",
+				"tsc",
+				"--lsp",
 				"--stdio",
+			],
+			"extensions": [
+				".ts",
+				".tsx",
+				".mts",
+				".cts",
+			],
+		},
+		"biome": {
+			"command": [
+				"biome",
+				"lsp-proxy",
+				"--stdio",
+			],
+			"extensions": [
+				".js",
+				".jsx",
+				".mjs",
+				".cjs",
+				".jsonc",
+			],
+		},
+		"ty": {
+			"command": [
+				"ty",
+				"server",
 			],
 			"extensions": [
 				".py",
 				".pyi",
 			],
 		},
-		"global-csharp": {
-			"command": [
-				"cmd",
-				"/c",
-				"roslyn-language-server",
-				"--stdio",
-				"--autoLoadProjects",
-			],
-			"extensions": [
-				".cs",
-				".csx",
-			],
+		"pyright": {
+			"disabled": true,
 		},
 		"global-json-schema": {
 			"command": [
-				"cmd",
-				"/c",
 				"vscode-json-language-server",
 				"--stdio",
 			],
 			"extensions": [
 				".json",
-				".jsonc",
 			],
 			"initialization": {
 				"json": {
@@ -93,24 +62,14 @@
 				},
 			},
 		},
-		"global-biome-code": {
-			"command": [
-				"cmd",
-				"/c",
-				"biome",
-				"lsp-proxy",
-				"--stdio",
-			],
-			"extensions": [
-				".js",
-				".jsx",
-				".ts",
-				".tsx",
-				".mjs",
-				".cjs",
-				".mts",
-				".cts",
-			],
+		"eslint": {
+			"disabled": true,
+		},
+		"oxlint": {
+			"disabled": true,
+		},
+		"deno": {
+			"disabled": true,
 		},
 	},
 	"permission": {
@@ -127,7 +86,7 @@
 			"git checkout -f*": "deny",
 			"git checkout * -f*": "deny",
 			"git checkout *--force*": "deny",
-			"git checkout *-- *": "deny",
+			"git checkout * -- *": "deny",
 			"git checkout .": "deny",
 			"git checkout * .": "deny",
 			"git switch -C*": "deny",
@@ -149,7 +108,7 @@
 		},
 	},
 	"disabled_providers": [
-		"Anthropic",
+		"anthropic",
 	],
 	"model": "opencode-go/muse-spark-1.3-contributor#xhigh",
 	"small_model": "opencode-go/muse-spark-1.3-contributor",
@@ -180,73 +139,34 @@
 				"serve",
 				"--mcp",
 			],
-			"enabled": true,
+			"timeout": 30000,
 		},
 		"exa": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"mcp-remote",
-				"https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
-				"--transport",
-				"http-only",
-				"--header",
-				"x-api-key:{env:EXA_API_KEY}"
-			],
-			"enabled": true,
+			"type": "remote",
+			"url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+			"headers": {
+				"x-api-key": "{env:EXA_API_KEY}",
+			},
+			"oauth": false,
+			"timeout": 30000,
 		},
 		"microsoft-learn": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"mcp-remote",
-				"https://learn.microsoft.com/api/mcp",
-				"--transport",
-				"http-only"
-			],
+			"type": "remote",
+			"url": "https://learn.microsoft.com/api/mcp",
 			"enabled": true,
-		},
-		"azure-mcp": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"@azure/mcp@latest",
-				"server",
-				"start",
-			],
-			"enabled": false,
+			"timeout": 30000,
 		},
 		"firecrawl": {
 			"type": "local",
 			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"firecrawl-mcp",
+				"node",
+				"C:/Users/Lance/.config/opencode/node_modules/firecrawl-mcp/dist/index.js",
 			],
 			"environment": {
 				"FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}",
+				"LOG_LEVEL": "error",
 			},
-			"enabled": true,
-			"timeout": 120000,
-		},
-		"agentql": {
-			"type": "local",
-			"command": ["cmd", "/c", "npx", "-y", "agentql-mcp"],
-			"environment": {
-				"AGENTQL_API_KEY": "{env:AGENTQL_API_KEY}",
-			},
-			"enabled": false,
+			"timeout": 30000,
 		},
 		"dappier": {
 			"type": "local",
@@ -254,7 +174,8 @@
 			"environment": {
 				"DAPPIER_API_KEY": "{env:DAPPIER_API_KEY}",
 			},
-			"enabled": true,
+			"enabled": false,
+			"timeout": 30000,
 		},
 		"scrapegraph": {
 			"type": "local",
@@ -262,21 +183,14 @@
 			"environment": {
 				"SGAI_API_KEY": "{env:SCRAPEGRAPH_API_KEY}",
 			},
-			"enabled": true,
+			"enabled": false,
+			"timeout": 30000,
 		},
 		"tavily": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"mcp-remote",
-				"https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
-				"--transport",
-				"http-only"
-			],
-			"enabled": true,
+			"type": "remote",
+			"url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+			"oauth": false,
+			"timeout": 30000,
 		},
 		"context7": {
 			"type": "local",
@@ -294,79 +208,15 @@
 			],
 			"enabled": true,
 		},
-		"browserbase": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"mcp-remote",
-				"https://mcp.browserbase.com/mcp?browserbaseApiKey={env:BROWSERBASE_API_KEY}",
-				"--transport",
-				"http-only"
-			],
-			"enabled": true,
-			"timeout": 120000,
-		},
-		"brightdata": {
-			"type": "remote",
-			"url": "https://mcp.brightdata.com/mcp?token={env:BRIGHTDATA_API_KEY}",
-			"enabled": true,
-		},
-		"apify": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"mcp-remote",
-				"https://mcp.apify.com",
-				"--transport",
-				"http-only",
-				"--header",
-				"Authorization:Bearer {env:APIFY_TOKEN}"
-			],
-			"enabled": true,
-			"timeout": 120000,
-		},
-		"brave": {
-			"type": "local",
-			"command": [
-				"cmd",
-				"/c",
-				"npx",
-				"-y",
-				"@brave/brave-search-mcp-server",
-				"--transport",
-				"stdio",
-			],
-			"environment": {
-				"BRAVE_API_KEY": "{env:BRAVE_API_KEY}",
-			},
-			"enabled": false,
-		},
 	},
-	"autoupdate": true,
+	"autoupdate": false,
 	"experimental": {
 		"batch_tool": true,
 		"continue_loop_on_deny": true,
 		"disable_paste_summary": true,
 	},
 	"tool_output": {
-		"max_lines": 2000,
 		"max_bytes": 204800,
 	},
-	"formatter": true,
-	"layout": "stretch",
-	"agent": {
-		"build": {
-			"model": "opencode-go/muse-spark-1.3-contributor#xhigh",
-			"variant": "xhigh",
-		},
-	},
-	"provider": {
-		"opencode-go": {},
-	},
+  "formatter": true
 }

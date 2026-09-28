@@ -1,15 +1,13 @@
 ---
 name: rigorous-research
-description: "Tiered, multi-source verification engine: take a list of checkable claims, run a cheap→grounded→contested ladder across the web-data MCP fleet, fan parallel research passes out when the claim list justifies it, and return every claim as claim → verdict → URL → quote. Self-activates whenever a task requires facts to be checked rather than recalled — verifying dates, figures, names, chronology, attributions or contested statements; fact-checking a source; or any request to research something properly, rigorously, or with citations. Does NOT wait for a trigger word: invoke it from other skills and from ordinary requests alike. Routes tool selection through the web-data-apis skill's capability table rather than choosing servers itself."
+description: "Whenever a research or search query or analysis is requested: a tiered, multi-source verification engine: take a list of checkable claims, run a cheap→grounded→contested ladder across the web-data MCP fleet, fan parallel research passes out when the claim list justifies it, and return every claim as claim → verdict → URL → quote. Self-activates whenever a task requires facts to be checked rather than recalled — verifying dates, figures, names, chronology, attributions or contested statements; fact-checking a source; or any request to research something properly, rigorously, or with citations."
 ---
 
 # Rigorous Research
 
-Tiered, multi-source claim verification. Invoke via the `rigorous-research` skill, under OpenCode + oh-my-openagent (OMO) or under Claude Code alike.
-
 ## Input contract
 
-**The caller extracts the claims; this skill begins at "claim list in."** This skill does not read, segment, or mine source content — it receives an already-extracted list of checkable claims and returns a verdict per claim. Claim extraction from chapter text, transcripts, or any other source material belongs to the calling skill.
+Input = already-extracted claim list. Output = verdict per claim. Claim extraction from any source material (chapters, transcripts, etc.) belongs to the caller; this skill never reads or mines source content.
 
 ## Tier ladder
 
@@ -19,19 +17,17 @@ Tiered, multi-source claim verification. Invoke via the `rigorous-research` skil
 
 ## Pass protocol
 
-1-2 parallel research passes via research subagents. Each pass receives: the claim list, the source ordering defined below (see "Source selection and handling"), and the required output format.
+1-2 parallel research passes via research subagents. Each pass gets: claim list, source ordering (below), output format.
 
 Output shape per claim: `claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote`. Loop until every claim resolves; stop after 5 passes and mark whatever remains plainly unverified — a claim with no witness stays unverified. Coordinate passes so each claim is searched once.
 
-**Looping on request.** When the caller asks for another pass on claims already run through this skill, the response opens with the exhausted-resources list for those claims: every domain, source, and tool already queried, per claim, before any new pass starts. The new pass targets sources outside that list; querying an already-exhausted source again is not a new pass. The exhausted-resources list stays in the output alongside the claim → verdict → URL → quote table, not folded into it.
+**Another pass on already-run claims:** open with the exhausted-resources list (every domain, source, tool already queried, per claim). New pass targets only sources outside it; re-querying an exhausted source is not a new pass. Keep that list as its own block beside the verdict table.
 
 ### Scaling beyond 2 passes
 
-Default to **2 parallel passes** — the existing upper bound. A claim list large enough to need more than that (3+ distinct source territories, e.g. court records / contemporaneous press / scholarship, or unresolved claims by pass 3 of the 5-pass budget) is an orchestration decision for the calling session, not this skill: hand it the claim list, the source ordering below, and the output format, split by axis, one worker per axis. This skill states what to research and how to verify it; how many workers carry that out is the caller's call.
+Default **2 parallel passes**. Needing more (3+ distinct source territories, or unresolved by pass 3) = caller's orchestration decision: hand it claim list, source ordering, output format, split by axis, one worker per axis.
 
 ## Source selection and handling
-
-Single home for every source-choice rule:
 
 - **Apparatus first:** start from the source's own apparatus (its description / bibliography citations), then add independent sources.
 - **Preference ordering:** primaries → records → press → scholarship → wikis.
@@ -39,14 +35,13 @@ Single home for every source-choice rule:
 - **Labelling:** advocacy sources labelled as advocacy.
 - **Attribution hygiene:** "as quoted in the source", "attributed to X, primary not located".
 
+URL audit: every URL emitted passes `web-data-apis` SKILL.md "URL audit" (200 or firecrawl-verified) before it reaches the user.
+**Domain-supplied source order:** a caller's own ordering (e.g. `deep-cut-classical` Grove → publisher → program notes → labels) replaces the default preference ordering; caller-level source bans (e.g. music streaming services) also apply. Tier ladder, pass protocol, burn guards unchanged.
+
 ## Burn guards
 
 Map before crawl with an explicit limit; never `raw_content` at scale; never request a summary for a large N that goes unused; pin agent effort and bound arrays; block media and fonts.
 
-## Tool routing — pointer only
+## Tool routing and failover — pointer only
 
-Do not choose servers here. Load the `web-data-apis` skill and pick from its capability table, citing the row you used.
-
-## Failover — pointer only
-
-Credit exhaustion during a research pass: the rotation mechanics, the hard-stop rule, and the never-read-`~/.secrets/.env` prohibition live in `web-data-apis` skill's "API key failover" section. Consult it there — not restated here.
+Load `web-data-apis`; pick servers from its capability table (cite the row used); credit exhaustion → its "Keys + credit failover" section.
