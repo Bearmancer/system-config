@@ -12,28 +12,29 @@ triggers:
 
 ## Inputs
 - Home root (`~`), read access to `AppData/Local`, `AppData/Roaming`, `Dev/`.
-- `fd`, `dust`, `git` on PATH. Run steps 5-8 in the Bash tool (git-bash) — they use bash-only syntax (`while IFS= read -r`, `rm.exe`/`rmdir.exe` on PATH), not PowerShell.
-- Bypass mode or explicit per-item user approval (see step 4) — either is enough. Large deletes are blocked by the destructive-action classifier otherwise.
+- `fd`, `dust`, `git` on PATH. Run every step in the Bash tool (git-bash), not PowerShell — steps 5-8 use bash-only syntax (`while IFS= read -r`, `rm`/`rmdir` from `/usr/bin`), and step 1/2 rely on `~` shell expansion.
+- Explicit per-item user approval (step 4) is always required before any delete. Bypass mode only lifts the destructive-action classifier's block on running the delete command — it does not replace step 4's approval.
 - Current session's own scratchpad path, to exclude from step 1's Temp/claude sweep (see step 1 and Pitfalls).
 
 ## Ordered steps
 
-1. Enumerate runtime-state roots. One `fd -u -t d -g '<pattern>' <root> --prune` call per tool family (`-g` = fd glob pattern, resolved by fd itself, never by the shell — see step 6). Never blanket-delete `~`.
+1. Enumerate runtime-state roots. One `fd -u -t d -g '<pattern>' <root> --prune` call per family for directory entries, one `fd -u -t f -g '<pattern>' <root>` call for file entries (a directory-only search never returns a purge-listed file like `notepad.md` or `*.stamp`) — `-g` is a fd glob pattern, resolved by fd itself, never by the shell (see step 6). Never blanket-delete `~`.
    - `.omc/` — every repo. Purge: `state/`, `plans/`, `handoffs/`, `research/`, `artifacts/`, `logs/`, `notepad.md`, `project-memory.json`. Keep: `skills/`, `ultragoal/`.
-   - `.omo/` — every repo + `~/.omo`. Purge: `agent/`, `senpi-task/`, `lsp-daemon/*.stamp` (fd glob), `thread-tools/`. Keep: `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`. Anything not listed here: leave alone, don't guess.
+   - `.omo/` — every repo + `~/.omo`. Purge: `agent/`, `senpi-task/`, `thread-tools/`, and `*.stamp` files under `lsp-daemon/` specifically (`fd -u -g '*.stamp' <root>/.omo/lsp-daemon` — fd's `-g` matches filename only, a pattern containing `/` needs `--full-path` instead). Keep: `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`. Anything not listed here: leave alone, don't guess.
    - `~/.codex/` (home dir only — codex has no per-repo state dir). Purge: nothing by default — `memories_*.sqlite`, `goals_*.sqlite`, `installation_id`, `auth.json`, `config.toml` are all live state, not cache. Skip this root entirely unless the user names a specific stale file inside it.
    - `~/.local/share/omo-codex/` — inspect contents and modification time before proposing any deletion; no default purge list established yet.
    - `~/.config/opencode/` — keep `AGENTS.md`, `opencode.jsonc`, `tui.json`, `agents/`, `commands/`, `skills/`. Purge only named cache dirs found by `fd -u -t d -g 'cache' ~/.config/opencode` — don't purge anything not matched.
    - `~/.claude/` — keep everything except the explicit purge list below. This dir holds live credentials and this skill's own file; treat as keep-by-default, not purge-by-default.
-     - Explicit purge list only: `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `file-history/`, `backups/`, `*.tmp.*` (fd glob).
-     - Never touch: `.credentials.json`, `.claude.json`, `settings.json`, `settings.local.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (third-party/vendored — `plugins/cache/**` and `plugins/marketplaces/**` especially).
+     - Explicit purge list only: `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `*.tmp.*` (fd glob).
+     - Ask-first, not auto-purge: `file-history/` (Claude Code's own rewind/checkpoint history — user data, not cache), `backups/` (the only recovery path if config is corrupted).
+     - Never touch: `.credentials.json` (in `~/.claude/`), `.claude.json` (in `~` itself, one level above `~/.claude/` — not covered by this root's fd calls anyway, listed here as a reminder it's off-limits), `settings.json`, `settings.local.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (third-party/vendored — `plugins/cache/**` and `plugins/marketplaces/**` especially).
    - `~/AppData/Roaming/Claude/scratch-workspaces/**` — see step 4's age rule before deleting any entry.
-   - `~/AppData/Local/Temp/claude/**` — Claude Code's own scratchpad root, usually the biggest win. Exclude the current session's own scratchpad dir (Inputs) — it's live. Write step 9's manifest before touching this root, or to a path outside it, so the manifest itself isn't deleted mid-run.
+   - `~/AppData/Local/Temp/claude/**` — Claude Code's own scratchpad root, usually the biggest win. Exclude the current session's own scratchpad dir with `--exclude '<current-session-id>'` on every `fd` call against this root in step 6, both the file pass and the dir pass — the exclusion has to be on the actual delete commands, not just noted in Inputs. Because of this exclusion, step 6's final `rmdir -- "$path"` on this specific root is expected to fail ("Directory not empty") even on full success — step 8's post-check for this root should look for a smaller `dust` number, not "No such file or directory". Write step 9's manifest to a path outside this root so the manifest itself isn't deleted mid-run.
    - `~/AppData/Local/Temp/` — match only named patterns (`bunx-*`, `opencode`), via `fd -u -g '<pattern>' --max-depth 1`. Never sweep this dir generally (see Pitfalls).
    - `~/.cache/opencode/`.
 
 2. Detect duplicate/orphaned git state. Don't size-scan only.
-   - Duplicate clones: same `origin` remote checked out twice (e.g. leftover `~/agents-config` beside a later `Dev/<renamed-repo>` after a rename+move). In each candidate: `git remote -v`, `git status --short`, `git log --branches --not --remotes --oneline` (unpushed commits), `git stash list`. Any of the last three non-empty: inspect-first, not auto-discard. Only a clean `status`+`log`+`stash` in the older/duplicate checkout is safe to discard.
+   - Duplicate clones: same `origin` remote checked out twice (e.g. leftover `~/agents-config` beside a later `Dev/<renamed-repo>` after a rename+move). In each candidate: `git remote -v`, `git status --short --ignored` (`--ignored` catches untracked-but-gitignored local files like `.env`), `git log --branches HEAD --not --remotes --oneline` (unpushed commits on any branch or a detached HEAD), `git stash list`. Any of the last three non-empty: inspect-first, not auto-discard. Only clean results from all four in the older/duplicate checkout is safe to discard.
    - Orphaned worktree dirs: a `.claude/worktrees/<name>/` with no `.git` file inside is not a real worktree. `git worktree list` in the parent repo won't show it. Confirm both ways before deleting. List its contents and modification time first — no `.git` file doesn't rule out uncommitted work sitting there.
    - Cross-reference `git worktree list` against found dirs. Delete only dirs for worktrees no longer listed.
 
@@ -50,7 +51,7 @@ triggers:
    - Batch up to 4 questions per call.
    - Unknown purpose or age, or no established age rule yet (a `stage-*` dir, an unlabeled scratch dir): always offer inspect-first, never only delete-or-leave. For scratch-workspaces/session dirs with no user-given threshold, default to flagging anything modified in the last 24h as likely-active (offer leave-alone as the lead option) and anything older as a purge candidate — state this default explicitly when asking, since the user can override it per session.
 
-5. Pre-check size before deleting anything approved in step 4: `dust -P -d 0 "$path"` (`-P`/`--no-progress` suppresses streamed progress noise; `-d 0` if dust unavailable, `du -sh`) for every root about to be touched. Record the number — only way step 8 proves something happened.
+5. Pre-check size before deleting anything approved in step 4: `dust -P -d 0 "$path"` (`-P`/`--no-progress` suppresses streamed progress noise) for every root about to be touched, or `du -sh "$path"` if dust is unavailable. Record the number — only way step 8 proves something happened.
 
 6. Delete via `fd -u`. Never a shell glob (`*`). Never `rm -rf`.
    - Use `fd -u` for every enumeration in this skill — unrestricted crosses `.gitignore`, includes hidden dirs by default. Both matter: `.omc`/`.omo`/`.claude` are dot-dirs, often gitignored by their containing repos. (`-u` alone is sufficient; don't also add `-H`, they overlap.)
@@ -79,6 +80,7 @@ triggers:
 - Don't conflate AI-artifact scope with general OS/app temp cleanup. Generic `AppData/Local/Temp` entries not matching a named pattern from step 1 are out of scope.
 - A tool being installed (`~/.bun`, an opencode install dir) is a different decision than its cache being stale. Uninstalling live software is a separate, explicit ask, not implied by a cache purge.
 - Path examples in this file (specific repo names, specific size numbers) are illustrative from past runs, not fixed facts — always verify current state, don't assume a past finding still applies.
+- `Temp/claude/**`'s live-scratchpad exclusion (step 1) means other sessions' idle scratchpad files have no open file handle and won't trigger step 7's busy check — the 24h-modified rule from step 4 is what protects them, not process detection. Apply that rule per session-id subdirectory under this root, the same as for `scratch-workspaces/**`.
 
 ## Verification evidence
 - Steps 5 and 8 are not optional. Every deleted root needs both numbers in the final manifest, side by side.
