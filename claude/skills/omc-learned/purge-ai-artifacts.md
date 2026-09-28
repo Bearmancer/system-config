@@ -18,9 +18,9 @@ triggers:
 
 ## Ordered steps
 
-1. Enumerate runtime-state roots. One `fd -u -t d -g '<pattern>' <root> --prune` call per tool family (`-g` = fd glob pattern, resolved by fd itself, never by the shell — see step 6). Never blanket-delete `~`.
+1. Enumerate runtime-state roots. One `fd -u -t d -g '<pattern>' <root> --prune` call per family for directory entries, one `fd -u -t f -g '<pattern>' <root>` call for file entries (a directory-only search never returns a purge-listed file like `notepad.md` or `*.stamp`) — `-g` is a fd glob pattern, resolved by fd itself, never by the shell (see step 6). Never blanket-delete `~`.
    - `.omc/` — every repo. Purge: `state/`, `plans/`, `handoffs/`, `research/`, `artifacts/`, `logs/`, `notepad.md`, `project-memory.json`. Keep: `skills/`, `ultragoal/`.
-   - `.omo/` — every repo + `~/.omo`. Purge: `agent/`, `senpi-task/`, `lsp-daemon/*.stamp` (fd glob), `thread-tools/`. Keep: `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`. Anything not listed here: leave alone, don't guess.
+   - `.omo/` — every repo + `~/.omo`. Purge: `agent/`, `senpi-task/`, `thread-tools/`, and `*.stamp` files under `lsp-daemon/` specifically (`fd -u -g '*.stamp' <root>/.omo/lsp-daemon` — fd's `-g` matches filename only, a pattern containing `/` needs `--full-path` instead). Keep: `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`. Anything not listed here: leave alone, don't guess.
    - `~/.codex/` (home dir only — codex has no per-repo state dir). Purge: nothing by default — `memories_*.sqlite`, `goals_*.sqlite`, `installation_id`, `auth.json`, `config.toml` are all live state, not cache. Skip this root entirely unless the user names a specific stale file inside it.
    - `~/.local/share/omo-codex/` — inspect contents and modification time before proposing any deletion; no default purge list established yet.
    - `~/.config/opencode/` — keep `AGENTS.md`, `opencode.jsonc`, `tui.json`, `agents/`, `commands/`, `skills/`. Purge only named cache dirs found by `fd -u -t d -g 'cache' ~/.config/opencode` — don't purge anything not matched.
