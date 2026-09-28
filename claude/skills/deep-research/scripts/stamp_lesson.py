@@ -5,7 +5,9 @@
 
 import argparse
 import html as html_mod
+import json
 import re
+import shutil
 import sys
 from pathlib import Path
 
@@ -25,6 +27,7 @@ from lesson_rules import (
 
 SKILL = Path(__file__).resolve().parent.parent
 DEFAULT_STENCIL = SKILL / "assets" / "lesson.stencil.html"
+SHELL_JS = SKILL / "assets" / "shell.js"
 
 BANNED = (
     "open threads",
