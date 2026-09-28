@@ -49,7 +49,7 @@ Page structure, casing, citation, timestamp, and stamp-contract rules: `referenc
 
 Lessons are stamped, never hand-authored. Shape lives in `assets/lesson.stencil.html`; content lives in `<workspace>/lessons/<NN>-chK-<slug>.yaml` (filename carries the chapter; stamp refuses names without `-chK-`).
 
-- Stamp: `python scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`
+- Stamp: `uv run scripts/stamp_lesson.py <lessons/NN-chK-slug.yaml> --lessons-dir <workspace/lessons>`
   — stdlib only, fails closed, writes repo paths only, prints a diff stat.
 - Writer rule: **no hand-written lesson HTML.** A lesson task's report must
   carry the stamp output (repo path + diff stat + mtime) and the gate exit —
