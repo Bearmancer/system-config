@@ -1,0 +1,321 @@
+/* lesson.css — shared stylesheet for this workspace's lessons and reference docs.
+   Tufte-inspired: quiet paper, generous margins, serif text, print-first.
+   Every lesson and reference links this file; do not restyle per-page. */
+
+:root {
+	--ink: #201d1a;
+	--ink-soft: #5a544b;
+	--paper: #fbfaf7;
+	--rule: #dbd6ca;
+	--accent: #8a5a2b;
+	--note-bg: #f4f1e8;
+	--warn-bg: #fbf5e4;
+	--warn-edge: #c9a94e;
+	--font-body: "Sitka Text", Constantia, Charter, Georgia, serif;
+	--font-ui: -apple-system, "Segoe UI", system-ui, sans-serif;
+	--font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+	--mono: var(--font-mono);
+	--size-base: 19px;
+	--size-lead: 1.12rem;
+	--size-small: 0.84rem;
+}
+
+/* Size presets: default M. Set data-size on <html> to switch. */
+html[data-size="S"] {
+	--size-base: 17px;
+	--size-lead: 1rem;
+	--size-small: 0.75rem;
+}
+html[data-size="M"] {
+	--size-base: 19px;
+	--size-lead: 1.12rem;
+	--size-small: 0.84rem;
+}
+html[data-size="L"] {
+	--size-base: 21px;
+	--size-lead: 1.24rem;
+	--size-small: 0.93rem;
+}
+
+html {
+	background: var(--paper);
+}
+
+body {
+	max-width: 46rem;
+	margin: 0 auto;
+	padding: 3.5rem 2.5rem 5rem;
+	color: var(--ink);
+	font-family: var(--font-body);
+	font-size: var(--size-base);
+	line-height: 1.62;
+	text-rendering: optimizeLegibility;
+}
+
+/* Headings */
+.kicker {
+	font-family: var(--font-ui);
+	font-size: 0.7rem;
+	letter-spacing: 0.14em;
+	color: var(--accent);
+	margin: 0 0 0.6rem;
+}
+h1 {
+	font-size: 1.9rem;
+	line-height: 1.15;
+	font-weight: 600;
+	margin: 0 0 0.5rem;
+	letter-spacing: -0.01em;
+}
+h2 {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin: 2.6rem 0 0.7rem;
+	padding-top: 1.1rem;
+	border-top: 1px solid var(--rule);
+}
+h3 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin: 1.6rem 0 0.4rem;
+}
+
+.meta {
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+	margin: 0 0 2rem;
+}
+.lead {
+	font-size: var(--size-lead);
+	color: var(--ink-soft);
+	margin: 0 0 1.6rem;
+}
+.surtitle {
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
+	color: var(--ink-soft);
+	margin: 0 0 1.2rem;
+}
+.home-link {
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
+	color: var(--ink-soft);
+	margin: 0 0 1.4rem;
+}
+.top-nav {
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+	margin: 0 0 1.6rem;
+}
+.top-nav a {
+	margin-right: 1rem;
+}
+
+/* Links & text */
+a {
+	color: var(--accent);
+	text-decoration: none;
+	border-bottom: 1px solid rgba(138, 90, 43, 0.35);
+}
+a:hover {
+	border-bottom-color: var(--accent);
+}
+strong {
+	font-weight: 600;
+}
+.t {
+	font-family: var(--font-mono);
+	font-size: 0.86em;
+	color: var(--accent);
+	white-space: nowrap;
+}
+.small {
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+}
+
+blockquote {
+	margin: 1.1rem 0 1.1rem 1.2rem;
+	padding-left: 1rem;
+	border-left: 2px solid var(--rule);
+	color: var(--ink-soft);
+}
+blockquote p {
+	margin: 0.3rem 0;
+}
+blockquote cite {
+	font-size: 0.86rem;
+	font-style: normal;
+}
+
+/* Boxes */
+.box {
+	background: var(--note-bg);
+	border: 1px solid var(--rule);
+	border-radius: 6px;
+	padding: 0.9rem 1.1rem;
+	margin: 1.4rem 0;
+	font-size: 0.95rem;
+}
+.box p:first-child {
+	margin-top: 0;
+}
+.box p:last-child {
+	margin-bottom: 0;
+}
+.box .box-title {
+	font-family: var(--font-ui);
+	font-size: 0.7rem;
+	letter-spacing: 0.12em;
+	color: var(--accent);
+	display: block;
+	margin-bottom: 0.35rem;
+}
+.box-fact {
+	background: var(--warn-bg);
+	border-left: 4px solid var(--warn-edge);
+}
+.box-source {
+	background: #f0f4f1;
+	border-left: 4px solid #6f8f76;
+}
+
+/* Tables (cast block + reference pages) */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.95rem;
+	margin: 1rem 0 1.6rem;
+}
+th {
+	text-align: left;
+	border-bottom: 1.5px solid var(--rule);
+	padding: 0.4rem 0.5rem;
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
+	font-weight: 600;
+}
+td {
+	border-bottom: 1px solid var(--rule);
+	padding: 0.4rem 0.5rem;
+	vertical-align: top;
+}
+
+/* Chapter subgraph + cast-map figures */
+figure.map {
+	margin: 1.4rem 0;
+}
+figure.map svg {
+	width: 100%;
+	height: auto;
+}
+@media (min-width: 1380px) {
+	figure.map {
+		width: 1260px;
+		margin-left: calc(50% - 630px);
+	}
+}
+
+/* Palette/legend colour swatch — one shared pattern for cast-map + legend rows */
+.swatch {
+	display: inline-block;
+	width: 0.85em;
+	height: 0.85em;
+	border-radius: 2px;
+	margin-right: 0.4em;
+	vertical-align: middle;
+}
+.legend-row {
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+}
+
+/* Timeline */
+.tl {
+	list-style: none;
+	margin: 1.2rem 0;
+	padding: 0;
+}
+.tl li {
+	display: grid;
+	grid-template-columns: 5.6rem 1fr;
+	gap: 0.9rem;
+	padding: 0.45rem 0;
+	border-bottom: 1px dotted var(--rule);
+}
+.tl .when {
+	font-family: var(--font-mono);
+	font-size: var(--size-small);
+	color: var(--accent);
+	padding-top: 0.15rem;
+}
+
+/* Lists */
+ul, ol {
+	padding-left: 1.2rem;
+}
+li {
+	margin: 0.3rem 0;
+}
+ul.tight li, ol.tight li {
+	margin: 0.25rem 0;
+}
+
+/* Hub/index pages (chapter tables) */
+.hub-table td:last-child {
+	white-space: nowrap;
+	color: var(--ink-soft);
+	font-family: var(--font-ui);
+	font-size: 0.78rem;
+}
+
+/* Footer */
+.lesson-footer {
+	margin-top: 3.2rem;
+	padding-top: 1.1rem;
+	border-top: 1px solid var(--rule);
+	font-family: var(--font-ui);
+	font-size: var(--size-small);
+	color: var(--ink-soft);
+}
+.lesson-footer nav a {
+	margin-right: 1rem;
+}
+
+/* Narrow screens */
+@media (max-width: 640px) {
+	body {
+		padding: 2rem 1.2rem 3rem;
+		font-size: min(var(--size-base), 17px);
+	}
+	.tl li {
+		grid-template-columns: 4.6rem 1fr;
+		gap: 0.6rem;
+	}
+}
+
+/* Print */
+@media print {
+	html, body {
+		background: #fff;
+		color: #000;
+	}
+	body {
+		max-width: none;
+		padding: 0 0.5in;
+		font-size: 11.5pt;
+	}
+	a {
+		color: #000;
+		border-bottom: none;
+	}
+	.box {
+		break-inside: avoid;
+	}
+	h2 {
+		break-after: avoid;
+	}
+}
