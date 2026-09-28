@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: "Web research engine + web-data fleet router. Consult before any scrape, search, crawl or extract call: server pick, bot-block chain, credit failover. Input shape picks mode: topic or long source (book, article, paper, lecture notes, video) -> per-chapter GitHub Pages course with approved syllabus; claim list or URL list -> cited chat verdicts; classical recommendation (deep cuts, bored of Beethoven/Mozart, new symphony/concerto/overture) -> verified picks. Use whenever facts must be checked not recalled (dates, figures, names, chronology, attributions, discography, durations), or user asks to research, fact-check, explain chapter N, go through a source chapter by chapter, make a course/notes/treatise, or continue a course workspace, even without naming this skill."
+description: "One-stop research engine + web-data fleet router. Consult before any scrape, search, crawl or extract call: server pick, bot-block chain, credit failover. Input shape picks mode: question or claim ('how true is it that X', 'is it true', 'did X happen') -> cited verdicts in chat; long source (book, article, paper, lecture notes, video URL + 'explain') or topic to learn -> per-chapter GitHub Pages course; classical works wanted (deep cuts, Soviet symphonies, bored of Beethoven, new concerto/overture) -> verified picks. Use whenever facts must be checked not recalled (dates, figures, names, chronology, attributions, discography, durations), or user asks to research, fact-check, explain chapter N, go through a source chapter by chapter, make a course/notes/treatise, or continue a course workspace, even without naming this skill."
 ---
 
 # Deep research
@@ -22,12 +22,21 @@ Plain fetch, no research asked: stop after fast path.
 
 ## Mode router
 
-| Input shape | Mode | Load |
-|---|---|---|
-| Named source (book, article, paper, lecture, video), incl. "fact-check this book" | course | `references/modes/course.md` |
-| Topic, no source | course, syllabus researched then approved by user | `references/modes/course.md` |
-| Claim list or URL list, no source | verdict | this file only |
-| "recommend/find me" classical works | recommend | `references/domains/music/classical/recommend.md` |
+One skill, every research ask. Match first row that fits.
+
+| Input shape | Example | Mode | Load |
+|---|---|---|---|
+| Named source: URL, book, article, paper, lecture, video; any verb incl. "fact-check" | "<youtube url> - explain", "go through The Prince" | course | `references/modes/course.md` |
+| Topic to learn, no source | "teach me the Thirty Years' War" | course; syllabus researched, user approves before build | `references/modes/course.md` |
+| Classical works wanted | "Soviet symphonies from early 20th century" | recommend | `references/domains/music/classical/recommend.md` |
+| Question, claim, claim list, URL list | "How true is it Putin is fucked?" | verdict | "Verdict mode" below |
+| Plain fetch/scrape, no research ask | "grab this page" | fast path only | none |
+
+## Verdict mode
+
+1. Operationalize: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes (e.g. war outcome, economy, regime stability, succession); state axes chosen in one line. Done when every axis has a binary observable.
+2. Pick domain; run passes (below). Done when every sub-claim has a verdict or pass cap hit.
+3. Reply: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence.
 
 Course mode step files, read when course.md step names them: `references/course/workflow.md`, `lesson-schema.md`, `page-design.md`, `diagram-spec.md`, `publishing.md`, `references/course/sources/youtube.md`, `text-sources.md`.
 

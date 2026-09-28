@@ -92,13 +92,7 @@ gh api repos/<owner>/<repo>/issues/<n>/timeline --jq '.[] | select(.event=="clos
 
 **Fork remote**: `<fork-remote>` = local git remote name added after `gh repo fork <owner>/<repo> --clone=false`, pointing at your fork (SSH or HTTPS clone URL, either works) — `git remote add <fork-remote> <your-fork-clone-url>`. `<fork-user>` = your GitHub user. Define both before any push; never push directly to the upstream base/origin.
 
-**Indexed checkout for mechanism claims**: clone to a temp dir and `codegraph init` it; quote `file:line` from that index, never from memory.
-```bash
-TMP=$(mktemp -d)
-git clone [--depth 1] https://github.com/<owner>/<repo>.git "$TMP/<repo>"
-codegraph init "$TMP/<repo>"
-```
-Use `--depth 1` when the clone is read-only proof (issue, PR mechanism check — local working tree stays for diff/push only). Omit it when the clone itself becomes the working tree you'll branch/build/push from (feature PR half). Stale index (moved lines, missing symbols) → `codegraph init` again before quoting.
+**Indexed checkout for mechanism claims**: temp clone + `codegraph init` per CLAUDE.md `<ai_artifacts>` and CodeGraph sections; quote `file:line` from that index, never memory. `--depth 1` when clone is read-only proof (issue, PR mechanism check); full clone when it becomes the branch/build/push tree (feature PR half).
 
 ## Filing procedures
 
