@@ -129,19 +129,21 @@ function Invoke-DailySync {
 
 function Install-DailySyncTask {
     param([string]$RepoRoot = $PSScriptRoot)
+    $wtPath = (Get-Command wt.exe).Source
     $pwshPath = (Get-Command pwsh).Source
     $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument "-NoProfile -File `"$RepoRoot\run-sync.ps1`""
+    $action = New-ScheduledTaskAction -Execute $wtPath -Argument "`"$pwshPath`" -NoProfile -File `"$RepoRoot\run-sync.ps1`""
     $trigger = New-ScheduledTaskTrigger -Daily -At 9:00am
     Register-ScheduledTask -TaskName 'Daily sync' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
 
 function Install-TopgradeTask {
+    $wtPath = (Get-Command wt.exe).Source
     $pwshPath = (Get-Command pwsh).Source
     $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "topgrade --yes --no-retry; if ($LASTEXITCODE) { Read-Host ''topgrade FAILED''; exit 1 }"'
+    $action = New-ScheduledTaskAction -Execute $wtPath -Argument "`"$pwshPath`" -NoProfile -Command `"topgrade --yes --no-retry; if (`$LASTEXITCODE) { Read-Host 'topgrade FAILED'; exit 1 }`""
     $trigger = New-ScheduledTaskTrigger -Daily -At 10:00am
     Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
