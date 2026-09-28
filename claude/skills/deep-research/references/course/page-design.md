@@ -48,21 +48,32 @@ Inline-only, forever — no Sources block, no bibliography, no footer citation l
 
 ```html
 <body>
-  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 1. series name -->
-  <h1>1996</h1>                                                      <!-- 2. chapter title -->
-  <nav class="top-nav">                                              <!-- 3. merged nav under H1, Title Case, zero dupes -->
-    <a href="../../index.html">Home</a>
-    <a href="../index.html#ch13">Chapter Index</a>
-    <a href="../reference/glossary.html">Glossary</a>
-    <a href="../reference/cast-map.html">Cast Map</a>
-  </nav>
+  <header class="A-bar">                                             <!-- 1. sticky top bar -->
+    <div class="row">
+      <span class="title">1996</span>
+      <select data-index data-current="ch13">                        <!-- chapter list injected by shell.js -->
+        <option value="../../index.html">Home</option>
+        <option value="../index.html#ch13">Chapter Index</option>
+        <option value="../reference/glossary.html">Glossary</option>
+        <option value="../reference/cast-map.html">Cast Map</option>
+      </select>
+      <select data-font-select>...12 fonts...</select>
+      <select data-size-select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+    </div>
+  </header>
+
+  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 2. series name -->
+  <h1>1996</h1>                                                      <!-- 3. chapter title -->
   <p class="surtitle">Chapter 13 of 18</p>                          <!-- 4. no time range -->
 
   <h2>1. Summary</h2> ... [<h2>2. Cast</h2> only when humans involved] ... <h2>3. Narrative</h2> ... <h2>4. Machinery</h2>
 
-  <footer class="lesson-footer">                                     <!-- 7. previous/next only -->
+  <footer class="lesson-footer">                                     <!-- previous/next only -->
     <nav><a href="...">Previous: ...</a> <a href="...">Next: ...</a></nav>
   </footer>
+
+  <script src="../assets/course-index.js"></script>
+  <script src="../assets/shell.js"></script>
 </body>
 ```
 
