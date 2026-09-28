@@ -27,9 +27,9 @@ Plain fetch, no research asked: stop after fast path.
 | Named source (book, article, paper, lecture, video), incl. "fact-check this book" | course | `references/modes/course.md` |
 | Topic, no source | course, syllabus researched then approved by user | `references/modes/course.md` |
 | Claim list or URL list, no source | verdict | this file only |
-| "recommend/find me" classical works | recommend | `references/domains/classical/recommend.md` |
+| "recommend/find me" classical works | recommend | `references/domains/music/classical/recommend.md` |
 
-Domain: before first search read `references/domains/<domain>/sources.md` + `exclusions.md`. Music (`classical`, `popular`) also reads `references/domains/music.md`. Non-music = `general`. Domain source order replaces default preference order; domain bans always apply.
+Domain: before first search read `references/domains/<domain>/sources.md` + `exclusions.md`. Domains: `general` (non-music), `music/classical`, `music/popular`. Music domains also read `references/domains/music/rules.md` first. Domain source order replaces default preference order; domain bans always apply.
 
 ## Research rules: always on
 
