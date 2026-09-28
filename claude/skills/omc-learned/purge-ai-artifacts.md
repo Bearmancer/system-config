@@ -34,7 +34,7 @@ triggers:
    - `~/.cache/opencode/`.
 
 2. Detect duplicate/orphaned git state. Don't size-scan only.
-   - Duplicate clones: same `origin` remote checked out twice (e.g. leftover `~/agents-config` beside a later `Dev/<renamed-repo>` after a rename+move). In each candidate: `git remote -v`, `git status --short`, `git log --branches --not --remotes --oneline` (unpushed commits), `git stash list`. Any of the last three non-empty: inspect-first, not auto-discard. Only a clean `status`+`log`+`stash` in the older/duplicate checkout is safe to discard.
+   - Duplicate clones: same `origin` remote checked out twice (e.g. leftover `~/agents-config` beside a later `Dev/<renamed-repo>` after a rename+move). In each candidate: `git remote -v`, `git status --short --ignored` (`--ignored` catches untracked-but-gitignored local files like `.env`), `git log --branches HEAD --not --remotes --oneline` (unpushed commits on any branch or a detached HEAD), `git stash list`. Any of the last three non-empty: inspect-first, not auto-discard. Only clean results from all four in the older/duplicate checkout is safe to discard.
    - Orphaned worktree dirs: a `.claude/worktrees/<name>/` with no `.git` file inside is not a real worktree. `git worktree list` in the parent repo won't show it. Confirm both ways before deleting. List its contents and modification time first — no `.git` file doesn't rule out uncommitted work sitting there.
    - Cross-reference `git worktree list` against found dirs. Delete only dirs for worktrees no longer listed.
 
