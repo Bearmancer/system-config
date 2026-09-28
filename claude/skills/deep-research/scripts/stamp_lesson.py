@@ -22,7 +22,9 @@ from lesson_rules import (
     VERDICT,
     BARE_URL as BARE,
     YOUTUBE,
+    bar_scripts,
     find_unsuperscripted_repeats,
+    render_bar,
 )
 
 SKILL = Path(__file__).resolve().parent.parent
