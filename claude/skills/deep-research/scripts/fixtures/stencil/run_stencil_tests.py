@@ -25,7 +25,7 @@ def run_stamp(yaml_text, name, ws=WS):
     yaml_path = lessons / name
     yaml_path.write_text(yaml_text, encoding="utf-8")
     proc = subprocess.run(
-        [sys.executable, str(STAMP), str(yaml_path), "--lessons-dir", str(lessons)],
+        ["uv", "run", str(STAMP), str(yaml_path), "--lessons-dir", str(lessons)],
         capture_output=True,
         text=True,
     )
