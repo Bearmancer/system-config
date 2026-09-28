@@ -127,15 +127,25 @@ Exception: full rebuild only if the finding shows the whole method untrustworthy
 Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. Temp files, incl. codegraph-init clone repos: `mktemp`.
 Exception: `deep-research` course data → `~/Dev/deep-research/<slug>/` (lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
 
-Runtime-state roots, one per tool, purge-candidate by default unless it holds a listed exception:
-- `.omc/` (any repo, incl. `~/.omc` itself): OMC runtime — `state/`, `state/sessions/{id}/`, `notepad.md`, `project-memory.json`, `plans/`, `research/`, `logs/`, `artifacts/`, `handoffs/`, `ultragoal/`. Gitignored by OMC default except `.omc/skills/` + `.omc/ultragoal/` (durable, never purge).
-- `~/.claude/`: `settings.json`/`CLAUDE.md`/`keybindings.json` durable (never purge). `~/.claude/plugins/cache/**` and `~/.claude/plugins/marketplaces/**` are third-party/vendored — never touch (`content_provenance`), including any nested `.omc/`/`.claude/` inside a plugin's own repo checkout. Per-repo `.claude/state/`, `.claude/worktrees/`, `.claude/plans/` (durable, keep) are OMC/Claude-Code scoped.
-- `~/.omo/`: agent runtime for the `omo`/OmO CLI — `agent/` (auth.json, cache, logs, sessions, `*.bak-*`, `migrations-state.json`, `harness-detect-cache.json`, `OmO-debug.log`), `lsp-daemon/*.stamp`, `senpi-task/{children,locks,logs,tasks}`, `thread-tools/{mailbox,receipts}`. Purge-candidate. `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/` durable — keep.
-- `~/.codex/` and `~/.local/share/omo-codex/`: Codex CLI runtime/session state — purge-candidate.
-- `~/.config/opencode/`: opencode config + runtime — `AGENTS.md`/`opencode.jsonc`/`tui.json` durable, keep; `agents/`, `commands/`, `skills/` durable, keep; session/cache subpaths purge-candidate.
-- ChatGPT: no local runtime dir observed on this machine — n/a unless one appears.
-- Scratch/session dirs outside any repo: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**`, `~/AppData/Local/Temp/bunx-*`, `~/AppData/Local/Temp/opencode/**` — purge-candidate, session-scoped, never referenced after session ends.
-- Stray `*-state.json`, `*-state-tracking*.json`, `*.heartbeat.json`, `*.lock`, `*-sync.log` at a repo root outside a known runtime dir above: purge-candidate, treat as orphaned tool output.
+Runtime-state roots. Keep by default; purge only listed paths; unlisted = leave:
+- `.omc/` (any repo, `~/.omc`): purge `state/`, `plans/`, `handoffs/`, `research/`, `artifacts/`, `logs/`, `notepad.md`, `project-memory.json`. Keep `skills/`, `ultragoal/`.
+- `.omo/` (any repo, `~/.omo`): purge `agent/`, `senpi-task/`, `thread-tools/`, `lsp-daemon/*.stamp` (fd `--full-path`). Keep `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`.
+- `~/.codex/`: live state (`memories_*.sqlite`, `goals_*.sqlite`, `auth.json`, `config.toml`, `installation_id`); skip unless user names a file. `~/.local/share/omo-codex/`: inspect contents + mtime first, no default purge.
+- `~/.config/opencode/`: purge only dirs matching `fd -u -t d -g cache`; rest keep.
+- `~/.claude/`: purge only `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `*.tmp.*`. Ask first: `file-history/`, `backups/`. Never: `.credentials.json`, `~/.claude.json`, `settings*.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (vendored, incl. nested `.omc/`/`.claude/`). Per-repo `.claude/plans/`, `.claude/state/`, `.claude/worktrees/`: keep.
+- Scratch: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**` (exclude current session id on every fd call), `~/AppData/Local/Temp/{bunx-*,opencode}` (`--max-depth 1`, named patterns only, never sweep Temp), `~/.cache/opencode/`, `~/.cache/deep-research/`. Per session-id subdir: modified <24h = likely active, lead with leave-alone.
+- Repo-root strays outside roots above (`*-state.json`, `*-state-tracking*.json`, `*.heartbeat.json`, `*.lock`, `*-sync.log`): purge candidate.
+- Dev caches, locate via tool never hardcode: `npm config get cache`, `bun pm cache`, `pip cache dir`, `uv cache dir`. VSCode + Insiders (`~/AppData/Roaming/Code*/`): `Cache`, `GPUCache`, `CachedData`, `CachedProfilesData`, `CachedExtensionVSIXs`, `WebStorage`, `Partitions`, `logs`, `chatDictation*`, `agent-host`, `agentPlugins`; never `User/`, `extensions/`; `agentSessionData` ask first; close app first. JetBrains `AppData/Local/JetBrains/*/{Transient,Daemon}/`; never product version dir (LocalHistory).
+- Duplicate clone (same origin twice): discard only when `git status --short --ignored`, `git log --branches HEAD --not --remotes --oneline`, `git stash list` all empty. `.claude/worktrees/<n>` without `.git` and absent from `git worktree list` = orphan; list contents + mtime first.
+
+Purge procedure (Bash tool, git-bash):
+1. Enumerate per root with `fd -u` (dirs `-t d --prune`, files `-t f`); fd globs only, never shell globs.
+2. AskUserQuestion, one question per finding: delete / inspect first / narrower / leave. Deletion needs listed category AND explicit approval.
+3. Pre-size: `dust -P -d 0 <path>`.
+4. Delete: `fd -u -t f -t l . <path> -X rm --`, then `fd -u -t d . <path> | sort -r | while IFS= read -r d; do rmdir -- "$d"; done`, then `rmdir -- <path>`. Never `rm -rf` (guard hook blocks it; `-f` hides failures).
+5. "Device or resource busy": retry once, then report blocked.
+6. Post-size same command; removed root must error "No such file or directory".
+7. Manifest (deleted / blocked / left, pre + post sizes) outside `Temp/claude/**`; report its path.
 
 Never purge without listing exact paths + byte/file counts first (`auto_purge` governs timing and report format); `rm -rf` and other irreversible-destruction commands route through the user when the auto-mode classifier blocks them — hand back the exact command, don't retry via another tool.
 </ai_artifacts>

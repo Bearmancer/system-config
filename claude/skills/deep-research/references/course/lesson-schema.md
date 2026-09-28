@@ -25,15 +25,18 @@ writes the lesson HTML. Page structure, casing, and citation rendering rules:
 | `machinery`      | text   | yes      | §4 restricted HTML                                                                                                                         |
 | `sources`        | list   | yes      | `{label, url, note?}` — non-empty; every `url` starts `https://`; a `youtube.com`/`youtu.be` url refuses — a YouTube video is never a source |
 
-Derived by the stamp (never authored): page `<title>`, merged top nav
-(Home + Chapter Index + Glossary + Cast Map, Title Case,
-zero dupe links, below the H1 above the surtitle), surtitle (`Chapter N of
+Derived by the stamp (never authored): page `<title>`, the A-bar top bar
+(chapter title + index `<select>` carrying Home/Chapter Index/Glossary/Cast
+Map as static options, plus font and size `<select>`s), surtitle (`Chapter N of
 M` — no time range, no timestamp anywhere on the page), cast-table `(chapter N)`
 hrefs (resolved against sibling lesson files; whole §2 Cast block omitted when
 `cast: []`), prev/next links (from filename
 order; text `Previous: <target title>` read from the sibling YAML or H1), row
-id from the filename. No Sources block, no footer bibliography, no footer
-workspace line, no `<p class="meta">` — the stamp renders no separate citation list, no meta paragraph, and no footer
+id from the filename. Every stamp also refreshes `<workspace>/assets/course-index.js`
+(the chapter list `assets/shell.js` reads at runtime to populate the index
+select) and copies `assets/shell.js` into the workspace. No Sources block, no
+footer bibliography, no footer workspace line, no `<p class="meta">` — the
+stamp renders no separate citation list, no meta paragraph, and no footer
 text at all; the footer carries only the previous/next nav.
 
 **Citations are author-written inline, not stamp-derived.** Write the first
