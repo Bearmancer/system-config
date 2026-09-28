@@ -1,43 +1,54 @@
-# agents-config
+# system-config
 
-Agent-agnostic backup of this machine's local agent configuration. One repo, three homes:
+Runs this machine's daily jobs and backs up its AI agent config. One private repo, two Windows Scheduled Tasks.
 
-| Repo folder | Local home | What it is |
+## Repo boundaries
+
+| Repo | Owns | Knows nothing about |
 |---|---|---|
-| `claude/` | `~/.claude/` | Claude Code configuration |
-| `opencode/` | `~/.config/opencode/` | OpenCode configuration |
-| `omo/` | `~/.omo/` | oh-my-openagent (omo) plugin configuration |
-| `agents/` | `~/.agents/` | `npx skills add` install location (skills.sh CLI): canonical skill bundles + `.skill-lock.json` update lock |
+| `Toolbox` (`Dev\Toolbox`) | CLI commands; its `.env`, `state/toolbox.db`, `state/logs`; DB backup to Azure blob and dashboard redeploy inside `toolbox sync lastfm` / `toolbox sync youtube` | Scheduling, tasks, system-config |
+| `system-config` (this repo, private) | Both scheduled tasks, `install.ps1`, `run-sync.ps1`, `backup-agents.ps1`, agent config backup, foobar2000 mirror, the Claude hook | Toolbox internals. It only calls `toolbox sync lastfm` and `toolbox sync youtube` from PATH |
+| `bearmancer.github.io` | Built HTML of learning courses, published by the `learning-course` skill | Course sources (transient, not backed up anywhere) |
 
-## What is included
+`toolbox` on PATH resolves to `C:\Users\Lance\Dev\Toolbox\artifacts\publish\src\App\release\toolbox.exe`. This repo never builds or publishes Toolbox and never reads its `.env`.
 
-- Instruction files: `CLAUDE.md` (Claude), `AGENTS.md` (OpenCode), `omo.jsonc` (omo).
-- Tool config: `keybindings.json`, `opencode.jsonc`, `tui.json`.
-- User-authored skills for both agents (`claude/skills/`, `opencode/skills/`).
-- Custom agents and commands (`opencode/agents/`, `opencode/commands/`).
-- omo scripts (`omo/scripts/`).
-- omo authored/decision content with no other backup: research bundles
-  (`omo/ulw-research/`), teaching workspace admin files (`omo/teach/`), task plans
-  (`omo/plans/`), task notepads (`omo/notepads/`).
+## Scheduled tasks
 
-## What is excluded on purpose
+- **Daily sync** (09:00): `run-sync.ps1` — lastfm sync, youtube sync, agent config backup, foobar2000 mirror.
+- **Topgrade** (10:00): `topgrade --yes --no-retry`.
 
-Claude settings files, hooks, plugins and marketplaces, `node_modules`, caches, transcripts, session and project state, and claude.ai-synced skills. These are machine-managed or reinstallable; the repo stays configuration-only. Within `~/.omo`, `cache/` (yt-dlp downloads, re-fetchable) and `codegraph/` (index databases, rebuilt via `codegraph init`) stay excluded for the same reason — everything else under `~/.omo` that isn't machine-derived is now backed up (see above).
+Both registered by `install.ps1` (run once, elevated, by hand — this repo's scripts never register scheduled tasks themselves).
 
-## Backup mechanism
+## Agent config backup (`claude/`, `opencode/`, `omo/`, `agents/`)
 
-A weekly scheduled task (`AgentsConfigSync`, Sundays) runs `scripts/sync_agents_config.py`:
+`backup-agents.ps1` mirrors whitelisted local config into this repo via `robocopy`, then commits and pushes if anything changed.
 
-1. Mirrors the whitelisted local paths into a clone at `~/Dev/agents-config`. Copies only: local files are never moved, replaced, or symlinked.
-2. Commits and pushes to `Bearmancer/agents-config` when something changed.
-3. Appends a line to `~/Dev/agents-config-sync.log`.
+| Repo folder | Local home | Mode |
+|---|---|---|
+| `claude/` (CLAUDE.md, keybindings.json, settings.json) | `~/.claude/` | files |
+| `claude/skills/` | `~/.claude/skills/` | `/MIR /XJ /XD synced *-workspace` |
+| `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
+| `opencode/` (AGENTS.md, opencode.jsonc, tui.json) | `~/.config/opencode/` | files |
+| `opencode/agents/`, `opencode/commands/`, `opencode/skills/` | `~/.config/opencode/...` | `/MIR` |
+| `omo/omo.jsonc` | `~/.omo/omo.jsonc` | files |
+| `omo/scripts/`, `omo/plans/` | `~/.omo/scripts`, `~/.omo/plans` | `/MIR` |
+| `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
+| `agents/skills/` | `~/.agents/skills/` | `/MIR /XJ` |
+| `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 
-Run it manually any time:
+Excluded on purpose: plugin caches, sessions, credentials, `~/.omo/teach`, `ulw-research`, `notepads`, `cache`, `codegraph`. `settings.json` is dropped from a backup if it appears to hold a credential.
 
-```powershell
-python ~/Dev/agents-config/scripts/sync_agents_config.py
-```
+Sync direction is one-way: local machine → repo. Restore is a manual reverse copy — nothing here writes back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically.
 
-## Restore
+## Claude hook
 
-Copy each folder back to its local home: `claude/*` to `~/.claude/`, `opencode/*` to `~/.config/opencode/`, `omo/omo.jsonc` to `~/.omo/omo.jsonc`, `omo/scripts/*` to `~/.omo/scripts/`, `omo/ulw-research/*` to `~/.omo/ulw-research/`, `omo/teach/*` to `~/.omo/teach/`, `omo/plans/*` to `~/.omo/plans/`, `omo/notepads/*` to `~/.omo/notepads/`.
+A `PostToolUse` hook in `~/.claude/settings.json` (matcher `Write|Edit|MultiEdit`) starts `backup-agents.ps1` detached whenever an edit lands under `~/.claude/skills`, `~/.claude/agents`, `~/.claude/commands`, or `~/.claude/CLAUDE.md`. Edits made outside Claude are caught by the next Daily sync.
+
+## foobar2000 mirror
+
+One-way `robocopy /MIR` of `%APPDATA%\foobar2000-v2` to `D:\My Drive\foobar2000-v2`. No history of its own — Google Drive's 30-day file versions are the only history.
+
+## Setup
+
+1. Google Drive tray icon → gear → Preferences → gear → "Drive letter": set `D`.
+2. Run `install.ps1` elevated.
