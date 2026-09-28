@@ -200,7 +200,7 @@ def check_refresh_bar_idempotent():
     bar_issue = re.compile(r"^A-bar", re.I)
     for _ in range(2):
         proc = subprocess.run(
-            [sys.executable, str(STAMP), "--refresh-bar", str(work)],
+            ["uv", "run", str(STAMP), "--refresh-bar", str(work)],
             capture_output=True,
             text=True,
         )
