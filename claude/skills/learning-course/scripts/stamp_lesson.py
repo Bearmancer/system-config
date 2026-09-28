@@ -11,19 +11,21 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lesson_rules import (
+    ANCHOR,
+    SECTION_REF,
+    TAG_CODE,
+    TIMESTAMP as TS,
+    VERDICT,
+    BARE_URL as BARE,
+    YOUTUBE,
+    find_unsuperscripted_repeats,
+)
+
 SKILL = Path(__file__).resolve().parent.parent
 DEFAULT_STENCIL = SKILL / "assets" / "lesson.stencil.html"
 
-VERDICT = re.compile(
-    r"\b(confirmed|corrected|partially correct|wrong|unfindable|unverified|allegation)\b",
-    re.I,
-)
-TAG_CODE = re.compile(r"\[[A-Z]{1,3}\d+[a-z]?\]")
-BARE = re.compile(r"https?://\S+")
-TS = re.compile(r"\b\d{1,2}:\d{2}(?::\d{2})?\b")
-SECTION_REF = re.compile(r"(?:§|\bsections?\b)\s*(\d+)", re.I)
-ANCHOR = re.compile(r"<a\b.*?</a>", re.S | re.I)
-HREF = re.compile(r'href="([^"]+)"')
 BANNED = (
     "open threads",
     "quiz",
@@ -114,30 +116,6 @@ def chapter_sibling(lessons_dir, ref):
     return None
 
 
-SUP_WRAP = re.compile(r"<sup>\s*$")
-
-
-def check_citation_wrapping(*texts):
-    seen = set()
-    for text in texts:
-        for m in ANCHOR.finditer(text):
-            hrefs = HREF.findall(m.group(0))
-            if not hrefs:
-                continue
-            target = hrefs[0].split("#")[0]
-            if not target or target.startswith(("#", "mailto:", "data:")):
-                continue
-            if target in seen:
-                preceding = text[: m.start()]
-                if not SUP_WRAP.search(preceding):
-                    raise StampError(
-                        f"repeat citation not superscripted: {target} - "
-                        "every mention after the first must be <sup><a href=...>"
-                    )
-            else:
-                seen.add(target)
-
-
 def stamp(yaml_path, lessons_dir, stencil_path):
     name = yaml_path.name
     stem = yaml_path.stem
@@ -171,12 +149,18 @@ def stamp(yaml_path, lessons_dir, stencil_path):
     for s in sources:
         if not isinstance(s, dict) or not s.get("label") or not s.get("url"):
             raise StampError("sources: every entry needs label and url")
-        if re.search(r"youtube\.com|youtu\.be", s["url"], re.I):
+        if YOUTUBE.search(s["url"]):
             raise StampError(
                 "sources: a YouTube URL is not a source — cite the non-YouTube primary"
             )
 
-    check_citation_wrapping(data["narrative"], data["machinery"])
+    repeats = find_unsuperscripted_repeats(data["narrative"], data["machinery"])
+    if repeats:
+        target, _ = repeats[0]
+        raise StampError(
+            f"repeat citation not superscripted: {target} - "
+            "every mention after the first must be <sup><a href=...>"
+        )
 
     def scan(textval, what):
         low = textval.lower()
@@ -195,9 +179,10 @@ def stamp(yaml_path, lessons_dir, stencil_path):
             raise StampError(
                 f"timestamp in {what}: no timestamps anywhere on the page, not even the surtitle"
             )
-        for ref in SECTION_REF.findall(textval):
-            if not 1 <= int(ref) <= 4:
-                raise StampError(f"section ref {ref} in {what}: sections run 1-4")
+        for match in SECTION_REF.findall(textval):
+            for ref in re.findall(r"\d+", match):
+                if not 1 <= int(ref) <= 4:
+                    raise StampError(f"section ref {ref} in {what}: sections run 1-4")
 
     scan(data["lead"], "lead")
     scan(data["narrative"], "narrative")
@@ -269,10 +254,10 @@ def stamp(yaml_path, lessons_dir, stencil_path):
     prev_link = next_link = ""
     if idx > 0:
         p = order[idx - 1]
-        prev_link = f'    <a href="{p}">Previous: {html_mod.escape(sibling_title(lessons_dir, p))}</a>'
+        prev_link = f'<a href="{p}">Previous: {html_mod.escape(sibling_title(lessons_dir, p))}</a>'
     if idx < len(order) - 1:
         n = order[idx + 1]
-        next_link = f'    <a href="{n}">Next: {html_mod.escape(sibling_title(lessons_dir, n))}</a>'
+        next_link = f'<a href="{n}">Next: {html_mod.escape(sibling_title(lessons_dir, n))}</a>'
 
     try:
         chapters_total = int(data["chapters_total"])
@@ -292,8 +277,7 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         "LEAD": f"<p>{html_mod.escape(str(data['lead']))}</p>",
         "NARRATIVE": data["narrative"],
         "MACHINERY": data["machinery"],
-        "PREV_LINK": prev_link,
-        "NEXT_LINK": next_link,
+        "NAV_LINKS": " ".join(link for link in (prev_link, next_link) if link),
         "ROW_ID": rid,
     }
     rendered = stencil

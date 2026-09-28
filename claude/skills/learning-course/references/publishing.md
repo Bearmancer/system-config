@@ -36,7 +36,7 @@ of that holds. The publish script already probes the root index (retries
 8 x 15 s, warns on lag); per-page 200s are inside the verifier's download
 step — any non-200 fails the run.
 
-Gates apply by artifact: any SVG visual that changed (the cast map) also gets the geometry checker on its live copy; the timeline is HTML-flow, so the screenshot pass covers it when it changed. Per-chapter Sources blocks ride inside the lesson HTML, so they publish with the lesson; RESOURCES stays local (split-source retained until migration) and never publishes.
+Gates apply by artifact: any SVG visual that changed (the cast map) also gets the geometry checker on its live copy; the timeline is HTML-flow, so the screenshot pass covers it when it changed. Citations ride inline inside the lesson HTML, so they publish with the lesson; RESOURCES stays local (split-source retained until migration) and never publishes.
 
 Assets come back byte-identical to the local copies (`Get-FileHash` both sides). Pages legitimately differ from local in exactly one way — `.md` links are flattened to plain text — so expect zero `href="*.md"` live, a small size delta, and matching content otherwise; any further difference means investigate before reporting success. A `200` proves a page exists; the downloaded bytes prove the right page went out. Report the live URLs and the gate results in chat.
 

@@ -21,11 +21,11 @@ Table plus diagram both scope toward _this chapter alone_. That scope keeps dupl
 - Same hard rules as Part 1 (colour-only edges, clash-free geometry, direction-checked arrows) — the three hard rules apply here in full.
 - Canvas 700–950 wide, sized toward node count; cumulative-map size stays out of scope here.
 - A solo-narration chapter, or any chapter with `cast: []`, omits the whole §2 Cast block (table plus subgraph) with no renumbering; a solo-narration chapter with a cast list but no active ties carries a one-line coverage line in place of the subgraph, naming the chapter scope.
-- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citation hyperlinks live in the lesson narrative and its per-chapter Sources block; the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
+- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citations are inline-only in the lesson narrative (`references/page-design.md`); the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
 
 ## Part 1 — Roster-index (`reference/cast-map.html`)
 
-Full-course roster/index in table form, updated chapter by chapter. Readers follow a single chapter through its subgraph (Part 0); they come here for the whole picture, spelled out in words. The cumulative mega-SVG stands retired: the 71KB / 59-rect baseline taught that one huge cumulative diagram turns unreadable past a mid-size cast. Visual explanation lives in chapter subgraphs; cumulative state lives here as a table. Dry-run at cap 12 confirmed the split reads clean.
+Full-course roster/index in table form, updated chapter by chapter. Readers follow a single chapter through its subgraph (Part 0); they come here for the whole picture, spelled out in words. Cumulative mega-SVG retired — one huge cumulative diagram turns unreadable past a mid-size cast; visual explanation lives in chapter subgraphs, cumulative state lives here as a table.
 
 ### Three hard rules (hold for every subgraph; roster prose mirrors them in words)
 
@@ -56,7 +56,7 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 - Geometry arithmetic precedes writing: each segment gets computed against every box rectangle. Reroute around, or move boxes. One line-line crossing in differing colours reads acceptably; two plus calls for layout revision.
 - Draw edges as `<line>`, `<polyline>`, or `<path>` (M/L/H/V, absolute or relative) for checker visibility; reroute or move, then re-run.
 - Boxes hold separation. Containment serves group frames around members alone; all else counts as clash, flagged by the checker.
-- Figure wrapper for readable render: `<figure class="map">` plus page CSS `figure.map svg { width: 100%; height: auto; } @media (min-width: 1380px) { figure.map { width: 1260px; margin-left: calc(50% - 630px); } }`.
+- Figure wrapper for readable render: `<figure class="map">` — the sizing rule lives once in `assets/lesson.css` (`figure.map`/`figure.map svg`); never hand-inline it per page.
 - **Labels**: short labels placed in wedges between lines, clear of boxes and lines. Each edge carries a short label clear of boxes; diagonals rotate along the line (`transform="rotate(angle cx cy)"`). Explicit `font-size` plus `text-anchor` on all labels; the checker reads attributes, plus CSS stays secondary.
 - Coordinate plan stays consistent within a cluster so later chapters extend the layout.
 
@@ -65,7 +65,7 @@ Pick visually distinct colours per relation type — distinct in hue AND lightne
 1. H1 "Cast roster — as of chapter N"; short cross-link line (cast roster · glossary · chapter index, no lesson list). No kicker on reference pages.
 2. Roster — grouped prose list: every node, one to three lines, relations spelled out in words, each entry carrying its introduction chapter `(chN)` (absolute) plus an anchor link toward that chapter's lesson.
 3. Context section for parallels and offstage actors, with reason for table-only coverage.
-4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown.
+4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown. Render each row's colour with `<span class="swatch" style="background:#hex"></span>`, row text with `class="legend-row"` — both classes live in `assets/lesson.css`; never a per-row inline SVG marker or a hand-copied `<style>` block for this.
 
 ### Updating per chapter
 
@@ -96,4 +96,4 @@ A course workspace lacking `reference/timeline.html` gains a fresh build seeded 
   `msedge --headless=new --disable-gpu --hide-scrollbars --screenshot=out.png "--window-size=1500,2400" "file:///<path>"`
   then review that PNG (multimodal look serves) and fix weak reads. Three traps: window height at 2400 or below (Edge falls back toward a 756x488 default above it); always quote the `--window-size` value (unquoted inside a PowerShell loop it splits at the comma and drops); check PNG dimensions after capture — a 756x488 image means the flag dropped, and conclusions from it hold zero weight. Pages taller than one capture get banded screenshots through an iframe with a negative `top` offset.
 
-Why the gates hold: each caught a defect class the arithmetic and sibling checks missed — an eval run claimed edge clearance with three segments crossing boxes; two maps shipped arrowheads merged 5 px apart; two author captions overflowed their boxes; a lesson said "see section 4" where the fact-check box sat in section 6. Changed artifacts pass all gates each time; untouched files rest.
+Changed artifacts pass all gates each time; untouched files rest.

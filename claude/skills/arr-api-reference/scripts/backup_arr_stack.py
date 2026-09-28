@@ -10,7 +10,7 @@ from pathlib import Path
 
 import requests
 
-from arr_scripts import ArrApp, HOST, get_arr_api_key, get_sab_api_key
+from arr_scripts import ArrApp, arr_base_and_headers, sab_api
 
 GOOGLE_DRIVE_FS_EXE = Path(
     r"C:\Program Files\Google\Drive File Stream\130.0.2.0\GoogleDriveFS.exe"
@@ -31,17 +31,12 @@ def backup_arr_stack() -> list[Path]:
 
     date = datetime.now().strftime("%Y-%m-%d")
 
-    ports: dict[ArrApp, int] = {"Sonarr": 8989, "Radarr": 7878, "Prowlarr": 9696}
-    for app, port in ports.items():
-        key = get_arr_api_key(app)
-        ver = "v1" if app == "Prowlarr" else "v3"
-        headers = {"X-Api-Key": key}
+    apps: list[ArrApp] = ["Sonarr", "Radarr", "Prowlarr"]
+    for app in apps:
+        base, headers = arr_base_and_headers(app)
         triggered_at = time.time()
         resp = requests.post(
-            f"http://{HOST}:{port}/api/{ver}/command",
-            headers=headers,
-            json={"name": "Backup"},
-            timeout=10,
+            f"{base}/command", headers=headers, json={"name": "Backup"}, timeout=10
         )
         resp.raise_for_status()
         command_id = resp.json()["id"]
@@ -50,7 +45,7 @@ def backup_arr_stack() -> list[Path]:
         for _ in range(30):
             time.sleep(1)
             status_resp = requests.get(
-                f"http://{HOST}:{port}/api/{ver}/command/{command_id}", headers=headers, timeout=10
+                f"{base}/command/{command_id}", headers=headers, timeout=10
             )
             status_resp.raise_for_status()
             status = status_resp.json().get("status")
@@ -78,19 +73,8 @@ def backup_arr_stack() -> list[Path]:
             )
         shutil.copy2(newest, configs / f"{app} - {date}.zip")
 
-    sab_key = get_sab_api_key()
-    resp = requests.get(
-        f"http://{HOST}:8080/api",
-        params={
-            "mode": "config",
-            "name": "create_backup",
-            "apikey": sab_key,
-            "output": "json",
-        },
-        timeout=10,
-    )
-    resp.raise_for_status()
-    sab_backup_path = Path(resp.json()["value"]["message"])
+    sab_resp = sab_api(mode="config", name="create_backup")
+    sab_backup_path = Path(sab_resp["value"]["message"])
     shutil.copy2(sab_backup_path, configs / f"SABnzbd - {date}.zip")
 
     qbt_dir = Path.home() / "AppData" / "Roaming" / "qBittorrent"

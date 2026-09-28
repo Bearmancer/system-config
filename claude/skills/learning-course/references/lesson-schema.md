@@ -1,11 +1,11 @@
-# Lesson content schema (YAML) — W2b
+# Lesson content schema (YAML)
 
 One YAML per lesson: `<workspace>/lessons/<NN>-ch<K>-<slug>.yaml`. The stamp
 (`scripts/stamp_lesson.py`) reads schema + `assets/lesson.stencil.html` and
-writes the lesson HTML. Plain text fields are HTML-escaped; only `narrative`
-and `machinery` accept a restricted HTML subset: `<p> <blockquote> <ul> <ol>
-
-<li> <strong> <em> <a>`.
+writes the lesson HTML. Page structure, casing, and citation rendering rules:
+`references/page-design.md`. Plain text fields are HTML-escaped; only
+`narrative` and `machinery` accept a restricted HTML subset: `<p> <blockquote>
+<ul> <ol> <li> <strong> <em> <a>`.
 
 ## Fields
 
@@ -20,7 +20,7 @@ and `machinery` accept a restricted HTML subset: `<p> <blockquote> <ul> <ol>
 | `transcript`     | string | yes      | slice filename under `reference/transcripts/` — admin-only: correction sourcing; the stamp never renders a link to it                       |
 | `lead`           | string | yes      | §1 paragraph (plain text)                                                                                                                  |
 | `cast`           | list   | explicit  | `{name, role, ref?}` — `ref` = chapter number for the `(chapter N)` link. Absent/`null`/`""` refuses; explicit `cast: []` omits §2 Cast (no humans this chapter) |
-| `subgraph`       | bool   | no       | default false; true renders a placeholder comment slot                                                                                     |
+| `subgraph`       | string | no       | inline `<svg>…</svg>` fragment (must start `<svg`, end `</svg>`, no external `href`/`src`); omitted/blank renders no subgraph; refuses with `cast: []` (no subgraph without a cast)                                                                                     |
 | `narrative`      | text   | yes      | §3 restricted HTML; MUST carry ≥2 verdict words (confirmed / corrected / partially correct / wrong / unfindable / unverified / allegation) |
 | `machinery`      | text   | yes      | §4 restricted HTML                                                                                                                         |
 | `sources`        | list   | yes      | `{label, url, note?}` — non-empty; every `url` starts `https://`; a `youtube.com`/`youtu.be` url refuses — a YouTube video is never a source |
@@ -89,7 +89,7 @@ sources:
     note: "accessed 2026-09-21"
 ```
 
-## Corrupt variants (W4 fixtures — each MUST fail with its named rule)
+## Corrupt variants (fixtures — each MUST fail with its named rule)
 
 | Fixture                         | Mutation                                                  | Expected rule              |
 | ------------------------------- | --------------------------------------------------------- | -------------------------- |
