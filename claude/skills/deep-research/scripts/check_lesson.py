@@ -372,7 +372,7 @@ def check(path):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="Check any course page against the workspace rules by path: lessons/ gets full lesson rules (merged nav, inline verdicts + inline-only citations with superscript repeats, no bare tag codes, no Sources/References block, no fact-check boxes or Open Threads, no all-caps runs, hyperlinked sources, links/assets); workspace index gets index rules (chapter links, no Status/Spine/Live/Pages/How-works/Mission wording, nav-only footer); reference/ gets header/footer rules (no kicker, short cross-link meta, no Links section, no how-read box, nav-only footer); timeline adds text-only rules (no kind tags, no legend). Fragments, slices, and stencil copies report SKIP."
+        description="Check any course page against the workspace rules by path: lessons/ gets full lesson rules (A-bar top bar with title/index-select/font-select/size-select, inline verdicts + inline-only citations with superscript repeats, no bare tag codes, no Sources/References block, no fact-check boxes or Open Threads, no all-caps runs, hyperlinked sources, links/assets, footer holds previous/next only); workspace index gets index rules (chapter links, no Status/Spine/Live/Pages/How-works/Mission wording, nav-only footer); reference/ gets header/footer rules (no kicker, short cross-link meta, no Links section, no how-read box, nav-only footer); timeline adds text-only rules (no kind tags, no legend). Fragments, slices, and stencil copies report SKIP."
     )
     ap.add_argument("files", nargs="+", help="course HTML file(s)")
     args = ap.parse_args()
