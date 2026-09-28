@@ -67,11 +67,12 @@
 
 	document.querySelectorAll("[data-index]").forEach(function (sel) {
 		var current = sel.dataset.current;
+		var base = sel.dataset.base || "";
 		var chapters = window.COURSE_INDEX || [];
 		var frag = document.createDocumentFragment();
 		chapters.forEach(function (c) {
 			var o = document.createElement("option");
-			o.value = c.href;
+			o.value = base + c.href;
 			o.textContent = c.label;
 			if (c.id === current) o.selected = true;
 			frag.appendChild(o);

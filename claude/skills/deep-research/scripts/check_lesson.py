@@ -170,7 +170,7 @@ def check(path):
     if ptype in ("lesson", "reference", "timeline") and "lesson-footer" not in low:
         issues.append("missing lesson footer")
 
-    if ptype == "lesson":
+    if ptype in ("lesson", "reference", "timeline", "index"):
         bars = re.findall(
             r'<header[^>]*class="[^"]*A-bar[^"]*"[^>]*>(.*?)</header>', html, re.S | re.I
         )
@@ -182,21 +182,6 @@ def check(path):
         idx_sel = re.search(r"<select[^>]*data-index[^>]*>(.*?)</select>", bar, re.S | re.I)
         if not idx_sel:
             issues.append("A-bar: missing chapter index select (data-index)")
-        else:
-            opts = OPTION_VALUE.findall(idx_sel.group(1))
-            for label, needle in (
-                ("Home", "../../index.html"),
-                ("Chapter Index", "#ch"),
-                ("Glossary", "glossary"),
-                ("Cast Map", "cast-map"),
-            ):
-                hits = [o for o in opts if needle in o]
-                if not hits:
-                    issues.append(f"A-bar: index select missing {label} option")
-                elif len(hits) > 1:
-                    issues.append(
-                        f"A-bar: index select repeats {label} option {len(hits)}x"
-                    )
         font_sel = re.search(
             r"<select[^>]*data-font-select[^>]*>(.*?)</select>", bar, re.S | re.I
         )
@@ -217,6 +202,24 @@ def check(path):
             issues.append("A-bar: missing <script src=...course-index.js> (chapter list feed)")
         if not re.search(r'<script[^>]*src="[^"]*shell\.js"', html):
             issues.append("A-bar: missing <script src=...shell.js> (bar behaviour)")
+
+    if ptype == "lesson":
+        idx_sel = re.search(r"<select[^>]*data-index[^>]*>(.*?)</select>", bar, re.S | re.I)
+        if idx_sel:
+            opts = OPTION_VALUE.findall(idx_sel.group(1))
+            for label, needle in (
+                ("Home", "../../index.html"),
+                ("Chapter Index", "#ch"),
+                ("Glossary", "glossary"),
+                ("Cast Map", "cast-map"),
+            ):
+                hits = [o for o in opts if needle in o]
+                if not hits:
+                    issues.append(f"A-bar: index select missing {label} option")
+                elif len(hits) > 1:
+                    issues.append(
+                        f"A-bar: index select repeats {label} option {len(hits)}x"
+                    )
         if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
             issues.append(
                 "meta row present: lessons carry no <p class=meta>; index/font/size live in the A-bar"
