@@ -67,7 +67,7 @@ if (Test-Path $settingsDest) {
 }
 
 if ($failed) {
-    Write-Error 'One or more robocopy operations failed (exit code >= 8).'
+    Write-Warning 'One or more robocopy operations failed (exit code >= 8).'
     exit 1
 }
 

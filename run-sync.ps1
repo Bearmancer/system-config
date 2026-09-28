@@ -9,8 +9,12 @@ toolbox sync youtube
 if (-not $?) { $failures.Add('toolbox sync youtube') }
 
 # 2. Agent config backup
-& "$PSScriptRoot\backup-agents.ps1"
-if ($LASTEXITCODE -ne 0) { $failures.Add('backup-agents.ps1') }
+try {
+    & "$PSScriptRoot\backup-agents.ps1"
+    if ($LASTEXITCODE -ne 0) { throw "backup-agents.ps1 exited $LASTEXITCODE" }
+} catch {
+    $failures.Add('backup-agents.ps1')
+}
 
 # 3. foobar2000 mirror via rclone (remote: gdrive)
 rclone sync "$env:APPDATA\foobar2000-v2" gdrive:foobar2000-v2 --fast-list
