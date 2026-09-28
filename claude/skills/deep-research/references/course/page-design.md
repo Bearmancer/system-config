@@ -6,9 +6,9 @@ One visual language, one owner table, for every page this skill produces: lesson
 
 Fixed by `assets/lesson.stencil.html`; identical on every lesson page.
 
-1. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
-2. **H1** — chapter title.
-3. **Merged nav** — Home · Chapter Index · Glossary · Cast Map in one `<nav class="top-nav">`, Title Case, directly under the H1. Zero dupe links, no meta paragraph anywhere.
+1. **Top bar** — sticky `<header class="A-bar">` above everything: chapter title, a chapter-index `<select>` (every chapter of this course plus Home, Chapter Index, Glossary, Cast Map), a font `<select>`, a size `<select>`. Chapter options are injected at runtime by `assets/shell.js` from `assets/course-index.js`; the four utility options are static markup.
+2. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
+3. **H1** — chapter title.
 4. **Surtitle** — `Chapter N of M`. No time range, no timestamp anywhere on the page.
 5. **Numbered sections** — 1 Summary, [2 Cast only when `cast` is an explicit non-empty list,] 3 Narrative, 4 Machinery. Fixed Title Case headings, no renumbering when §2 omitted.
 6. **Footer** — previous/next lesson links only. No home, no glossary, no chapter index, no Sources/bibliography block, no workspace line.
