@@ -1,6 +1,6 @@
 # Source adapter — books, long articles, papers, lecture notes
 
-The course engine is source-agnostic (see SKILL.md); this adapter covers text sources. The one structural difference from video: "chapters" come from a table of contents or headings (timestamps serve that role for video), and the risk class in the text is OCR/conversion damage (ASR garble is the video-side equivalent).
+The course engine is source-agnostic (see `references/modes/course.md`); this adapter covers text sources. The one structural difference from video: "chapters" come from a table of contents or headings (timestamps serve that role for video), and the risk class in the text is OCR/conversion damage (ASR garble is the video-side equivalent).
 
 ## Acquire
 
@@ -19,12 +19,12 @@ The course engine is source-agnostic (see SKILL.md); this adapter covers text so
 
 ## Apparatus mining (mandatory)
 
-- Bibliography, footnotes, endnotes, reference list = the source's own citations → inline citation entries (hyperlinked to the actual page, no bare URLs — `references/page-design.md`) and the **first** verification targets. RESOURCES stays split-source retained until migration.
+- Bibliography, footnotes, endnotes, reference list = the source's own citations → inline citation entries (hyperlinked to the actual page, no bare URLs — `references/course/page-design.md`) and the **first** verification targets.
 - Preface/introduction usually states method and sources; the abstract does it for papers.
 - Editions and translations matter: record translator and edition in NOTES.md, and name the translation when quoting.
 - Integrate: corrections land as inline verdicts in the narrative beside the quoted wording, cited inline; unfindables read "the source's account, unverified" in narrative and land in RESOURCES Gaps too.
 
-## Corrections pass (mandatory — SKILL.md Step 3)
+## Corrections pass (mandatory — `references/modes/course.md` Step 3)
 
 OCR and bad conversions garble text the way ASR garbles speech: split words, wrong characters (rn/m, 1/l), mangled names and numbers, hyphenation across line breaks. The pass:
 

@@ -21,7 +21,7 @@ Table plus diagram both scope toward _this chapter alone_. That scope keeps dupl
 - Same hard rules as Part 1 (colour-only edges, clash-free geometry, direction-checked arrows) — the three hard rules apply here in full.
 - Canvas 700–950 wide, sized toward node count; cumulative-map size stays out of scope here.
 - A solo-narration chapter, or any chapter with `cast: []`, omits the whole §2 Cast block (table plus subgraph) with no renumbering; a solo-narration chapter with a cast list but no active ties carries a one-line coverage line in place of the subgraph, naming the chapter scope.
-- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citations are inline-only in the lesson narrative (`references/page-design.md`); the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
+- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citations are inline-only in the lesson narrative (`references/course/page-design.md`); the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
 
 ## Part 1 — Roster-index (`reference/cast-map.html`)
 

@@ -1,6 +1,6 @@
 # Source adapter — YouTube (and other chaptered video)
 
-The course engine is source-agnostic (see SKILL.md); this adapter covers everything YouTube-specific: fetching, slicing, description mining, caption quirks, and the corrections that auto-captions need. YouTube/transcript slices stay secondary unless user explicitly names video as course source; every chapter needs >= 1 non-YouTube primary.
+The course engine is source-agnostic (see `references/modes/course.md`); this adapter covers everything YouTube-specific: fetching, slicing, description mining, caption quirks, and the corrections that auto-captions need. YouTube/transcript slices stay secondary unless user explicitly names video as course source; every chapter needs >= 1 non-YouTube primary.
 
 ## Fetch metadata + captions
 
@@ -41,12 +41,12 @@ Batch extraction is safe here because the ranges come from metadata; it is _teac
 
 The description is where creators put their citations, sources, corrections, and chapter lists. Read it every time, before verification:
 
-- Extract every link/source it cites into inline citations (annotated hyperlink to the actual page, no bare URLs — `references/page-design.md`) and treat them as the **first** verification targets — what the creator leaned on is the fastest route to the record. RESOURCES stays split-source retained until migration.
+- Extract every link/source it cites into inline citations (annotated hyperlink to the actual page, no bare URLs — `references/course/page-design.md`) and treat them as the **first** verification targets — what the creator leaned on is the fastest route to the record.
 - Watch for errata ("correction:", pinned notes, "edit:"): those override the spoken claim; state the correction as an inline verdict in the narrative beside the quoted wording, citing both claim and erratum inline.
 - Sponsors and advocacy: label them as such inline so the course keeps promotional framing visible as promotion.
 - The description's chapter list is also a second witness for `chapters[]`.
 
-## Machine-caption correction (mandatory pass — SKILL.md Step 3)
+## Machine-caption correction (mandatory pass — `references/modes/course.md` Step 3)
 
 Auto-captions garble proper nouns ("Yeager" for Yager, "Sobcheck" for Sobchak), numbers, and technical terms. The pass:
 

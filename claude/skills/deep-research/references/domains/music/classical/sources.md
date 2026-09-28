@@ -1,7 +1,5 @@
 # Classical: source order
 
-Read `../rules.md` first.
-
 1. Grove / Oxford reference: composer dates, era, output.
 2. Publishers (Universal, Bärenreiter, Schott, Eschig): scoring, catalog scope.
 3. Orchestra program notes (LSO, Berlin Phil, Concertgebouw, LA Phil): context.

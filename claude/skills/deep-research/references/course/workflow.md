@@ -7,7 +7,7 @@
 3. Layout:
    ```
    ~/Dev/deep-research/<slug>/
-    ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/standing
+   ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/standing
    ├── RESOURCES.md          # tiered sources, every entry annotated, + Gaps
    ├── assets/lesson.css     # copy from this skill's assets/ (font-pinned)
    ├── index.html            # course home — chapters + reference pages, linked from the root hub
@@ -43,7 +43,7 @@
 
 ## The treatise (per-chapter lesson structure)
 
-Page structure, casing, citation, timestamp, and stamp-contract rules: `references/page-design.md` (the single style + contract doc). Content-field contract: `references/lesson-schema.md`.
+Page structure, casing, citation, timestamp, and stamp-contract rules: `references/course/page-design.md` (the single style + contract doc). Content-field contract: `references/course/lesson-schema.md`.
 
 ## The stencil (stamp-only lesson writing)
 
@@ -58,9 +58,7 @@ Lessons are stamped, never hand-authored. Shape lives in `assets/lesson.stencil.
   must pass the gate; every corrupt variant must fail with its rule tag) and
   `python scripts/fixtures/stencil/run_parity_test.py` (stamp and publisher
   derive identical row ids — drift alarm).
-- Migration: option **B, on-touch** — new lessons stamp; an existing lesson is
-  restamped when it is next edited. No wholesale backfill until a 3-lesson
-  pilot yields a per-lesson cost.
+- Migration: courses moved from `~/.omo/teach` are restamped wholesale with the current shell; lesson prose keeps its voice, only the shell changes.
 
 
 ## Glossary conventions (glossary stays distinct from the cast map)
@@ -80,7 +78,7 @@ Write one when the position advances with new insight, a verification norm emerg
 - **Subagent-first.** Chapter production and the verification passes run as subagent tasks; the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
 - **Stay at the user's chapter position.** Teach chapter-and-earlier facts only — as internal discipline; the page itself never narrates the boundary.
 
-Gates, chat/report etiquette, publish, and auto-open: SKILL.md Steps 6-9 and `references/publishing.md`.
+Gates, chat/report etiquette, publish, and auto-open: `references/modes/course.md` Steps 6-9 and `references/course/publishing.md`.
 
 ## Sandbox / eval runs
 

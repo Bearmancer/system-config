@@ -1,6 +1,6 @@
 # Popular (rock, pop, jazz, electronic): source order
 
-Read `../rules.md` first. Research and verification only; no recommend mode.
+Research and verification only; no recommend mode.
 
 1. MusicBrainz + Discogs: releases, sessions, credits, catalog numbers (`../rules.md` "Discography").
 2. Label sites + liner notes (scans, label catalog pages): credits, dates, tie-breaks.

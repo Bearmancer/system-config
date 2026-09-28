@@ -1,6 +1,6 @@
 # Page design — style + stamp contract
 
-One visual language, one owner table, for every page this skill produces: lesson pages, `reference/*.html`, publish-generated hub/index pages. Content-field contract (what goes in the YAML): `references/lesson-schema.md`.
+One visual language, one owner table, for every page this skill produces: lesson pages, `reference/*.html`, publish-generated hub/index pages. Content-field contract (what goes in the YAML): `references/course/lesson-schema.md`.
 
 ## Page structure (top to bottom)
 
@@ -121,6 +121,6 @@ A contract test asserts the stamp's row-id capture and `publish_teach.py`'s `get
 
 ## Cross-references
 
-- Content field contract (YAML fields, fail-closed rules): `references/lesson-schema.md`.
+- Content field contract (YAML fields, fail-closed rules): `references/course/lesson-schema.md`.
 - Canonical stylesheet: `assets/lesson.css` — copy into each workspace verbatim, never restyle per-page.
-- Publish/hub page generation: `references/publishing.md`.
+- Publish/hub page generation: `references/course/publishing.md`.
