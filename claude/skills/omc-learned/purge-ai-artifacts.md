@@ -80,6 +80,7 @@ triggers:
 - Don't conflate AI-artifact scope with general OS/app temp cleanup. Generic `AppData/Local/Temp` entries not matching a named pattern from step 1 are out of scope.
 - A tool being installed (`~/.bun`, an opencode install dir) is a different decision than its cache being stale. Uninstalling live software is a separate, explicit ask, not implied by a cache purge.
 - Path examples in this file (specific repo names, specific size numbers) are illustrative from past runs, not fixed facts — always verify current state, don't assume a past finding still applies.
+- `Temp/claude/**`'s live-scratchpad exclusion (step 1) means other sessions' idle scratchpad files have no open file handle and won't trigger step 7's busy check — the 24h-modified rule from step 4 is what protects them, not process detection. Apply that rule per session-id subdirectory under this root, the same as for `scratch-workspaces/**`.
 
 ## Verification evidence
 - Steps 5 and 8 are not optional. Every deleted root needs both numbers in the final manifest, side by side.
