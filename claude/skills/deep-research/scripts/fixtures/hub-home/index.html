@@ -7,6 +7,37 @@
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
+  <header class="A-bar">
+    <div class="row">
+      <span class="title">Index</span>
+      <select aria-label="Chapter index" data-index>
+        <option value="ws-a/index.html">Ws A</option>
+        <option value="ws-b/index.html">Ws B</option>
+      </select>
+      <div class="type-panel">
+        <select aria-label="Font" data-font-select>
+          <option>Literata</option>
+          <option>Source Serif 4</option>
+          <option>Newsreader</option>
+          <option>Crimson Pro</option>
+          <option>EB Garamond</option>
+          <option>Merriweather</option>
+          <option>Lora</option>
+          <option>Libre Baskerville</option>
+          <option>Atkinson Hyperlegible</option>
+          <option>Inter</option>
+          <option>IBM Plex Sans</option>
+          <option selected>Charter</option>
+        </select>
+        <select aria-label="Size" data-size-select>
+          <option>S</option>
+          <option selected>M</option>
+          <option>L</option>
+          <option>XL</option>
+        </select>
+      </div>
+    </div>
+  </header>
   <h1>Index</h1>
   <p class="meta">Published from the local teaching workspaces · pick a book/video, then its chapters</p>
   <table class="hub-table">
@@ -14,5 +45,7 @@
     <tr><td><a href="ws-a/index.html">Ws A</a></td><td>2</td></tr>
     <tr><td><a href="ws-b/index.html">Ws B</a></td><td>1</td></tr>
   </table>
+  <script src="assets/course-index.js"></script>
+  <script src="assets/shell.js"></script>
 </body>
 </html>
