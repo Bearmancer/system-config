@@ -213,6 +213,10 @@ def check(path):
             sizes = [s.strip() for s in re.findall(r"<option[^>]*>([^<]+)", size_sel.group(1))]
             if sorted(sizes) != ["L", "M", "S", "XL"]:
                 issues.append(f"A-bar: size menu must offer exactly S/M/L/XL, found {sizes}")
+        if not re.search(r'<script[^>]*src="[^"]*course-index\.js"', html):
+            issues.append("A-bar: missing <script src=...course-index.js> (chapter list feed)")
+        if not re.search(r'<script[^>]*src="[^"]*shell\.js"', html):
+            issues.append("A-bar: missing <script src=...shell.js> (bar behaviour)")
         if re.search(r'<p[^>]*class="[^"]*meta[^"]*"', html, re.I):
             issues.append(
                 "meta row present: lessons carry no <p class=meta>; index/font/size live in the A-bar"
