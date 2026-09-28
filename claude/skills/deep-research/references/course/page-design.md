@@ -17,15 +17,17 @@ Reference and hub/index pages reuse the same typography/color tokens but drop le
 
 ## Typography & color tokens
 
-Canonical values live in `assets/lesson.css`'s `:root` block — named here by what they're *for*:
+Canonical values live in `assets/lesson.css`'s `:root` block — the single home for every font-size and font-family; no other file hardcodes one.
 
 - `--ink` / `--ink-soft` — body text / de-emphasized text (surtitle, footer, nav).
-- `--paper` — page background.
-- `--rule` — hairline borders (headings' top rule, table borders, footer top rule).
+- `--paper` / `--panel` — page background / A-bar background.
+- `--rule` — hairline borders (headings' top rule, table borders, footer top rule, A-bar bottom border).
 - `--accent` — links, kicker, table `.when` column. The one accent color on the page.
 - `--mono` — the rare monospace run (timeline `.when`, inline code-like tokens).
+- `--size-base` — the one size knob; every other size is a `calc()` ratio of it: `--size-kicker`, `--size-h1`, `--size-h2`, `--size-h3`, `--size-body`, `--size-lead`, `--size-table`, `--size-nav`, `--size-footer`, `--size-code`. `html[data-size="S|M|L|XL"]` sets `--size-base`; the A-bar's size `<select>` writes that attribute.
+- `--font-body` — set at runtime by the A-bar's font `<select>` (`assets/shell.js`), persisted to `localStorage`. Roster of 12, lazy-loaded from Google Fonts on selection (Charter is the one system font, no network fetch): Literata, Source Serif 4, Newsreader, Crimson Pro, EB Garamond, Merriweather, Lora, Libre Baskerville, Atkinson Hyperlegible, Inter, IBM Plex Sans, Charter.
 
-Serif body text (`"Sitka Text", Constantia, Charter, Georgia`), sans-serif for small UI text (kicker, surtitle, top-nav, footer). No third typeface.
+Sans-serif for small UI text (kicker, surtitle, A-bar, footer). No third typeface.
 
 ## Casing
 
