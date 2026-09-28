@@ -25,8 +25,9 @@ triggers:
    - `~/.local/share/omo-codex/` — inspect contents and modification time before proposing any deletion; no default purge list established yet.
    - `~/.config/opencode/` — keep `AGENTS.md`, `opencode.jsonc`, `tui.json`, `agents/`, `commands/`, `skills/`. Purge only named cache dirs found by `fd -u -t d -g 'cache' ~/.config/opencode` — don't purge anything not matched.
    - `~/.claude/` — keep everything except the explicit purge list below. This dir holds live credentials and this skill's own file; treat as keep-by-default, not purge-by-default.
-     - Explicit purge list only: `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `file-history/`, `backups/`, `*.tmp.*` (fd glob).
-     - Never touch: `.credentials.json`, `.claude.json`, `settings.json`, `settings.local.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (third-party/vendored — `plugins/cache/**` and `plugins/marketplaces/**` especially).
+     - Explicit purge list only: `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `*.tmp.*` (fd glob).
+     - Ask-first, not auto-purge: `file-history/` (Claude Code's own rewind/checkpoint history — user data, not cache), `backups/` (the only recovery path if config is corrupted).
+     - Never touch: `.credentials.json` (in `~/.claude/`), `.claude.json` (in `~` itself, one level above `~/.claude/` — not covered by this root's fd calls anyway, listed here as a reminder it's off-limits), `settings.json`, `settings.local.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (third-party/vendored — `plugins/cache/**` and `plugins/marketplaces/**` especially).
    - `~/AppData/Roaming/Claude/scratch-workspaces/**` — see step 4's age rule before deleting any entry.
    - `~/AppData/Local/Temp/claude/**` — Claude Code's own scratchpad root, usually the biggest win. Exclude the current session's own scratchpad dir (Inputs) — it's live. Write step 9's manifest before touching this root, or to a path outside it, so the manifest itself isn't deleted mid-run.
    - `~/AppData/Local/Temp/` — match only named patterns (`bunx-*`, `opencode`), via `fd -u -g '<pattern>' --max-depth 1`. Never sweep this dir generally (see Pitfalls).
