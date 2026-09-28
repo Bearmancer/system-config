@@ -12,8 +12,8 @@ triggers:
 
 ## Inputs
 - Home root (`~`), read access to `AppData/Local`, `AppData/Roaming`, `Dev/`.
-- `fd`, `dust`, `git` on PATH. Run steps 5-8 in the Bash tool (git-bash) — they use bash-only syntax (`while IFS= read -r`, `rm.exe`/`rmdir.exe` on PATH), not PowerShell.
-- Bypass mode or explicit per-item user approval (see step 4) — either is enough. Large deletes are blocked by the destructive-action classifier otherwise.
+- `fd`, `dust`, `git` on PATH. Run every step in the Bash tool (git-bash), not PowerShell — steps 5-8 use bash-only syntax (`while IFS= read -r`, `rm`/`rmdir` from `/usr/bin`), and step 1/2 rely on `~` shell expansion.
+- Explicit per-item user approval (step 4) is always required before any delete. Bypass mode only lifts the destructive-action classifier's block on running the delete command — it does not replace step 4's approval.
 - Current session's own scratchpad path, to exclude from step 1's Temp/claude sweep (see step 1 and Pitfalls).
 
 ## Ordered steps
