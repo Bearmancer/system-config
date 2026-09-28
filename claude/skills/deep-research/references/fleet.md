@@ -29,7 +29,7 @@ Not wired (pool entries only in `switch_api_key.py`; wire before use): Dappier, 
 | Tavily | `tavily` | `TAVILY_API_KEY` (in URL) | `tavily` |
 | Exa | `exa` | none: bare remote URL | `exa` |
 | ScrapeGraphAI | `scrapegraph` | `SGAI_API_KEY` (mapped from `SCRAPEGRAPH_API_KEY`) | `scrapegraph` |
-| Bright Data | `brightdata` | `BRIGHTDATA_API_KEY` | `brightdata` |
+| Bright Data | `brightdata` | `BRIGHTDATA_API_KEY` (passed as `API_TOKEN`) | `brightdata` |
 
 - Exa rotation = no-op: `exa` entry carries no `{env:EXA_API_KEY}`; rotating changes nothing until config references the var.
 - ScrapeGraphAI starts without key, fails per call: silent dead server = missing key.
