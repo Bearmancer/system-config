@@ -46,9 +46,9 @@ A `PostToolUse` hook in `~/.claude/settings.json` (matcher `Write|Edit|MultiEdit
 
 ## foobar2000 mirror
 
-One-way `robocopy /MIR` of `%APPDATA%\foobar2000-v2` to `D:\My Drive\foobar2000-v2`. No history of its own — Google Drive's 30-day file versions are the only history.
+One-way `rclone sync` of `%APPDATA%\foobar2000-v2` to the `gdrive` remote's `foobar2000-v2` folder. rclone keeps no version history of its own on the remote side — Google Drive's own 30-day file versions are the only history.
 
 ## Setup
 
-1. Google Drive tray icon → gear → Preferences → gear → "Drive letter": set `D`.
+1. `rclone config` — create a remote named `gdrive` (Google Drive backend, interactive OAuth).
 2. Run `install.ps1` elevated.
