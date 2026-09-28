@@ -28,15 +28,15 @@ if p:
 
 o = check(os.path.join(BASE, "fail-old.html"))
 low = " | ".join(o).lower()
-if not ("home" in low and ("index.html" in low)):
-    fails.append(f"fail-old.html expected missing-home issue, got {o}")
-if not ("ch" in low and "back" in low or "chapter" in low and "index.html" in low):
-    fails.append(f"fail-old.html expected missing-backlink issue, got {o}")
+if not ("a-bar" in low and "top bar" in low):
+    fails.append(f"fail-old.html expected missing top-bar issue, got {o}")
+if not ("footer" in low and "glossary" in low):
+    fails.append(f"fail-old.html expected footer nav-link leak issue, got {o}")
 
 b = check(os.path.join(BASE, "fail-budget.html"))
 blow = " | ".join(b).lower()
-if not ("repeated" in blow and "../index.html" in blow):
-    fails.append(f"fail-budget.html expected dup issue for ../index.html, got {b}")
+if not ("a-bar" in blow and "repeats" in blow and "home" in blow):
+    fails.append(f"fail-budget.html expected repeated Home option issue, got {b}")
 
 rp = check(os.path.join(BASE, "pass-real-footer.html"))
 if rp:
