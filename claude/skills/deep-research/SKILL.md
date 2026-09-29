@@ -9,6 +9,17 @@ Caveman lite for this skill's output and every subagent it launches: no filler, 
 
 Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if defined, else the host's general subagent; one self-contained worker per chapter/axis (prompt names deliverable, scope, verify step, stop condition, output schema); no launcher, or subagent lacks web tools -> run inline.
 
+## Workflow
+
+Every run, stages in order:
+
+1. Classify: pick mode via "Mode router". Router covers every input shape.
+2. Intake: before any research, ask at least one AskUserQuestion batch covering scope, depth and output (up to 4 questions each, recommended option first). Skip only for quick work = plain fetch or single-claim check.
+3. Research level: pick tier 0/1/2 ("Tier ladder"); state it in one line.
+4. Execute: the mode's steps.
+5. Publish, no asking: course results go to GitHub Pages (bearmancer.github.io) via `references/course/publishing.md`; terminal shows short answer + live link. Verdict, recommend: Pages target, no mechanism (Bearmancer/system-config#45); full result in terminal.
+6. Gaps: workflow needs something missing (mechanism, script, tool, config) -> open GitHub issue on Bearmancer/system-config; no workaround.
+
 ## Reader profile
 
 - Reader is in India. Default scope global, never US/West by default.
@@ -25,17 +36,17 @@ Self-contained answer printed to terminal (e.g. statistics fact-check):
 
 ## Fast path: every web call
 
-1. Pick server by capability: `references/fleet.md`. Name row used.
+1. Pick server by capability: `references/fleet.md`. Name row used. Route MCP first, then vendor CLI, then POST script.
 2. Bot-blocked (401/403/429/503, challenge page, empty body): walk chain in order, stop at first fetch holding target content. Credit/auth failure on a step: walk accounts of that server ("Key rotation") before leaving it. Blocked: next step.
-   1. Tavily `tavily-extract`.
+   1. Tavily `tavily_extract`.
    2. Firecrawl `firecrawl_scrape` `proxy: "auto"`, `maxAge: 0`.
    3. Exa `web_fetch_exa` (cached copy); `SOURCE_NOT_AVAILABLE` -> next.
    4. ScrapeGraph `scrape` `stealth: true` (+5 credits).
-   5. Apify `apify/rag-web-browser`, or site Actor via `search-actors` + `call-actor`.
-   6. AgentQL (disabled by default; enable when reached).
-   7. Firefox DevTools MCP, or `@playwright/cli` (`goto` -> `snapshot` -> `find`).
-   8. Bright Data Web Unlocker (`brightdata`); 502 `reject_block` -> retry once.
-   9. Browserbase (disabled by default; paid tier for CAPTCHA).
+   5. Apify tool `apify--rag-web-browser` (Actor ID `apify/rag-web-browser`), or site Actor via `search-actors` + `call-actor`.
+   6. AgentQL `extract-web-data`. OmO sidecar: disabled; enable when reached.
+   7. Firefox DevTools MCP, or Playwright MCP `browser_navigate` -> `browser_snapshot`.
+   8. Bright Data Web Unlocker: MCP `scrape_as_markdown`, then CLI `brightdata scrape`; 502 `reject_block` -> retry once.
+   9. Browserbase (paid tier for CAPTCHA). OmO sidecar: disabled; enable when reached.
    Keep internal log `URL | status | method` per attempt. All steps and accounts exhausted: URL blocked, never guess content; flag or drop the claim it carried.
 3. Credit/quota/auth failure: "Key rotation" below; error codes per service: `references/fleet.md`.
 
@@ -49,9 +60,11 @@ One skill, every research ask. Match first row that fits.
 |---|---|---|---|
 | Named source: URL, book, article, paper, lecture, video; any verb incl. "fact-check" | "<youtube url> - explain", "go through The Prince" | course | `references/modes/course.md` |
 | Topic to learn, no source | "teach me the Thirty Years' War" | course; syllabus researched, user approves before build | `references/modes/course.md` |
-| Classical works wanted | "Soviet symphonies from early 20th century" | recommend | `references/domains/music/classical/recommend.md` |
-| Question, claim, claim list, URL list | "How true is it Putin is fucked?" | verdict | "Verdict mode" below |
+| Existing course workspace | "continue the Prince course" | course | `references/modes/course.md` |
+| Classical works wanted | "Soviet symphonies from early 20th century" | recommend; published (Workflow stage 5) | `references/domains/music/classical/recommend.md` |
+| Question, claim, claim list, URL list | "How true is it Putin is fucked?" | verdict; published (Workflow stage 5) | "Verdict mode" below |
 | Plain fetch/scrape, no research ask | "grab this page" | fast path only | none |
+| Fits no row above | mixed or unclear ask | AskUserQuestion: which mode | none |
 
 Course mode step files, read when course.md step names them: `references/course/workflow.md`, `lesson-schema.md`, `page-design.md`, `diagram-spec.md`, `publishing.md`, `references/course/sources/youtube.md`, `text-sources.md`.
 
@@ -63,7 +76,7 @@ Domain: before first search read `references/domains/<domain>/sources.md` + `exc
 
 1. Operationalize: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes (e.g. war outcome, economy, regime stability, succession); state axes chosen in one line. Done when every axis has a binary observable.
 2. Pick domain; run passes (below). Done when every sub-claim has a verdict or pass cap hit.
-3. Reply: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence.
+3. Compose: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence. Publish per Workflow stage 5.
 
 ## Research rules: always on
 
