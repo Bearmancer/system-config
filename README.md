@@ -27,7 +27,7 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | Repo folder | Local home | Mode |
 |---|---|---|
 | `claude/` (CLAUDE.md, keybindings.json, settings.json) | `~/.claude/` | files |
-| `claude/skills/` | `~/.claude/skills/` | `/MIR /XJ /XD synced *-workspace` |
+| `claude/skills/` | `~/.claude/skills/` | `/MIR /XJ /XD synced *-workspace __pycache__ .pytest_cache` |
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
 | `opencode/` (AGENTS.md, opencode.json, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
@@ -36,6 +36,8 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 
 Excluded on purpose: plugin caches, sessions, credentials, `secrets/`, `auth.json`, `service.json`, `~/.omo/teach`, `ulw-research`, `notepads`, `cache`, `codegraph`. `claude/settings.json` and `omo/settings.json` are dropped from a backup if it appears to hold a credential.
+
+A whitelisted source that is absent is removed from its mirror path; nothing else in the repo is touched.
 
 Sync direction is one-way: local machine → repo. Restore is a manual reverse copy — nothing here writes back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically.
 

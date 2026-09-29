@@ -25,7 +25,10 @@ function Backup-AgentConfig {
 
     function Copy-Mirror {
         param([string]$Source, [string]$Dest, [string[]]$ExtraFlags = @())
-        if (-not (Test-Path $Source)) { return }
+        if (-not (Test-Path $Source)) {
+            Remove-Item $Dest -Recurse -Force -ErrorAction SilentlyContinue
+            return
+        }
         New-Item -ItemType Directory -Force -Path $Dest | Out-Null
         robocopy $Source $Dest @robocopyFlags @ExtraFlags | Out-Null
         if ($LASTEXITCODE -ge 8) { $script:failed = $true }
@@ -33,17 +36,20 @@ function Backup-AgentConfig {
 
     function Copy-Files {
         param([string]$SourceDir, [string[]]$Files, [string]$Dest)
-        if (-not (Test-Path $SourceDir)) { return }
-        New-Item -ItemType Directory -Force -Path $Dest | Out-Null
         foreach ($f in $Files) {
             $src = Join-Path $SourceDir $f
-            if (Test-Path $src) { Copy-Item $src -Destination $Dest -Force }
+            if (Test-Path $src) {
+                New-Item -ItemType Directory -Force -Path $Dest | Out-Null
+                Copy-Item $src -Destination $Dest -Force
+            } else {
+                Remove-Item (Join-Path $Dest $f) -Force -ErrorAction SilentlyContinue
+            }
         }
     }
 
     # claude/
     Copy-Files -SourceDir "$HomeRoot\.claude" -Files @('CLAUDE.md', 'keybindings.json', 'settings.json') -Dest "$repoRoot\claude"
-    Copy-Mirror -Source "$HomeRoot\.claude\skills" -Dest "$repoRoot\claude\skills" -ExtraFlags @('/MIR', '/XJ', '/XD', 'synced', '*-workspace')
+    Copy-Mirror -Source "$HomeRoot\.claude\skills" -Dest "$repoRoot\claude\skills" -ExtraFlags @('/MIR', '/XJ', '/XD', 'synced', '*-workspace', '__pycache__', '.pytest_cache')
     Copy-Mirror -Source "$HomeRoot\.claude\agents" -Dest "$repoRoot\claude\agents" -ExtraFlags @('/MIR')
     Copy-Mirror -Source "$HomeRoot\.claude\commands" -Dest "$repoRoot\claude\commands" -ExtraFlags @('/MIR')
 
