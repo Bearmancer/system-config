@@ -48,6 +48,9 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | Claude plugins | `claude plugin install <plugin>@<marketplace>` for each entry in `enabledPlugins` of the restored `claude/settings.json` |
 | `.skill-lock.json` | Copy `agents/.skill-lock.json` back to `~/.agents/.skill-lock.json` |
 | Slim skills (vendored oh-my-opencode-slim bundle) | OpenCode installs the `oh-my-opencode-slim` npm plugin listed (unpinned) in the restored `opencode.json` |
+| OpenCode credentials (`auth.json`, `mcp-auth.json` in `~/.local/share/opencode`) | `opencode auth login` for providers, `opencode mcp auth` for OAuth MCP servers (both verified in `--help`) |
+| OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
+| Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
 | Secrets | `uv run ~/.claude/skills/deep-research/scripts/switch_api_key.py --service all --materialize`, from the key pools in `~/.secrets/.env` |
 | Repos | `gh repo clone <owner>/<repo>`, e.g. `gh repo clone Bearmancer/deep-research ~/Dev/deep-research` |
 | Scheduled Tasks | `install.ps1`, elevated |
