@@ -4,7 +4,7 @@ description: This skill should be used when the user asks to "wire Sonarr to SAB
 version: 0.3.0
 ---
 
-Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby (plus Bazarr) through their HTTP APIs or on-disk locations — no UI click needed. General HTTP/API debugging, PowerShell foot-guns, and web research route to `shell-gotchas` and `rigorous-research`/`web-data-apis` instead.
+Configure Sonarr/Radarr/Prowlarr/SABnzbd/Emby (plus Bazarr) through their HTTP APIs or on-disk locations — no UI click needed. General HTTP/API debugging, PowerShell foot-guns, and web research route to `shell-gotchas` and `deep-research` instead.
 
 ## Core pattern: schema-then-submit
 
