@@ -118,6 +118,12 @@ function Invoke-DailySync {
 
     if (-not (Sync-Foobar2000)) { $failures.Add('foobar2000 (rclone)') }
 
+    opencode service status
+    if ($LASTEXITCODE -ne 0) {
+        opencode service start
+        if ($LASTEXITCODE -ne 0) { $failures.Add('opencode service') }
+    }
+
     if ($failures.Count -gt 0) {
         Read-Host "FAILED: $($failures -join ', '). Press Enter to close"
         return $false
@@ -146,14 +152,27 @@ function Install-TopgradeTask {
     Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
 
+function Install-OpenCodeServiceTask {
+    $pwshPath = (Get-Command pwsh).Source
+    $user = "$env:COMPUTERNAME\$env:USERNAME"
+    $principal = New-ScheduledTaskPrincipal -UserId $user -LogonType Interactive -RunLevel Highest
+    $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
+    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "opencode service start"'
+    $trigger = New-ScheduledTaskTrigger -AtLogOn -User $user
+    Register-ScheduledTask -TaskName 'OpenCode service' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
+}
+
 function Install-SystemConfigTasks {
     param([string]$RepoRoot = $PSScriptRoot)
     Install-DailySyncTask -RepoRoot $RepoRoot
     Install-TopgradeTask
-    if (-not (Get-ScheduledTask -TaskName 'Daily sync', 'Topgrade' -ErrorAction SilentlyContinue)) {
-        throw 'Registration reported no error but neither task exists — verify manually.'
+    Install-OpenCodeServiceTask
+    $expected = 'Daily sync', 'Topgrade', 'OpenCode service'
+    $found = @(Get-ScheduledTask -TaskName $expected -ErrorAction SilentlyContinue).Count
+    if ($found -ne $expected.Count) {
+        throw "Registration reported no error but only $found of $($expected.Count) tasks exist — verify manually."
     }
-    Write-Host 'Registered: Daily sync (09:00), Topgrade (10:00).'
+    Write-Host 'Registered: Daily sync (09:00), Topgrade (10:00), OpenCode service (at logon).'
 }
 
-Export-ModuleMember -Function Sync-Lastfm, Sync-Youtube, Backup-AgentConfig, Sync-Foobar2000, Invoke-DailySync, Install-DailySyncTask, Install-TopgradeTask, Install-SystemConfigTasks
+Export-ModuleMember -Function Sync-Lastfm, Sync-Youtube, Backup-AgentConfig, Sync-Foobar2000, Invoke-DailySync, Install-DailySyncTask, Install-TopgradeTask, Install-OpenCodeServiceTask, Install-SystemConfigTasks
