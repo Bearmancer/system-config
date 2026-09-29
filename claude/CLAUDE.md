@@ -165,7 +165,7 @@ Task done: auto-purge artifacts created, not deliverables: state tracking, temp 
 </auto_purge>
 
 <model_tier_default>
-Delegated execution and review default `sonnet`. `haiku`: lookups, search, quick reads. `opus`: one-time architect/plan pass only (design, decompose, decide approach) — never review, never authoring/execution. `fable`/above: only on explicit ask.
+Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegated agents. `haiku`: lookups, search, quick reads. `opus`: reviews + one-time architect/plan pass (design, decompose, decide approach) only. `fable`/above: only on explicit ask.
 </model_tier_default>
 
 <terminal_input_format>
