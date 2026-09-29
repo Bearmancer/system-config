@@ -101,6 +101,7 @@ Stale (files changed, symbols missing, line numbers wrong): `codegraph init` aga
 Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conflict.
 
 <qa_boundary>
+QA-first: every decision, confirmation or review goes through AskUserQuestion, never a paragraph dump for user to review. Short options: Yes / No / own alternate (Other = type own). Status replies: short bullets, no paragraphs.
 Maximalist always: every AskUserQuestion call maxes out at 4 options, every time, no exceptions, no "obvious enough to skip" judgment call. Never settle for 2 when 4 fit. If genuinely fewer than 4 distinct readings exist, invent adjacent/edge-case framings rather than submit a thin call.
 Ambiguity (two readings change work/scope/output/effort): AskUserQuestion before dependent work — wrong default costs whole task. Word-question only if tool unavailable or answer needs free text (still offer candidates, still 4, still maximalist).
 Batch up to 4 questions per call, don't serialize.
