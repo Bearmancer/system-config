@@ -9,7 +9,7 @@ $sources = @(
     '.claude\CLAUDE.md', '.claude\settings.json',
     '.claude\skills\a\SKILL.md', '.claude\skills\a\__pycache__\m.pyc', '.claude\skills\a\.pytest_cache\c',
     '.claude\skills\synced\x.md', '.claude\agents\a.md', '.claude\commands\c.md',
-    '.config\opencode\opencode.jsonc', '.config\opencode\tui.json', '.config\opencode\AGENTS.md',
+    '.config\opencode\opencode.jsonc', '.config\opencode\oh-my-opencode-slim.jsonc', '.config\opencode\tui.json', '.config\opencode\AGENTS.md',
     '.config\opencode\agents\a.md',
     '.config\opencode\secrets\key.txt', '.config\opencode\auth.json', '.config\opencode\service.json',
     '.config\opencode\skills\s.md',
@@ -21,7 +21,7 @@ $expected = @(
     'claude/CLAUDE.md', 'claude/agents/a.md', 'claude/commands/c.md',
     'claude/settings.json', 'claude/skills/a/SKILL.md',
     'omo/settings.json',
-    'opencode/AGENTS.md', 'opencode/agents/a.md', 'opencode/opencode.jsonc', 'opencode/tui.json'
+    'opencode/AGENTS.md', 'opencode/agents/a.md', 'opencode/oh-my-opencode-slim.jsonc', 'opencode/opencode.jsonc', 'opencode/tui.json'
 ) | Sort-Object
 
 try {
