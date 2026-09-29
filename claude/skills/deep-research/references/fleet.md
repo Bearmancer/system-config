@@ -1,6 +1,6 @@
 # Fleet: pick server by capability
 
-Wired in OpenCode (`~/.config/opencode/opencode.json` `mcp.servers`) and, for OmO, in the skill sidecar `mcp.json` (all except ScrapeGraph and Bright Data; see SKILL.md Key rotation step 5). Other hosts expose whatever MCP servers they carry; same rows apply by capability.
+Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`) and, for OmO, in the skill sidecar `mcp.json` (all except ScrapeGraph and Bright Data; see SKILL.md Key rotation step 5). Other hosts expose whatever MCP servers they carry; same rows apply by capability.
 
 | Server | Use when |
 |---|---|
