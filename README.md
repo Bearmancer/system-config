@@ -29,7 +29,7 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `claude/` (CLAUDE.md, keybindings.json, settings.json) | `~/.claude/` | files |
 | `claude/skills/` | `~/.claude/skills/` | `/MIR /XJ /XD synced *-workspace __pycache__ .pytest_cache` |
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
-| `opencode/` (AGENTS.md, opencode.json, tui.json) | `~/.config/opencode/` | files |
+| `opencode/` (AGENTS.md, opencode.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
 | `omo/settings.json` | `~/.omo/agent/settings.json` | files (credential-guarded) |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
@@ -49,7 +49,7 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 |---|---|
 | Claude plugins | `claude plugin install <plugin>@<marketplace>` for each entry in `enabledPlugins` of the restored `claude/settings.json` |
 | `.skill-lock.json` | Copy `agents/.skill-lock.json` back to `~/.agents/.skill-lock.json` |
-| Slim skills (vendored oh-my-opencode-slim bundle) | OpenCode installs the `oh-my-opencode-slim` npm plugin listed (unpinned) in the restored `opencode.json`; the researcher-subagent delegation was verified against `2.2.25` (`.claude/docs/research/researcher-subagent-mcp.md`) |
+| Slim skills (vendored oh-my-opencode-slim bundle) | OpenCode installs the `oh-my-opencode-slim` npm plugin listed (unpinned) in the restored `opencode.jsonc`; the researcher-subagent delegation was verified against `2.2.25` (`.claude/docs/research/researcher-subagent-mcp.md`) |
 | OpenCode credentials (`auth.json`, `mcp-auth.json` in `~/.local/share/opencode`) | `opencode auth login` for providers, `opencode mcp auth` for OAuth MCP servers (both verified in `--help`) |
 | OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
 | Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
