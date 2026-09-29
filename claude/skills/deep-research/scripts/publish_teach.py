@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import re
 import shutil
 import subprocess
+import sys
 import urllib.request
 import urllib.error
 from datetime import datetime
@@ -17,7 +19,12 @@ CHAPTER_NUM_PATTERN = re.compile(r"(?i)ch(?:apter)?\.?\s*0*(\d+)")
 LESSON_PATH_PATTERN = re.compile(r"(?i)^[^/]+/lessons/")
 REFERENCE_PATH_PATTERN = re.compile(r"(?i)^[^/]+/reference/")
 
-CANONICAL_CSS = Path(__file__).resolve().parent.parent / "assets" / "lesson.css"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from lesson_rules import bar_scripts, render_bar
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
+CANONICAL_CSS = ASSETS / "lesson.css"
+SHELL_JS = ASSETS / "shell.js"
 
 
 def title_case(s: str) -> str:
@@ -59,8 +66,9 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
     published: list[dict[str, str]] = []
     for ws in sorted(p for p in source.iterdir() if p.is_dir()):
         dest = staging / ws.name
-        dest.mkdir(parents=True, exist_ok=True)
-        shutil.copytree(ws, dest, dirs_exist_ok=True)
+        if dest.exists():
+            shutil.rmtree(dest)
+        shutil.copytree(ws, dest)
 
         for f in list(dest.rglob("*")):
             if not f.is_file():
@@ -70,6 +78,13 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
                 f.unlink()
 
         remove_empty_dirs(dest)
+
+        if any(dest.rglob("*.html")):
+            (dest / "assets").mkdir(exist_ok=True)
+            shutil.copyfile(SHELL_JS, dest / "assets" / "shell.js")
+            feed = dest / "assets" / "course-index.js"
+            if not feed.exists():
+                feed.write_text("window.COURSE_INDEX = [];\n", encoding="utf-8")
 
         for html in sorted(dest.rglob("*.html")):
             text = html.read_text(encoding="utf-8")
@@ -84,7 +99,7 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
     return published
 
 
-def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str) -> str:
+def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str, bar: str) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,6 +109,7 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str) -> str:
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
+{bar}
   <p class="home-link"><a href="../index.html">Home</a></p>
   <p class="kicker">Course Home</p>
   <h1>{ws_title}</h1>
@@ -105,11 +121,13 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str) -> str:
   <ul>
 {ref_rows}
   </ul>
+{bar_scripts("assets/")}
 </body>
 </html>"""
 
 
 def build_top_index_html(rows: str, generated_at: str) -> str:
+    bar = render_bar("Index", [])
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -119,12 +137,14 @@ def build_top_index_html(rows: str, generated_at: str) -> str:
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
+{bar}
   <h1>Index</h1>
   <p class="meta">Published from the local course workspaces · {generated_at} · pick a book/video, then its chapters</p>
   <table class="hub-table">
     <tr><th>Book / Video</th><th>Chapters</th></tr>
 {rows}
   </table>
+{bar_scripts("assets/")}
 </body>
 </html>"""
 
@@ -132,7 +152,6 @@ def build_top_index_html(rows: str, generated_at: str) -> str:
 def build_hub_rows(
     source: Path, staging: Path, published: list[dict[str, str]]
 ) -> list[dict[str, object]]:
-    hub_rows: list[dict[str, object]] = []
     for ws in sorted(p for p in source.iterdir() if p.is_dir()):
         ws_pages = [p for p in published if p["workspace"] == ws.name]
         if not ws_pages:
@@ -143,7 +162,6 @@ def build_hub_rows(
 
         lesson_pages = [p for p in ws_pages if LESSON_PATH_PATTERN.match(p["path"])]
         ref_pages = [p for p in ws_pages if REFERENCE_PATH_PATTERN.match(p["path"])]
-        chapter_count = len(lesson_pages)
 
         lesson_rows_list: list[str] = []
         for i, p in enumerate(
@@ -169,13 +187,23 @@ def build_hub_rows(
             ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list)
         )
         (dest / "index.html").write_text(home_html, encoding="utf-8")
-        home_rel_from_root = f"{ws.name}/index.html"
 
-        hub_rows.append(
-            {"title": ws_title, "chapters": chapter_count, "link": home_rel_from_root}
-        )
+    return course_rows(staging)
 
-    return hub_rows
+
+def course_rows(staging: Path) -> list[dict[str, object]]:
+    return [
+        {
+            "title": d.name.replace("-", " ").title(),
+            "chapters": len(list((d / "lessons").glob("*.html"))),
+            "link": f"{d.name}/index.html",
+        }
+        for d in sorted(staging.iterdir())
+        if d.is_dir()
+        and not d.name.startswith(".")
+        and d.name != "assets"
+        and (d / "index.html").is_file()
+    ]
 
 
 def run_checked(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
@@ -309,7 +337,9 @@ def publish(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-name", default="bearmancer.github.io")
-    parser.add_argument("--source", type=Path, default=Path.home() / "Dev" / "deep-research")
+    parser.add_argument(
+        "--source", type=Path, default=Path.home() / "Dev" / "deep-research"
+    )
     parser.add_argument(
         "--staging",
         type=Path,
@@ -318,35 +348,45 @@ def main() -> None:
     parser.add_argument(
         "--commit", default=f"Publish courses {datetime.now():%Y-%m-%d %H:%M}"
     )
+    parser.add_argument("--no-push", action="store_true")
     args = parser.parse_args()
 
     staging: Path = args.staging
     source: Path = args.source
 
-    if not (staging / ".git").exists() and run_checked(
-        ["gh", "repo", "view", args.repo_name], Path.home()
-    ).returncode == 0:
+    if (
+        not (staging / ".git").exists()
+        and run_checked(["gh", "repo", "view", args.repo_name], Path.home()).returncode
+        == 0
+    ):
         # A fresh `git init` here would later push non-fast-forward against the live site.
-        subprocess.run(["gh", "repo", "clone", args.repo_name, str(staging)], check=True)
+        subprocess.run(
+            ["gh", "repo", "clone", args.repo_name, str(staging)], check=True
+        )
     staging.mkdir(parents=True, exist_ok=True)
 
     print(f"== staging: {staging}")
-    for item in staging.iterdir():
-        if item.name == ".git":
-            continue
-        if item.is_dir():
-            shutil.rmtree(item)
-        else:
-            item.unlink()
-
     published = process_workspaces(source, staging)
 
     (staging / ".nojekyll").touch()
 
     (staging / "assets").mkdir(exist_ok=True)
     shutil.copyfile(CANONICAL_CSS, staging / "assets" / "lesson.css")
+    shutil.copyfile(SHELL_JS, staging / "assets" / "shell.js")
 
     hub_rows = build_hub_rows(source, staging, published)
+
+    feed = [
+        {
+            "id": Path(str(h["link"])).parent.name,
+            "label": title_case(str(h["title"])),
+            "href": h["link"],
+        }
+        for h in hub_rows
+    ]
+    (staging / "assets" / "course-index.js").write_text(
+        "window.COURSE_INDEX = " + json.dumps(feed) + ";\n", encoding="utf-8"
+    )
 
     rows = "\n".join(
         f'    <tr><td><a href="{h["link"]}">{title_case(str(h["title"]))}</a></td><td>{h["chapters"]}</td></tr>'
@@ -355,6 +395,11 @@ def main() -> None:
     top_index = build_top_index_html(rows, f"{datetime.now():%Y-%m-%d %H:%M}")
     (staging / "index.html").write_text(top_index, encoding="utf-8")
 
+    if args.no_push:
+        print(
+            f"== --no-push: {len(hub_rows)} courses in hub, {len(published)} pages from source"
+        )
+        return
     publish(staging, args.repo_name, args.commit, len(published))
 
 

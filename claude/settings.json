@@ -10,6 +10,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "opus",
   "hooks": {
     "PostToolUse": [
       {
@@ -23,7 +24,6 @@
       }
     ]
   },
-  "model": "sonnet",
   "worktree": {
     "baseRef": "head"
   },
@@ -39,7 +39,10 @@
     "mattpocock-skills@mattpocock": true,
     "firefox-devtools-mcp@firefox-devtools-plugins": false,
     "azure@azure-skills": false,
-    "dotnet-claude-kit@dotnet-claude-kit": true
+    "dotnet-claude-kit@dotnet-claude-kit": false,
+    "agents-md@builtin": false,
+    "telemetry@builtin": false,
+    "plugin-dev@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -88,6 +91,12 @@
   "feedbackDrafts": "quiet",
   "modelSettings": {
     "claude-sonnet-5": {
+      "effortLevel": "medium"
+    },
+    "claude-sonnet-5-5": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5-5": {
       "effortLevel": "medium"
     }
   },
