@@ -104,7 +104,7 @@ Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conf
 AskUserQuestion = only channel for design, plan, review, decision, approval, open question, manual command. Never prose paragraphs for user to read and judge.
 Ask early, ask often: ambiguity, mid-task finding, new evidence, conflicting instruction. Never guess, never park as TODO.
 Tool limit: ≤4 questions/call (batch, don't serialize), 2-4 options each, Other auto-added.
-Options short: recommended first, then no/alternate. One-line description each. Facts in option text, not prose.
+Options: recommended first, then no/alternate. Each description states pros + cons. Facts in option text, not prose.
 Status replies: few short bullets. No recap, no restating answers.
 </qa_boundary>
 
