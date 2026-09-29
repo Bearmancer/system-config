@@ -5,18 +5,39 @@ description: "One-stop research engine + web-data fleet router. Consult before a
 
 # Deep research
 
-Harness-agnostic: OpenCode first, Claude Code works too. Subagent = runtime's own (Claude Task tool, slim `@librarian`/`@fixer`); subagent lacks web tools: run pass inline.
+Caveman lite for this skill's output and every subagent it launches: no filler, hedging or pleasantries; complete sentences and technical terms kept. Applies on every host.
+
+Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if defined, else the host's general subagent; one self-contained worker per chapter/axis (prompt names deliverable, scope, verify step, stop condition, output schema); no launcher, or subagent lacks web tools -> run inline.
+
+## Reader profile
+
+- Reader is in India. Default scope global, never US/West by default.
+- Region-varying fact: give global picture, include India alongside. India = one included lens, not the frame. TB statistics: global burden + India figures, not US data.
+- Prices only when topic already involves cost: in ₹, original currency beside it if source differs. No pricing section otherwise.
+- No other India rules: no spelling/unit/date rules, no forced Indian examples.
+
+## Terminal answer format
+
+Self-contained answer printed to terminal (e.g. statistics fact-check):
+- Short heading per part; one-line bottom line first; then grouped sections.
+- Blank line between sections; bold key number or verdict per group; sources as short final list.
+- Never one flat bullet list without headings and spacing.
 
 ## Fast path: every web call
 
 1. Pick server by capability: `references/fleet.md`. Name row used.
-2. Bot-blocked (401/403/429/503, challenge page, empty body): escalate in order, stop at first fetch holding target content:
-   1. `firecrawl_scrape` `proxy: "auto"`, `maxAge: 0`.
-   2. ScrapeGraph scrape `stealth: true` (+5 credits).
-   3. Firefox DevTools MCP, or `@playwright/cli` (`goto` -> `snapshot` -> `find`): real-browser fingerprint.
-   4. Bright Data Web Unlocker (`brightdata` MCP; 5k free req/month).
-   All four fail: report URL blocked, never guess content.
-3. Credit/quota failure: "Key failover" below.
+2. Bot-blocked (401/403/429/503, challenge page, empty body): walk chain in order, stop at first fetch holding target content. Credit/auth failure on a step: walk accounts of that server ("Key rotation") before leaving it. Blocked: next step.
+   1. Tavily `tavily-extract`.
+   2. Firecrawl `firecrawl_scrape` `proxy: "auto"`, `maxAge: 0`.
+   3. Exa `web_fetch_exa` (cached copy); `SOURCE_NOT_AVAILABLE` -> next.
+   4. ScrapeGraph `scrape` `stealth: true` (+5 credits).
+   5. Apify `apify/rag-web-browser`, or site Actor via `search-actors` + `call-actor`.
+   6. AgentQL (disabled by default; enable when reached).
+   7. Firefox DevTools MCP, or `@playwright/cli` (`goto` -> `snapshot` -> `find`).
+   8. Bright Data Web Unlocker (`brightdata`); 502 `reject_block` -> retry once.
+   9. Browserbase (disabled by default; paid tier for CAPTCHA).
+   Keep internal log `URL | status | method` per attempt. All steps and accounts exhausted: URL blocked, never guess content; flag or drop the claim it carried.
+3. Credit/quota/auth failure: "Key rotation" below; error codes per service: `references/fleet.md`.
 
 Plain fetch, no research asked: stop after fast path.
 
@@ -58,7 +79,7 @@ Domain: before first search read `references/domains/<domain>/sources.md` + `exc
 ## Tier ladder
 
 - Tier 0 cheap: cached search + highlights, score > 0.7, dedupe canonical URL, wiki paired with second source.
-- Tier 1 grounded: search then extract chosen URLs, `maxAge: 0` on stale only, full markdown, query-reranked.
+- Tier 1 grounded: search then extract chosen URLs, `maxAge: 0` on stale only, complete markdown, query-reranked.
 - Tier 2 contested: 2+ independent domains + primary source + counter-search + `observed_at`/`valid_at`; code-verify behaviour claims; unresolved or refuted claims go to annex, never synthesis.
 
 ## Passes
@@ -84,20 +105,21 @@ Map before crawl, explicit limit. No `raw_content` at scale. No summary request 
 
 Every URL emitted to user or written to file (citations, links, issue/PR bodies, lessons). Exempt: placeholders (`<owner>`, `XXXX`, `/example`), localhost/private IP, MCP endpoints, URLs inside shell commands; script skips these itself.
 
-1. Run `python <skill>/scripts/check_urls.py <url>...` or `-f <file>`. Only final `200 OK` passes.
-2. `BLOCKED` or `JS?`: re-check via fast-path bot-block chain; page must load and hold cited claim.
+1. Run `uv run <skill>/scripts/check_urls.py <url>...` or `-f <file>`. Only final `200 OK` passes.
+2. `BLOCKED` or `JS?`: re-check via fast-path chain; page must load and hold cited claim.
 3. `BROKEN` (4xx/5xx, soft-404, deep link redirected to root): find correct URL, re-audit; else drop link, mark `[link unverified]`.
-4. Report per URL: `URL | status | method | pass`.
+4. Audit log stays internal; never print a URL table. Failure only: unverifiable claim flagged or dropped.
 
-## Key failover: single home
+## Key rotation: single home
 
 Account pools live in `~/.secrets/.env`. Never read that file by any means, not even for variable names. `scripts/switch_api_key.py` is its only reader; it prints account names + sha256 fingerprints only.
 
-Trigger: credit/quota/payment/auth failure (Tavily usage limit, Firecrawl 402, Exa credits exhausted, key 401s after working). Plain rate limit: retry once first.
+Trigger: credit/quota/payment/auth failure per `references/fleet.md` table (e.g. Firecrawl 402, ScrapeGraph `insufficient_credits`, key 401 after working). Plain rate limit (429): retry once first.
 
-1. Run `python <skill>/scripts/switch_api_key.py --service <name> --next`.
-2. Relay its output line verbatim (already masked).
-3. Tell user: restart OpenCode; MCP servers read env at startup only.
-4. HARD STOP. No retry on old key, no further tool calls this session.
+1. Run `uv run <skill>/scripts/switch_api_key.py --service <name> --next`. It writes the active key to `~/.config/opencode/secrets/<name>`. OpenCode: config watcher reconnects only that MCP server in about 1 s, no restart (verified: system-config `.claude/docs/research/secrets-subdir-reload.md`). OmO: restart needed.
+2. Relay its output line verbatim (already masked). Its watcher-reconnect wording holds on OpenCode only; on OmO say restart needed.
+3. Retry the failed call on the same server. Repeat `--next` per failure until the output returns to the first account: pool exhausted, go to next chain step.
+4. OmO host: sidecar `mcp.json` reads env vars at server spawn, so a rotated key applies after OmO restarts. Tell user; continue chain on other servers meanwhile.
+5. OmO host: chain skips steps 4 (ScrapeGraph) and 8 (Bright Data) until senpi issue https://github.com/code-yeongyu/senpi/issues/2345 is fixed; senpi skips `${VAR}` in skill sidecars and those servers read only `SGAI_API_KEY` / `API_TOKEN`.
 
-Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`. Service list, env vars, Exa rotation no-op: `references/fleet.md`.
+Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`, `--materialize`. Service list and env vars: `references/fleet.md`.

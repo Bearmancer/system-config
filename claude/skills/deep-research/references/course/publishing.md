@@ -8,6 +8,7 @@ python "<skill>/scripts/publish_teach.py"
 
 The script:
 
+- commits and pushes the source dir (`~/Dev/deep-research`, private repo `Bearmancer/deep-research`) first; a failure aborts before any HTML is mirrored or published (skipped with `--no-push`),
 - mirrors `~/Dev/deep-research/*` **HTML + `assets/` only** to the site working copy (`~/Dev/bearmancer.github.io`),
 - converts `.md` links to plain text in the published copy (local files are untouched),
 - refreshes the root index page,

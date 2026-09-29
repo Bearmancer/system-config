@@ -11,10 +11,16 @@
       "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
     },
     "general": {
-      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+      "disabled": true
     },
     "explore": {
-      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+      "disabled": true
+    },
+    "researcher": {
+      "description": "Web researcher. Use for any web lookup, scrape, search or crawl.",
+      "mode": "subagent",
+      "model": "opencode/muse-spark-1.3-contributor-free",
+      "system": "Use the web MCP tools (via execute) for every question. Report exact returned text with source URLs."
     }
   },
   "mcp": {
@@ -23,7 +29,7 @@
         "type": "remote",
         "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
         "headers": {
-          "x-api-key": "{env:EXA_API_KEY}"
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/exa}"
         },
         "oauth": false,
         "timeout": {
@@ -33,10 +39,67 @@
       },
       "tavily": {
         "type": "remote",
-        "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+        "url": "https://mcp.tavily.com/mcp/",
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/tavily}"
+        },
         "oauth": false,
         "timeout": {
           "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "firecrawl": {
+        "type": "remote",
+        "url": "https://mcp.firecrawl.dev/v2/mcp",
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/firecrawl}"
+        },
+        "oauth": false,
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "apify": {
+        "type": "remote",
+        "url": "https://mcp.apify.com?tools=apify/rag-web-browser,search-actors,call-actor",
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/apify}"
+        },
+        "oauth": false,
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "browserbase": {
+        "type": "remote",
+        "disabled": true,
+        "url": "https://mcp.browserbase.com/mcp",
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/browserbase}"
+        },
+        "oauth": false,
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "agentql": {
+        "type": "local",
+        "disabled": true,
+        "command": [
+          "npx",
+          "-y",
+          "agentql-mcp"
+        ],
+        "environment": {
+          "AGENTQL_API_KEY": "{file:~/.config/opencode/secrets/agentql}"
+        },
+        "timeout": {
+          "startup": 120000,
+          "catalog": 60000,
           "execution": 30000
         }
       },
@@ -48,28 +111,13 @@
           "execution": 30000
         }
       },
-      "firecrawl": {
-        "type": "local",
-        "command": [
-          "firecrawl-mcp"
-        ],
-        "environment": {
-          "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}",
-          "LOG_LEVEL": "error"
-        },
-        "timeout": {
-          "startup": 120000,
-          "catalog": 60000,
-          "execution": 30000
-        }
-      },
       "scrapegraph": {
         "type": "local",
         "command": [
           "scrapegraph-mcp"
         ],
         "environment": {
-          "SGAI_API_KEY": "{env:SCRAPEGRAPH_API_KEY}"
+          "SGAI_API_KEY": "{file:~/.config/opencode/secrets/scrapegraph}"
         },
         "timeout": {
           "startup": 120000,
@@ -116,7 +164,7 @@
           "@brightdata/mcp"
         ],
         "environment": {
-          "API_TOKEN": "{env:BRIGHTDATA_API_KEY}"
+          "API_TOKEN": "{file:~/.config/opencode/secrets/brightdata}"
         },
         "timeout": {
           "startup": 120000,
@@ -127,16 +175,10 @@
     }
   },
   "plugin": [
-    "oh-my-opencode-slim"
+    "oh-my-opencode-slim",
+    // OpenCode Quota: loads the server plugin for slash commands and quota checks.
+    "@slkiser/opencode-quota@next"
   ],
-  "agent": {
-    "explore": {
-      "disable": true
-    },
-    "general": {
-      "disable": true
-    }
-  },
   "lsp": true,
   "formatter": true
 }

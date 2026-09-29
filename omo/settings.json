@@ -1,0 +1,91 @@
+{
+  "tipsHistory": {
+    "thinking-level": 1790489509233,
+    "favorite-model-rotation": 1790489515880,
+    "model-selector-favorites": 1790489661461,
+    "model-command-search": 1790489873720,
+    "model-cycling-scope": 1790490086868,
+    "thinking-budgets": 1790490299256,
+    "prompt-preset": 1790490373114,
+    "provider-login": 1790490412781,
+    "fallback-chains-setting": 1790490664352,
+    "fallback-command": 1790490734596,
+    "click-pending-question": 1790490900496,
+    "queue-follow-up": 1790490982598,
+    "steering-message": 1790491061119,
+    "edit-queued-message": 1790491422807,
+    "interrupt-restores-queue": 1790491444889,
+    "file-reference": 1790492755787,
+    "path-completion": 1790492915349,
+    "shortcut-overlay": 1790493182358,
+    "prompt-history": 1790493196565,
+    "external-editor": 1790493314315,
+    "expand-tool-output": 1790493523289,
+    "thinking-blocks": 1790493648432,
+    "paste-image": 1790493752178,
+    "copy-message": 1790493826604,
+    "input-newline": 1790493860136,
+    "bash-prefixes": 1790493974017,
+    "drag-drop-files": 1790494031047,
+    "answer-agent-question": 1790494051676,
+    "open-pending-question": 1790494094367,
+    "favorite-models-command": 1790494181177,
+    "tree-command": 1790494209190,
+    "fork-command": 1790494307375,
+    "clone-session": 1790494374813,
+    "continue-session": 1790496415686,
+    "session-name": 1790505951123,
+    "session-info": 1790506042497
+  },
+  "theme": "dark",
+  "defaultProvider": "qwen-token-plan",
+  "defaultModel": "deepseek-v4.1-flash",
+  "modelThinkingLevels": {
+    "opencode-go/kimi-k3": "max",
+    "qwen-token-plan/deepseek-v4.1-flash": "high",
+    "qwen-token-plan/qwen3.6-flash": "low"
+  },
+  "modelLastOnThinkingLevels": {
+    "opencode-go/kimi-k3": "max",
+    "qwen-token-plan/deepseek-v4.1-flash": "high",
+    "qwen-token-plan/qwen3.6-flash": "low"
+  },
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "qwen-token-plan/deepseek-v4.1-flash"
+  ],
+  "favoriteModels": [
+    "opencode-go/qwen3.8-flash",
+    "qwen-token-plan/deepseek-v4.1-flash"
+  ],
+  "images": {
+    "blockImages": true
+  },
+  "showHardwareCursor": true,
+  "editorPaddingX": 1,
+  "outputPad": 1,
+  "autocompleteMaxVisible": 10,
+  "terminal": {
+    "showTerminalProgress": true,
+    "mouse": "always"
+  },
+  "followUpMode": "all",
+  "transport": "auto",
+  "smoothStreamingFps": 60,
+  "markdown": {
+    "mermaid": "final"
+  },
+  "showCacheMissNotices": true,
+  "collapseChangelog": false,
+  "quietStartup": true,
+  "enableInstallTelemetry": false,
+  "defaultProjectTrust": "always",
+  "doubleEscapeAction": "tree",
+  "treeFilterMode": "all",
+  "tuiMode": "fullscreen",
+  "fullscreenCopyOnSelect": false,
+  "hideThinkingBlock": false,
+  "skills": [
+    "~/.claude/skills"
+  ]
+}
