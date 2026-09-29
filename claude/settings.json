@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "rg -q \"(^|[\\s\\\";&|(])(find|gci|Get-ChildItem)\\b\" && { echo \"use fd / fd -u\" >&2; exit 2; }; exit 0"
+            "command": "jaq -r \".tool_input.command // \\\"\\\"\" | rg -q \"(^|[\\s\\\";&|(])(find|gci|Get-ChildItem)\\b\" && { echo \"use fd / fd -u\" >&2; exit 2; }; exit 0"
           }
         ]
       }
