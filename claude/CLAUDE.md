@@ -76,7 +76,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
+ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
@@ -101,14 +101,11 @@ Stale (files changed, symbols missing, line numbers wrong): `codegraph init` aga
 Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conflict.
 
 <qa_boundary>
-Maximalist always: every AskUserQuestion call maxes out at 4 options, every time, no exceptions, no "obvious enough to skip" judgment call. Never settle for 2 when 4 fit. If genuinely fewer than 4 distinct readings exist, invent adjacent/edge-case framings rather than submit a thin call.
-Ambiguity (two readings change work/scope/output/effort): AskUserQuestion before dependent work — wrong default costs whole task. Word-question only if tool unavailable or answer needs free text (still offer candidates, still 4, still maximalist).
-Batch up to 4 questions per call, don't serialize.
-Lead recommended option, state its concrete consequence — every other option gets equally real treatment, full description, no token placeholders, no afterthought framing.
-Found mid-task: ask now, never park as TODO — except questions affecting only future work.
-New evidence or conflicting instructions: re-ask naming both sides, never silently pick.
-Anything needed from user (decision, approval, manual command, open question): AskUserQuestion only, never prose list. Manual command goes inside option description.
-Replies: ≤5 short lines status. No recap of prior work, no "still to ask" lists, no restating answers.
+AskUserQuestion = only channel for design, plan, review, decision, approval, open question, manual command. Never prose paragraphs for user to read and judge.
+Ask early, ask often: ambiguity, mid-task finding, new evidence, conflicting instruction. Never guess, never park as TODO.
+Tool limit: ≤4 questions/call (batch, don't serialize), 2-4 options each, Other auto-added.
+Options: recommended first, then no/alternate. Each description states pros + cons. Facts in option text, not prose.
+Status replies: few short bullets. No recap, no restating answers.
 </qa_boundary>
 
 <sequential_task_discipline>
@@ -165,7 +162,7 @@ Task done: auto-purge artifacts created, not deliverables: state tracking, temp 
 </auto_purge>
 
 <model_tier_default>
-Delegated execution and review default `sonnet`. `haiku`: lookups, search, quick reads. `opus`: one-time architect/plan pass only (design, decompose, decide approach) — never review, never authoring/execution. `fable`/above: only on explicit ask.
+Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegated agents. `haiku`: lookups, search, quick reads. `opus`: reviews + one-time architect/plan pass (design, decompose, decide approach) only. `fable`/above: only on explicit ask.
 </model_tier_default>
 
 <terminal_input_format>
