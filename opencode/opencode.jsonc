@@ -3,7 +3,7 @@
   "shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
   "model": "opencode-go/muse-spark-1.3-contributor",
   "small_model": "opencode-go/muse-spark-1.3-contributor",
-  // OpenCode Go: only muse-spark-1.3-contributor, deepseek-v4.1-flash, qwen3.7-plus are allowed.
+  // OpenCode Go: only muse-spark-1.3-contributor, deepseek-v4.1-flash, qwen3.7-plus, mimo-v2.6-flash are allowed.
   // v2 has no allow-list; per-model disabled removes a model from the catalog and rejects it for sessions and subagents.
   "providers": {
     "opencode-go": {
@@ -60,9 +60,6 @@
           "disabled": true
         },
         "mimo-v2.5-pro": {
-          "disabled": true
-        },
-        "mimo-v2.6-flash": {
           "disabled": true
         },
         "mimo-v2.6-pro": {
