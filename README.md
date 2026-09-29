@@ -54,6 +54,7 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
 | Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
 | Secrets | `uv run ~/.claude/skills/deep-research/scripts/switch_api_key.py --service all --materialize`, from the key pools in `~/.secrets/.env` |
+| Vendor CLIs (deep-research) | `uv tool install tavily-cli; npm install -g firecrawl-cli apify-cli @brightdata/cli just-scrape browse` (verified with each `--version`; sources in `.claude/docs/research/mcp-cli-post-matrix.md`) |
 | Repos | `gh repo clone <owner>/<repo>`, e.g. `gh repo clone Bearmancer/deep-research ~/Dev/deep-research` |
 | Scheduled Tasks | `install.ps1`, elevated |
 | `service.json` | `opencode service set hostname 127.0.0.1` |
