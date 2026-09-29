@@ -62,7 +62,7 @@ function Backup-AgentConfig {
     Copy-Mirror -Source "$HomeRoot\.claude\commands" -Dest "$repoRoot\claude\commands" -ExtraFlags @('/MIR')
 
     # opencode/
-    Copy-Files -SourceDir "$HomeRoot\.config\opencode" -Files @('opencode.json', 'tui.json', 'AGENTS.md') -Dest "$repoRoot\opencode"
+    Copy-Files -SourceDir "$HomeRoot\.config\opencode" -Files @('opencode.jsonc', 'tui.json', 'AGENTS.md') -Dest "$repoRoot\opencode"
     Copy-Mirror -Source "$HomeRoot\.config\opencode\agents" -Dest "$repoRoot\opencode\agents" -ExtraFlags @('/MIR')
     Copy-Mirror -Source "$HomeRoot\.config\opencode\commands" -Dest "$repoRoot\opencode\commands" -ExtraFlags @('/MIR')
 
