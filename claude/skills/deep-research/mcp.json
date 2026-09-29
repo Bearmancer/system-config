@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "tavily": {
+      "url": "https://mcp.tavily.com/mcp/",
+      "bearerTokenEnv": "TAVILY_API_KEY"
+    },
+    "firecrawl": {
+      "url": "https://mcp.firecrawl.dev/v2/mcp",
+      "bearerTokenEnv": "FIRECRAWL_API_KEY"
+    },
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+      "bearerTokenEnv": "EXA_API_KEY"
+    },
+    "apify": {
+      "url": "https://mcp.apify.com?tools=apify/rag-web-browser,search-actors,call-actor",
+      "bearerTokenEnv": "APIFY_TOKEN"
+    },
+    "agentql": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "agentql-mcp"
+      ],
+      "enabled": false
+    },
+    "browserbase": {
+      "url": "https://mcp.browserbase.com/mcp",
+      "bearerTokenEnv": "BROWSERBASE_API_KEY",
+      "enabled": false
+    }
+  }
+}

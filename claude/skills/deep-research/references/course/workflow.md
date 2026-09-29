@@ -75,7 +75,7 @@ Write one when the position advances with new insight, a verification norm emerg
 
 ## Standing behaviours
 
-- **Subagent-first.** Chapter production and the verification passes run as subagent tasks; the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
+- **Subagent-first.** Chapter production and the verification passes run as subagent tasks when a subagent launcher exists (else inline, see SKILL.md fan-out probe); the orchestrating session coordinates, runs the mechanical gates, and merges results. Substantive work happens in subagents; the orchestrator holds coordination.
 - **Stay at the user's chapter position.** Teach chapter-and-earlier facts only — as internal discipline; the page itself never narrates the boundary.
 
 Gates, chat/report etiquette, publish, and auto-open: `references/modes/course.md` Steps 6-9 and `references/course/publishing.md`.

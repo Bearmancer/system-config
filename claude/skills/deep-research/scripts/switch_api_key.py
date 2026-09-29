@@ -7,6 +7,7 @@ import hashlib
 import os
 import re
 import sys
+import tempfile
 import winreg
 from dataclasses import dataclass
 from pathlib import Path
@@ -57,6 +58,52 @@ SERVICE_MAP: dict[str, ServiceInfo] = {
         "BROWSERBASE_API_KEY", r"^(?P<acct>[A-Z0-9]+)_BROWSERBASE_API_KEY$"
     ),
 }
+
+
+DEFAULT_SECRETS_DIR = Path.home() / ".config" / "opencode" / "secrets"
+
+MATERIALIZE_SERVICES = [
+    "agentql",
+    "apify",
+    "brightdata",
+    "browserbase",
+    "exa",
+    "firecrawl",
+    "scrapegraph",
+    "tavily",
+]
+
+
+def write_secret(secrets_dir: Path, svc: str, value: str) -> Path:
+    secrets_dir.mkdir(parents=True, exist_ok=True)
+    target = secrets_dir / svc
+    fd, tmp = tempfile.mkstemp(dir=secrets_dir, prefix=f".{svc}.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as f:
+            f.write(value)
+        os.replace(tmp, target)
+    except BaseException:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+        raise
+    return target
+
+
+def materialize_secret(
+    dotenv: dict[str, str], svc: str, secrets_dir: Path, dry_run: bool = False
+) -> str:
+    if (secrets_dir / svc).exists():
+        return f"{svc}: exists"
+    pool = get_pool(dotenv, svc)
+    value = get_active_value(SERVICE_MAP[svc].env_var)
+    if not value and pool:
+        value = pool[sorted(pool)[0]]
+    if not value:
+        raise ValueError(f"{svc}: no active key or pool account; file not created")
+    if dry_run:
+        return f"{svc}: WHATIF create (no write)"
+    write_secret(secrets_dir, svc, value)
+    return f"{svc}: created"
 
 
 def get_dotenv_map(path: Path) -> dict[str, str]:
@@ -170,7 +217,11 @@ def show_pool_state(dotenv: dict[str, str], svc: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Rotate a masked pool of API keys into a User-scope environment variable."
+        description=(
+            "Rotate a masked pool of API keys. The active key is written to "
+            "~/.config/opencode/secrets/<service> (read by OpenCode via {file:}) "
+            "and to a User-scope environment variable."
+        )
     )
     parser.add_argument("--service", required=True, choices=SERVICE_CHOICES)
     parser.add_argument("--list", action="store_true")
@@ -178,10 +229,28 @@ def main() -> None:
     parser.add_argument("--next", action="store_true")
     parser.add_argument("--env-path", default=str(Path.home() / ".secrets" / ".env"))
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--secrets-dir", default=str(DEFAULT_SECRETS_DIR))
+    parser.add_argument(
+        "--materialize",
+        action="store_true",
+        help="create every missing secrets file (--service all, or one service)",
+    )
     args = parser.parse_args()
 
     try:
         dotenv = get_dotenv_map(Path(args.env_path))
+        secrets_dir = Path(args.secrets_dir)
+
+        if args.materialize:
+            targets = MATERIALIZE_SERVICES if args.service == "all" else [args.service]
+            failed = False
+            for svc in targets:
+                try:
+                    print(materialize_secret(dotenv, svc, secrets_dir, args.dry_run))
+                except ValueError as exc:
+                    failed = True
+                    print(str(exc), file=sys.stderr)
+            sys.exit(1 if failed else 0)
 
         if args.service == "all":
             if args.set_account or args.next:
@@ -215,6 +284,8 @@ def main() -> None:
             )
 
         target_fp = get_fingerprint(pool[target_acct])
+        if not args.dry_run:
+            write_secret(secrets_dir, args.service, pool[target_acct])
         if active_acct == target_acct:
             print(f"{args.service}: already active {target_acct}({target_fp})")
             sys.exit(0)
@@ -231,7 +302,7 @@ def main() -> None:
                 from_desc = "UNSET"
             print(
                 f"{args.service}: {from_desc} -> {target_acct}({target_fp}). "
-                "Restart OpenCode to load the new key. HARD STOP until restart."
+                "Secrets file updated; the OpenCode config watcher reconnects the MCP server."
             )
     except Exception as exc:
         print(str(exc), file=sys.stderr)

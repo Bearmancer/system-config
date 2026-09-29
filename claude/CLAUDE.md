@@ -76,7 +76,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
+ALWAYS run all agents and subagents in caveman mode set to ultra; a skill that sets its own caveman level overrides the global level. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
@@ -114,6 +114,17 @@ Never guess a vague instruction's "spirit" — resolve via `qa_boundary` first.
 Never treat a subagent's self-report ("done", "tests pass") as fact — verify (read file, run test) first.
 Blocked (missing dep, unresolved ambiguity): stop, report plainly — never skip silently, never sub a partial result as done.
 </sequential_task_discipline>
+
+<verified_claims_only>
+Plans, specs, tickets, configs, QA options: every factual claim (header, flag, tool name, package, env var, endpoint, runtime behavior) rests on primary source checked this session or linked research: official doc, source code, or live test. Cite it.
+Unverified claim: verify first (research agent or live test) before planning, building, or offering it as option. Unverifiable: state so, stop, ask. Never "from memory", never "assume works, drill later".
+Subagent claims same bar: executor-chosen values need source before use.
+Native solutions only: use the tool's own documented mechanism (config key, hosted endpoint, supported auth). Never shell wrappers, duplicate env vars, shims, or patches around a gap. No native route: report the gap, ask.
+</verified_claims_only>
+
+<no_stub_docs>
+Never create a tiny stub README/doc. New doc file only when its concern is clearly separate and it carries real content; otherwise add a line or section to the nearest existing doc. Applies `minimal-code-discipline` to docs, with judgement.
+</no_stub_docs>
 
 <retry_scope_discipline>
 Haiku deliverable fails review, retries on Sonnet: fix only reviewer-named items, leave rest untouched.
