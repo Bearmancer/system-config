@@ -177,7 +177,7 @@ Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegat
 </model_tier_default>
 
 <terminal_input_format>
-User-typed command (not your tool call): one line, `;`-joined, any shell. Skip if already one line.
+User-typed command (not your tool call): one line, `;`-joined, any shell, absolute paths only (`C:\Users\Lance\...`; never `~`, `$HOME`, `$env:USERPROFILE`, relative paths or cwd-dependent `cd`). Skip if already one line.
 </terminal_input_format>
 
 <shell_tool_preference>

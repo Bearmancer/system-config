@@ -11,6 +11,19 @@
     "defaultMode": "auto"
   },
   "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rg -q \"(^|[\\s\\\";&|(])(find|gci|Get-ChildItem)\\b\" && { echo \"use fd / fd -u\" >&2; exit 2; }; exit 0"
+          }
+        ]
+      }
+    ]
+  },
   "worktree": {
     "baseRef": "head"
   },
@@ -29,7 +42,10 @@
     "dotnet-claude-kit@dotnet-claude-kit": false,
     "agents-md@builtin": false,
     "telemetry@builtin": false,
-    "plugin-dev@claude-plugins-official": true
+    "claude-socratic-plugin@synced": false,
+    "cowork-plugin-management@synced": false,
+    "design-skills@synced": false,
+    "doc-authoring-skills@synced": false
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -100,6 +116,7 @@
   },
   "autoUpdatesChannel": "latest",
   "timeFormat": "24-hour",
+  "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "editorMode": "normal",
   "autoCompactEnabled": true,
@@ -155,6 +172,5 @@
       "**Org-specific CLIs**: `toolbox` (published CLI, resolves to `artifacts\\publish\\src\\App\\release\\toolbox.exe`), `dbcrust` (ad hoc SQLite query against `state/toolbox.db`), `codegraph` (mandatory repo indexing per user global CLAUDE.md)",
       "routine under C:\\Users\\Lance\\Dev\\Toolbox\\ prefix: build/test/publish commands (`dotnet build`, `dotnet publish src/App -c Release`, `dotnet test`), git operations against origin, `gh` issue/label operations on Bearmancer/Toolbox"
     ]
-  },
-  "skipDangerousModePermissionPrompt": true
+  }
 }

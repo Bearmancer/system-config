@@ -48,7 +48,7 @@ Rotate on "Out of credit" and on "Bad key" after a working key. Move to next cha
 
 | Service | Bad key | Out of credit | Blocked | Rate limit |
 |---|---|---|---|---|
-| Tavily | unverified | unverified | unverified | unverified |
+| Tavily | unverified | unverified | empty result + `Failed to fetch url`, no status code (live drill, system-config#20) | unverified |
 | Firecrawl | 401 | 402 | 403, empty body or challenge page in result (still 1 credit) | 429 |
 | Exa | 401 | 402 | `SOURCE_NOT_AVAILABLE` per URL | 429 + `Retry-After` |
 | ScrapeGraph | 401 `auth_missing_key`; 403 `auth_invalid_key` | 402 `insufficient_credits` | undocumented | 429 `rate_limited` |
