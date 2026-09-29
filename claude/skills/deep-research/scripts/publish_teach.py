@@ -64,7 +64,9 @@ def remove_empty_dirs(root: Path) -> None:
 
 def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
     published: list[dict[str, str]] = []
-    for ws in sorted(p for p in source.iterdir() if p.is_dir()):
+    for ws in sorted(
+        p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
+    ):
         dest = staging / ws.name
         if dest.exists():
             shutil.rmtree(dest)
@@ -152,7 +154,9 @@ def build_top_index_html(rows: str, generated_at: str) -> str:
 def build_hub_rows(
     source: Path, staging: Path, published: list[dict[str, str]]
 ) -> list[dict[str, object]]:
-    for ws in sorted(p for p in source.iterdir() if p.is_dir()):
+    for ws in sorted(
+        p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
+    ):
         ws_pages = [p for p in published if p["workspace"] == ws.name]
         if not ws_pages:
             continue
@@ -184,7 +188,10 @@ def build_hub_rows(
             ref_rows_list.append(f'    <li><a href="{leaf}">{label}</a></li>')
 
         home_html = build_home_html(
-            ws_title, "\n".join(lesson_rows_list), "\n".join(ref_rows_list)
+            ws_title,
+            "\n".join(lesson_rows_list),
+            "\n".join(ref_rows_list),
+            render_bar(ws_title, []),
         )
         (dest / "index.html").write_text(home_html, encoding="utf-8")
 
@@ -208,6 +215,30 @@ def course_rows(staging: Path) -> list[dict[str, object]]:
 
 def run_checked(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+
+
+def push_sources(source: Path) -> None:
+    add = run_checked(["git", "add", "-A"], source)
+    if add.returncode != 0:
+        raise RuntimeError(f"source git add failed in {source}: {add.stderr.strip()}")
+    staged = run_checked(["git", "diff", "--cached", "--quiet"], source)
+    if staged.returncode == 1:
+        message = f"Update course sources {datetime.now():%Y-%m-%d}"
+        commit = run_checked(["git", "commit", "-m", message], source)
+        if commit.returncode != 0:
+            raise RuntimeError(
+                f"source commit failed in {source}: {commit.stderr.strip() or commit.stdout.strip()}"
+            )
+        print(f"== sources committed: {message}")
+    elif staged.returncode != 0:
+        raise RuntimeError(
+            f"source git diff failed in {source}: {staged.stderr.strip()}"
+        )
+    push = run_checked(["git", "push"], source)
+    if push.returncode != 0:
+        raise RuntimeError(
+            f"source push failed in {source}; not publishing HTML with unpushed sources: {push.stderr.strip()}"
+        )
 
 
 def publish(
@@ -364,6 +395,9 @@ def main() -> None:
             ["gh", "repo", "clone", args.repo_name, str(staging)], check=True
         )
     staging.mkdir(parents=True, exist_ok=True)
+
+    if not args.no_push:
+        push_sources(source)
 
     print(f"== staging: {staging}")
     published = process_workspaces(source, staging)
