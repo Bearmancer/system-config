@@ -118,10 +118,20 @@ function Invoke-DailySync {
 
     if (-not (Sync-Foobar2000)) { $failures.Add('foobar2000 (rclone)') }
 
-    opencode service status
-    if ($LASTEXITCODE -ne 0) {
-        opencode service start
-        if ($LASTEXITCODE -ne 0) { $failures.Add('opencode service') }
+    try {
+        if (-not (Get-Command opencode -ErrorAction SilentlyContinue)) { throw 'opencode not found' }
+        $LASTEXITCODE = 0
+        opencode service status *> $null
+        if ($LASTEXITCODE -ne 0) {
+            $LASTEXITCODE = 0
+            opencode service start
+            if ($LASTEXITCODE -ne 0) { throw 'opencode service start failed' }
+            $LASTEXITCODE = 0
+            opencode service status *> $null
+            if ($LASTEXITCODE -ne 0) { throw 'opencode service still down after start' }
+        }
+    } catch {
+        $failures.Add('opencode service')
     }
 
     if ($failures.Count -gt 0) {
