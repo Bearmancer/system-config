@@ -76,7 +76,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
+ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
