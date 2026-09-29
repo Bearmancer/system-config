@@ -8,4 +8,4 @@ Checkable rules, each with its why. An empty section means no rule has been sett
 
 ## Testing
 
-- No test suite exists yet. Each ticket proves itself with the smoke check named in its acceptance criteria. (Why: these are PowerShell scripts that touch live machine state, and the acceptance drills in #20 are the end-to-end check.)
+- `scripts/test-backup-agent-config.ps1` is the smoke test for `Backup-AgentConfig`; run `pwsh -NoProfile -File scripts/test-backup-agent-config.ps1` after any backup change. Other tickets prove themselves with the smoke check named in their acceptance criteria. (Why: these are PowerShell scripts that touch live machine state, and the acceptance drills in #20 are the end-to-end check.)
