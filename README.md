@@ -44,5 +44,4 @@ One-way `rclone sync` of `%APPDATA%\foobar2000-v2` to the `gdrive` remote's `foo
 
 ## Setup
 
-1. `rclone config` — create a remote named `gdrive` (Google Drive backend, interactive OAuth).
-2. Run `install.ps1` elevated.
+Run `install.ps1` elevated. It registers the tasks and creates the `gdrive` rclone remote if missing (a browser opens once for Google sign-in).
