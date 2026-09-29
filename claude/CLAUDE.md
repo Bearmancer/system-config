@@ -76,7 +76,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. NEVER ask questions plainly - ONLY ask via the QA tool with elaborate explanation of pros/cons of each options.
+ALWAYS run all agents and subagents in caveman mode set to ultra. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
@@ -101,14 +101,11 @@ Stale (files changed, symbols missing, line numbers wrong): `codegraph init` aga
 Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conflict.
 
 <qa_boundary>
-Maximalist always: every AskUserQuestion call maxes out at 4 options, every time, no exceptions, no "obvious enough to skip" judgment call. Never settle for 2 when 4 fit. If genuinely fewer than 4 distinct readings exist, invent adjacent/edge-case framings rather than submit a thin call.
-Ambiguity (two readings change work/scope/output/effort): AskUserQuestion before dependent work — wrong default costs whole task. Word-question only if tool unavailable or answer needs free text (still offer candidates, still 4, still maximalist).
-Batch up to 4 questions per call, don't serialize.
-Lead recommended option, state its concrete consequence — every other option gets equally real treatment, full description, no token placeholders, no afterthought framing.
-Found mid-task: ask now, never park as TODO — except questions affecting only future work.
-New evidence or conflicting instructions: re-ask naming both sides, never silently pick.
-Anything needed from user (decision, approval, manual command, open question): AskUserQuestion only, never prose list. Manual command goes inside option description.
-Replies: ≤5 short lines status. No recap of prior work, no "still to ask" lists, no restating answers.
+AskUserQuestion = only channel for design, plan, review, decision, approval, open question, manual command. Never prose paragraphs for user to read and judge.
+Ask early, ask often: ambiguity, mid-task finding, new evidence, conflicting instruction. Never guess, never park as TODO.
+Tool limit: ≤4 questions/call (batch, don't serialize), 2-4 options each, Other auto-added.
+Options: recommended first, then no/alternate. Each description states pros + cons. Facts in option text, not prose.
+Status replies: few short bullets. No recap, no restating answers.
 </qa_boundary>
 
 <sequential_task_discipline>
@@ -124,8 +121,30 @@ Exception: full rebuild only if the finding shows the whole method untrustworthy
 </retry_scope_discipline>
 
 <ai_artifacts>
-Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. `.omc/` = OMC runtime, gitignored per OMC default except `.omc/skills/` + `.omc/ultragoal/`. Temp files, incl. codegraph-init clone repos: `mktemp`.
-Exception: `/teach` output → `~/.omo/teach/<topic>/` (MISSION.md, lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
+Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. Temp files, incl. codegraph-init clone repos: `mktemp`.
+Exception: `deep-research` course data → `~/Dev/deep-research/<slug>/` (lessons/, reference/, learning-records/, RESOURCES.md, NOTES.md, assets/), no ask.
+
+Runtime-state roots. Keep by default; purge only listed paths; unlisted = leave:
+- `.omc/` (any repo, `~/.omc`): purge `state/`, `plans/`, `handoffs/`, `research/`, `artifacts/`, `logs/`, `notepad.md`, `project-memory.json`. Keep `skills/`, `ultragoal/`.
+- `.omo/` (any repo, `~/.omo`): purge `agent/`, `senpi-task/`, `thread-tools/`, `lsp-daemon/*.stamp` (fd `--full-path`). Keep `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`.
+- `~/.codex/`: live state (`memories_*.sqlite`, `goals_*.sqlite`, `auth.json`, `config.toml`, `installation_id`); skip unless user names a file. `~/.local/share/omo-codex/`: inspect contents + mtime first, no default purge.
+- `~/.config/opencode/`: purge only dirs matching `fd -u -t d -g cache`; rest keep.
+- `~/.claude/`: purge only `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `*.tmp.*`. Ask first: `file-history/`, `backups/`. Never: `.credentials.json`, `~/.claude.json`, `settings*.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (vendored, incl. nested `.omc/`/`.claude/`). Per-repo `.claude/plans/`, `.claude/state/`, `.claude/worktrees/`: keep.
+- Scratch: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**` (exclude current session id on every fd call), `~/AppData/Local/Temp/{bunx-*,opencode}` (`--max-depth 1`, named patterns only, never sweep Temp), `~/.cache/opencode/`, `~/.cache/deep-research/`. Per session-id subdir: modified <24h = likely active, lead with leave-alone.
+- Repo-root strays outside roots above (`*-state.json`, `*-state-tracking*.json`, `*.heartbeat.json`, `*.lock`, `*-sync.log`): purge candidate.
+- Dev caches, locate via tool never hardcode: `npm config get cache`, `bun pm cache`, `pip cache dir`, `uv cache dir`. VSCode + Insiders (`~/AppData/Roaming/Code*/`): `Cache`, `GPUCache`, `CachedData`, `CachedProfilesData`, `CachedExtensionVSIXs`, `WebStorage`, `Partitions`, `logs`, `chatDictation*`, `agent-host`, `agentPlugins`; never `User/`, `extensions/`; `agentSessionData` ask first; close app first. JetBrains `AppData/Local/JetBrains/*/{Transient,Daemon}/`; never product version dir (LocalHistory).
+- Duplicate clone (same origin twice): discard only when `git status --short --ignored`, `git log --branches HEAD --not --remotes --oneline`, `git stash list` all empty. `.claude/worktrees/<n>` without `.git` and absent from `git worktree list` = orphan; list contents + mtime first.
+
+Purge procedure (Bash tool, git-bash):
+1. Enumerate per root with `fd -u` (dirs `-t d --prune`, files `-t f`); fd globs only, never shell globs.
+2. AskUserQuestion, one question per finding: delete / inspect first / narrower / leave. Deletion needs listed category AND explicit approval.
+3. Pre-size: `dust -P -d 0 <path>`.
+4. Delete: `fd -u -t f -t l . <path> -X rm --`, then `fd -u -t d . <path> | sort -r | while IFS= read -r d; do rmdir -- "$d"; done`, then `rmdir -- <path>`. Never `rm -rf` (guard hook blocks it; `-f` hides failures).
+5. "Device or resource busy": retry once, then report blocked.
+6. Post-size same command; removed root must error "No such file or directory".
+7. Manifest (deleted / blocked / left, pre + post sizes) outside `Temp/claude/**`; report its path.
+
+Never purge without listing exact paths + byte/file counts first (`auto_purge` governs timing and report format); `rm -rf` and other irreversible-destruction commands route through the user when the auto-mode classifier blocks them — hand back the exact command, don't retry via another tool.
 </ai_artifacts>
 
 <content_provenance>
@@ -143,7 +162,7 @@ Task done: auto-purge artifacts created, not deliverables: state tracking, temp 
 </auto_purge>
 
 <model_tier_default>
-Delegated execution and review default `sonnet`. `haiku`: lookups, search, quick reads. `opus`: one-time architect/plan pass only (design, decompose, decide approach) — never review, never authoring/execution. `fable`/above: only on explicit ask.
+Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegated agents. `haiku`: lookups, search, quick reads. `opus`: reviews + one-time architect/plan pass (design, decompose, decide approach) only. `fable`/above: only on explicit ask.
 </model_tier_default>
 
 <terminal_input_format>
@@ -153,6 +172,14 @@ User-typed command (not your tool call): one line, `;`-joined, any shell. Skip i
 <shell_tool_preference>
 Prefer `fd`(find/gci), `dust`(du), `jaq`(jq/ConvertFrom-Json), `rg`(grep/Get-Content), `ouch`(Compress-Archive/tar).
 </shell_tool_preference>
+
+<python_packages>
+Python packages: `uv` only; never `pip`, `pip3`, `python -m pip`.
+- One-off script: `uv run --with <pkg> script.py`, or `uv run script.py` when it has a PEP 723 header.
+- Project: `uv venv`, then `uv pip install` inside it. Never `--user`, `--system`, global site-packages.
+- CLI tools: `uv tool install <pkg>`; never pipx or global pip.
+- Stray global pip package: delete its site-packages dir + dist-info (never run pip); verify import fails on bare `python`, works via `uv run --with`.
+</python_packages>
 
 <background_job_discipline>
 Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmux` — `tmux new-session -d -s <name> '<command>'`. Never `nohup ... &` or redirect output away — unobservable later. Check: `tmux capture-pane -t <name> -p`.

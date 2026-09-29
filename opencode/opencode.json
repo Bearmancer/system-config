@@ -1,0 +1,142 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
+  "model": "opencode/muse-spark-1.3-contributor-free",
+  "small_model": "opencode/muse-spark-1.3-contributor-free",
+  "agents": {
+    "build": {
+      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+    },
+    "plan": {
+      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+    },
+    "general": {
+      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+    },
+    "explore": {
+      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+    }
+  },
+  "mcp": {
+    "servers": {
+      "exa": {
+        "type": "remote",
+        "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+        "headers": {
+          "x-api-key": "{env:EXA_API_KEY}"
+        },
+        "oauth": false,
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "tavily": {
+        "type": "remote",
+        "url": "https://mcp.tavily.com/mcp/?tavilyApiKey={env:TAVILY_API_KEY}",
+        "oauth": false,
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "microsoft-learn": {
+        "type": "remote",
+        "url": "https://learn.microsoft.com/api/mcp",
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "firecrawl": {
+        "type": "local",
+        "command": [
+          "firecrawl-mcp"
+        ],
+        "environment": {
+          "FIRECRAWL_API_KEY": "{env:FIRECRAWL_API_KEY}",
+          "LOG_LEVEL": "error"
+        },
+        "timeout": {
+          "startup": 120000,
+          "catalog": 60000,
+          "execution": 30000
+        }
+      },
+      "scrapegraph": {
+        "type": "local",
+        "command": [
+          "scrapegraph-mcp"
+        ],
+        "environment": {
+          "SGAI_API_KEY": "{env:SCRAPEGRAPH_API_KEY}"
+        },
+        "timeout": {
+          "startup": 120000,
+          "catalog": 60000,
+          "execution": 30000
+        }
+      },
+      "codegraph": {
+        "type": "local",
+        "command": [
+          "codegraph",
+          "serve",
+          "--mcp"
+        ],
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
+      },
+      "firefox-devtools": {
+        "type": "local",
+        "command": [
+          "firefox-devtools-mcp",
+          "--profile-path",
+          "C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile",
+          "--firefox-path",
+          "C:/Program Files/Mozilla Firefox/firefox.exe",
+          "--viewport",
+          "1280x720",
+          "--tool-preset",
+          "all"
+        ],
+        "timeout": {
+          "startup": 120000,
+          "catalog": 60000,
+          "execution": 30000
+        }
+      },
+      "brightdata": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@brightdata/mcp"
+        ],
+        "environment": {
+          "API_TOKEN": "{env:BRIGHTDATA_API_KEY}"
+        },
+        "timeout": {
+          "startup": 120000,
+          "catalog": 60000,
+          "execution": 30000
+        }
+      }
+    }
+  },
+  "plugin": [
+    "oh-my-opencode-slim"
+  ],
+  "agent": {
+    "explore": {
+      "disable": true
+    },
+    "general": {
+      "disable": true
+    }
+  },
+  "lsp": true,
+  "formatter": true
+}
