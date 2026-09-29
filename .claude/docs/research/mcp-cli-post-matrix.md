@@ -34,10 +34,10 @@ Auth header per service:
 |---|---|---|
 | Exa | `https://api.exa.ai` | `Authorization: Bearer $EXA_API_KEY` or `x-api-key: $EXA_API_KEY` |
 | Tavily | `https://api.tavily.com` | `Authorization: Bearer tvly-...` |
-| Firecrawl | `https://api.firecrawl.dev/v2` | `Authorization: Bearer fc-...` |
+| Firecrawl | `https://api.firecrawl.dev` (paths below carry the `/v2` prefix) | `Authorization: Bearer fc-...` |
 | Apify | `https://api.apify.com` | `Authorization: Bearer <token>` (or `?token=` query, documented as less secure) |
 | Bright Data | `https://api.brightdata.com` | `Authorization: Bearer <api key>` |
-| ScrapeGraphAI | `https://v2-api.scrapegraphai.com/api` | `SGAI-APIKEY: sgai-...` |
+| ScrapeGraphAI | `https://v2-api.scrapegraphai.com` (paths below carry the `/api` prefix) | `SGAI-APIKEY: sgai-...` |
 | Browserbase | `https://api.browserbase.com` | `X-BB-API-Key: <key>` |
 | AgentQL | `https://api.agentql.com` | `X-API-Key: <key>` |
 
@@ -179,56 +179,79 @@ Sources: Exa https://exa.ai/docs/reference/answer (Agent Instructions block) and
 
 Legend for the MCP column: (L) name returned by a live `tools/list` in the catalog file; (R) upstream README or source only; (cfg) pinned in the OpenCode config URL. Servers whose live list needs a key (Exa, Apify, Tavily, AgentQL, Bright Data) are all (R). "none" means no such route was located in the primary sources. Rows marked SCRIPT have no MCP tool and no CLI command.
 
-| Service | Capability | MCP tool | CLI command | POST endpoint | Script? |
-|---|---|---|---|---|---|
-| Exa | search | `web_search_exa` (R, cfg), `web_search_advanced_exa` (R, cfg) | none | `POST /search` | no |
-| Exa | extract or fetch | `web_fetch_exa` (R, cfg) | none | `POST /contents` | no |
-| Exa | crawl or map | none | none | none | no |
-| Exa | answer | none | none | `POST /answer` | SCRIPT |
-| Exa | deep research (Agent, incl. ultra) | `agent_run` (R, cfg; its `effort` field exists, accepted values not documented) | none | `POST /agent/runs` | no (verify `ultra` via MCP) |
-| Exa | async: poll, stop, cancel, events | `agent_run` re-called with `runId` for polling; stop and cancel: none | none | `GET /agent/runs/{id}`, `POST /agent/runs/{id}/stop`, `POST /agent/runs/{id}/cancel`, `GET /agent/runs/{id}/events` | SCRIPT (stop, cancel) |
-| Exa | async batches | none | none | `POST /batches`, `GET /batches/{id}`, `POST /batches/{id}/cancel` | SCRIPT (low priority) |
-| Tavily | search | `tavily_search` (R) | `tvly search` | `POST /search` | no |
-| Tavily | extract | `tavily_extract` (R) | `tvly extract` | `POST /extract` | no |
-| Tavily | crawl | `tavily_crawl` (R) | `tvly crawl` | `POST /crawl` | no |
-| Tavily | map | `tavily_map` (R) | `tvly map` | `POST /map` | no |
-| Tavily | deep research | `tavily_research` (R) | `tvly research` | `POST /research` | no |
-| Tavily | async research | `tavily_research` (blocking behavior not documented) | `tvly research --no-wait`, `tvly research status <id>`, `tvly research poll <id>` | `GET /research/{request_id}` | no |
-| Firecrawl | search | `firecrawl_search` (L, unauthenticated list) | `firecrawl search` | `POST /v2/search` | no |
-| Firecrawl | scrape | `firecrawl_scrape` (L) | `firecrawl scrape` (multiple URLs are scraped concurrently) | `POST /v2/scrape` | no |
-| Firecrawl | batch scrape | none | none | `POST /v2/batch/scrape`, `GET`/`DELETE /v2/batch/scrape/{id}` | SCRIPT |
-| Firecrawl | crawl | `firecrawl_crawl` (R) | `firecrawl crawl <url> [--wait]` | `POST /v2/crawl` | no |
-| Firecrawl | crawl status, cancel | `firecrawl_check_crawl_status` (R); cancel: none | `firecrawl crawl <job-id>`; `firecrawl crawl --cancel` (flag documented as "Cancel an active crawl job by job ID") | `GET /v2/crawl/{id}`, `DELETE /v2/crawl/{id}` | no |
-| Firecrawl | map | `firecrawl_map` (R) | `firecrawl map` | `POST /v2/map` | no |
-| Firecrawl | deep research (Agent) | `firecrawl_agent`, `firecrawl_agent_status` (R) | `firecrawl agent "<prompt>" [--wait]`, `firecrawl agent <job-id>` | `POST /v2/agent`, `GET /v2/agent/{jobId}` | no |
-| Firecrawl | research papers | `firecrawl_research_search_papers`, `_read_paper`, `_related_papers`, `_inspect_paper` (R) | `firecrawl research` | `GET /v2/search/research/papers` | no |
-| Firecrawl | monitors | `firecrawl_monitor_create`, `_list`, `_get`, `_update`, `_delete`, `_run`, `_checks`, `_check` (R) | `firecrawl monitor` | `POST /v2/monitor` and siblings | no |
-| Apify | search Actors | `search-actors` (R, cfg) | `apify actors search` | `GET /v2/store` | no |
-| Apify | run Actor (incl. rag-web-browser) | `apify--rag-web-browser` (R, cfg), `call-actor` (R, cfg) | `apify actors call` (alias `apify call`), `apify actors start` | `POST /v2/actors/{actorId}/runs`, `POST /v2/actors/{actorId}/run-sync-get-dataset-items` | no |
-| Apify | async: run status, dataset items, abort | `get-actor-run`, `get-dataset-items`, `abort-actor-run`, `get-key-value-store-record` (R, auto-injected once `call-actor` is present) | `apify runs info`, `apify runs wait`, `apify runs abort`, `apify datasets get-items` | `GET /v2/actor-runs/{runId}`, `POST /v2/actor-runs/{runId}/abort`, `GET /v2/datasets/{id}/items` | no |
-| Apify | builds | `build-actor`, `get-actor-build`, `get-actor-build-log` (R, `builds` category, opt-in, not in cfg) | `apify builds create` (alias `apify actors build`), `apify builds info`, `apify builds wait`, `apify builds log` | `POST /v2/actors/{actorId}/builds?version=` | no |
-| Apify | schedules | `create-schedule`, `get-schedule`, `update-schedule`, `delete-schedule` (R, `schedules` category, opt-in, not in cfg) | no dedicated command; generic `apify api POST /v2/schedules -d '<json>'` | `POST /v2/schedules` | no |
-| Apify | actor tasks | `create-actor-task`, `get-actor-task`, `update-actor-task` (R, `tasks` category, opt-in, not in cfg) | `apify task run` (also `publish`, `unpublish`); create via generic `apify api` | `POST /v2/actor-tasks`, `POST /v2/actor-tasks/{id}/runs` | no |
-| Apify | crawl or map | none dedicated (run an Actor via `call-actor`) | none dedicated | none dedicated | no |
-| Bright Data | search | `search_engine`, `search_engine_batch` (R) | `brightdata search` | `POST /request` (SERP zone) | no |
-| Bright Data | fetch URL | `scrape_as_markdown`, `scrape_as_html`, `scrape_batch` (R) | `brightdata scrape` | `POST /request` (Web Unlocker zone) | no |
-| Bright Data | crawl or map | none | none | none documented | no |
-| Bright Data | discover (AI-ranked web discovery) | `discover` (R) | `brightdata discover` | `POST /discover`, `GET /discover?task_id=` | no |
-| Bright Data | structured platform data | `web_data_*` (R, many; full list not captured) | `brightdata pipelines <type> <url>` | `POST /datasets/v3/trigger`, `GET /datasets/v3/progress/{id}`, `GET /datasets/v3/snapshot/{id}` | no |
-| Bright Data | async Unlocker | none | `brightdata scrape --async` (submit only, prints Response ID; no result command in `src/commands`) | `POST /unblocker/req?zone=`, `GET /unblocker/get_result?response_id=` | SCRIPT (result retrieval) |
-| ScrapeGraphAI | scrape | `scrape`, `markdownify` (L, installed 1.0.1) | `just-scrape scrape` | `POST /api/scrape` | no |
-| ScrapeGraphAI | extract | `smartscraper` (L, 1.0.1); `extract` in unpublished v3 | `just-scrape extract` | `POST /api/extract` | no |
-| ScrapeGraphAI | search and answer | `searchscraper` (L, 1.0.1); `search` in unpublished v3 | `just-scrape search` | `POST /api/search` | no |
-| ScrapeGraphAI | crawl (start, poll) | `smartcrawler_initiate`, `smartcrawler_fetch_results` (L, 1.0.1); `crawl_start`, `crawl_get_status` in unpublished v3 | `just-scrape crawl` | `POST /api/crawl`, `GET /api/crawl/:id` | no |
-| ScrapeGraphAI | crawl manage (stop, resume, delete, pages) | none installed; `crawl_stop`, `crawl_resume` only in unpublished v3 | none | `POST /api/crawl/:id/stop`, `POST /api/crawl/:id/resume`, `DELETE /api/crawl/:id`, `GET /api/crawl/:id/pages` | SCRIPT |
-| ScrapeGraphAI | map or sitemap | `sitemap` (L, 1.0.1) | none | none in v2 | no |
-| ScrapeGraphAI | monitors | `monitor_*` only in unpublished v3 | `just-scrape monitor` | `POST /api/monitor` | no |
-| Browserbase | search | none | `browse cloud search` | `POST /v1/search` | no |
-| Browserbase | fetch a page | none | `browse cloud fetch` | `POST /v1/fetch` | no |
-| Browserbase | browser session | `start`, `end`, `navigate`, `act`, `observe`, `extract` (L, unauthenticated list) | `browse open`, `snapshot`, `click`, `fill`, `screenshot`, `browse cloud sessions` | `POST /v1/sessions` | no |
-| Browserbase | agent run (async) | none | none documented | `POST /v1/agents/runs`, `GET /v1/agents/runs/{runId}` | SCRIPT |
-| Browserbase | crawl or map | none | none | none | no |
-| AgentQL | extract | `extract-web-data` (R) | none (`agentql-cli` is scaffolding only) | `POST /v1/query-data` | no |
+| Service | Capability | MCP tool | CLI command | POST endpoint | Script? | Source |
+|---|---|---|---|---|---|---|
+| Exa | search | `web_search_exa` (R, cfg), `web_search_advanced_exa` (R, cfg) | none | `POST /search` | no | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | extract or fetch | `web_fetch_exa` (R, cfg) | none | `POST /contents` | no | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | crawl or map | none | none | none | no | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | answer | none | none | `POST /answer` | SCRIPT | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | deep research (Agent, incl. ultra) | `agent_run` (R, cfg; its `effort` field exists, accepted values not documented) | none | `POST /agent/runs` | no (verify `ultra` via MCP) | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | async: poll, stop, cancel, events | `agent_run` re-called with `runId` for polling; stop and cancel: none | none | `GET /agent/runs/{id}`, `POST /agent/runs/{id}/stop`, `POST /agent/runs/{id}/cancel`, `GET /agent/runs/{id}/events` | SCRIPT (stop, cancel) | [spec][exa-spec], [mcp][exa-mcp] |
+| Exa | async batches | none | none | `POST /batches`, `GET /batches/{id}`, `POST /batches/{id}/cancel` | SCRIPT (low priority) | [spec][exa-spec], [mcp][exa-mcp] |
+| Tavily | search | `tavily_search` (R) | `tvly search` | `POST /search` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Tavily | extract | `tavily_extract` (R) | `tvly extract` | `POST /extract` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Tavily | crawl | `tavily_crawl` (R) | `tvly crawl` | `POST /crawl` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Tavily | map | `tavily_map` (R) | `tvly map` | `POST /map` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Tavily | deep research | `tavily_research` (R) | `tvly research` | `POST /research` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Tavily | async research | `tavily_research` (blocking behavior not documented) | `tvly research --no-wait`, `tvly research status <id>`, `tvly research poll <id>` | `GET /research/{request_id}` | no | [api][tav-api], [cli][tav-cli], [mcp][tav-mcp] |
+| Firecrawl | search | `firecrawl_search` (L, unauthenticated list) | `firecrawl search` | `POST /v2/search` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | scrape | `firecrawl_scrape` (L) | `firecrawl scrape` (multiple URLs are scraped concurrently) | `POST /v2/scrape` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | batch scrape | none | none | `POST /v2/batch/scrape`, `GET`/`DELETE /v2/batch/scrape/{id}` | SCRIPT | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | crawl | `firecrawl_crawl` (R) | `firecrawl crawl <url> [--wait]` | `POST /v2/crawl` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | crawl status, cancel | `firecrawl_check_crawl_status` (R); cancel: none | `firecrawl crawl <job-id>`; `firecrawl crawl --cancel` (flag documented as "Cancel an active crawl job by job ID") | `GET /v2/crawl/{id}`, `DELETE /v2/crawl/{id}` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | map | `firecrawl_map` (R) | `firecrawl map` | `POST /v2/map` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | deep research (Agent) | `firecrawl_agent`, `firecrawl_agent_status` (R) | `firecrawl agent "<prompt>" [--wait]`, `firecrawl agent <job-id>` | `POST /v2/agent`, `GET /v2/agent/{jobId}` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | research papers | `firecrawl_research_search_papers`, `_read_paper`, `_related_papers`, `_inspect_paper` (R) | `firecrawl research` | `GET /v2/search/research/papers` | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Firecrawl | monitors | `firecrawl_monitor_create`, `_list`, `_get`, `_update`, `_delete`, `_run`, `_checks`, `_check` (R) | `firecrawl monitor` | `POST /v2/monitor` and siblings | no | [api][fc-api], [cli][fc-cli], [mcp][fc-mcp] |
+| Apify | search Actors | `search-actors` (R, cfg) | `apify actors search` | `GET /v2/store` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | run Actor (incl. rag-web-browser) | `apify--rag-web-browser` (R, cfg), `call-actor` (R, cfg) | `apify actors call` (alias `apify call`), `apify actors start` | `POST /v2/actors/{actorId}/runs`, `POST /v2/actors/{actorId}/run-sync-get-dataset-items` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | async: run status, dataset items, abort | `get-actor-run`, `get-dataset-items`, `abort-actor-run`, `get-key-value-store-record` (R, auto-injected once `call-actor` is present) | `apify runs info`, `apify runs wait`, `apify runs abort`, `apify datasets get-items` | `GET /v2/actor-runs/{runId}`, `POST /v2/actor-runs/{runId}/abort`, `GET /v2/datasets/{id}/items` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | builds | `build-actor`, `get-actor-build`, `get-actor-build-log` (R, `builds` category, opt-in, not in cfg) | `apify builds create` (alias `apify actors build`), `apify builds info`, `apify builds wait`, `apify builds log` | `POST /v2/actors/{actorId}/builds?version=` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | schedules | `create-schedule`, `get-schedule`, `update-schedule`, `delete-schedule` (R, `schedules` category, opt-in, not in cfg) | no dedicated command; generic `apify api POST /v2/schedules -d '<json>'` | `POST /v2/schedules` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | actor tasks | `create-actor-task`, `get-actor-task`, `update-actor-task` (R, `tasks` category, opt-in, not in cfg) | `apify task run` (also `publish`, `unpublish`); create via generic `apify api` | `POST /v2/actor-tasks`, `POST /v2/actor-tasks/{id}/runs` | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Apify | crawl or map | none dedicated (run an Actor via `call-actor`) | none dedicated | none dedicated | no | [api][ap-api], [cli][ap-cli], [mcp][ap-mcp] |
+| Bright Data | search | `search_engine`, `search_engine_batch` (R) | `brightdata search` | `POST /request` (SERP zone) | no | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| Bright Data | fetch URL | `scrape_as_markdown`, `scrape_as_html`, `scrape_batch` (R) | `brightdata scrape` | `POST /request` (Web Unlocker zone) | no | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| Bright Data | crawl or map | none | none | none documented | no | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| Bright Data | discover (AI-ranked web discovery) | `discover` (R) | `brightdata discover` | `POST /discover`, `GET /discover?task_id=` | no | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| Bright Data | structured platform data | `web_data_*` (R, many; full list not captured) | `brightdata pipelines <type> <url>` | `POST /datasets/v3/trigger`, `GET /datasets/v3/progress/{id}`, `GET /datasets/v3/snapshot/{id}` | no | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| Bright Data | async Unlocker | none | `brightdata scrape --async` (submit only, prints Response ID; no result command in `src/commands`) | `POST /unblocker/req?zone=`, `GET /unblocker/get_result?response_id=` | SCRIPT (result retrieval) | [api][bd-api], [cli][bd-cli], [mcp][bd-mcp] |
+| ScrapeGraphAI | scrape | `scrape`, `markdownify` (L, installed 1.0.1) | `just-scrape scrape` | `POST /api/scrape` | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | extract | `smartscraper` (L, 1.0.1); `extract` in unpublished v3 | `just-scrape extract` | `POST /api/extract` | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | search and answer | `searchscraper` (L, 1.0.1); `search` in unpublished v3 | `just-scrape search` | `POST /api/search` | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | crawl (start, poll) | `smartcrawler_initiate`, `smartcrawler_fetch_results` (L, 1.0.1); `crawl_start`, `crawl_get_status` in unpublished v3 | `just-scrape crawl` | `POST /api/crawl`, `GET /api/crawl/:id` | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | crawl manage (stop, resume, delete, pages) | none installed; `crawl_stop`, `crawl_resume` only in unpublished v3 | none | `POST /api/crawl/:id/stop`, `POST /api/crawl/:id/resume`, `DELETE /api/crawl/:id`, `GET /api/crawl/:id/pages` | SCRIPT | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | map or sitemap | `sitemap` (L, 1.0.1) | none | none in v2 | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| ScrapeGraphAI | monitors | `monitor_*` only in unpublished v3 | `just-scrape monitor` | `POST /api/monitor` | no | [api][sg-api], [cli][sg-cli], [mcp][sg-mcp] |
+| Browserbase | search | none | `browse cloud search` | `POST /v1/search` | no | [api][bb-api], [cli][bb-cli], [mcp][cat] |
+| Browserbase | fetch a page | none | `browse cloud fetch` | `POST /v1/fetch` | no | [api][bb-api], [cli][bb-cli], [mcp][cat] |
+| Browserbase | browser session | `start`, `end`, `navigate`, `act`, `observe`, `extract` (L, unauthenticated list) | `browse open`, `snapshot`, `click`, `fill`, `screenshot`, `browse cloud sessions` | `POST /v1/sessions` | no | [api][bb-api], [cli][bb-cli], [mcp][cat] |
+| Browserbase | agent run (async) | none | none documented | `POST /v1/agents/runs`, `GET /v1/agents/runs/{runId}` | SCRIPT | [api][bb-api], [cli][bb-cli], [mcp][cat] |
+| Browserbase | crawl or map | none | none | none | no | [api][bb-api], [cli][bb-cli], [mcp][cat] |
+| AgentQL | extract | `extract-web-data` (R) | none (`agentql-cli` is scaffolding only) | `POST /v1/query-data` | no | [api][aq-api], [mcp][aq-mcp] |
+
+[exa-spec]: https://exa.ai/docs/exa-spec.yaml
+[exa-mcp]: https://exa.ai/docs/get-started/exa-mcp
+[tav-api]: https://docs.tavily.com/documentation/api-reference/endpoint/research
+[tav-cli]: https://docs.tavily.com/documentation/tavily-cli
+[tav-mcp]: https://github.com/tavily-ai/tavily-mcp/blob/main/src/index.ts
+[fc-api]: https://docs.firecrawl.dev/api-reference/v2-openapi.json
+[fc-cli]: https://github.com/firecrawl/cli
+[fc-mcp]: https://github.com/firecrawl/firecrawl-mcp-server
+[ap-api]: https://docs.apify.com/api/openapi.json
+[ap-cli]: https://docs.apify.com/cli/docs/reference
+[ap-mcp]: https://github.com/apify/apify-mcp-server
+[bd-api]: https://docs.brightdata.com/api-reference/rest-api/unlocker/unlock-website
+[bd-cli]: https://github.com/brightdata/cli
+[bd-mcp]: https://github.com/brightdata/brightdata-mcp
+[sg-api]: https://docs.scrapegraphai.com/api-reference/introduction
+[sg-cli]: https://docs.scrapegraphai.com/services/cli/commands
+[sg-mcp]: https://github.com/ScrapeGraphAI/scrapegraph-mcp
+[bb-api]: https://docs.browserbase.com/reference/api/fetch-a-page
+[bb-cli]: https://docs.browserbase.com/integrations/skills/browse-cli
+[aq-api]: https://docs.agentql.com/rest-api/api-reference
+[aq-mcp]: https://github.com/tinyfish-io/agentql-mcp
+[cat]: https://github.com/Bearmancer/system-config/blob/research-drill-catalog-topgrade/.claude/docs/research/mcp-tool-catalog.md
 
 Config-hidden gaps recorded in the catalog: the Exa URL pins 4 tools and the Apify URL pins 3, so the Apify builds, schedules and tasks tools above exist upstream but are not enabled in the current config, and Exa `agent_run` depends on the pinned list including it. Enabling them is a config change, not a script.
 
@@ -240,7 +263,7 @@ Limited to the skill's five capability buckets. Each row has no MCP tool and no 
 2. Exa agent stop and cancel: `POST /agent/runs/{id}/stop` (ultra runs only) and `POST /agent/runs/{id}/cancel`. Creating and polling runs is covered by `agent_run`.
 3. Exa async batches: `POST /batches`, `GET /batches/{id}`, `POST /batches/{id}/cancel` (low priority; only if the skill needs queued request batches).
 4. Firecrawl batch scrape: `POST /v2/batch/scrape` plus `GET`/`DELETE /v2/batch/scrape/{id}` and `GET .../errors`.
-5. Bright Data async Unlocker result retrieval: `GET /unblocker/get_result?response_id=` (submit exists in the CLI as `scrape --async`; poll schedule 20 s, 10 s, then 5 s).
+5. Bright Data async Unlocker: submit via `POST /unblocker/req?zone=` and retrieve via `GET /unblocker/get_result?response_id=` (poll schedule 20 s, 10 s, then 5 s). The CLI `scrape --async` posts `async: true` to `POST /request`; whether its response IDs work with `get_result` is unverified.
 6. Browserbase agent runs: `POST /v1/agents/runs` and `GET /v1/agents/runs/{runId}`.
 7. ScrapeGraphAI crawl management: `POST /api/crawl/:id/stop`, `POST /api/crawl/:id/resume`, `DELETE /api/crawl/:id`, `GET /api/crawl/:id/pages`.
 
