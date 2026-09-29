@@ -13,7 +13,13 @@ function Sync-Youtube {
 }
 
 function Backup-AgentConfig {
-    $repoRoot = $PSScriptRoot
+    param(
+        [string]$HomeRoot = $HOME,
+        [string]$RepoRoot = $PSScriptRoot,
+        [string]$ProfilePath = $PROFILE,
+        [switch]$SkipGit
+    )
+    $repoRoot = $RepoRoot
     $robocopyFlags = @('/R:1', '/W:1', '/NFL', '/NDL', '/NJH', '/NJS', '/NP')
     $failed = $false
 
@@ -36,44 +42,41 @@ function Backup-AgentConfig {
     }
 
     # claude/
-    Copy-Files -SourceDir "$HOME\.claude" -Files @('CLAUDE.md', 'keybindings.json', 'settings.json') -Dest "$repoRoot\claude"
-    Copy-Mirror -Source "$HOME\.claude\skills" -Dest "$repoRoot\claude\skills" -ExtraFlags @('/MIR', '/XJ', '/XD', 'synced', '*-workspace')
-    Copy-Mirror -Source "$HOME\.claude\agents" -Dest "$repoRoot\claude\agents" -ExtraFlags @('/MIR')
-    Copy-Mirror -Source "$HOME\.claude\commands" -Dest "$repoRoot\claude\commands" -ExtraFlags @('/MIR')
+    Copy-Files -SourceDir "$HomeRoot\.claude" -Files @('CLAUDE.md', 'keybindings.json', 'settings.json') -Dest "$repoRoot\claude"
+    Copy-Mirror -Source "$HomeRoot\.claude\skills" -Dest "$repoRoot\claude\skills" -ExtraFlags @('/MIR', '/XJ', '/XD', 'synced', '*-workspace')
+    Copy-Mirror -Source "$HomeRoot\.claude\agents" -Dest "$repoRoot\claude\agents" -ExtraFlags @('/MIR')
+    Copy-Mirror -Source "$HomeRoot\.claude\commands" -Dest "$repoRoot\claude\commands" -ExtraFlags @('/MIR')
 
     # opencode/
-    Copy-Files -SourceDir "$HOME\.config\opencode" -Files @('opencode.json', 'tui.json') -Dest "$repoRoot\opencode"
-    Copy-Mirror -Source "$HOME\.config\opencode\agents" -Dest "$repoRoot\opencode\agents" -ExtraFlags @('/MIR')
-    Copy-Mirror -Source "$HOME\.config\opencode\commands" -Dest "$repoRoot\opencode\commands" -ExtraFlags @('/MIR')
-    Copy-Mirror -Source "$HOME\.config\opencode\skills" -Dest "$repoRoot\opencode\skills" -ExtraFlags @('/MIR')
+    Copy-Files -SourceDir "$HomeRoot\.config\opencode" -Files @('opencode.json', 'tui.json', 'AGENTS.md') -Dest "$repoRoot\opencode"
+    Copy-Mirror -Source "$HomeRoot\.config\opencode\agents" -Dest "$repoRoot\opencode\agents" -ExtraFlags @('/MIR')
+    Copy-Mirror -Source "$HomeRoot\.config\opencode\commands" -Dest "$repoRoot\opencode\commands" -ExtraFlags @('/MIR')
 
     # omo/
-    Copy-Files -SourceDir "$HOME\.omo" -Files @('omo.jsonc') -Dest "$repoRoot\omo"
-    Copy-Mirror -Source "$HOME\.omo\scripts" -Dest "$repoRoot\omo\scripts" -ExtraFlags @('/MIR')
-    Copy-Mirror -Source "$HOME\.omo\plans" -Dest "$repoRoot\omo\plans" -ExtraFlags @('/MIR')
+    Copy-Files -SourceDir "$HomeRoot\.omo\agent" -Files @('settings.json') -Dest "$repoRoot\omo"
 
     # agents/
-    Copy-Files -SourceDir "$HOME\.agents" -Files @('.skill-lock.json') -Dest "$repoRoot\agents"
-    Copy-Mirror -Source "$HOME\.agents\skills" -Dest "$repoRoot\agents\skills" -ExtraFlags @('/MIR', '/XJ')
+    Copy-Files -SourceDir "$HomeRoot\.agents" -Files @('.skill-lock.json') -Dest "$repoRoot\agents"
 
     # powershell/
-    if ($PROFILE -and (Test-Path $PROFILE)) {
+    if ($ProfilePath -and (Test-Path $ProfilePath)) {
         New-Item -ItemType Directory -Force -Path "$repoRoot\powershell" | Out-Null
-        Copy-Item $PROFILE -Destination "$repoRoot\powershell" -Force
-        Select-String -Path $PROFILE -Pattern '^\s*\.\s+["'']?([^"''\s]+\.ps1)' -AllMatches |
+        Copy-Item $ProfilePath -Destination "$repoRoot\powershell" -Force
+        Select-String -Path $ProfilePath -Pattern '^\s*\.\s+["'']?([^"''\s]+\.ps1)' -AllMatches |
             ForEach-Object { $_.Matches } | ForEach-Object {
                 $dotSourced = $ExecutionContext.InvokeCommand.ExpandString($_.Groups[1].Value)
                 if (Test-Path $dotSourced) { Copy-Item $dotSourced -Destination "$repoRoot\powershell" -Force }
             }
     }
 
-    # settings.json must hold no tokens before first commit
-    $settingsDest = "$repoRoot\claude\settings.json"
-    if (Test-Path $settingsDest) {
-        $content = Get-Content $settingsDest -Raw
-        if ($content -match '(?i)(api[_-]?key|token|secret|password)\s*["'':]\s*["''][^"'']{8,}') {
-            Remove-Item $settingsDest -Force
-            Write-Warning 'settings.json appears to hold a credential; left out of this backup.'
+    # mirrored settings files must hold no tokens before first commit
+    foreach ($settingsDest in "$repoRoot\claude\settings.json", "$repoRoot\omo\settings.json") {
+        if (Test-Path $settingsDest) {
+            $content = Get-Content $settingsDest -Raw
+            if ($content -match '(?i)(api[_-]?key|token|secret|password)\s*["'':]\s*["''][^"'']{8,}') {
+                Remove-Item $settingsDest -Force
+                Write-Warning "$settingsDest appears to hold a credential; left out of this backup."
+            }
         }
     }
 
@@ -81,6 +84,8 @@ function Backup-AgentConfig {
         Write-Warning 'One or more robocopy operations failed (exit code >= 8).'
         return $false
     }
+
+    if ($SkipGit) { return $true }
 
     Push-Location $repoRoot
     try {
