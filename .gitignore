@@ -161,3 +161,6 @@ Thumbs.db
 .omc/*
 !.omc/skills/
 .claude/worktrees/
+
+# --- secrets ---
+secrets/
