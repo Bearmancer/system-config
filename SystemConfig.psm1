@@ -19,14 +19,21 @@ function Backup-AgentConfig {
         [string]$ProfilePath = $PROFILE,
         [switch]$SkipGit
     )
+    if (-not $HomeRoot -or -not (Test-Path "$HomeRoot\.claude")) {
+        Write-Warning "HomeRoot '$HomeRoot' has no .claude; backup skipped."
+        return $false
+    }
     $repoRoot = $RepoRoot
     $robocopyFlags = @('/R:1', '/W:1', '/NFL', '/NDL', '/NJH', '/NJS', '/NP')
-    $failed = $false
+    $script:failed = $false
 
     function Copy-Mirror {
         param([string]$Source, [string]$Dest, [string[]]$ExtraFlags = @())
         if (-not (Test-Path $Source)) {
-            Remove-Item $Dest -Recurse -Force -ErrorAction SilentlyContinue
+            if (Test-Path $Dest) {
+                try { Remove-Item $Dest -Recurse -Force -ErrorAction Stop }
+                catch { Write-Warning $_; $script:failed = $true }
+            }
             return
         }
         New-Item -ItemType Directory -Force -Path $Dest | Out-Null
@@ -41,8 +48,9 @@ function Backup-AgentConfig {
             if (Test-Path $src) {
                 New-Item -ItemType Directory -Force -Path $Dest | Out-Null
                 Copy-Item $src -Destination $Dest -Force
-            } else {
-                Remove-Item (Join-Path $Dest $f) -Force -ErrorAction SilentlyContinue
+            } elseif (Test-Path (Join-Path $Dest $f)) {
+                try { Remove-Item (Join-Path $Dest $f) -Force -ErrorAction Stop }
+                catch { Write-Warning $_; $script:failed = $true }
             }
         }
     }
@@ -86,8 +94,8 @@ function Backup-AgentConfig {
         }
     }
 
-    if ($failed) {
-        Write-Warning 'One or more robocopy operations failed (exit code >= 8).'
+    if ($script:failed) {
+        Write-Warning 'One or more backup operations failed.'
         return $false
     }
 

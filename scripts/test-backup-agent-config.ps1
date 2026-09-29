@@ -36,6 +36,19 @@ try {
         Set-Content -Path $p -Value 'stale'
     }
 
+    $noClaude = Backup-AgentConfig -HomeRoot "$tmp\empty" -RepoRoot $fakeRepo -ProfilePath '' -SkipGit 3>$null
+    if ($noClaude -or -not (Test-Path "$fakeRepo\claude\keybindings.json")) {
+        Write-Error 'FAIL: guard must return $false and remove nothing when HomeRoot has no .claude'
+        exit 1
+    }
+
+    $lock = [IO.File]::Open("$fakeRepo\claude\keybindings.json", 'Open', 'ReadWrite', 'None')
+    try { $locked = Backup-AgentConfig -HomeRoot $fakeHome -RepoRoot $fakeRepo -ProfilePath '' -SkipGit 3>$null } finally { $lock.Dispose() }
+    if ($locked) {
+        Write-Error 'FAIL: locked stale file must make backup return $false'
+        exit 1
+    }
+
     $ok = Backup-AgentConfig -HomeRoot $fakeHome -RepoRoot $fakeRepo -ProfilePath '' -SkipGit
     $actual = Get-ChildItem $fakeRepo -Recurse -File -Force |
         ForEach-Object { $_.FullName.Substring($fakeRepo.Length + 1).Replace('\', '/') } | Sort-Object
