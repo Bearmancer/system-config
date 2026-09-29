@@ -155,5 +155,6 @@
       "**Org-specific CLIs**: `toolbox` (published CLI, resolves to `artifacts\\publish\\src\\App\\release\\toolbox.exe`), `dbcrust` (ad hoc SQLite query against `state/toolbox.db`), `codegraph` (mandatory repo indexing per user global CLAUDE.md)",
       "routine under C:\\Users\\Lance\\Dev\\Toolbox\\ prefix: build/test/publish commands (`dotnet build`, `dotnet publish src/App -c Release`, `dotnet test`), git operations against origin, `gh` issue/label operations on Bearmancer/Toolbox"
     ]
-  }
+  },
+  "skipDangerousModePermissionPrompt": true
 }

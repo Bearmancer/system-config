@@ -1,14 +1,100 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
-  "model": "opencode/muse-spark-1.3-contributor-free",
-  "small_model": "opencode/muse-spark-1.3-contributor-free",
+  "model": "opencode-go/muse-spark-1.3-contributor",
+  "small_model": "opencode-go/muse-spark-1.3-contributor",
+  // OpenCode Go: only muse-spark-1.3-contributor, deepseek-v4.1-flash, qwen3.7-plus are allowed.
+  // v2 has no allow-list; per-model disabled removes a model from the catalog and rejects it for sessions and subagents.
+  "providers": {
+    "opencode-go": {
+      "models": {
+        "deepseek-v4-flash": {
+          "disabled": true
+        },
+        "deepseek-v4-flash-vision-exp": {
+          "disabled": true
+        },
+        "deepseek-v4-pro": {
+          "disabled": true
+        },
+        "glm-5.2": {
+          "disabled": true
+        },
+        "glm-5.3": {
+          "disabled": true
+        },
+        "glm-5.3-flash": {
+          "disabled": true
+        },
+        "gpt-5.6-luna": {
+          "disabled": true
+        },
+        "gpt-6-luna": {
+          "disabled": true
+        },
+        "grok-4.6": {
+          "disabled": true
+        },
+        "grok-4.7": {
+          "disabled": true
+        },
+        "hy3": {
+          "disabled": true
+        },
+        "hy4-preview": {
+          "disabled": true
+        },
+        "kimi-k2.7-code": {
+          "disabled": true
+        },
+        "kimi-k3": {
+          "disabled": true
+        },
+        "longcat-2.0": {
+          "disabled": true
+        },
+        "longcat-2.5-preview-free": {
+          "disabled": true
+        },
+        "mimo-v2.5": {
+          "disabled": true
+        },
+        "mimo-v2.5-pro": {
+          "disabled": true
+        },
+        "mimo-v2.6-flash": {
+          "disabled": true
+        },
+        "mimo-v2.6-pro": {
+          "disabled": true
+        },
+        "minimax-m2.7": {
+          "disabled": true
+        },
+        "minimax-m3": {
+          "disabled": true
+        },
+        "muse-spark-1.2-contributor": {
+          "disabled": true
+        },
+        "qwen3.8-flash": {
+          "disabled": true
+        },
+        "qwen3.8-max": {
+          "disabled": true
+        },
+        "space-bunny-free": {
+          "disabled": true
+        }
+      }
+    }
+  },
   "agents": {
     "build": {
-      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+      "model": "opencode-go/muse-spark-1.3-contributor"
     },
     "plan": {
-      "model": "opencode/muse-spark-1.3-contributor-free#xhigh"
+      "model": "opencode-go/deepseek-v4.1-flash#xhigh"
     },
     "general": {
       "disabled": true
@@ -19,7 +105,7 @@
     "researcher": {
       "description": "Web researcher. Use for any web lookup, scrape, search or crawl.",
       "mode": "subagent",
-      "model": "opencode/muse-spark-1.3-contributor-free",
+      "model": "opencode-go/muse-spark-1.3-contributor",
       "system": "Use the web MCP tools (via execute) for every question. Report exact returned text with source URLs."
     }
   },
@@ -75,7 +161,6 @@
       },
       "browserbase": {
         "type": "remote",
-        "disabled": true,
         "url": "https://mcp.browserbase.com/mcp",
         "headers": {
           "Authorization": "Bearer {file:~/.config/opencode/secrets/browserbase}"
@@ -88,7 +173,6 @@
       },
       "agentql": {
         "type": "local",
-        "disabled": true,
         "command": [
           "npx",
           "-y",
@@ -171,6 +255,42 @@
           "catalog": 60000,
           "execution": 30000
         }
+      },
+      "github": {
+        "type": "local",
+        "command": [
+          "C:\\Users\\Lance\\.local\\bin\\github-mcp-server.exe",
+          "stdio"
+        ],
+        "environment": {
+          "GITHUB_PERSONAL_ACCESS_TOKEN": "{file:~/.config/opencode/secrets/github}"
+        }
+      },
+      "playwright": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@playwright/mcp@latest"
+        ]
+      },
+      "sequential-thinking": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "@modelcontextprotocol/server-sequential-thinking"
+        ]
+      },
+      "aws-mcp": {
+        "type": "local",
+        "command": [
+          "uvx",
+          "mcp-proxy-for-aws@latest",
+          "https://aws-mcp.us-east-1.api.aws/mcp",
+          "--metadata",
+          "INSTALL_SOURCE=aws-cli"
+        ]
       }
     }
   },
@@ -179,6 +299,95 @@
     // OpenCode Quota: loads the server plugin for slash commands and quota checks.
     "@slkiser/opencode-quota@next"
   ],
-  "lsp": true,
-  "formatter": true
+  "lsp": {
+    "typescript": {
+      "command": [
+        "typescript-language-server",
+        "--stdio"
+      ],
+      "extensions": [
+        ".ts",
+        ".tsx",
+        ".js",
+        ".jsx",
+        ".mjs",
+        ".cjs",
+        ".mts",
+        ".cts"
+      ]
+    },
+    "json": {
+      "command": [
+        "vscode-json-language-server",
+        "--stdio"
+      ],
+      "extensions": [
+        ".json",
+        ".jsonc"
+      ]
+    },
+    "csharp": {
+      "command": [
+        "csharp-ls"
+      ],
+      "extensions": [
+        ".cs",
+        ".csx"
+      ]
+    },
+    "pyright": {
+      "command": [
+        "C:/Users/Lance/AppData/Local/Python/pythoncore-3.14-64/Scripts/basedpyright-langserver.exe",
+        "--stdio"
+      ],
+      "extensions": [
+        ".py",
+        ".pyi"
+      ]
+    },
+    "powershell": {
+      "command": [
+        "pwsh",
+        "-NoLogo",
+        "-NoProfile",
+        "-NonInteractive",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "C:/Users/Lance/Documents/PowerShell/Modules/PowerShellEditorServices/Start-EditorServices.ps1",
+        "-HostName",
+        "OpenCode",
+        "-HostProfileId",
+        "OpenCode",
+        "-HostVersion",
+        "1.0",
+        "-Stdio"
+      ],
+      "extensions": [
+        ".ps1",
+        ".psm1",
+        ".psd1"
+      ]
+    },
+    "bash": {
+      "command": [
+        "bash-language-server",
+        "start"
+      ],
+      "extensions": [
+        ".sh",
+        ".bash",
+        ".zsh",
+        ".ksh"
+      ]
+    }
+  },
+  "formatter": true,
+  "compaction": {
+    "auto": false,
+    "prune": false
+  },
+  "plugins": [
+    "@cortexkit/opencode-magic-context@latest"
+  ]
 }
