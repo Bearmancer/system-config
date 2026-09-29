@@ -47,7 +47,7 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 |---|---|
 | Claude plugins | `claude plugin install <plugin>@<marketplace>` for each entry in `enabledPlugins` of the restored `claude/settings.json` |
 | `.skill-lock.json` | Copy `agents/.skill-lock.json` back to `~/.agents/.skill-lock.json` |
-| Slim skills (vendored oh-my-opencode-slim bundle) | OpenCode installs the `oh-my-opencode-slim` npm plugin listed (unpinned) in the restored `opencode.json` |
+| Slim skills (vendored oh-my-opencode-slim bundle) | OpenCode installs the `oh-my-opencode-slim` npm plugin listed (unpinned) in the restored `opencode.json`; the researcher-subagent delegation was verified against `2.2.25` (`.claude/docs/research/researcher-subagent-mcp.md`) |
 | OpenCode credentials (`auth.json`, `mcp-auth.json` in `~/.local/share/opencode`) | `opencode auth login` for providers, `opencode mcp auth` for OAuth MCP servers (both verified in `--help`) |
 | OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
 | Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
