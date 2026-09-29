@@ -5,7 +5,7 @@ Runs this machine's daily jobs and backs up its AI agent config. See README.md f
 ## Index
 
 - Standards: docs/standards/architecture.md, docs/standards/data.md, docs/standards/process.md
-- Decisions: docs/adr/ (ADR-0001: adopt shipyard harness)
+- Decisions: docs/adr/ (0001 shipyard harness, 0002 two distinct instruction files, 0003 `{file:}` key rotation, 0004 daily-only backup + one-time squash)
 - Background: docs/business/; setup end-state: navigator map #2 and .claude/plans/specs/deep-interview-setup-end-state.md
 
 ## Rules
