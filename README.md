@@ -29,7 +29,7 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `claude/` (CLAUDE.md, keybindings.json, settings.json) | `~/.claude/` | files |
 | `claude/skills/` | `~/.claude/skills/` | `/MIR /XJ /XD synced *-workspace __pycache__ .pytest_cache` |
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
-| `opencode/` (AGENTS.md, opencode.jsonc, tui.json) | `~/.config/opencode/` | files |
+| `opencode/` (AGENTS.md, opencode.jsonc, oh-my-opencode-slim.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
 | `omo/settings.json` | `~/.omo/agent/settings.json` | files (credential-guarded) |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
