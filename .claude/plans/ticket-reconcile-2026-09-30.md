@@ -90,8 +90,8 @@ Gates before closing:
 1. **G1, skill tests and skill-edit check.** Scope: the pytest suite covers `scripts/` (including `switch_api_key.py`) only; it does not check SKILL.md or fleet.md. So G1 has two parts:
    - `uv run --with pytest pytest C:\Users\Lance\.claude\skills\deep-research\scripts\tests` passes.
    - `rg` assertions on the skill edit, run from `C:\Users\Lance\.claude\skills\deep-research`, one file per call so a hit in one file cannot mask a miss in the other:
-     - present (each exits 0): `rg -q 'tavily_extract' SKILL.md`, `rg -q 'apify--rag-web-browser' SKILL.md`, `rg -q 'smartcrawler_initiate' references/fleet.md`, `rg -q 'system-config#45' SKILL.md`, `rg -q 'OmO sidecar: disabled' SKILL.md`, `rg -q 'OmO sidecar: disabled' references/fleet.md`;
-     - absent (each exits 1, checked on both files together since any hit fails): `rg -q 'tavily-extract' SKILL.md references/fleet.md`, `rg -q 'crawl_start' SKILL.md references/fleet.md`, `rg -q '@playwright/cli' SKILL.md references/fleet.md`.
+     - present (each exits 0): `rg -q 'tavily_extract' SKILL.md`, `rg -q 'apify--rag-web-browser' SKILL.md`, `rg -q 'smartcrawler_initiate' references/fleet.md`, `rg -q 'system-config#45' SKILL.md`;
+     - absent (each exits 1, checked on both files together since any hit fails): `rg -q 'tavily-extract' SKILL.md references/fleet.md`, `rg -q 'crawl_start' SKILL.md references/fleet.md`, `rg -q '@playwright/cli' SKILL.md references/fleet.md`, `rg -q 'OmO sidecar: disabled' SKILL.md references/fleet.md` (the sidecar was removed in #51).
    An Opus review PASS is not a test result.
 2. **G2, plan docs committed and pushed.** In `C:\Users\Lance\Dev\system-config` on `master`: commit `.claude/plans/deep-research/review.md` and `.claude/plans/ticket-reconcile-2026-09-30.md` together in one commit and `git push origin master` directly (the same path as the daily backup commits; no PR, since these are plan and record docs). Checks, each for both paths:
    - `git ls-files --error-unmatch .claude/plans/deep-research/review.md .claude/plans/ticket-reconcile-2026-09-30.md` exits 0;

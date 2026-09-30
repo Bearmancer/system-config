@@ -31,7 +31,7 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
 | `opencode/` (AGENTS.md, opencode.jsonc, oh-my-opencode-slim.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
-| `omo/settings.json` | `~/.omo/agent/settings.json` | files (credential-guarded) |
+| `omo/` (mcp.json, settings.json) | `~/.omo/agent/` | files (settings.json credential-guarded) |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
 | `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 
@@ -54,6 +54,7 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
 | Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
 | Secrets | `uv run ~/.claude/skills/deep-research/scripts/switch_api_key.py --service all --materialize`, from the key pools in `~/.secrets/.env` |
+| MCP key env vars (read by `omo/mcp.json`) | `switch_api_key.py --service <name> --set <ACCOUNT>` per service writes the secrets file and the user env var; set `GITHUB_PERSONAL_ACCESS_TOKEN` by hand. Restart OmO from a new terminal afterwards |
 | Vendor CLIs (deep-research) | `uv tool install tavily-cli; npm install -g firecrawl-cli apify-cli @brightdata/cli just-scrape browse` (verified with each `--version`; sources in `.claude/docs/research/mcp-cli-post-matrix.md`) |
 | Repos | `gh repo clone <owner>/<repo>`, e.g. `gh repo clone Bearmancer/deep-research ~/Dev/deep-research` |
 | Scheduled Tasks | `install.ps1`, elevated |

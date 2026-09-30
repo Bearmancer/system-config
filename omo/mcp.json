@@ -1,0 +1,73 @@
+{
+  "mcpServers": {
+    "exa": {
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
+      "bearerTokenEnv": "EXA_API_KEY"
+    },
+    "tavily": {
+      "url": "https://mcp.tavily.com/mcp/",
+      "bearerTokenEnv": "TAVILY_API_KEY"
+    },
+    "firecrawl": {
+      "url": "https://mcp.firecrawl.dev/v2/mcp",
+      "bearerTokenEnv": "FIRECRAWL_API_KEY"
+    },
+    "apify": {
+      "url": "https://mcp.apify.com?tools=apify/rag-web-browser,search-actors,call-actor",
+      "bearerTokenEnv": "APIFY_TOKEN"
+    },
+    "browserbase": {
+      "url": "https://mcp.browserbase.com/mcp",
+      "bearerTokenEnv": "BROWSERBASE_API_KEY"
+    },
+    "agentql": {
+      "connectTimeoutMs": 120000,
+      "command": "npx",
+      "args": ["-y", "agentql-mcp"],
+      "env": { "AGENTQL_API_KEY": "${AGENTQL_API_KEY}" }
+    },
+    "microsoft-learn": {
+      "url": "https://learn.microsoft.com/api/mcp"
+    },
+    "scrapegraph": {
+      "connectTimeoutMs": 120000,
+      "command": "scrapegraph-mcp",
+      "env": { "SGAI_API_KEY": "${SCRAPEGRAPH_API_KEY}" }
+    },
+    "codegraph": {
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
+    },
+    "firefox-devtools": {
+      "connectTimeoutMs": 120000,
+      "command": "firefox-devtools-mcp",
+      "args": [
+        "--profile-path", "C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile",
+        "--firefox-path", "C:/Program Files/Mozilla Firefox/firefox.exe",
+        "--viewport", "1280x720",
+        "--tool-preset", "all"
+      ]
+    },
+    "brightdata": {
+      "connectTimeoutMs": 120000,
+      "command": "npx",
+      "args": ["-y", "@brightdata/mcp"],
+      "env": { "API_TOKEN": "${BRIGHTDATA_API_KEY}" }
+    },
+    "github": {
+      "command": "C:\\Users\\Lance\\.local\\bin\\github-mcp-server.exe",
+      "args": ["stdio"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}" }
+    },
+    "playwright": {
+      "connectTimeoutMs": 120000,
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "sequential-thinking": {
+      "connectTimeoutMs": 120000,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Fleet: pick server by capability
 
-Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`) and, for OmO, in the skill sidecar `mcp.json` (all except ScrapeGraph and Bright Data, see SKILL.md Key rotation step 5; AgentQL and Browserbase present with `"enabled": false`). Exa MCP URL pins 4 tools (`web_search_exa`, `web_fetch_exa`, `web_search_advanced_exa`, `agent_run`), Apify pins 3 (`apify/rag-web-browser`, `search-actors`, `call-actor`); keep pins. Other hosts expose whatever MCP servers they carry; same rows apply by capability.
+Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/` files) and OmO (`~/.omo/agent/mcp.json`, same servers, keys from user env vars). No skill sidecar `mcp.json`: senpi sends skill-declared remote servers without auth. Exa MCP URL pins 4 tools (`web_search_exa`, `web_fetch_exa`, `web_search_advanced_exa`, `agent_run`), Apify pins 3 (`apify/rag-web-browser`, `search-actors`, `call-actor`); keep pins. Other hosts expose whatever MCP servers they carry; same rows apply by capability.
 
 | Server | Use when |
 |---|---|
@@ -9,10 +9,10 @@ Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`) and, for O
 | Exa | Conceptual (not keyword) query; papers and long-form keyword engines miss; chain step 3 (`web_fetch_exa`). |
 | ScrapeGraphAI | Schema-shaped extraction across many pages; crawl outliving one call; chain step 4 (`stealth`). |
 | Apify | Site-specific Actor or Actor `apify/rag-web-browser` (tool `apify--rag-web-browser`); chain step 5. |
-| AgentQL | Query-shaped extraction; chain step 6. OmO sidecar: disabled; enable when reached. |
+| AgentQL | Query-shaped extraction; chain step 6. |
 | Firefox DevTools | JS-gated page seen rendered; network/console truth behind page; chain step 7. |
 | Bright Data | WAF/Cloudflare/geo-blocked after cheaper tiers fail; chain step 8. |
-| Browserbase | Hosted browser, CAPTCHA (paid tier); chain step 9. OmO sidecar: disabled; enable when reached. |
+| Browserbase | Hosted browser, CAPTCHA (paid tier); chain step 9. |
 | Microsoft Learn | Anything Microsoft, Azure, .NET: before general web search. |
 
 Also connected, loaded by the `oh-my-opencode-slim` plugin (not `opencode.jsonc`): Context7 (`resolve-library-id`, `query-docs`), gh_grep (`searchGitHub`).
