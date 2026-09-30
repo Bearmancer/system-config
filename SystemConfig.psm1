@@ -176,7 +176,7 @@ function Install-TopgradeTask {
     $pwshPath = (Get-Command pwsh).Source
     $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "topgrade --yes --no-retry; if ($LASTEXITCODE) { Read-Host ''topgrade FAILED''; exit 1 }"'
+    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "Start-Transcript -Path $env:LOCALAPPDATA\topgrade-task.log -Append -UseMinimalHeader; topgrade --yes; $rc = $LASTEXITCODE; Stop-Transcript; if ($rc) { Read-Host ''topgrade FAILED''; exit 1 }"'
     $trigger = New-ScheduledTaskTrigger -Daily -At 10:00am
     Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
