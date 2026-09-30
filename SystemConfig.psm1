@@ -177,11 +177,27 @@ function Install-DailySyncTask {
     Register-ScheduledTask -TaskName 'Daily sync' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
 
+function Get-TopgradeTaskArgument {
+    param([string]$Command = 'topgrade --yes --verbose')
+    $script = @(
+        '[Console]::OutputEncoding = [Text.Encoding]::UTF8',
+        '$dir = Join-Path $env:LOCALAPPDATA ''topgrade-logs''',
+        'New-Item -ItemType Directory -Force $dir | Out-Null',
+        '$log = Join-Path $dir (''topgrade-{0:yyyyMMdd-HHmmss}.log'' -f (Get-Date))',
+        '$rc = 1',
+        ('for ($i = 1; $i -le 2; $i++) { try { & ' + $Command + ' 2>&1 | ForEach-Object { $_.ToString() } | Tee-Object -FilePath $log -Append; $rc = $LASTEXITCODE; break } catch { (''[start failed, attempt '' + $i + ''] '' + $_) | Tee-Object -FilePath $log -Append; Start-Sleep -Seconds 30 } }'),
+        '(''[exit code '' + $rc + '']'') | Tee-Object -FilePath $log -Append',
+        'Copy-Item -LiteralPath $log -Destination (Join-Path $env:LOCALAPPDATA ''topgrade-task.log'') -Force',
+        'if ($rc) { Read-Host ''topgrade FAILED''; exit $rc }'
+    ) -join '; '
+    "-NoProfile -Command `"$script`""
+}
+
 function Install-TopgradeTask {
     $pwshPath = (Get-Command pwsh).Source
     $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "Start-Transcript -Path (Join-Path $env:LOCALAPPDATA topgrade-task.log) -Append -UseMinimalHeader; topgrade --yes; $rc = if ($?) { $LASTEXITCODE } else { 1 }; Stop-Transcript; if ($rc) { Read-Host ''topgrade FAILED''; exit 1 }"'
+    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument (Get-TopgradeTaskArgument)
     $trigger = New-ScheduledTaskTrigger -Daily -At 10:00am
     Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
