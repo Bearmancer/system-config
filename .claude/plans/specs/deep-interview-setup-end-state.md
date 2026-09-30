@@ -60,10 +60,10 @@ system-config is the single documented, daily-backed-up home for everything auth
   - Dappier not wired (data marketplace, cannot unblock). v2 uses `disabled: true`, not `enabled: false`.
 
 ## Acceptance Criteria
-- [ ] Restore drill: following README restore + reinstall list on a fresh folder brings back every authored file; OpenCode, Claude and OmO start with the same skills and rules.
-- [ ] Drift check: every README backup row exists locally and in repo; no stale files; one commit/day; no links under `~/Dev`; no `.codegraph` junctions.
-- [ ] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict.
-- [ ] Remote + tasks check: after reboot + logon, OpenCode service up, reachable only via tailnet HTTPS, not LAN IP; all three Scheduled Tasks defined in code and registered.
+- [x] Restore drill: following README restore + reinstall list on a fresh folder brings back every authored file; OpenCode, Claude and OmO start with the same skills and rules. PASS: #20.
+- [x] Drift check: every README backup row exists locally and in repo; no stale files; one commit/day; no links under `~/Dev`; no `.codegraph` junctions. PASS: #20.
+- [ ] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict. Partial: bare OpenCode researcher chain walk PASS (#20 drill, Tavily -> Firecrawl); slim and OmO variants and key rotation during the drill not exercised.
+- [x] Remote + tasks check: after reboot + logon, OpenCode service up, reachable only via tailnet HTTPS, not LAN IP; all three Scheduled Tasks defined in code and registered. PASS: #20 (reboot check).
 
 ## Open unknowns (research tickets)
 - Live test: `{file:}` key change under `~/.config/opencode/secrets/` hot-reloads one MCP (source says yes; `{file:}` absent from v2 MCP docs).
