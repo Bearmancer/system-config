@@ -15,7 +15,7 @@ Runs this machine's daily jobs and backs up its AI agent config. One private rep
 ## Scheduled tasks
 
 - **Daily sync** (09:00): `run-sync.ps1` — lastfm sync, youtube sync, agent config backup, foobar2000 mirror, then checks the OpenCode service and starts it if it is down.
-- **Topgrade** (10:00): `topgrade --yes`, transcribed to `%LOCALAPPDATA%\topgrade-task.log`. Local `topgrade.toml` (not backed up) adds `[pre_commands]` "Stop codegraph" (npm 11 `update -g` rewrites every global package and a running codegraph MCP locks its node.exe) and `[commands]` "uv tools" and "github-mcp-server".
+- **Topgrade** (10:00): `topgrade --yes --verbose`, all stdout/stderr/child output tee'd to `%LOCALAPPDATA%\topgrade-logs\topgrade-<timestamp>.log` and copied to `%LOCALAPPDATA%\topgrade-task.log` at the end (`Get-TopgradeTaskArgument`). Local `topgrade.toml` (not backed up) adds `[pre_commands]` "Stop codegraph" (npm 11 `update -g` rewrites every global package and a running codegraph MCP locks its node.exe) and `[commands]` "uv tools" and "github-mcp-server".
 - **OpenCode service** (at logon): `opencode service start`.
 
 All three registered by `install.ps1` (run once, elevated, by hand — this repo's scripts never register scheduled tasks themselves).
