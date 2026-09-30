@@ -103,13 +103,18 @@ function Backup-AgentConfig {
 
     Push-Location $repoRoot
     try {
+        $branch = git rev-parse --abbrev-ref HEAD
+        if ($branch -ne 'master') {
+            Write-Warning "Agent config backup skipped: repo is on branch $branch, not master."
+            return $false
+        }
         git add -A
         git diff --cached --quiet
         if ($LASTEXITCODE -eq 0) { return $true }
         $msg = "Backup agent config $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
         git commit -m $msg
         if ($LASTEXITCODE -ne 0) { return $false }
-        git push
+        git push origin master
         return ($LASTEXITCODE -eq 0)
     } finally {
         Pop-Location
