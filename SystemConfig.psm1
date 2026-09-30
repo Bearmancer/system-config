@@ -103,13 +103,18 @@ function Backup-AgentConfig {
 
     Push-Location $repoRoot
     try {
+        $branch = git rev-parse --abbrev-ref HEAD
+        if ($branch -ne 'master') {
+            Write-Warning "Agent config backup skipped: repo is on branch $branch, not master."
+            return $false
+        }
         git add -A
         git diff --cached --quiet
         if ($LASTEXITCODE -eq 0) { return $true }
         $msg = "Backup agent config $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
         git commit -m $msg
         if ($LASTEXITCODE -ne 0) { return $false }
-        git push
+        git push origin master
         return ($LASTEXITCODE -eq 0)
     } finally {
         Pop-Location
@@ -176,7 +181,7 @@ function Install-TopgradeTask {
     $pwshPath = (Get-Command pwsh).Source
     $principal = New-ScheduledTaskPrincipal -UserId "$env:COMPUTERNAME\$env:USERNAME" -LogonType Interactive -RunLevel Highest
     $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew
-    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "topgrade --yes --no-retry; if ($LASTEXITCODE) { Read-Host ''topgrade FAILED''; exit 1 }"'
+    $action = New-ScheduledTaskAction -Execute $pwshPath -Argument '-NoProfile -Command "Start-Transcript -Path (Join-Path $env:LOCALAPPDATA topgrade-task.log) -Append -UseMinimalHeader; topgrade --yes; $rc = if ($?) { $LASTEXITCODE } else { 1 }; Stop-Transcript; if ($rc) { Read-Host ''topgrade FAILED''; exit 1 }"'
     $trigger = New-ScheduledTaskTrigger -Daily -At 10:00am
     Register-ScheduledTask -TaskName 'Topgrade' -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force -ErrorAction Stop | Out-Null
 }
