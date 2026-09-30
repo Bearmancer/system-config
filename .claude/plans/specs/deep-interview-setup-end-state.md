@@ -46,7 +46,7 @@ system-config is the single documented, daily-backed-up home for everything auth
 - Hosts: bare OpenCode v2, OpenCode + oh-my-opencode-slim (current primary, removable layer), OmO 5.0.1 (omo-native). No host-specific tool names in SKILL.md.
 - Fan-out: capability probe — if a subagent launcher exists, one worker per chapter with self-contained prompt + output schema; else inline. Define native `researcher` subagent in `opencode.json` `agents` (built-in `general`/`explore` stay disabled).
 - MCP keys: pools stay in `~/.secrets/.env`. Active key per service at `~/.config/opencode/secrets/<svc>`, referenced via `{file:}` (watched dir, hot reload, only changed MCP reconnects). `switch_api_key.py --next` writes the file and creates every referenced file (missing file breaks config load). Backup excludes `secrets/`. Sidesteps bug #50882.
-- OmO MCPs: skill-bundled `mcp.json` sidecar (`${VAR}`; OmO rotation needs restart).
+- OmO MCPs: global `~/.omo/agent/mcp.json`, same servers as OpenCode (`${VAR}` and `bearerTokenEnv` from user env vars; OmO rotation needs a restart from a new terminal).
 - Block chain (walk every account of a server before moving on; report "blocked" only after full log `URL | status | method`):
   1. Tavily extract (basic, then advanced)
   2. Firecrawl `proxy:"auto"`, `maxAge:0`

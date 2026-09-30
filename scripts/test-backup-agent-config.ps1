@@ -59,7 +59,14 @@ try {
         Write-Error "FAIL: ok=$ok`n$($diff | Out-String)"
         exit 1
     }
-    Write-Output "PASS: $($actual.Count) mirrored paths match whitelist"
+    Set-Content -Path "$fakeHome\.omo\agent\mcp.json" -Value '{"mcpServers":{"x":{"env":{"X_API_KEY": "planted-literal-value"}}}}'
+    Set-Content -Path "$fakeHome\.omo\agent\settings.json" -Value '{"env":{"API_TOKEN": "${SOME_VAR}"}}'
+    $null = Backup-AgentConfig -HomeRoot $fakeHome -RepoRoot $fakeRepo -ProfilePath '' -SkipGit 3>$null
+    if ((Test-Path "$fakeRepo\omo\mcp.json") -or -not (Test-Path "$fakeRepo\omo\settings.json")) {
+        Write-Error 'FAIL: guard must drop a literal credential and keep a ${VAR} placeholder'
+        exit 1
+    }
+    Write-Output "PASS: $($actual.Count) mirrored paths match whitelist; credential guard drops literals only"
 } finally {
     Get-ChildItem $tmp -Recurse -Force -ErrorAction SilentlyContinue | Sort-Object FullName -Descending |
         ForEach-Object { if ($_.PSIsContainer) { [IO.Directory]::Delete($_.FullName) } else { [IO.File]::Delete($_.FullName) } }

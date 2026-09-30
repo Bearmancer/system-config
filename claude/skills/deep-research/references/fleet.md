@@ -1,6 +1,6 @@
 # Fleet: pick server by capability
 
-Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/` files) and OmO (`~/.omo/agent/mcp.json`, same servers, keys from user env vars; wins over the skill sidecar `mcp.json`, whose remote servers senpi sends without auth). Exa MCP URL pins 4 tools (`web_search_exa`, `web_fetch_exa`, `web_search_advanced_exa`, `agent_run`), Apify pins 3 (`apify/rag-web-browser`, `search-actors`, `call-actor`); keep pins. Other hosts expose whatever MCP servers they carry; same rows apply by capability.
+Wired in OpenCode (`~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/` files) and OmO (`~/.omo/agent/mcp.json`, same servers, keys from user env vars). No skill sidecar `mcp.json`: senpi sends skill-declared remote servers without auth. Exa MCP URL pins 4 tools (`web_search_exa`, `web_fetch_exa`, `web_search_advanced_exa`, `agent_run`), Apify pins 3 (`apify/rag-web-browser`, `search-actors`, `call-actor`); keep pins. Other hosts expose whatever MCP servers they carry; same rows apply by capability.
 
 | Server | Use when |
 |---|---|

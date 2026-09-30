@@ -21,6 +21,7 @@
       "bearerTokenEnv": "BROWSERBASE_API_KEY"
     },
     "agentql": {
+      "connectTimeoutMs": 120000,
       "command": "npx",
       "args": ["-y", "agentql-mcp"],
       "env": { "AGENTQL_API_KEY": "${AGENTQL_API_KEY}" }
@@ -29,6 +30,7 @@
       "url": "https://learn.microsoft.com/api/mcp"
     },
     "scrapegraph": {
+      "connectTimeoutMs": 120000,
       "command": "scrapegraph-mcp",
       "env": { "SGAI_API_KEY": "${SCRAPEGRAPH_API_KEY}" }
     },
@@ -37,6 +39,7 @@
       "args": ["serve", "--mcp"]
     },
     "firefox-devtools": {
+      "connectTimeoutMs": 120000,
       "command": "firefox-devtools-mcp",
       "args": [
         "--profile-path", "C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile",
@@ -46,6 +49,7 @@
       ]
     },
     "brightdata": {
+      "connectTimeoutMs": 120000,
       "command": "npx",
       "args": ["-y", "@brightdata/mcp"],
       "env": { "API_TOKEN": "${BRIGHTDATA_API_KEY}" }
@@ -56,10 +60,12 @@
       "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}" }
     },
     "playwright": {
+      "connectTimeoutMs": 120000,
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest"]
     },
     "sequential-thinking": {
+      "connectTimeoutMs": 120000,
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
     }
