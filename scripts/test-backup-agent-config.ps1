@@ -13,14 +13,14 @@ $sources = @(
     '.config\opencode\agents\a.md',
     '.config\opencode\secrets\key.txt', '.config\opencode\auth.json', '.config\opencode\service.json',
     '.config\opencode\skills\s.md',
-    '.omo\agent\settings.json', '.omo\agent\auth.json', '.omo\omo.jsonc', '.omo\scripts\s.ps1', '.omo\plans\p.md',
+    '.omo\agent\settings.json', '.omo\agent\mcp.json', '.omo\agent\auth.json', '.omo\omo.jsonc', '.omo\scripts\s.ps1', '.omo\plans\p.md',
     '.agents\.skill-lock.json', '.agents\skills\s.md'
 )
 $expected = @(
     'agents/.skill-lock.json',
     'claude/CLAUDE.md', 'claude/agents/a.md', 'claude/commands/c.md',
     'claude/settings.json', 'claude/skills/a/SKILL.md',
-    'omo/settings.json',
+    'omo/mcp.json', 'omo/settings.json',
     'opencode/AGENTS.md', 'opencode/agents/a.md', 'opencode/oh-my-opencode-slim.jsonc', 'opencode/opencode.jsonc', 'opencode/tui.json'
 ) | Sort-Object
 

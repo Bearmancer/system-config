@@ -31,7 +31,7 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
 | `opencode/` (AGENTS.md, opencode.jsonc, oh-my-opencode-slim.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
-| `omo/settings.json` | `~/.omo/agent/settings.json` | files (credential-guarded) |
+| `omo/` (mcp.json, settings.json) | `~/.omo/agent/` | files (settings.json credential-guarded) |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
 | `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 

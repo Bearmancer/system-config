@@ -67,7 +67,7 @@ function Backup-AgentConfig {
     Copy-Mirror -Source "$HomeRoot\.config\opencode\commands" -Dest "$repoRoot\opencode\commands" -ExtraFlags @('/MIR')
 
     # omo/
-    Copy-Files -SourceDir "$HomeRoot\.omo\agent" -Files @('settings.json') -Dest "$repoRoot\omo"
+    Copy-Files -SourceDir "$HomeRoot\.omo\agent" -Files @('settings.json', 'mcp.json') -Dest "$repoRoot\omo"
 
     # agents/
     Copy-Files -SourceDir "$HomeRoot\.agents" -Files @('.skill-lock.json') -Dest "$repoRoot\agents"

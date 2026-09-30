@@ -43,10 +43,10 @@ Self-contained answer printed to terminal (e.g. statistics fact-check):
    3. Exa `web_fetch_exa` (cached copy); `SOURCE_NOT_AVAILABLE` -> next.
    4. ScrapeGraph `scrape` `stealth: true` (+5 credits).
    5. Apify tool `apify--rag-web-browser` (Actor ID `apify/rag-web-browser`), or site Actor via `search-actors` + `call-actor`.
-   6. AgentQL `extract-web-data`. OmO sidecar: disabled; enable when reached.
+   6. AgentQL `extract-web-data`.
    7. Firefox DevTools MCP, or Playwright MCP `browser_navigate` -> `browser_snapshot`.
    8. Bright Data Web Unlocker: MCP `scrape_as_markdown`, then CLI `brightdata scrape`; 502 `reject_block` -> retry once.
-   9. Browserbase (paid tier for CAPTCHA). OmO sidecar: disabled; enable when reached.
+   9. Browserbase (paid tier for CAPTCHA).
    Keep internal log `URL | status | method` per attempt. All steps and accounts exhausted: URL blocked, never guess content; flag or drop the claim it carried.
 3. Credit/quota/auth failure: "Key rotation" below; error codes per service: `references/fleet.md`.
 
@@ -132,7 +132,6 @@ Trigger: credit/quota/payment/auth failure per `references/fleet.md` table (e.g.
 1. Run `uv run <skill>/scripts/switch_api_key.py --service <name> --next`. It writes the active key to `~/.config/opencode/secrets/<name>`. OpenCode: config watcher reconnects only that MCP server in about 1 s, no restart (verified: system-config `.claude/docs/research/secrets-subdir-reload.md`). OmO: restart needed.
 2. Relay its output line verbatim (already masked). Its watcher-reconnect wording holds on OpenCode only; on OmO say restart needed.
 3. Retry the failed call on the same server. Repeat `--next` per failure until the output returns to the first account: pool exhausted, go to next chain step.
-4. OmO host: sidecar `mcp.json` reads env vars at server spawn, so a rotated key applies after OmO restarts. Tell user; continue chain on other servers meanwhile.
-5. OmO host: chain skips steps 4 (ScrapeGraph) and 8 (Bright Data) until senpi issue https://github.com/code-yeongyu/senpi/issues/2345 is fixed; senpi skips `${VAR}` in skill sidecars and those servers read only `SGAI_API_KEY` / `API_TOKEN`.
+4. OmO host: `~/.omo/agent/mcp.json` reads user env vars at server spawn, so a rotated key applies after OmO restarts. Tell user; continue chain on other servers meanwhile.
 
 Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`, `--materialize`. Service list and env vars: `references/fleet.md`.
