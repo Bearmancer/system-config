@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: "One-stop research engine + web-data fleet router. Consult before any scrape, search, crawl or extract call: server pick, bot-block chain, credit failover. Input shape picks mode: question or claim ('how true is it that X', 'is it true', 'did X happen') -> cited verdicts in chat; long source (book, article, paper, lecture notes, video URL + 'explain') or topic to learn -> per-chapter GitHub Pages course; classical works wanted (deep cuts, Soviet symphonies, bored of Beethoven, new concerto/overture) -> verified picks. Use whenever facts must be checked not recalled (dates, figures, names, chronology, attributions, discography, durations), or user asks to research, fact-check, explain chapter N, go through a source chapter by chapter, make a course/notes/treatise, or continue a course workspace, even without naming this skill."
+description: "One-stop research engine + web-data fleet router. Consult before any scrape, search, crawl or extract call: server pick, bot-block chain, credit failover. Input shape picks mode: question or claim ('how true is it that X', 'is it true', 'did X happen') -> cited verdict page; long source (book, article, paper, lecture notes, video URL + 'explain') or topic to learn -> per-chapter GitHub Pages course; classical works wanted (deep cuts, Soviet symphonies, bored of Beethoven, new concerto/overture) -> verified picks page. Use whenever facts must be checked not recalled (dates, figures, names, chronology, attributions, discography, durations), or user asks to research, fact-check, explain chapter N, go through a source chapter by chapter, make a course/notes/treatise, or continue a course workspace, even without naming this skill."
 ---
 
 # Deep research
@@ -14,10 +14,10 @@ Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if
 Every run, stages in order:
 
 1. Classify: pick mode via "Mode router". Router covers every input shape.
-2. Intake: before any research, ask at least one AskUserQuestion batch covering scope, depth and output (up to 4 questions each, recommended option first). Skip only for quick work = plain fetch or single-claim check.
+2. Intake: before any research, ask at least one AskUserQuestion batch covering scope, depth and output (up to 4 questions each, recommended option first). Skip only for quick work = plain fetch or single-claim check. After asking, stop and wait for answers; no research before them. Host with async question tool (OmO: answer arrives as next user message): end the turn after asking.
 3. Research level: pick tier 0/1/2 ("Tier ladder"); state it in one line.
 4. Execute: the mode's steps.
-5. Publish, no asking: course results go to GitHub Pages (bearmancer.github.io) via `references/course/publishing.md`; terminal shows short answer + live link. Verdict, recommend: Pages target, no mechanism (Bearmancer/system-config#45); full result in terminal.
+5. Publish, no asking, every mode: GitHub Pages (bearmancer.github.io) via `references/course/publishing.md` (course: workspace publish; verdict, recommend: "Single answer page", one page each). Terminal shows short answer + live link.
 6. Gaps: workflow needs something missing (mechanism, script, tool, config) -> open GitHub issue on Bearmancer/system-config; no workaround.
 
 ## Reader profile
@@ -29,7 +29,7 @@ Every run, stages in order:
 
 ## Terminal answer format
 
-Self-contained answer printed to terminal (e.g. statistics fact-check):
+Terminal answer of a published run: bottom line (1-3 lines) + live link. Other self-contained terminal answers (e.g. gap report):
 - Short heading per part; one-line bottom line first; then grouped sections.
 - Blank line between sections; bold key number or verdict per group; sources as short final list.
 - Never one flat bullet list without headings and spacing.
@@ -87,12 +87,14 @@ Domain: before first search read `references/domains/<domain>/sources.md` + `exc
 5. Waiting on Pages build or long job: harness monitor or end turn. No sleep/poll loops.
 6. Defect met mid-run (dead link, failed gate, wrong claim): fix same run.
 7. Done = evidence: every verdict carries URL + quote; publish done only after live-bytes check.
-8. After each result ask "answerable with evidence now?" Yes: answer. Two exploration rounds, no new facts: stop exploring, act.
+8. Claim about a specific site/tool behavior needs a fetch/render/test in this run, else mark untested in `Unverified` annex. Todo/step closes only with its evidence.
+9. After each result ask "answerable with evidence now?" Yes: answer. Two exploration rounds, no new facts: stop exploring, act.
 
 ## Tier ladder
 
 - Tier 0 cheap: cached search + highlights, score > 0.7, dedupe canonical URL, wiki paired with second source.
 - Tier 1 grounded: search then extract chosen URLs, `maxAge: 0` on stale only, complete markdown, query-reranked.
+- User asks "most comprehensive" / "thorough" / "exhaustive": Tier 2.
 - Tier 2 contested: 2+ independent domains + primary source + counter-search + `observed_at`/`valid_at`; code-verify behaviour claims; unresolved or refuted claims go to annex, never synthesis.
 
 ## Passes
@@ -131,7 +133,7 @@ Trigger: credit/quota/payment/auth failure per `references/fleet.md` table (e.g.
 
 1. Run `uv run <skill>/scripts/switch_api_key.py --service <name> --next`. It writes the active key to `~/.config/opencode/secrets/<name>` and to the user env var. OpenCode: config watcher reconnects only that MCP server in about 1 s, no restart (verified: system-config `.claude/docs/research/secrets-subdir-reload.md`).
 2. Relay its output line verbatim (already masked). Its watcher-reconnect wording holds on OpenCode only.
-3. Retry the failed call on the same server. Repeat `--next` per failure until the output returns to the first account: pool exhausted, go to next chain step.
+3. Retry the failed call on the same server. Repeat `--next` per failure until the output returns to the first account: pool exhausted, go to next chain step. Output `pool empty for <svc>: move to next chain step`: go to next chain step, tell user in one line.
 4. OmO host: `~/.omo/agent/mcp.json` reads env vars from OmO's parent process at server spawn; rotated key applies only after OmO restarts from a new terminal. Tell user; continue chain on other servers meanwhile.
 
 Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`, `--materialize`. Service list and env vars: `references/fleet.md`.

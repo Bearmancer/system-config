@@ -6,9 +6,11 @@ import re
 import shutil
 import subprocess
 import sys
-import urllib.request
+import time
 import urllib.error
+import urllib.request
 from datetime import datetime
+from html import escape
 from pathlib import Path
 
 MD_LINK_PATTERN = re.compile(r'(?s)<a\s+[^>]*href="[^"]*\.md"[^>]*>(.*?)</a>')
@@ -18,6 +20,12 @@ CHAPTER_ROW_LESSON_PATTERN = re.compile(r"^(\d+)")
 CHAPTER_NUM_PATTERN = re.compile(r"(?i)ch(?:apter)?\.?\s*0*(\d+)")
 LESSON_PATH_PATTERN = re.compile(r"(?i)^[^/]+/lessons/")
 REFERENCE_PATH_PATTERN = re.compile(r"(?i)^[^/]+/reference/")
+SOURCES_HEADING_PATTERN = re.compile(
+    r"(?i)<h[1-6][^>]*>[^<]*(sources|references|bibliography)"
+)
+EXTERNAL_LINK_PATTERN = re.compile(r'(?i)<a\s[^>]*href="https?://')
+ANSWER_KINDS = {"verdict": "Verdict", "recommend": "Recommendation"}
+ANSWERS_DIR = "answers"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lesson_rules import bar_scripts, render_bar
@@ -128,8 +136,18 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str, bar: str) ->
 </html>"""
 
 
-def build_top_index_html(rows: str, generated_at: str) -> str:
+def build_top_index_html(rows: str, generated_at: str, answer_rows_html: str = "") -> str:
     bar = render_bar("Index", [])
+    answers = (
+        f"""  <h2>Answers</h2>
+  <table class="hub-table">
+    <tr><th>Page</th><th>Kind</th></tr>
+{answer_rows_html}
+  </table>
+"""
+        if answer_rows_html
+        else ""
+    )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,7 +164,7 @@ def build_top_index_html(rows: str, generated_at: str) -> str:
     <tr><th>Book / Video</th><th>Chapters</th></tr>
 {rows}
   </table>
-{bar_scripts("assets/")}
+{answers}{bar_scripts("assets/")}
 </body>
 </html>"""
 
@@ -213,8 +231,60 @@ def course_rows(staging: Path) -> list[dict[str, object]]:
     ]
 
 
+def slugify(title: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:60].strip("-")
+
+
+def check_answer_body(body: str) -> None:
+    if not EXTERNAL_LINK_PATTERN.search(body):
+        raise ValueError("answer body needs at least one inline https link")
+    if SOURCES_HEADING_PATTERN.search(body):
+        raise ValueError(
+            "answer body has a Sources/References/Bibliography heading; citations stay inline"
+        )
+
+
+def build_answer_html(kind: str, title: str, body: str, date: str) -> str:
+    label = ANSWER_KINDS[kind]
+    bar = render_bar(label, [("Home", "../index.html")], base="../")
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{escape(title)}</title>
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+{bar}
+  <p class="kicker">{label}</p>
+  <h1>{escape(title)}</h1>
+  <p class="surtitle">{date}</p>
+{body}
+  <footer class="lesson-footer">
+    <nav><a href="../index.html">Home</a></nav>
+  </footer>
+{bar_scripts("../assets/")}
+</body>
+</html>"""
+
+
+def answer_rows(staging: Path) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    for f in sorted((staging / ANSWERS_DIR).glob("*.html")):
+        title = TITLE_PATTERN.search(f.read_text(encoding="utf-8"))
+        rows.append(
+            {
+                "title": title.group(1).strip() if title else f.stem,
+                "kind": ANSWER_KINDS.get(f.stem.split("-", 1)[0], "Answer"),
+                "link": f"{ANSWERS_DIR}/{f.name}",
+            }
+        )
+    return rows
+
+
 def run_checked(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(args, cwd=cwd, capture_output=True, text=True)
+    return subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=False)
 
 
 def push_sources(source: Path) -> None:
@@ -241,9 +311,36 @@ def push_sources(source: Path) -> None:
         )
 
 
+def probe(
+    url: str, needle: str | None = None, attempts: int = 8, delay: int = 15
+) -> tuple[str, bool]:
+    code, found = "000", needle is None
+    for attempt in range(attempts):
+        if attempt:
+            time.sleep(delay)
+        try:
+            with urllib.request.urlopen(url, timeout=10) as resp:
+                code = str(resp.status)
+                if needle is not None:
+                    found = needle.encode() in resp.read()
+        except urllib.error.HTTPError as e:
+            code = str(e.code)
+        except urllib.error.URLError:
+            code = "000"
+        if code == "200" and found:
+            break
+    return code, found
+
+
 def publish(
-    staging: Path, repo_name: str, commit_message: str, published_count: int
-) -> None:
+    staging: Path,
+    repo_name: str,
+    commit_message: str,
+    published_count: int,
+    probe_rel: str = "",
+    needle: str | None = None,
+    paths: list[str] | None = None,
+) -> bool:
     if not (staging / ".git").exists():
         subprocess.run(
             ["git", "init", "-b", "main"],
@@ -254,11 +351,14 @@ def publish(
         )
 
     subprocess.run(
-        ["git", "add", "-A"], cwd=staging, capture_output=True, text=True, check=True
+        ["git", "add", "--", *paths] if paths else ["git", "add", "-A"],
+        cwd=staging,
+        capture_output=True,
+        text=True,
+        check=True,
     )
 
-    status = run_checked(["git", "status", "--porcelain"], staging).stdout
-    if status.strip():
+    if run_checked(["git", "diff", "--cached", "--quiet"], staging).returncode == 1:
         subprocess.run(
             ["git", "commit", "-m", commit_message],
             cwd=staging,
@@ -341,28 +441,97 @@ def publish(
     print(f"site: {site}")
     print(f"pages published: {published_count}")
 
-    code = "000"
-    for _ in range(8):
-        try:
-            with urllib.request.urlopen(site, timeout=10) as resp:
-                code = str(resp.status)
-        except urllib.error.HTTPError as e:
-            code = str(e.code)
-        except urllib.error.URLError:
-            code = "000"
-        if code == "200":
-            break
-        import time
-
-        time.sleep(15)
+    target = f"{site}{probe_rel}"
+    code, found = probe(target, needle)
 
     if code == "200":
-        print(f"== probe: {site} -> 200")
+        print(f"== probe: {target} -> 200")
     else:
         print(
-            f"WARNING: probe: {site} -> {code} after 2 min. Pages build still running; "
-            f"retry curl.exe -s -o NUL -w '%{{http_code}}' {site} before assuming failure."
+            f"WARNING: probe: {target} -> {code} after 2 min. Pages build still running; "
+            f"retry curl.exe -s -o NUL -w '%{{http_code}}' {target} before assuming failure."
         )
+    if needle is not None:
+        print(f"== live bytes contain page title: {found}")
+        print(f"live: {target}")
+    return code == "200" and found
+
+
+def ensure_staging(repo_name: str, staging: Path) -> None:
+    if (
+        not (staging / ".git").exists()
+        and run_checked(["gh", "repo", "view", repo_name], Path.home()).returncode == 0
+    ):
+        # A fresh `git init` here would later push non-fast-forward against the live site.
+        subprocess.run(["gh", "repo", "clone", repo_name, str(staging)], check=True)
+    staging.mkdir(parents=True, exist_ok=True)
+
+
+def sync_shared_assets(staging: Path) -> None:
+    (staging / ".nojekyll").touch()
+    (staging / "assets").mkdir(exist_ok=True)
+    shutil.copyfile(CANONICAL_CSS, staging / "assets" / "lesson.css")
+    shutil.copyfile(SHELL_JS, staging / "assets" / "shell.js")
+
+
+def write_hub(staging: Path, hub_rows: list[dict[str, object]]) -> None:
+    feed = [
+        {
+            "id": Path(str(h["link"])).parent.name,
+            "label": title_case(str(h["title"])),
+            "href": h["link"],
+        }
+        for h in hub_rows
+    ]
+    (staging / "assets" / "course-index.js").write_text(
+        "window.COURSE_INDEX = " + json.dumps(feed) + ";\n", encoding="utf-8"
+    )
+
+    rows = "\n".join(
+        f'    <tr><td><a href="{h["link"]}">{title_case(str(h["title"]))}</a></td><td>{h["chapters"]}</td></tr>'
+        for h in sorted(hub_rows, key=lambda h: str(h["title"]))
+    )
+    answers = "\n".join(
+        f'    <tr><td><a href="{a["link"]}">{a["title"]}</a></td><td>{a["kind"]}</td></tr>'
+        for a in answer_rows(staging)
+    )
+    top_index = build_top_index_html(
+        rows, f"{datetime.now():%Y-%m-%d %H:%M}", answers
+    )
+    (staging / "index.html").write_text(top_index, encoding="utf-8")
+
+
+def publish_answer(args: argparse.Namespace) -> bool:
+    body = args.page.read_text(encoding="utf-8")
+    check_answer_body(body)
+    slug = slugify(args.title)
+    if not slug:
+        raise ValueError("title has no ASCII letters/digits")
+    staging: Path = args.staging
+    ensure_staging(args.repo_name, staging)
+    sync_shared_assets(staging)
+    (staging / ANSWERS_DIR).mkdir(exist_ok=True)
+    rel = f"{ANSWERS_DIR}/{args.kind}-{slug}.html"
+    (staging / rel).write_text(
+        build_answer_html(
+            args.kind, args.title, body, f"{datetime.now():%Y-%m-%d}"
+        ),
+        encoding="utf-8",
+    )
+    write_hub(staging, course_rows(staging))
+    print(f"== staging: {staging}")
+    if args.no_push:
+        print(f"== --no-push: {rel}")
+        return True
+    return publish(
+        staging,
+        args.repo_name,
+        f"Publish {args.kind} {slug} {datetime.now():%Y-%m-%d %H:%M}",
+        len(answer_rows(staging)),
+        rel,
+        escape(args.title),
+        [rel, "index.html", "assets"],
+    )
 
 
 def main() -> None:
@@ -380,21 +549,21 @@ def main() -> None:
         "--commit", default=f"Publish courses {datetime.now():%Y-%m-%d %H:%M}"
     )
     parser.add_argument("--no-push", action="store_true")
+    parser.add_argument("--page", type=Path, help="HTML body fragment of one answer page")
+    parser.add_argument("--kind", choices=sorted(ANSWER_KINDS))
+    parser.add_argument("--title")
     args = parser.parse_args()
+
+    if args.page:
+        if not (args.kind and args.title):
+            parser.error("--page needs --kind and --title")
+        ok = publish_answer(args)
+        sys.exit(0 if ok else 1)
 
     staging: Path = args.staging
     source: Path = args.source
 
-    if (
-        not (staging / ".git").exists()
-        and run_checked(["gh", "repo", "view", args.repo_name], Path.home()).returncode
-        == 0
-    ):
-        # A fresh `git init` here would later push non-fast-forward against the live site.
-        subprocess.run(
-            ["gh", "repo", "clone", args.repo_name, str(staging)], check=True
-        )
-    staging.mkdir(parents=True, exist_ok=True)
+    ensure_staging(args.repo_name, staging)
 
     if not args.no_push:
         push_sources(source)
@@ -402,32 +571,10 @@ def main() -> None:
     print(f"== staging: {staging}")
     published = process_workspaces(source, staging)
 
-    (staging / ".nojekyll").touch()
-
-    (staging / "assets").mkdir(exist_ok=True)
-    shutil.copyfile(CANONICAL_CSS, staging / "assets" / "lesson.css")
-    shutil.copyfile(SHELL_JS, staging / "assets" / "shell.js")
+    sync_shared_assets(staging)
 
     hub_rows = build_hub_rows(source, staging, published)
-
-    feed = [
-        {
-            "id": Path(str(h["link"])).parent.name,
-            "label": title_case(str(h["title"])),
-            "href": h["link"],
-        }
-        for h in hub_rows
-    ]
-    (staging / "assets" / "course-index.js").write_text(
-        "window.COURSE_INDEX = " + json.dumps(feed) + ";\n", encoding="utf-8"
-    )
-
-    rows = "\n".join(
-        f'    <tr><td><a href="{h["link"]}">{title_case(str(h["title"]))}</a></td><td>{h["chapters"]}</td></tr>'
-        for h in sorted(hub_rows, key=lambda h: str(h["title"]))
-    )
-    top_index = build_top_index_html(rows, f"{datetime.now():%Y-%m-%d %H:%M}")
-    (staging / "index.html").write_text(top_index, encoding="utf-8")
+    write_hub(staging, hub_rows)
 
     if args.no_push:
         print(

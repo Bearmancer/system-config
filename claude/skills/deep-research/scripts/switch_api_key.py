@@ -106,29 +106,62 @@ def materialize_secret(
     return f"{svc}: created"
 
 
-def get_dotenv_map(path: Path) -> dict[str, str]:
+SECTION_ALIASES = {"scrapegraphai": "scrapegraph"}
+
+
+class DotEnv(dict):
+    sections: dict[str, dict[str, str]]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sections = {}
+
+
+def _parse_assignment(line: str) -> tuple[str, str] | None:
+    if line.startswith("export "):
+        line = line[len("export ") :]
+    idx = line.find("=")
+    if idx < 1:
+        return None
+    name = line[:idx].strip()
+    val = line[idx + 1 :].strip()
+    if len(val) >= 2 and (
+        (val[0] == '"' and val[-1] == '"') or (val[0] == "'" and val[-1] == "'")
+    ):
+        val = val[1:-1].strip()
+    return (name, val) if name else None
+
+
+def _section_service(title: str) -> str | None:
+    key = re.sub(r"[^a-z0-9]", "", title.lower())
+    key = SECTION_ALIASES.get(key, key)
+    return key if key in SERVICE_MAP else None
+
+
+def get_dotenv_map(path: Path) -> DotEnv:
     if not path.exists():
         raise FileNotFoundError(f"env file not found: {path}")
-    env_map: dict[str, str] = {}
+    env_map = DotEnv()
+    section: str | None = None
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
             continue
         if line[0] in "#;":
+            heading = re.match(r"^(#+)\s*(.*)$", line)
+            if heading and "=" not in heading.group(2):
+                if len(heading.group(1)) == 1:
+                    section = None
+                elif len(heading.group(1)) == 2:
+                    section = _section_service(heading.group(2))
             continue
-        if line.startswith("export "):
-            line = line[len("export ") :]
-        idx = line.find("=")
-        if idx < 1:
+        parsed = _parse_assignment(line)
+        if not parsed:
             continue
-        name = line[:idx].strip()
-        val = line[idx + 1 :].strip()
-        if len(val) >= 2 and (
-            (val[0] == '"' and val[-1] == '"') or (val[0] == "'" and val[-1] == "'")
-        ):
-            val = val[1:-1].strip()
-        if name:
-            env_map[name] = val
+        name, val = parsed
+        env_map[name] = val
+        if section:
+            env_map.sections.setdefault(section, {})[name] = val
     return env_map
 
 
@@ -141,6 +174,11 @@ def get_pool(dotenv: dict[str, str], svc: str) -> dict[str, str]:
             acct = m.group("acct")
             if acct and v:
                 pool[acct] = v
+    for k, v in getattr(dotenv, "sections", {}).get(svc, {}).items():
+        m = pattern.match(k)
+        acct = m.group("acct") if m else k
+        if acct and v:
+            pool[acct] = v
     return pool
 
 
@@ -266,7 +304,7 @@ def main() -> None:
         env_var = SERVICE_MAP[args.service].env_var
         pool = get_pool(dotenv, args.service)
         if not pool:
-            raise ValueError(f"no pool accounts found for service '{args.service}'")
+            raise ValueError(f"pool empty for {args.service}: move to next chain step")
         names = sorted(pool.keys())
         active = get_active_value(env_var)
         active_acct = get_active_account(pool, active)

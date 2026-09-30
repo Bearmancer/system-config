@@ -10,7 +10,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "sonnet",
   "hooks": {
     "PreToolUse": [
       {
@@ -45,7 +45,8 @@
     "claude-socratic-plugin@synced": false,
     "cowork-plugin-management@synced": false,
     "design-skills@synced": false,
-    "doc-authoring-skills@synced": false
+    "doc-authoring-skills@synced": false,
+    "plugin-dev@synced": false
   },
   "extraKnownMarketplaces": {
     "caveman": {
@@ -97,7 +98,7 @@
       "effortLevel": "medium"
     },
     "claude-sonnet-5-5": {
-      "effortLevel": "high"
+      "effortLevel": "medium"
     },
     "claude-opus-5-5": {
       "effortLevel": "medium"
@@ -135,42 +136,28 @@
     "environment": [
       "### Org-wide",
       "**Organization**: None configured",
-      "**Cloud provider(s)**: None configured",
-      "**Repository visibility**: assume private unless the remote host and repo name indicate otherwise, or a visibility check in the transcript shows public — no remote configured for this repo (~/ is not a git repository with remotes; tracked file count 0)",
+      "**Cloud provider(s)**: Azure (AI/Vision/Translate/Speech/DocIntel/TextAnalytics/OpenAI services referenced in Toolbox repo structure) — no deployment target confirmed",
+      "**Repository visibility**: Not queryable here (no origin remote derivable for the current working directory ~/); Toolbox (github.com/Bearmancer/Toolbox) is private per prior confirmation in existing auto-mode settings, treat as unverified in this session and confirm before assuming",
       "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
-      "**Secrets management**: None configured",
-      "**Default / protected branches**: not queryable (no origin remote; org/repo not derivable)",
+      "**Secrets management**: \\`.env\\` file only, never hardcoded (per repo CLAUDE.md convention); \\`~/.secrets/.env\\` holds research-tool API keys and must never be read directly (Read/cat/rg forbidden; only switch_api_key.py may touch it)",
+      "**Default / protected branches**: Not queryable (no origin remote in this working directory; org/repo not derivable)",
       "**CI/CD deploy targets**: None configured",
       "**Network posture**: None configured",
-      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine with open internet",
-      "**Source control**: The trusted repo and its remote(s) only (no additional orgs configured) — no remote is currently configured for this working directory",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine (Windows) with open internet",
+      "**Source control**: The trusted repo and its remote(s) only (no additional orgs configured) — no remote is currently configured for this working directory (~/)",
       "**Trusted internal domains**: None configured",
       "**Trusted cloud buckets**: None configured — bucket config scan did not complete cleanly, no evidence collected",
       "**Key internal services**: None configured",
       "**Internal package registry**: None configured",
-      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar — note ~/.secrets/.env holds research-tool API keys and per deep-research skill docs must never be read directly (Read/cat/rg forbidden; only switch_api_key.py may touch it)",
+      "**Sensitive data locations & audiences**: \\`~/.secrets/.env\\` (research-tool API keys, Read/cat/rg forbidden — only switch_api_key.py may touch it), \\`.claude/.credentials.json\\`, \\`AppData/Roaming/brightdata-cli/credentials.json\\`, \\`AppData/Roaming/gcloud/credentials.db\\`; share only with audiences cleared at the [named+specifics] bar",
       "**Data retention / declassification**: None configured",
       "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
       "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
       "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
-      "**Cloud provider(s)**: Azure (AI/Vision/Translate/Speech/DocIntel/TextAnalytics/OpenAI services referenced in repo structure) — no deployment target confirmed",
-      "**Repository visibility**: Private — Bearmancer/Toolbox (confirmed via gh)",
-      "**Secrets management**: `.env` file only, never hardcoded (per CLAUDE.md convention); each service reads via `XxxCredentials.Read()` or setup-level env read",
-      "**Default / protected branches**: Default branch `master`; Protected branches: none listed; Rulesets: not queryable here — treat as unconfirmed, not as proof of no protection",
-      "**CI/CD deploy targets**: None configured — repo notes state no CI/CD, manual build only",
-      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine (Windows, per `C:\\Users\\Lance\\...` paths) with open internet",
-      "**Source control**: The trusted repo (Bearmancer/Toolbox) and its origin remote only (github.com/Bearmancer/Toolbox) — no additional orgs configured",
-      "**Trusted cloud buckets**: None configured",
-      "**Sensitive data locations & audiences**: `.env` (credentials), `state/toolbox.db` (SQLite — scrobble, YouTube playlist/video, tag journal, translation cache), `state/auth/`, `.claude/plans/cpm-recording-date-ocr/phase1-tier-classification.md`; share only with audiences cleared at the [named+specifics] bar",
       "### User-specific",
       "**Primary use of Claude Code**: personal/hobby software development and homelab automation (oh-my-claudecode multi-agent orchestration setup, media-stack API skills, deep-research course pipeline) — working directory is the user's home folder, not a single project checkout",
-      "**Trusted repo**: no git repository with a remote is present at this working directory (~/); treat any git operations here as needing repo identification first before push/publish actions",
-      "**Org-specific CLIs**: None configured — routine non-Claude CLIs observed in shell history include git, gh, dotnet, cargo, npm/npx/bun/bunx, uv/uvx, az, codegraph, fd/rg/bat/eza/dust/ouch (modern CLI replacements), psmux/tmux-style session tools, ii; treat these as ordinary developer tooling, not org-specific",
-      "routine under Bearmancer/ prefix: GitHub repos observed under this account (Toolbox, sdet-roadmap, media-research-tools, agents-config) are the user's own personal repos, not corroborated org context — listed as candidates only, not adopted as trusted scope since they are separate checkouts not in scope for this session",
-      "**Primary use of Claude Code**: software development (C#/.NET CLI toolbox — Azure AI, Google YouTube API, Last.fm, SACD audio conversion)",
-      "**Trusted repo**: `C:\\Users\\Lance\\Dev\\Toolbox` (github.com/Bearmancer/Toolbox, private) — confidential material (e.g. `.env`-adjacent config, `state/` data) may be handled within this repo, but is not for publication given repo private status; nothing here clears secrets for commit",
-      "**Org-specific CLIs**: `toolbox` (published CLI, resolves to `artifacts\\publish\\src\\App\\release\\toolbox.exe`), `dbcrust` (ad hoc SQLite query against `state/toolbox.db`), `codegraph` (mandatory repo indexing per user global CLAUDE.md)",
-      "routine under C:\\Users\\Lance\\Dev\\Toolbox\\ prefix: build/test/publish commands (`dotnet build`, `dotnet publish src/App -c Release`, `dotnet test`), git operations against origin, `gh` issue/label operations on Bearmancer/Toolbox"
+      "**Trusted repo**: No git repository with a remote is present at this working directory (~/); treat any git operations here as needing repo identification first before push/publish actions",
+      "**Org-specific CLIs**: None configured — routine non-Claude CLIs observed include git, gh, dotnet, cargo, npm/npx/bun/bunx, uv/uvx, az, codegraph, fd/rg/bat/eza/dust/ouch, psmux/tmux-style session tools; treat these as ordinary developer tooling, not org-specific"
     ]
   }
 }
