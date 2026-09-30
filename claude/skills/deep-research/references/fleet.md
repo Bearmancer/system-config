@@ -36,7 +36,7 @@ Not wired (pool entries only in `switch_api_key.py`; wire before use): Dappier, 
 | Exa | agent stop/cancel | none | none | `POST /agent/runs/{id}/stop`, `.../cancel` (#38) |
 | Exa | batches | none | none | `POST /batches` (#39) |
 | Exa | crawl/map | none | none | none |
-| Tavily | search, extract, crawl, map, research | `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map`, `tavily_research` | `tvly search`, `extract`, `crawl`, `map`, `research` (`--no-wait`, `status <id>`, `poll <id>`) | - |
+| Tavily | search, extract, crawl, map, research | `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map`, `tavily_research` (live) | `tvly search`, `extract`, `crawl`, `map`, `research` (`--no-wait`, `status <id>`, `poll <id>`) | - |
 | Firecrawl | search, scrape | `firecrawl_search` (live), `firecrawl_scrape` (live) | `firecrawl search`, `firecrawl scrape` | - |
 | Firecrawl | crawl, map | `firecrawl_crawl`, `firecrawl_check_crawl_status`, `firecrawl_map` | `firecrawl crawl [--wait \| --cancel]`, `firecrawl map` | - |
 | Firecrawl | batch scrape | none | none | `POST /v2/batch/scrape` (#40) |
