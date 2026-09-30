@@ -37,7 +37,17 @@
     "session-name": 1790505951123,
     "session-info": 1790506042497,
     "efforts-command": 1790724906229,
-    "export-share": 1790725038530
+    "export-share": 1790725038530,
+    "compact-command": 1790742122896,
+    "auto-compaction": 1790742166112,
+    "help-command": 1790743982309,
+    "keybindings-command": 1790746013808,
+    "agents-md-context": 1790746292919,
+    "skills-and-prompts": 1790743401240,
+    "files-command": 1790746451197,
+    "diff-command": 1790746728611,
+    "todo-command": 1790748703715,
+    "goal-command": 1790748731155
   },
   "theme": "dark",
   "defaultProvider": "qwen-token-plan",
@@ -68,12 +78,12 @@
     "qwen-token-plan/deepseek-v4.1-flash"
   ],
   "images": {
-    "blockImages": true
+    "blockImages": false
   },
   "showHardwareCursor": true,
   "editorPaddingX": 1,
   "outputPad": 1,
-  "autocompleteMaxVisible": 10,
+  "autocompleteMaxVisible": 20,
   "terminal": {
     "showTerminalProgress": true,
     "mouse": "always"

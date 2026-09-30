@@ -208,6 +208,10 @@ Pass `session_id` so state is session-scoped. Update `current_phase` on every st
 Worktree with commits → push + `gh pr create` same turn, never teardown unpushed/PR-less work. After PR `MERGED` (check `gh pr view`): exit worktree, stop its agents + build servers (`dotnet build-server shutdown`), `git worktree remove`, `git branch -D`, `git worktree prune`.
 </worktree_lifecycle>
 
+<key_rotation>
+Web-data API credit, quota or auth failure (MCP, CLI, POST script; any host): rotate per deep-research SKILL.md "Key rotation", no ask. claude.ai connectors (`mcp__claude_ai_*`) hold no local key: switch to local server of same vendor instead.
+</key_rotation>
+
 <sibling_duplication_check>
 Before adding a new file for a variant of an existing concept (a new format/grammar/handler/parser sibling), diff its planned structure against every existing file in the same directory implementing the same interface/role. If 2+ siblings would share more than half their logic with the new one (same field-extraction shape, same validate-construct-filter sequence, same dict/table), stop — extract the shared part into one parameterized module (constructor args/delegates/enums, not a premature interface) before writing the 3rd near-duplicate file. Applies to any repo, any file family — not just OCR/grammar-shaped code. Red flag: copy-pasting a whole dictionary/table byte-for-byte into a new file is an instant stop-and-check trigger, not a "fix it later" note.
 </sibling_duplication_check>

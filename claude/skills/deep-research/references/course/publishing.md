@@ -1,4 +1,4 @@
-# Publishing — GitHub Pages, course pages only
+# Publishing — GitHub Pages
 
 ## Primary flow (this machine)
 
@@ -15,7 +15,19 @@ The script:
 - commits and pushes to `Bearmancer/bearmancer.github.io` (public site: `https://bearmancer.github.io/`),
 - prints the page count.
 
-Scope is fixed: **course pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
+Course flow scope is fixed: **course pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
+
+## Single answer page (verdict, recommend)
+
+```
+python "<skill>/scripts/publish_teach.py" --page <body.html> --kind verdict|recommend --title "<title>"
+```
+
+- Body = HTML fragment, no `<html>`/`<head>`. The script wraps it in the shared layout (A-bar, kicker = kind, H1 = title, date, Home footer) with `assets/lesson.css` + `shell.js`.
+- Body gate, refuses before any git call: at least one inline `https` `<a href>`; no Sources/References/Bibliography heading (citations inline only, `page-design.md` "Citations").
+- Writes `answers/<kind>-<slug>.html` in the site working copy, adds a row under "Answers" on the root index (course publishes keep answer rows), commits and pushes the Pages repo only. Same title overwrites its page.
+- Probes the page URL (8 x 15 s) for HTTP 200 and the escaped title in the live bytes; prints `live: <url>`. Exit 0 only when both hold; exit 1: wait for the build with the harness monitor, then re-fetch.
+- Body content per mode: verdict = `SKILL.md` "Verdict mode" step 3; recommend = `recommend.md` pick blocks.
 
 ## Dry run (no flag — preview by hand)
 

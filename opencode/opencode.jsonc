@@ -171,9 +171,8 @@
       "agentql": {
         "type": "local",
         "command": [
-          "npx",
-          "-y",
-          "agentql-mcp"
+          "node",
+          "C:/Users/Lance/AppData/Roaming/npm/node_modules/agentql-mcp/dist/index.js"
         ],
         "environment": {
           "AGENTQL_API_KEY": "{file:~/.config/opencode/secrets/agentql}"
@@ -240,9 +239,8 @@
       "brightdata": {
         "type": "local",
         "command": [
-          "npx",
-          "-y",
-          "@brightdata/mcp"
+          "node",
+          "C:/Users/Lance/AppData/Roaming/npm/node_modules/@brightdata/mcp/server.js"
         ],
         "environment": {
           "API_TOKEN": "{file:~/.config/opencode/secrets/brightdata}"
@@ -266,9 +264,8 @@
       "playwright": {
         "type": "local",
         "command": [
-          "npx",
-          "-y",
-          "@playwright/mcp@latest"
+          "node",
+          "C:/Users/Lance/AppData/Roaming/npm/node_modules/@playwright/mcp/cli.js"
         ],
         "timeout": {
           "catalog": 30000,
@@ -278,9 +275,8 @@
       "sequential-thinking": {
         "type": "local",
         "command": [
-          "npx",
-          "-y",
-          "@modelcontextprotocol/server-sequential-thinking"
+          "node",
+          "C:/Users/Lance/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-sequential-thinking/dist/index.js"
         ],
         "timeout": {
           "catalog": 30000,

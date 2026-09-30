@@ -103,3 +103,79 @@ def test_next_writes_file_never_deletes_others(tmp_path, monkeypatch):
     sk.main()
     assert (secrets / "exa").read_text() == "kb"
     assert (secrets / "tavily").read_text() == "t"
+
+
+SECTIONED_ENV = """# MCPs
+## Exa
+GITHUB=exa-gh
+BEATLES=exa-bt
+## Firecrawl 
+GITHUB=fc-gh
+BEATLES=fc-bt
+## ScrapeGraphAI
+GITHUB=sg-gh
+## Bright Data
+GOOGLE=bd-go
+## Brave
+PERSONAL_BRAVE_API_KEY=brave-p
+## Browserbase
+BROWSER_BASE_API_KEY=bb-1
+## Unknown Thing
+GITHUB=ignored
+# OpenCode
+FATHER_GITHUB=oc-father
+"""
+
+
+@pytest.fixture
+def sectioned(tmp_path):
+    env = tmp_path / ".env"
+    env.write_text(SECTIONED_ENV)
+    return sk.get_dotenv_map(env)
+
+
+def test_repeated_names_split_per_section(sectioned):
+    assert sk.get_pool(sectioned, "exa") == {"GITHUB": "exa-gh", "BEATLES": "exa-bt"}
+    assert sk.get_pool(sectioned, "firecrawl") == {"GITHUB": "fc-gh", "BEATLES": "fc-bt"}
+
+
+def test_heading_trailing_space_and_alias_normalization(sectioned):
+    assert sk.get_pool(sectioned, "firecrawl")["GITHUB"] == "fc-gh"
+    assert sk.get_pool(sectioned, "scrapegraph") == {"GITHUB": "sg-gh"}
+    assert sk.get_pool(sectioned, "brightdata") == {"GOOGLE": "bd-go"}
+
+
+def test_level1_heading_ends_scope(sectioned):
+    for svc in sk.SERVICE_MAP:
+        assert "FATHER_GITHUB" not in sk.get_pool(sectioned, svc)
+    assert sk.get_pool(sectioned, "exa").get("GITHUB") == "exa-gh"
+
+
+def test_unknown_section_ignored(sectioned):
+    assert all("ignored" not in sk.get_pool(sectioned, s).values() for s in sk.SERVICE_MAP)
+
+
+def test_brave_old_style_name_maps_to_personal(sectioned):
+    assert sk.get_pool(sectioned, "brave") == {"PERSONAL": "brave-p"}
+
+
+def test_single_key_section(sectioned):
+    assert sk.get_pool(sectioned, "browserbase") == {"BROWSER_BASE_API_KEY": "bb-1"}
+
+
+def test_flat_pattern_fallback_outside_sections(tmp_path):
+    env = tmp_path / ".env"
+    env.write_text("# Services\nexport A_EXA_API_KEY='ka'\n")
+    assert sk.get_pool(sk.get_dotenv_map(env), "exa") == {"A": "ka"}
+
+
+def test_next_empty_pool_message(tmp_path, monkeypatch, capsys):
+    env = tmp_path / ".env"
+    env.write_text("## Exa\n")
+    monkeypatch.setattr(
+        sys, "argv", ["x", "--service", "exa", "--next", "--env-path", str(env)]
+    )
+    with pytest.raises(SystemExit) as e:
+        sk.main()
+    assert e.value.code == 1
+    assert "pool empty for exa: move to next chain step" in capsys.readouterr().err
