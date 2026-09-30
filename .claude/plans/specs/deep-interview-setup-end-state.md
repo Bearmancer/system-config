@@ -46,7 +46,7 @@ system-config is the single documented, daily-backed-up home for everything auth
 - Hosts: bare OpenCode v2, OpenCode + oh-my-opencode-slim (current primary, removable layer), OmO 5.0.1 (omo-native). No host-specific tool names in SKILL.md.
 - Fan-out: capability probe — if a subagent launcher exists, one worker per chapter with self-contained prompt + output schema; else inline. Define native `researcher` subagent in `opencode.json` `agents` (built-in `general`/`explore` stay disabled).
 - MCP keys: pools stay in `~/.secrets/.env`. Active key per service at `~/.config/opencode/secrets/<svc>`, referenced via `{file:}` (watched dir, hot reload, only changed MCP reconnects). `switch_api_key.py --next` writes the file and creates every referenced file (missing file breaks config load). Backup excludes `secrets/`. Sidesteps bug #50882.
-- OmO MCPs: skill-bundled `mcp.json` sidecar (`${VAR}`; OmO rotation needs restart).
+- OmO MCPs: global `~/.omo/agent/mcp.json`, same servers as OpenCode (`${VAR}` and `bearerTokenEnv` from user env vars; OmO rotation needs a restart from a new terminal).
 - Block chain (walk every account of a server before moving on; report "blocked" only after full log `URL | status | method`):
   1. Tavily extract (basic, then advanced)
   2. Firecrawl `proxy:"auto"`, `maxAge:0`
@@ -60,10 +60,10 @@ system-config is the single documented, daily-backed-up home for everything auth
   - Dappier not wired (data marketplace, cannot unblock). v2 uses `disabled: true`, not `enabled: false`.
 
 ## Acceptance Criteria
-- [ ] Restore drill: following README restore + reinstall list on a fresh folder brings back every authored file; OpenCode, Claude and OmO start with the same skills and rules.
-- [ ] Drift check: every README backup row exists locally and in repo; no stale files; one commit/day; no links under `~/Dev`; no `.codegraph` junctions.
-- [ ] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict.
-- [ ] Remote + tasks check: after reboot + logon, OpenCode service up, reachable only via tailnet HTTPS, not LAN IP; all three Scheduled Tasks defined in code and registered.
+- [x] Restore drill: following README restore + reinstall list on a fresh folder brings back every authored file; OpenCode, Claude and OmO start with the same skills and rules. PASS: #20.
+- [x] Drift check: every README backup row exists locally and in repo; no stale files; one commit/day; no links under `~/Dev`; no `.codegraph` junctions. PASS: #20.
+- [ ] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict. Partial: bare OpenCode researcher chain walk PASS (#20 drill, Tavily -> Firecrawl); slim and OmO variants and key rotation during the drill not exercised.
+- [x] Remote + tasks check: after reboot + logon, OpenCode service up, reachable only via tailnet HTTPS, not LAN IP; all three Scheduled Tasks defined in code and registered. PASS: #20 (reboot check).
 
 ## Open unknowns (research tickets)
 - Live test: `{file:}` key change under `~/.config/opencode/secrets/` hot-reloads one MCP (source says yes; `{file:}` absent from v2 MCP docs).

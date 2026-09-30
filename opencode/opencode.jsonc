@@ -269,7 +269,11 @@
           "npx",
           "-y",
           "@playwright/mcp@latest"
-        ]
+        ],
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
       },
       "sequential-thinking": {
         "type": "local",
@@ -277,17 +281,11 @@
           "npx",
           "-y",
           "@modelcontextprotocol/server-sequential-thinking"
-        ]
-      },
-      "aws-mcp": {
-        "type": "local",
-        "command": [
-          "uvx",
-          "mcp-proxy-for-aws@latest",
-          "https://aws-mcp.us-east-1.api.aws/mcp",
-          "--metadata",
-          "INSTALL_SOURCE=aws-cli"
-        ]
+        ],
+        "timeout": {
+          "catalog": 30000,
+          "execution": 30000
+        }
       }
     }
   },

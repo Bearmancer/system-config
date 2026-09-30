@@ -13,14 +13,14 @@ $sources = @(
     '.config\opencode\agents\a.md',
     '.config\opencode\secrets\key.txt', '.config\opencode\auth.json', '.config\opencode\service.json',
     '.config\opencode\skills\s.md',
-    '.omo\agent\settings.json', '.omo\agent\auth.json', '.omo\omo.jsonc', '.omo\scripts\s.ps1', '.omo\plans\p.md',
+    '.omo\agent\settings.json', '.omo\agent\mcp.json', '.omo\agent\auth.json', '.omo\omo.jsonc', '.omo\scripts\s.ps1', '.omo\plans\p.md',
     '.agents\.skill-lock.json', '.agents\skills\s.md'
 )
 $expected = @(
     'agents/.skill-lock.json',
     'claude/CLAUDE.md', 'claude/agents/a.md', 'claude/commands/c.md',
     'claude/settings.json', 'claude/skills/a/SKILL.md',
-    'omo/settings.json',
+    'omo/mcp.json', 'omo/settings.json',
     'opencode/AGENTS.md', 'opencode/agents/a.md', 'opencode/oh-my-opencode-slim.jsonc', 'opencode/opencode.jsonc', 'opencode/tui.json'
 ) | Sort-Object
 
@@ -59,7 +59,14 @@ try {
         Write-Error "FAIL: ok=$ok`n$($diff | Out-String)"
         exit 1
     }
-    Write-Output "PASS: $($actual.Count) mirrored paths match whitelist"
+    Set-Content -Path "$fakeHome\.omo\agent\mcp.json" -Value '{"mcpServers":{"x":{"env":{"X_API_KEY": "planted-literal-value"}}}}'
+    Set-Content -Path "$fakeHome\.omo\agent\settings.json" -Value '{"env":{"API_TOKEN": "${SOME_VAR}"}}'
+    $null = Backup-AgentConfig -HomeRoot $fakeHome -RepoRoot $fakeRepo -ProfilePath '' -SkipGit 3>$null
+    if ((Test-Path "$fakeRepo\omo\mcp.json") -or -not (Test-Path "$fakeRepo\omo\settings.json")) {
+        Write-Error 'FAIL: guard must drop a literal credential and keep a ${VAR} placeholder'
+        exit 1
+    }
+    Write-Output "PASS: $($actual.Count) mirrored paths match whitelist; credential guard drops literals only"
 } finally {
     Get-ChildItem $tmp -Recurse -Force -ErrorAction SilentlyContinue | Sort-Object FullName -Descending |
         ForEach-Object { if ($_.PSIsContainer) { [IO.Directory]::Delete($_.FullName) } else { [IO.File]::Delete($_.FullName) } }

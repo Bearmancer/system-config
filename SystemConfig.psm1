@@ -67,7 +67,7 @@ function Backup-AgentConfig {
     Copy-Mirror -Source "$HomeRoot\.config\opencode\commands" -Dest "$repoRoot\opencode\commands" -ExtraFlags @('/MIR')
 
     # omo/
-    Copy-Files -SourceDir "$HomeRoot\.omo\agent" -Files @('settings.json') -Dest "$repoRoot\omo"
+    Copy-Files -SourceDir "$HomeRoot\.omo\agent" -Files @('settings.json', 'mcp.json') -Dest "$repoRoot\omo"
 
     # agents/
     Copy-Files -SourceDir "$HomeRoot\.agents" -Files @('.skill-lock.json') -Dest "$repoRoot\agents"
@@ -83,11 +83,11 @@ function Backup-AgentConfig {
             }
     }
 
-    # mirrored settings files must hold no tokens before first commit
-    foreach ($settingsDest in "$repoRoot\claude\settings.json", "$repoRoot\omo\settings.json") {
+    # mirrored settings files must hold no tokens before first commit; ${VAR} placeholders are allowed
+    foreach ($settingsDest in "$repoRoot\claude\settings.json", "$repoRoot\omo\settings.json", "$repoRoot\omo\mcp.json") {
         if (Test-Path $settingsDest) {
             $content = Get-Content $settingsDest -Raw
-            if ($content -match '(?i)(api[_-]?key|token|secret|password)\s*["'':]\s*["''][^"'']{8,}') {
+            if ($content -match '(?i)(api[_-]?key|token|secret|password)["'']?\s*:\s*["''](?!\$\{)[^"'']{8,}') {
                 Remove-Item $settingsDest -Force
                 Write-Warning "$settingsDest appears to hold a credential; left out of this backup."
             }

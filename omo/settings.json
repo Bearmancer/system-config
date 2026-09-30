@@ -35,7 +35,9 @@
     "clone-session": 1790494374813,
     "continue-session": 1790496415686,
     "session-name": 1790505951123,
-    "session-info": 1790506042497
+    "session-info": 1790506042497,
+    "efforts-command": 1790724906229,
+    "export-share": 1790725038530
   },
   "theme": "dark",
   "defaultProvider": "qwen-token-plan",
@@ -52,7 +54,14 @@
   },
   "defaultThinkingLevel": "high",
   "enabledModels": [
-    "qwen-token-plan/deepseek-v4.1-flash"
+    "opencode-go/muse-spark-1.3-contributor",
+    "qwen-token-plan/deepseek-v4.1-flash",
+    "qwen-token-plan/qwen3.7-plus",
+    "qwen-token-plan/qwen3.8-flash",
+    "opencode-go/deepseek-v4.1-flash",
+    "opencode-go/mimo-v2.6-flash",
+    "opencode-go/qwen3.7-plus",
+    "opencode-go/gpt-6-luna"
   ],
   "favoriteModels": [
     "opencode-go/qwen3.8-flash",
