@@ -17,7 +17,7 @@ Read on a credit/auth/quota failure or a missing-secret problem only.
 
 - Active key sits in `~/.config/opencode/secrets/<pool>`; POST scripts read it there and send it only as the vendor auth header. `switch_api_key.py --next` rewrites that file; OpenCode reconnects only the changed server. OmO: SKILL.md Key rotation.
 - Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
-- ScrapeGraphAI (legacy local MCP) starts without a key and fails per call: a silent dead server = missing key.
+- ScrapeGraphAI hosted MCP answers 401 without a valid key: a dead server = missing or wrong key.
 - Container hosts (no secrets dir): POST scripts fall back to the pool env var (`POOL_ENV` in `_post_common.py`, e.g. `TAVILY_API_KEY`); neither set -> exit 1 `key_unreadable`.
 - A key is always required: no keyless or free-tier path is used for any vendor.
 
@@ -37,5 +37,5 @@ Rotate on "Out of credit" and on "Bad key" after a working key. Next chain step 
 | Browserbase | unverified | unverified | unverified | unverified |
 
 - POST scripts: HTTP error -> exit 1, JSON line on stderr `{"status","code","message"}`.
-- Legacy ScrapeGraph MCP wrapper raises `Error {status}: {body}` for any status >= 400: match status number and `insufficient_credits`.
+- Hosts still on legacy ScrapeGraph MCP 1.0.1 raise `Error {status}: {body}` for any status >= 400: match status number and `insufficient_credits`.
 - Unverified cell = no published code; treat any auth/credit-looking failure as rotate, then next step.

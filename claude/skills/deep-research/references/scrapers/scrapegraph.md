@@ -3,10 +3,10 @@
 Pick: schema-shaped extraction, many-page crawl outliving one call, page-change monitors. Stealth = `fetchConfig.stealth` (+5 credits per page / call / monitor tick).
 Key: `SGAI_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
 
-## MCP: legacy local 1.0.1 in config; hosted v2 not adopted
+## MCP: hosted v2 (config mirrors point here; legacy local 1.0.1 retired)
 
-- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth `Authorization: Bearer sgai-...` / `SGAI-APIKEY` / `X-API-Key` or Google OAuth. Unauthenticated call returns 401 `missing authorization header` (live). Configs still run the legacy local server; swap only after a keyed smoke test shows Bearer is accepted.
-- Legacy local `scrapegraph-mcp` 1.0.1 (PyPI, last release, v1-style, 8 tools): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`. Config mirrors still run it, so use these names.
+- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth `Authorization: Bearer sgai-...` / `SGAI-APIKEY` / `X-API-Key` or Google OAuth. Unauthenticated call returns 401 `missing authorization header` (live). Mirrors send the pool key as Bearer; acceptance untested (no key in CI/cloud).
+- Legacy local `scrapegraph-mcp` 1.0.1 (PyPI, last release, v1-style, 8 tools): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`. Hosts still running it use these names.
 - Hosted tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. Gone vs legacy (per hosted docs): `sitemap`, `agentic_scrapper`, `generate_schema` (pass `schema` to extract/search).
 - Tool call cap 60 s: long work = `crawl_*` / `monitor_*`.
 
