@@ -1,9 +1,9 @@
-"""Shared plumbing for the POST-only vendor scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*).
+"""Shared plumbing for the POST scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*, vendor_request).
 
 Key: ~/.config/opencode/secrets/<pool>, read here and sent only as the auth header.
 Success: JSON payload to stdout, exit 0. HTTP or network error: one JSON line to stderr
 {"status", "code", "message"}, exit 1. Vendor code comes from the response, else the status number.
-Error shapes: references/fleet.md "Error codes per service".
+Error shapes: references/scrapers/keys-errors.md.
 Redirects are refused so the auth header never leaves the vendor host.
 """
 from __future__ import annotations
@@ -29,6 +29,9 @@ VENDORS: dict[str, tuple[str, str, str]] = {
     "brightdata": ("https://api.brightdata.com", "Authorization", "Bearer "),
     "browserbase": ("https://api.browserbase.com/v1", "X-BB-API-Key", ""),
     "scrapegraph": ("https://v2-api.scrapegraphai.com/api", "SGAI-APIKEY", ""),
+    "tavily": ("https://api.tavily.com", "Authorization", "Bearer "),
+    "apify": ("https://api.apify.com/v2", "Authorization", "Bearer "),
+    "agentql": ("https://api.agentql.com/v1", "X-API-Key", ""),
 }
 
 CODE_HEADERS = ("x-brd-error-code", "x-brd-err-code")

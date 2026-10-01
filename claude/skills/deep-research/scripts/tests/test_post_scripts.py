@@ -18,6 +18,7 @@ import exa_answer  # noqa: E402
 import exa_batches  # noqa: E402
 import firecrawl_batch_scrape  # noqa: E402
 import scrapegraph_crawl  # noqa: E402
+import vendor_request  # noqa: E402
 
 FAKE_KEY = "fake-key-1234567890"
 
@@ -110,6 +111,19 @@ CASES = [
 ]
 
 
+CASES += [
+    (vendor_request, ["scrapegraph", "GET", "/credits"], "GET", "https://v2-api.scrapegraphai.com/api/credits", None),
+    (vendor_request, ["exa", "POST", "/findSimilar", "--body", '{"url":"https://a.test"}'], "POST",
+     "https://api.exa.ai/findSimilar", {"url": "https://a.test"}),
+    (vendor_request, ["apify", "GET", "/store", "--param", "search=maps", "--param", "limit=3"], "GET",
+     "https://api.apify.com/v2/store?search=maps&limit=3", None),
+    (vendor_request, ["agentql", "POST", "/query-data", "--body", '{"query":"{ a }","url":"https://a.test"}'], "POST",
+     "https://api.agentql.com/v1/query-data", {"query": "{ a }", "url": "https://a.test"}),
+    (vendor_request, ["tavily", "POST", "/research", "--body", '{"input":"q"}'], "POST",
+     "https://api.tavily.com/research", {"input": "q"}),
+]
+
+
 @pytest.mark.parametrize("mod,argv,method,url,body", CASES)
 def test_request_shape(net, capsys, mod, argv, method, url, body):
     net.reply(200, {"ok": True})
@@ -135,6 +149,9 @@ def test_exa_batches_send_beta_header(net, argv):
         ("brightdata", "Authorization", f"Bearer {FAKE_KEY}"),
         ("browserbase", "X-bb-api-key", FAKE_KEY),
         ("scrapegraph", "Sgai-apikey", FAKE_KEY),
+        ("tavily", "Authorization", f"Bearer {FAKE_KEY}"),
+        ("apify", "Authorization", f"Bearer {FAKE_KEY}"),
+        ("agentql", "X-api-key", FAKE_KEY),
     ],
 )
 def test_auth_header_per_vendor(net, pool, header, value):
@@ -323,3 +340,21 @@ def test_bad_json_arg_exits_1(capsys):
     with pytest.raises(SystemExit) as exc:
         pc.load_json_arg("{nope")
     assert exc.value.code == 1
+
+
+def test_vendor_request_extra_header_sent(net):
+    net.reply(200, {})
+    vendor_request.main(["exa", "GET", "/batches/b1", "--header", "Exa-Beta=batches-2026-06-06"])
+    assert net.sent[0].get_header("Exa-beta") == "batches-2026-06-06"
+
+
+@pytest.mark.parametrize(
+    "argv,code",
+    [(["exa", "GET", "search"], "bad_path"), (["exa", "GET", "/x", "--param", "novalue"], "bad_param")],
+)
+def test_vendor_request_rejects_bad_input_before_network(net, capsys, argv, code):
+    with pytest.raises(SystemExit) as exc:
+        vendor_request.main(argv)
+    assert exc.value.code == 1
+    assert json.loads(capsys.readouterr().err)["code"] == code
+    assert net.sent == []
