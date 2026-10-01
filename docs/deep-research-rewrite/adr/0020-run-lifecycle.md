@@ -1,0 +1,7 @@
+# Run lifecycle: Python driver, draft branches, NEEDS_YOU, bounded waves
+
+- A Python driver owns the state machine and `run.yaml`. Each step is launched as an OpenCode agent with its assigned model (ADR 0013). Phases are re-entrant; resume = re-run the driver. The skill's job: start the driver and report. The driver tells each discovery agent which paradigm to use and audits `attempts.jsonl` afterwards.
+- Phases: infer-mode, discover (waves to saturation), verify (Ralph per claim, max 5 rounds), write (claims-first), conformance gate, pick layout, render once, gates (verifier on all claims, ledger check, URL audit, render check), publish, live check. Verify mode extracts claims from the input instead of discovering. Rules mode follows learn with rules sources.
+- Every run works on `draft/<topic>-<run>`. Fast-forward to main only when gates pass. A failed live check auto-reverts the merge. Failed runs leave the branch with ledger and report (ADR 0018, Q34).
+- Unattended questions: write `NEEDS_YOU.md` in the run dir, exit non-zero, raise a desktop/push notification if a hook is configured.
+- Waves: size configurable (default 8), halved on 429s; per-agent wall-clock timeout, one retry, then the attempt is marked failed.
