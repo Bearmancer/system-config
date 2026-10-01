@@ -1,0 +1,10 @@
+# Model roles (ADR 0013). No checking role shares a family with the author.
+# Model ids are unverified: confirm against `opencode models` and vision/context limits on the host.
+# opencode.jsonc currently allows qwen3.7-plus; the user states qwen-3.8-flash. Update the config, then this file.
+schema: 1
+roles:
+  author: {model: "opencode-go/muse-spark-1.3-contributor", family: muse, note: "free; writes lessons from verified claims"}
+  extractor: {model: "opencode-go/mimo-v2.6-flash", family: mimo, note: "free; tool-less; splits source text and final prose into claims"}
+  verifier: {model: "opencode-go/qwen3.8-flash", family: qwen, note: "UNVERIFIED id; re-checks every claim, all statuses"}
+  media: {model: "opencode-go/deepseek-v4.1-flash", family: deepseek, note: "audio/video ingest and first visual read"}
+checking_roles: [extractor, verifier, media]
