@@ -7,3 +7,4 @@ Design record from a grill-with-docs session, 2026-10-01. Design only: nothing h
 - `HANDOFF.md`: migration plan, per-domain tests, open items.
 - `layouts.html`: layout atlas (12 lesson layouts, sample content is illustrative).
 - `ledgerlab/`: draft skill code and tests (staged here, not under `claude/skills/`, because the daily backup mirror would delete a repo-only skill). See its README.
+- `HANDOFF-LOCAL.md`: exhaustive handoff for all work that needs the user's own machine (config, probes, handlers, shell, fixtures, cutover).
