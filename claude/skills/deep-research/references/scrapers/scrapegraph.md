@@ -1,16 +1,16 @@
 # ScrapeGraphAI
 
 Pick: schema-shaped extraction, many-page crawl outliving one call, page-change monitors. Stealth = `fetchConfig.stealth` (+5 credits per page / call / monitor tick).
-Key: always `SCRAPEGRAPH_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
+Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
 
 ## MCP: hosted v2 (config mirrors point here; legacy local 1.0.1 retired)
 
-- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth `Authorization: Bearer sgai-...` / `SGAI-APIKEY` / `X-API-Key` or Google OAuth. Unauthenticated call returns 401 `missing authorization header` (live). Mirrors send the pool key as Bearer. Live probe 2026-10-01 with a fake key: `Authorization: Bearer`, `SGAI-APIKEY` and `X-API-Key` all pass `initialize` and `tools/list` (20 tools, as listed below) and all reach key validation on `tools/call` (`auth_invalid_key`); a missing header is 401 `missing authorization header`; a bare `Authorization: <key>` without `Bearer` is 401 `no token payload`. Valid-key check 2026-10-01: Bearer `tools/call` `credits` and `scrape` (example.com) succeed; REST `GET /credits` through `vendor_request.py` (env var fallback) also succeeds. The tested key was on the Free Plan (500 credits, 1 crawl job, 1 monitor): plan limits, not an auth issue.
+- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth per `keys-errors.md`. Unauthenticated call returns 401 `missing authorization header` (live). Mirrors send the key as Bearer. Live probe 2026-10-01 with a fake key: `Authorization: Bearer`, `SGAI-APIKEY` and `X-API-Key` all pass `initialize` and `tools/list` (20 tools, as listed below) and all reach key validation on `tools/call` (`auth_invalid_key`); a missing header is 401 `missing authorization header`; a bare `Authorization: <key>` without `Bearer` is 401 `no token payload`. Valid-key check 2026-10-01: Bearer `tools/call` `credits` and `scrape` (example.com) succeed; REST `GET /credits` through `vendor_request.py` (env var fallback) also succeeds. The tested key was on the Free Plan (500 credits, 1 crawl job, 1 monitor): plan limits, not an auth issue.
 - Legacy local `scrapegraph-mcp` 1.0.1 (PyPI, last release, v1-style, 8 tools): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`. Hosts still running it use these names.
 - Hosted tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. Gone vs legacy (per hosted docs): `sitemap`, `agentic_scrapper`, `generate_schema` (pass `schema` to extract/search).
 - Tool call cap 60 s: long work = `crawl_*` / `monitor_*`.
 
-## CLI `just-scrape` (npm, Node >=22; the CLI itself reads `SGAI_API_KEY`, so set it from ours: `SGAI_API_KEY=$SCRAPEGRAPH_API_KEY just-scrape ...`; `--json` everywhere)
+## CLI `just-scrape` (npm, Node >=22; `--json` everywhere; key: see `keys-errors.md`)
 
 | Need | Command |
 |---|---|

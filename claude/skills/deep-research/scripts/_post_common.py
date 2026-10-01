@@ -1,6 +1,6 @@
 """Shared plumbing for the POST scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*, vendor_request).
 
-Key: ~/.config/opencode/secrets/<pool>, else the pool env var (POOL_ENV, for cloud hosts with no secrets dir), read here and sent only as the auth header.
+Key policy: references/scrapers/keys-errors.md (secrets file, else POOL_ENV; sent only as the auth header).
 Success: JSON payload to stdout, exit 0. HTTP or network error: one JSON line to stderr
 {"status", "code", "message"}, exit 1. Vendor code comes from the response, else the status number.
 Error shapes: references/scrapers/keys-errors.md.

@@ -1,6 +1,6 @@
 # Exa
 
-Pick: conceptual (not keyword) queries; papers and long-form that keyword engines miss; cached fetch (chain step 3). `livecrawl` = freshness, not a bypass. Key `EXA_API_KEY`, pool `exa`; script header `x-api-key` (Bearer also accepted). No official CLI (npm `exa-cli` is third-party, unexamined).
+Pick: conceptual (not keyword) queries; papers and long-form that keyword engines miss; cached fetch (chain step 3). `livecrawl` = freshness, not a bypass. No official CLI (npm `exa-cli` is third-party, unexamined).
 
 ## MCP (config pins 4 tools in the URL; live list 403 without key, names from README (readme))
 

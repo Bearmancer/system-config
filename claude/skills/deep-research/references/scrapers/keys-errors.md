@@ -2,24 +2,27 @@
 
 Read on a credit/auth/quota failure or a missing-secret problem only.
 
-## Keys
+## Key policy (the only place it is stated)
 
-| Server | Config entry | Key env var | Pool |
-|---|---|---|---|
-| Tavily | `tavily` | `TAVILY_API_KEY` | `tavily` |
-| Firecrawl | `firecrawl` | `FIRECRAWL_API_KEY` | `firecrawl` |
-| Exa | `exa` | `EXA_API_KEY` | `exa` |
-| ScrapeGraphAI | `scrapegraph` | `SCRAPEGRAPH_API_KEY` (single source; never `SGAI_API_KEY` or `GITHUB_SCRAPEGRAPHAI_API_KEY` in configs) | `scrapegraph` |
-| Apify | `apify` | `APIFY_TOKEN` | `apify` |
-| AgentQL | `agentql` | `AGENTQL_API_KEY` | `agentql` |
-| Bright Data | `brightdata` | `API_TOKEN` (from `BRIGHTDATA_API_KEY`) | `brightdata` |
-| Browserbase | `browserbase` | `BROWSERBASE_API_KEY` | `browserbase` |
+1. A key is always sent. No keyless access for any vendor, any host, any call. A free-plan key is fine.
+2. One env var per vendor, named in the table; configs, scripts and docs use only that name. Aliases (`SGAI_API_KEY`, `GITHUB_*`) are never used in configs; set a vendor CLI's own var from ours at call time.
+3. Source order: `~/.config/opencode/secrets/<pool>` (written by `switch_api_key.py`), else the env var. Neither -> exit 1 `key_unreadable`.
+4. A key goes only into the vendor's auth header (fixed per pool in `_post_common.VENDORS`), never into logs, output, URLs or repo files. Redirects are refused.
+5. Rotation: `switch_api_key.py --next` rewrites the secrets file; OpenCode reconnects only that server; OmO needs a restart from a new terminal (SKILL.md Key rotation).
+6. Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
 
-- Active key sits in `~/.config/opencode/secrets/<pool>`; POST scripts read it there and send it only as the vendor auth header. `switch_api_key.py --next` rewrites that file; OpenCode reconnects only the changed server. OmO: SKILL.md Key rotation.
-- Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
+| Server | Config entry | Env var | Pool | Auth header |
+|---|---|---|---|---|
+| Tavily | `tavily` | `TAVILY_API_KEY` | `tavily` | `Authorization: Bearer tvly-...` |
+| Firecrawl | `firecrawl` | `FIRECRAWL_API_KEY` | `firecrawl` | `Authorization: Bearer fc-...` |
+| Exa | `exa` | `EXA_API_KEY` | `exa` | `x-api-key` (Bearer also accepted) |
+| ScrapeGraphAI | `scrapegraph` | `SCRAPEGRAPH_API_KEY` | `scrapegraph` | `Authorization: Bearer` (also `SGAI-APIKEY`, `X-API-Key`); CLI `just-scrape` reads `SGAI_API_KEY`: `SGAI_API_KEY=$SCRAPEGRAPH_API_KEY just-scrape ...` |
+| Apify | `apify` | `APIFY_TOKEN` | `apify` | `Authorization: Bearer` (`?token=` works, less secure) |
+| AgentQL | `agentql` | `AGENTQL_API_KEY` | `agentql` | `X-API-Key` |
+| Bright Data | `brightdata` | `BRIGHTDATA_API_KEY` (MCP env `API_TOKEN`) | `brightdata` | `Authorization: Bearer` |
+| Browserbase | `browserbase` | `BROWSERBASE_API_KEY` | `browserbase` | `X-BB-API-Key` |
+
 - ScrapeGraphAI hosted MCP answers 401 without a valid key: a dead server = missing or wrong key.
-- Container hosts (no secrets dir): POST scripts fall back to the pool env var (`POOL_ENV` in `_post_common.py`, e.g. `TAVILY_API_KEY`); neither set -> exit 1 `key_unreadable`.
-- An API key is always required: no keyless access for any vendor. A free-plan key is fine; only keyless calls are banned.
 
 ## Error codes per service
 

@@ -38,7 +38,7 @@ M = MCP, C = CLI, S = dedicated script in `scripts/`, R = raw REST via `scripts/
 
 ## Bot-block chain
 
-First step returning the target content wins. Credit/auth failure: rotate that server's key first (SKILL.md), then move on. Blocked: next step.
+First step returning the target content wins. Credit/auth failure: rotate that server's key first (SKILL.md; key policy: `scrapers/keys-errors.md`), then move on. Blocked: next step.
 
 1. Tavily `tavily_extract`.
 2. Firecrawl `scrape` `proxy: "auto"`, `maxAge: 0`.
@@ -54,7 +54,7 @@ Host lacks a step's MCP and CLI: REST via `vendor_request.py`: Tavily `POST /ext
 
 ## POST scripts
 
-PEP 723 stdlib only: `uv run scripts/<name>.py ...`. Key from `~/.config/opencode/secrets/<pool>`, JSON to stdout, HTTP error -> exit 1 with `{"status","code","message"}` on stderr. Redirects refused.
+PEP 723 stdlib only: `uv run scripts/<name>.py ...`. Keys: `scrapers/keys-errors.md`. JSON to stdout, HTTP error -> exit 1 with `{"status","code","message"}` on stderr. Redirects refused.
 
 | Script | Does |
 |---|---|

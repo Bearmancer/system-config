@@ -1,6 +1,6 @@
 # Browserbase
 
-Pick: hosted browser, CAPTCHA (paid tier); chain step 9. Key `BROWSERBASE_API_KEY`, pool `browserbase`, header `X-BB-API-Key`.
+Pick: hosted browser, CAPTCHA (paid tier); chain step 9.
 
 - MCP (live, unauthenticated list; authenticated may be larger): `start`, `end`, `navigate`, `act`, `observe`, `extract`.
 - CLI `browse` (npm `browse`, Node ^20.19 or >=22.12): `browse cloud search`, `browse cloud fetch`, `browse cloud sessions`, `browse open|snapshot|click|fill|screenshot`. No agent-run command.

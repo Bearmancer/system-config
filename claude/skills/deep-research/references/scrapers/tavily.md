@@ -1,12 +1,12 @@
 # Tavily
 
-Pick: question in, cited answer + ranked URLs out; first stop for unknown-query factual lookups; chain step 1 (`tavily_extract`). Key `TAVILY_API_KEY`, pool `tavily`, Bearer `tvly-...`. Always call with the key; no keyless use.
+Pick: question in, cited answer + ranked URLs out; first stop for unknown-query factual lookups; chain step 1 (`tavily_extract`).
 
 ## MCP (names from npm server source (readme); hosted remote spelling unverified, docs prose says `tavily-search`)
 
 `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map`, `tavily_research`, `tavily_feedback`. `extract_depth: advanced` = depth, not a bot-block bypass.
 
-## CLI `tvly` (PyPI `tavily-cli`; `uv tool install tavily-cli`; `TAVILY_API_KEY` or `tvly login`)
+## CLI `tvly` (PyPI `tavily-cli`; `uv tool install --upgrade tavily-cli`)
 
 `tvly search`, `extract`, `crawl`, `map`, `research` (`--no-wait`, `status <id>`, `poll <id>`).
 

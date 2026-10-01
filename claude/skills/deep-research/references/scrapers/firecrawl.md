@@ -1,6 +1,6 @@
 # Firecrawl
 
-Pick: known URL or whole site to clean markdown; academic papers; proxy ladder `proxy: "auto"`; keyed typed data (Alexandria). Key `FIRECRAWL_API_KEY`, pool `firecrawl`, Bearer `fc-...`.
+Pick: known URL or whole site to clean markdown; academic papers; proxy ladder `proxy: "auto"`; keyed typed data (Alexandria).
 
 ## MCP
 
@@ -14,7 +14,7 @@ Pick: known URL or whole site to clean markdown; academic papers; proxy ladder `
 - `firecrawl_developer_search` `{query,k<=100,skills:"only"}`: repos, issues, merged PRs, READMEs, docs. `firecrawl_find_tools`: browse Alexandria providers (free); execute via scrape `alexandria`.
 - Research: `search_papers {query,authors,categories,from,to,k<=500}`; `inspect_paper {paperId}`; `read_paper {paperId,question,k}`; `related_papers {seed_ids<=10,intent,mode similar|citers|references}`. IDs `arxiv:`, `pmid:`, `pmcid:`, `doi:`.
 
-## CLI `firecrawl` (npm `firecrawl-cli`, Node >=22; `FIRECRAWL_API_KEY` or `firecrawl login`)
+## CLI `firecrawl` (npm `firecrawl-cli`, Node >=22)
 
 `firecrawl search`, `scrape` (several URLs concurrent), `crawl <url> [--wait | --cancel]`, `crawl <job-id>`, `map`, `agent "<prompt>" [--wait]` / `agent <job-id>`, `research`, `monitor`.
 

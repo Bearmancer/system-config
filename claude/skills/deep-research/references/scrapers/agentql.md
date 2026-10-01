@@ -1,6 +1,6 @@
 # AgentQL
 
-Pick: query-shaped extraction (`{ products[] { name price(integer) } }`) from a rendered page; chain step 6. Key `AGENTQL_API_KEY`, pool `agentql`, header `X-API-Key`. No search, crawl, map, research.
+Pick: query-shaped extraction (`{ products[] { name price(integer) } }`) from a rendered page; chain step 6. No search, crawl, map, research.
 
 - MCP (readme; server exits at start without key): `extract-web-data`.
 - CLI: none usable (`agentql-cli` only scaffolds SDK projects).
