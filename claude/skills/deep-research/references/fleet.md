@@ -30,7 +30,7 @@ M = MCP, C = CLI, S = dedicated script in `scripts/`, R = raw REST via `scripts/
 | Tavily | MCR | MCR | - | MCR | MCR | MCR | `tvly research --no-wait` | - | - |
 | Firecrawl | MCR | MCR | M(json fmt) | M*CR | M*CR | M*CR agent, M papers | S batch | M*CR | - |
 | Exa | MR | MR | - | - | - | M `agent_run`, S stop/cancel, S answer | S batches | R | - |
-| ScrapeGraph | MCR | MCR | MCR | MCSR | M (legacy `sitemap`; none in v2) | MCR search | S crawl mgmt | CR (hosted M) | - |
+| ScrapeGraph | MCR | MCR | MCR | MCSR | - | MCR search | S crawl mgmt | CR (hosted M) | - |
 | Apify | MCR | MCR (rag-web-browser) | MCR (Actor) | Actor | Actor | - | MCR runs | R schedules | - |
 | AgentQL | - | - | MR | - | - | - | - | - | - |
 | Bright Data | MCR | MCR | - | - | - | - | M `scrape_batch`/`search_engine_batch`, S async Unlocker | - | - |
@@ -43,7 +43,7 @@ First step returning the target content wins. Credit/auth failure: rotate that s
 1. Tavily `tavily_extract`.
 2. Firecrawl `scrape` `proxy: "auto"`, `maxAge: 0`.
 3. Exa `web_fetch_exa` (cached); `SOURCE_NOT_AVAILABLE` -> next.
-4. ScrapeGraph `scrape` via hosted v2 MCP / CLI `--stealth` / REST `fetchConfig.stealth: true` (+5 credits per page); legacy MCP stealth support unverified.
+4. ScrapeGraph `scrape` via hosted v2 MCP / CLI `--stealth` / REST `fetchConfig.stealth: true` (+5 credits per page).
 5. Apify `apify--rag-web-browser`, or site Actor via `search-actors` + `call-actor`.
 6. AgentQL `extract-web-data`.
 7. Firefox DevTools MCP, or Playwright `browser_navigate` -> `browser_snapshot`.
@@ -69,7 +69,7 @@ Not scripted because MCP or CLI covers it: everything else in the capability map
 
 ## House rules
 
-- Always the latest version and the widest tool set: installs use `@latest` / `--upgrade`, MCP URLs enable every tool, hosted v2 over legacy.
+- Always the latest version and the widest tool set: installs use `@latest` / `--upgrade`, MCP URLs enable every tool.
 - One URL, markdown: `firecrawl_scrape` or ScrapeGraph `scrape`.
 - Whole site: `map` before `crawl`, explicit limit.
 - Tavily `extract_depth: advanced` = depth only; Exa `livecrawl` = freshness only; neither bypasses blocks.

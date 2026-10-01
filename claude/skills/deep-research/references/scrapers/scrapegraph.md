@@ -3,11 +3,10 @@
 Pick: schema-shaped extraction, many-page crawl outliving one call, page-change monitors. Stealth = `fetchConfig.stealth` (+5 credits per page / call / monitor tick).
 Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
 
-## MCP: hosted v2 (config mirrors point here; legacy local 1.0.1 retired)
+## MCP (hosted v2)
 
-- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth per `keys-errors.md`. Unauthenticated call returns 401 `missing authorization header` (live). Mirrors send the key as Bearer. Live probe 2026-10-01 with a fake key: `Authorization: Bearer`, `SGAI-APIKEY` and `X-API-Key` all pass `initialize` and `tools/list` (20 tools, as listed below) and all reach key validation on `tools/call` (`auth_invalid_key`); a missing header is 401 `missing authorization header`; a bare `Authorization: <key>` without `Bearer` is 401 `no token payload`. Valid-key check 2026-10-01: Bearer `tools/call` `credits` and `scrape` (example.com) succeed; REST `GET /credits` through `vendor_request.py` (env var fallback) also succeeds. The tested key was on the Free Plan (500 credits, 1 crawl job, 1 monitor): plan limits, not an auth issue.
-- Legacy local `scrapegraph-mcp` 1.0.1 (PyPI, last release, v1-style, 8 tools): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`. Hosts still running it use these names.
-- Hosted tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. Gone vs legacy (per hosted docs): `sitemap`, `agentic_scrapper`, `generate_schema` (pass `schema` to extract/search).
+- `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth per `keys-errors.md` (Bearer verified live 2026-10-01 with `credits` and `scrape`; no header = 401 `missing authorization header`, `Authorization` without `Bearer` = 401 `no token payload`, bad key = `auth_invalid_key`).
+- Tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. No sitemap, map or schema-generation tool: pass `schema` to extract/search.
 - Tool call cap 60 s: long work = `crawl_*` / `monitor_*`.
 
 ## CLI `just-scrape` (npm, Node >=22; `--json` everywhere; key: see `keys-errors.md`)
@@ -35,6 +34,6 @@ Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per 
 
 Optional header `SGAI-Session-Id` groups a workflow in history. Script usage: `uv run scripts/vendor_request.py scrapegraph POST /scrape --body '...'`.
 
-## Live check
+## Routes
 
-Dated audit (2026-10-01, unauthenticated): `.claude/docs/research/scrapegraph-live-check.md` in system-config. Summary: all documented v2 routes exist except `/schema` (documented, 404); no `/sitemap` or `/map`. Smoke with a key: `vendor_request.py scrapegraph GET /credits`, then `POST /scrape` on `https://example.com`. Docs index https://docs.scrapegraphai.com/llms.txt; its `api-reference/openapi.json` is the stale v1 spec.
+All documented v2 routes exist except `/schema` (documented, 404 at probe 2026-10-01); no `/sitemap` or `/map`. Smoke test: `vendor_request.py scrapegraph GET /credits`, then `POST /scrape` on `https://example.com`. Docs index: https://docs.scrapegraphai.com/llms.txt.

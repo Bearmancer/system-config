@@ -2,7 +2,7 @@
 
 Date: 2026-09-29. Scope: issue #33 steps 1-2 (research only). Every claim below was read from a primary source (vendor API docs or OpenAPI spec, vendor CLI docs or README, npm or PyPI registry, or source code) on this date. No API that needs a key was called and nothing was installed.
 
-> Update 2026-10-01: ScrapeGraph now documents a hosted v2 MCP (`https://mcp.scrapegraphai.com/mcp`, 20 tools incl. `crawl_*`, `monitor_*`, `credits`, `history_*`), so section 4 row 7 (crawl management) is covered by MCP once the config swaps off legacy `scrapegraph-mcp` 1.0.1. Exa `/findSimilar` and `/monitors*` have no MCP or CLI (POST-only). A generic REST preset `scripts/vendor_request.py` was added (dedicated scripts remain); current routing lives in `claude/skills/deep-research/references/fleet.md` and `references/scrapers/`.
+> Update 2026-10-01: ScrapeGraph now documents a hosted v2 MCP (`https://mcp.scrapegraphai.com/mcp`, 20 tools incl. `crawl_*`, `monitor_*`, `credits`, `history_*`), so section 4 row 7 (crawl management) is covered by MCP, which the configs now use. Exa `/findSimilar` and `/monitors*` have no MCP or CLI (POST-only). A generic REST preset `scripts/vendor_request.py` was added (dedicated scripts remain); current routing lives in `claude/skills/deep-research/references/fleet.md` and `references/scrapers/`.
 
 ## Questions
 

@@ -40,5 +40,4 @@ Rotate on "Out of credit" and on "Bad key" after a working key. Next chain step 
 | Browserbase | unverified | unverified | unverified | unverified |
 
 - POST scripts: HTTP error -> exit 1, JSON line on stderr `{"status","code","message"}`.
-- Hosts still on legacy ScrapeGraph MCP 1.0.1 raise `Error {status}: {body}` for any status >= 400: match status number and `insufficient_credits`.
 - Unverified cell = no published code; treat any auth/credit-looking failure as rotate, then next step.
