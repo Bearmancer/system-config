@@ -62,6 +62,10 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | `service.json` | `opencode service set hostname 127.0.0.1` |
 | Tailscale serve | `tailscale serve --bg 49374` |
 
+## Ubuntu setup
+
+`scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt]` is a manual, user-run script. It purges Bun, npm globals, OpenCode, OmO and oh-my-opencode-slim state (listing every path first; `~/.config/opencode/secrets` is backed up and restored; `~/.secrets/.env` is never touched), then installs Bun, OpenCode v2 (`https://opencode.ai/v2/install`), uv, the MCP servers, vendor CLIs and language servers, and deploys `AGENTS.md`, `tui.json` and the skills. Models are the free `opencode/*-free` ones (override with `FREE_MODELS=id1,id2,id3`). MCP servers that need a key are enabled only when `~/.config/opencode/secrets/<name>` holds a free-plan key; the rest are listed as skipped.
+
 ## foobar2000 mirror
 
 One-way `rclone sync` of `%APPDATA%\foobar2000-v2` to the `gdrive` remote's `foobar2000-v2` folder. rclone keeps no version history of its own on the remote side — Google Drive's own 30-day file versions are the only history.
