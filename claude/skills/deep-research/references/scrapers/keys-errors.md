@@ -9,7 +9,7 @@ Read on a credit/auth/quota failure or a missing-secret problem only.
 | Tavily | `tavily` | `TAVILY_API_KEY` | `tavily` |
 | Firecrawl | `firecrawl` | `FIRECRAWL_API_KEY` | `firecrawl` |
 | Exa | `exa` | `EXA_API_KEY` | `exa` |
-| ScrapeGraphAI | `scrapegraph` | `SGAI_API_KEY` (from `SCRAPEGRAPH_API_KEY`) | `scrapegraph` |
+| ScrapeGraphAI | `scrapegraph` | `SCRAPEGRAPH_API_KEY` (single source; never `SGAI_API_KEY` or `GITHUB_SCRAPEGRAPHAI_API_KEY` in configs) | `scrapegraph` |
 | Apify | `apify` | `APIFY_TOKEN` | `apify` |
 | AgentQL | `agentql` | `AGENTQL_API_KEY` | `agentql` |
 | Bright Data | `brightdata` | `API_TOKEN` (from `BRIGHTDATA_API_KEY`) | `brightdata` |

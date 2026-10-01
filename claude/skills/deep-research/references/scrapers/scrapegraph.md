@@ -1,7 +1,7 @@
 # ScrapeGraphAI
 
 Pick: schema-shaped extraction, many-page crawl outliving one call, page-change monitors. Stealth = `fetchConfig.stealth` (+5 credits per page / call / monitor tick).
-Key: `SGAI_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
+Key: always `SCRAPEGRAPH_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
 
 ## MCP: hosted v2 (config mirrors point here; legacy local 1.0.1 retired)
 
@@ -10,7 +10,7 @@ Key: `SGAI_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 
 - Hosted tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. Gone vs legacy (per hosted docs): `sitemap`, `agentic_scrapper`, `generate_schema` (pass `schema` to extract/search).
 - Tool call cap 60 s: long work = `crawl_*` / `monitor_*`.
 
-## CLI `just-scrape` (npm, Node >=22; `SGAI_API_KEY`; `--json` everywhere)
+## CLI `just-scrape` (npm, Node >=22; the CLI itself reads `SGAI_API_KEY`, so set it from ours: `SGAI_API_KEY=$SCRAPEGRAPH_API_KEY just-scrape ...`; `--json` everywhere)
 
 | Need | Command |
 |---|---|
