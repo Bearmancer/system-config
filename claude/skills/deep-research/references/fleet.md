@@ -1,6 +1,6 @@
 # Fleet: route a web call
 
-Order per capability: MCP tool the host carries -> vendor CLI -> POST script. Hosts carry different servers: list your tools first (this Claude cloud session: Firecrawl `scrape`/`search`/`research_*` only). OpenCode wiring: `~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/<pool>`; OmO: `~/.omo/agent/mcp.json`, keys from user env. No skill `mcp.json` (senpi sends remote servers without auth). Exa URL pins 4 tools, Apify pins 3: keep pins.
+Order per capability: MCP tool the host carries -> vendor CLI -> POST script. Hosts carry different servers: list your tools first (this Claude cloud session: Firecrawl `scrape`/`search`/`research_*` only). OpenCode wiring: `~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/<pool>`; OmO: `~/.omo/agent/mcp.json`, keys from user env. No skill `mcp.json` (senpi sends remote servers without auth). Exa URL lists all 4 tools; Apify URL enables every category (actors, docs, runs, storage, tasks, schedules, builds, dev) plus `apify/rag-web-browser`, `apify/web-fetch`, `get-actor-list`.
 
 Detail lives in one file per vendor, read only the one you route to: `scrapers/<vendor>.md` (MCP tool names, CLI commands, POST endpoints + presets). On failure: `scrapers/keys-errors.md`.
 

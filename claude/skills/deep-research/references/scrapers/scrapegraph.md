@@ -3,10 +3,10 @@
 Pick: schema-shaped extraction, many-page crawl outliving one call, page-change monitors. Stealth = `fetchConfig.stealth` (+5 credits).
 Key: `SGAI_API_KEY`, pool `scrapegraph`. Header `SGAI-APIKEY`. Costs: scrape md 1, json 5, screenshot 2, branding 25; extract 5; crawl 2 + per page; monitor tick = scrape cost, +5 on change.
 
-## Installed MCP is legacy
+## MCP: hosted v2 (config mirrors point here; legacy local 1.0.1 retired)
 
-- Config runs local `scrapegraph-mcp` 1.0.1 (PyPI, v1-style, 8 tools, live): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`.
-- Hosted v2 MCP exists (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth `Authorization: Bearer sgai-...` / `SGAI-APIKEY` / `X-API-Key` or Google OAuth. Unauthenticated call returns 401 `missing authorization header` (live). Not wired; swapping the config entry is the user's call.
+- Hosted v2 MCP (docs 2026-10-01): `https://mcp.scrapegraphai.com/mcp`, Streamable HTTP, 20 tools, auth `Authorization: Bearer sgai-...` / `SGAI-APIKEY` / `X-API-Key` or Google OAuth. Unauthenticated call returns 401 `missing authorization header` (live). Mirrors send the pool key as Bearer; acceptance untested (no key in CI/cloud).
+- Legacy local `scrapegraph-mcp` 1.0.1 (PyPI, last release, v1-style, 8 tools): `scrape`, `markdownify`, `smartscraper` (= extract), `searchscraper` (= search), `smartcrawler_initiate`, `smartcrawler_fetch_results`, `sitemap`, `agentic_scrapper`. Hosts still running it use these names.
 - Hosted tools: `scrape`, `extract`, `search`; `crawl_start`, `crawl_get`, `crawl_pages`, `crawl_stop`, `crawl_resume`, `crawl_delete`; `monitor_create`, `monitor_list`, `monitor_get`, `monitor_update`, `monitor_pause`, `monitor_resume`, `monitor_delete`, `monitor_activity`; `credits`, `history_list`, `history_get`. Gone vs legacy: `sitemap`, `agentic_scrapper`, `generate_schema` (pass `schema` to extract/search).
 - Tool call cap 60 s: long work = `crawl_*` / `monitor_*`.
 
@@ -40,5 +40,5 @@ Optional header `SGAI-Session-Id` groups a workflow in history. Script usage: `u
 - Every route above except `/schema` answers 401 `auth_missing_key` = route exists: scrape, extract, search, crawl (+ `/{id}`, `/pages`, `/stop`, `/resume`), monitor (+ list, `/{id}`, PATCH, pause, resume, activity), credits, history (+ `/{id}`), validate.
 - 404: `/sitemap`, `/map` (no map endpoint in v2), and `/schema` (documented at `POST /api/schema`, not served at probe time: docs ahead of deploy).
 - `GET /api/agent/protocols` answers free: keyless USDC key purchase exists (`/api/agent/mpp/access/{pack}`). Never use.
-- Not verified (needs key): response shapes, `stealth` credit charge, `/monitor` PATCH body, hosted-MCP Bearer acceptance. Smoke with a key: `vendor_request.py scrapegraph GET /credits`, then `POST /scrape` on `https://example.com`.
+- Not verified (needs key): response shapes, `stealth` credit charge, `/monitor` PATCH body, hosted-MCP Bearer acceptance (if Bearer is refused, set `SGAI-APIKEY` header instead). Smoke with a key: `vendor_request.py scrapegraph GET /credits`, then `POST /scrape` on `https://example.com`.
 - Trust the docs index https://docs.scrapegraphai.com/llms.txt; `api-reference/openapi.json` there is the stale v1 spec (`/v1/smartscraper`).
