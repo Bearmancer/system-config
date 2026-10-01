@@ -24,9 +24,9 @@ Pick: known URL or whole site to clean markdown; academic papers; proxy ladder `
 |---|---|
 | search / scrape / map | `POST /search` `{"query":Q,"limit":3}`; `POST /scrape` `{"url":U}`; `POST /map` `{"url":U}` |
 | crawl | `POST /crawl` `{"url":U,"limit":10}`; `GET\|DELETE /crawl/{id}`; `GET /crawl/{id}/errors` |
-| batch scrape | `scripts/firecrawl_batch_scrape.py start <url>... [--formats ...]` then `status\|cancel\|errors <id>` |
+| batch scrape | raw `POST /batch/scrape` `{"urls":[...],"formats":["markdown"]}`, `GET\|DELETE /batch/scrape/{id}`, `GET /batch/scrape/{id}/errors`; or `scripts/firecrawl_batch_scrape.py start <url>... [--formats ...]` then `status\|cancel\|errors <id>` |
 | agent | `POST /agent` `{"prompt":P,"maxCredits":100}`; `GET\|DELETE /agent/{jobId}` |
 | papers | `GET /search/research/papers?query=Q&k=10` |
-| monitors | `POST /monitor` and siblings |
+| monitors | `POST /monitor` plus list/get/update/delete/run/checks siblings (exact paths unverified) |
 
 Burn: map before crawl, set `limit`. Blocked page still costs 1 credit.

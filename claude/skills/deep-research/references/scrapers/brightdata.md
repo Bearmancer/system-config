@@ -14,10 +14,10 @@ Pick: WAF/Cloudflare/geo-blocked after cheaper tiers fail (chain step 8); SERP; 
 
 | Need | Call |
 |---|---|
-| fetch (Unlocker) | `POST /request` `{"zone":"web_unlocker1","url":U,"format":"raw","data_format":"markdown"}` |
+| fetch (Unlocker) | `POST /request` `{"zone":"web_unlocker1","url":U,"format":"raw","data_format":"markdown"}`; optional `country`, `render`; `data_format` markdown or screenshot; `POST /request?async=true` documented, retrieval endpoint unverified |
 | search (SERP) | `POST /request` `{"zone":"serp_api1","url":"https://www.google.com/search?q=Q","format":"json"}` |
-| async Unlocker | `scripts/brightdata_unlocker.py start --zone <zone> <url>` then `result <response_id> [--wait] [--timeout S]` (zone needs "Asynchronous requests" on; `mcp_unlocker` works, live 2026-09-30; polls 20 s, 10 s, then 5 s) |
-| discover | `POST /discover` `{"query":Q}` then `GET /discover?task_id=ID` (contract from CLI source only) |
+| async Unlocker | raw `POST /unblocker/req?zone=Z` `{"url":U}` -> `response_id`, `GET /unblocker/get_result?response_id=ID` (202 pending); or `scripts/brightdata_unlocker.py start --zone <zone> <url>` then `result <response_id> [--wait] [--timeout S]` (zone needs "Asynchronous requests" on; `mcp_unlocker` works, live 2026-09-30; polls 20 s, 10 s, then 5 s) |
+| discover | `POST /discover` `{"query":Q}` then `GET /discover?task_id=ID` (contract from CLI source only; fields `intent`, `city`, `country`, `language`, `num_results`, `filter_keywords`, `include_content`, `remove_duplicates`, `start_date`, `end_date`) |
 | platform data | `POST /datasets/v3/trigger?dataset_id=ID` `{"input":[{...}]}`; `GET /datasets/v3/progress/{snapshot}`; `GET /datasets/v3/snapshot/{snapshot}?format=json` |
 
 Zones are account resources. 502 `reject_block`: retry once.
