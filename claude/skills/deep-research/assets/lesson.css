@@ -19,6 +19,16 @@
 	--font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
 	--mono: var(--font-mono);
 
+	/* diagram palette: one hue per relationship type, chosen per diagram from
+	   this fixed set; every value holds >= 4.5:1 against --paper in its theme */
+	--d1: #b3261e;
+	--d2: #1f5fa8;
+	--d3: #157033;
+	--d4: #7a3fa0;
+	--d5: #6b6b00;
+	--d6: #0b7270;
+	--d-neutral: #2b2724;
+
 	/* one knob; every role below is a ratio of it */
 	--size-base: 19px;
 	--size-kicker: calc(var(--size-base) * 0.68);
@@ -31,6 +41,30 @@
 	--size-nav: calc(var(--size-base) * 0.8);
 	--size-footer: calc(var(--size-base) * 0.85);
 	--size-code: calc(var(--size-base) * 0.85);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--ink: #e9e4da;
+		--ink-soft: #b3ac9f;
+		--paper: #1b1a18;
+		--panel: #26241f;
+		--rule: #3d3a32;
+		--accent: #dca56b;
+		--note-bg: #22201c;
+		--warn-bg: #2c261a;
+		--warn-edge: #b8973f;
+		--d1: #f07167;
+		--d2: #6fa8f0;
+		--d3: #4cc36e;
+		--d4: #cf9cf0;
+		--d5: #e6d040;
+		--d6: #4fc9c6;
+		--d-neutral: #e6e0d6;
+	}
+	.box-source {
+		background: #1f2622;
+	}
 }
 
 /* Size presets: default M. Set data-size on <html> to switch. */
@@ -175,7 +209,7 @@ blockquote cite {
 	border-left: 4px solid #6f8f76;
 }
 
-/* Tables (cast block + reference pages) */
+/* Tables (reference pages) */
 table {
 	width: 100%;
 	border-collapse: collapse;
@@ -278,7 +312,9 @@ ul.tight li, ol.tight li {
 	margin-right: 1rem;
 }
 
-/* Top bar (loft variant A): sticky title + chapter index + type controls */
+/* Top bar: two states. Chapter page: topic name, chapter dropdown, then text
+   settings behind "Aa". Home (data-state="home"): Topic picker, Chapter picker,
+   then text settings. */
 .A-bar {
 	position: sticky;
 	top: 0;
@@ -299,15 +335,40 @@ ul.tight li, ol.tight li {
 	font-size: var(--size-nav);
 }
 .A-bar .title {
-	flex: 1 1 12rem;
 	font-weight: 600;
+	max-width: 18rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
+.A-bar .title a {
+	color: inherit;
+	border-bottom: none;
+}
+.A-bar .grp {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+}
+.A-bar .lbl {
+	font-size: var(--size-kicker);
+	letter-spacing: 0.07em;
+	color: var(--ink-soft);
+}
+.A-bar .sep {
+	width: 1px;
+	align-self: stretch;
+	background: var(--rule);
+}
 .A-bar .type-panel {
 	display: flex;
+	align-items: center;
 	gap: 0.4rem;
+	margin-left: auto;
+}
+.A-bar .aa {
+	font-family: var(--font-body);
+	font-weight: 600;
 }
 select, button {
 	font: inherit;
@@ -316,6 +377,38 @@ select, button {
 	border: 1px solid var(--rule);
 	border-radius: 6px;
 	padding: 0.25rem 0.5rem;
+	max-width: 20rem;
+	text-overflow: ellipsis;
+}
+
+/* Diagram: legend rows, node text */
+figure.map svg text {
+	font-family: var(--font-ui);
+}
+.legend {
+	list-style: none;
+	margin: 0.6rem 0 0;
+	padding: 0;
+}
+.legend li {
+	margin: 0.15rem 0;
+}
+
+/* Course index: rows "N · name", then Cast, Glossary, Timeline */
+.index-rows {
+	list-style: none;
+	margin: 1rem 0;
+	padding: 0;
+}
+.index-extras {
+	display: flex;
+	gap: 1.2rem;
+	flex-wrap: wrap;
+	margin: 1.2rem 0 0;
+	padding-top: 0.8rem;
+	border-top: 1px solid var(--rule);
+	font-family: var(--font-ui);
+	font-size: var(--size-nav);
 }
 
 /* Narrow screens */
@@ -328,6 +421,9 @@ select, button {
 	}
 	.A-bar .row {
 		padding: 0.45rem 1.2rem;
+	}
+	.A-bar .type-panel {
+		margin-left: 0;
 	}
 	.tl li {
 		grid-template-columns: 4.6rem 1fr;

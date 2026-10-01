@@ -1,99 +1,75 @@
-# Visuals spec — cast block, chapter subgraph, roster-index & timeline (colour-coded, legend-complete, clash-free)
+# Visuals spec: chapter diagram, cast page, timeline
 
-Two cumulative references grow with every course — a roster-index and a timeline — plus per-lesson visuals when humans are involved. Each lesson with an explicit non-empty `cast` list carries a cast block and a chapter-scoped relationship subgraph (Part 0). Chapter scope keeps a large, tangled cast (e.g. Stalin's circle) readable chapter by chapter, in place of one huge cumulative diagram.
+Three visuals: a per-lesson relationship diagram (computed), a course-level cast page, a cumulative timeline. Answer and fact-check pages carry no cast list; cast pages belong to explanation courses.
 
-## Part 0 — Per-chapter cast block & subgraph (in the lesson, only when `cast` is an explicit non-empty list)
+## Part 0: chapter diagram (in the lesson, only when the chapter has relationships worth drawing)
 
-Table plus diagram both scope toward _this chapter alone_. That scope keeps duplication low and complexity bounded.
+Authored as a `diagram:` mapping (or a list of up to 2 mappings) in the lesson YAML; `scripts/layout_diagram.py` computes the layout and emits static SVG + legend at stamp time. Never hand-draw SVG. A chapter carries at most 2 diagrams; two diagrams split the cast by concern.
 
-### Cast block (table, only with explicit non-empty `cast`)
+### Spec
 
-- One row per person acting on stage this chapter — the on-stage cast, apart from the full roster and apart from passing mentions. Target 5–12 rows; a larger on-stage cast stays whole while each listed person acts.
-- Columns: **Name | Role this chapter**. Info alone: current role for this chapter; every row reads standalone. No "first appears" column and no introduction-date column.
-- **New player** (introduced this chapter): full role line, stable row id (e.g. `id="cast-yezhov"`).
-- **Returning player**: role text fresh for this chapter, ending with its "(chapter N)" link to the lesson holding the full entry — chapter numbers are absolute. Internal "(chapter N)" links count toward the max-twice hyperlink rule: each target at most twice per page. Short role-change phrases ("now NKVD chief") ride inside the role cell where roles shifted.
-- Model row: `Rich DeVos | on the stand in 1988, admits abuses persist, pledges unenforced (full line: <a>chapter 2</a>)` — fresh role text plus the chapter link each time.
+```yaml
+diagram:
+  title: "Chapter 5 relationships"     # aria-label
+  rows:                                # top to bottom; each row a list of nodes
+    - - {id: kand, name: "Taliban in Kandahar", note: "Decrees and gold money"}
+      - {id: kabul, name: "Taliban in Kabul", note: "Officials defying orders"}
+    - - {id: nrf, name: "National Resistance Front", note: "Massoud exile network"}
+  types:                               # legend text per relationship type
+    attack: "Attack"
+  edges:
+    - {from: nrf, to: kand, label: "NRF raids north", type: attack, directed: true}
+    - {from: kabul, to: kand, label: "Kabul defies the cutoff", directed: false}
+```
 
-### Chapter-scoped relationship subgraph (SVG, only with explicit cast plus active ties among the on-stage cast)
+- Node: `id` (unique), `name`, optional `note`. Node cap 12 per diagram; larger casts split into two diagrams by concern.
+- Edge: `from`, `to`, `label`, `directed` (required bool), optional `type`. Two edges never join the same pair.
 
-- A **subgraph**, scoped toward this chapter: nodes on stage this chapter plus edges active in it. Chapter scope keeps the visual small while total cast grows.
-- Node cap 12. On-stage casts above 12 split into two subgraphs clustered by concern (e.g. court cluster, street cluster), each with a complete legend for the colours shown.
-- Same hard rules as Part 1 (colour-only edges, clash-free geometry, direction-checked arrows) — the three hard rules apply here in full.
-- Canvas 700–950 wide, sized toward node count; cumulative-map size stays out of scope here.
-- A solo-narration chapter, or any chapter with `cast: []`, omits the whole §2 Cast block (table plus subgraph) with no renumbering; a solo-narration chapter with a cast list but no active ties carries a one-line coverage line in place of the subgraph, naming the chapter scope.
-- The chapter figcaption states the colours shown (matching the cast-map legend); it does not re-link the cast map — the merged nav already links it. Citations are inline-only in the lesson narrative (`references/course/page-design.md`); the subgraph carries no source citations, and verdicts stay inline in narrative prose (never a separate box on the visual).
+### Colour = relationship type, chosen per diagram
 
-## Part 1 — Roster-index (`reference/cast-map.html`)
+- Colour encodes the type of relationship (attack, alliance, rift, kinship-style), the same colour for every edge of that type whoever the actor.
+- A type earns a colour only when 2+ edges in the same diagram share it. A type used once is drawn neutral. Colours come from `--d1`..`--d6` in `lesson.css`, assigned in order of first use over the edge list; there is no global palette. Max 6 repeating types.
+- One-off events and untyped edges: solid `--d-neutral` (a strong ink tone in both themes) with their own label. Never a faint grey, never dashed.
+- The legend (HTML list below the SVG, `.swatch` + `.legend-row`) explains each colour, the neutral row, and "An arrow runs from the actor to the target."
+- All lines solid, one weight (2.5). No `stroke-dasharray`.
+- Every colour token holds >= 4.5:1 against the page in light and dark (`test_lesson_css.py`).
 
-Full-course roster/index in table form, updated chapter by chapter. Readers follow a single chapter through its subgraph (Part 0); they come here for the whole picture, spelled out in words. Cumulative mega-SVG retired — one huge cumulative diagram turns unreadable past a mid-size cast; visual explanation lives in chapter subgraphs, cumulative state lives here as a table.
+### Direction = arrow
 
-### Three hard rules (hold for every subgraph; roster prose mirrors them in words)
+- `directed: true` draws an arrowhead at `to`; `from` is the actor, `to` the target (NRF -> Taliban in Kandahar for an attack). Read every edge aloud as "from [label] to": the label continues the sentence from actor to target ("Party" + "loses the runoff to" + "Boris Yeltsin").
+- `directed: false` (alliance, split) draws no arrowhead.
 
-1. **Colour is the ONLY line difference.** Each line runs solid, same weight (~2.2 px), colour-matched arrowhead. Relation differences ride on colour alone; uncertainty and dispute ride on a dedicated colour or on label text. Line style and thickness hold constant across all relations.
-2. **One colour = one concern, legend-defined.** Colour meaning comes from the legend on the diagram in hand, stable per workspace across every chapter subgraph. A reader learns the palette once. Each workspace gives each concern a distinct colour.
-3. **Clearance holds everywhere.** Boxes hold clearance from each other; edges run clear of boxes; edge and node labels sit clear of both. Geometry gets checked numerically before writing.
+### Computed layout (in `layout_diagram.py`)
 
-### Choosing colours (legend defines meaning)
+1. Row 0 keeps the authored order. Every later row sorts by the barycentre (mean x) of the nodes it connects to in the rows above, so lines do not cross. With 3+ rows, an up-sweep and a second down-sweep replace that order only when they cross fewer lines and keep every same-row edge between neighbours. The stamp prints `WARN: diagram N: K line crossings` when K > 0; reroute a node to another row until it prints 0.
+2. Edge ends spread evenly along the box side they touch, ordered by the far end's x.
+3. Each label slides from the line midpoint (offsets .5, .42, .58, .34, .66, .27, .73, both sides) until its padded box clears every node, every line and every earlier label. Labels sit beside their line, never on it; text is never rotated. A label must sit at least 8 px nearer its own line than any other line; when no slot does, the nearest clear slot is used.
+4. Canvas widens (760 up to 1400) until every label fits.
+5. Refusals (`diagram: ...` from the stamp): wrongly typed spec (rows, nodes, ids, names, notes, edges, types, labels), unknown node, duplicate id, missing `directed`, type without a `types` entry, > 6 repeating types, a same-row edge between non-neighbours, a line passing through a box, a label with no clear spot. Fix the spec (move a node to another row, shorten the label); never patch the SVG.
 
-Pick visually distinct colours per relation type — distinct in hue AND lightness, distinct from node fills (`#fff`, `#f2efe4`, `#eceae2`), capsule frame (`#c8c2b4`), text colours. Legend carries meaning; labels carry detail. Worked example values from the amway map (illustrative hues): `#1a7f37`, `#1f5fa8`, `#6f6a60`, `#7a3fa0`, `#6b4a1f`, `#c07a00`, `#c2185b`, `#0e7c7b`, `#b3261e`.
+### Geometry gate
 
-### Node conventions (for chapter subgraphs; roster rows mirror these fields)
+`check_lesson.py` runs `check_map_geometry.analyze` on every `<svg>` in a lesson and FAILS on: a line through a box, overlapping boxes, a label over a box, label over label, a label on a line, merged arrowheads, anything outside the viewBox. It also fails: `stroke-dasharray`, rotated text, a line colour that is not a palette token, a colour on one line only, a colour with no legend row, a line without its own label, an arrowhead marker not defined in the SVG, marker ids repeated across a page (each figure gets its own `uid`: `d1`, `d2`), a legend row missing from the figure that uses the colour (legends are checked per `<figure class="map">`), more than 2 figures, an edge drawn as anything but a `<line>` (`<path>`, `<polyline>`, `<polygon>`, curves refused), an SVG outside `<figure class="map">`. Glyph width is `0.56 * font-size * characters` in both the layout and the checker (`glyph_width` in `check_map_geometry.py`).
 
-- Person: white fill, solid border. Organisation: cream fill `#f2efe4`.
-- Unknown identity: pale grey fill `#eceae2`, "?" in the name, solid border retained.
-- Node label: name plus one role line; `(chN)` marks introduction chapter; the page header states position ("as of chapter N").
-- Capsule frames (solid, light `#c8c2b4`) group a defensible cluster (e.g. "the tools kingpins"). Frame membership needs chapter-grounded justification; geography sits on the individual boxes holding it.
+Standalone: `python <skill>/scripts/check_map_geometry.py <file.html>` (`--strict-labels` also fails labels on lines; `check_lesson.py` always does). Regression fixture `evals/fixtures/geom-fixture.html` must report exactly one box-overlap and one label-on-box, zero elsewhere; `test_lesson_gate.py` asserts it.
 
-### Edge direction (arrow runs actor toward target)
+### Screenshot pass
 
-- Each arrow points from actor toward target: plaintiff toward defendant, suer toward sued. Setzer chapter: distributors toward Amway.
-- Label each edge as "A [verb] B" and land the arrowhead on B. Direction check: read all edges aloud in that form during review; flip or relabel on mismatch before the geometry pass.
+Mechanical checks miss cramped or unreadable renders. After a diagram changes, screenshot the stamped page and look. Probe first: `Get-Command msedge, chrome`. `msedge --headless=new --disable-gpu --hide-scrollbars --screenshot=out.png "--window-size=1500,2400" "file:///<path>"`. Window height <= 2400; quote `--window-size`; check the PNG size (756x488 = flag dropped).
 
-### SVG authoring rules (chapter subgraphs)
+## Part 1: cast page (`reference/cast-map.html`)
 
-- Hand-authored inline SVG in the lesson page; canvas 700–950 wide, sized toward node count (`viewBox` matched toward content, `width="100%"`).
-- One arrowhead marker per colour, unique ids per SVG (`ah-<colour>` in art; `lg-<colour>` in legend swatches — duplicate ids across SVGs rebind silently, so scope ids per SVG).
-- Geometry arithmetic precedes writing: each segment gets computed against every box rectangle. Reroute around, or move boxes. One line-line crossing in differing colours reads acceptably; two plus calls for layout revision.
-- Draw edges as `<line>`, `<polyline>`, or `<path>` (M/L/H/V, absolute or relative) for checker visibility; reroute or move, then re-run.
-- Boxes hold separation. Containment serves group frames around members alone; all else counts as clash, flagged by the checker.
-- Figure wrapper for readable render: `<figure class="map">` — the sizing rule lives once in `assets/lesson.css` (`figure.map`/`figure.map svg`); never hand-inline it per page.
-- **Labels**: short labels placed in wedges between lines, clear of boxes and lines. Each edge carries a short label clear of boxes; diagonals rotate along the line (`transform="rotate(angle cx cy)"`). Explicit `font-size` plus `text-anchor` on all labels; the checker reads attributes, plus CSS stays secondary.
-- Coordinate plan stays consistent within a cluster so later chapters extend the layout.
+Exists only for a long-running narrative with important recurring people. Lists only those people, not everyone mentioned; no per-chapter table of minor or unnamed actors.
 
-### Page structure (roster-index)
+- H1 "Cast", short cross-link line (glossary, timeline); no kicker.
+- Entries grouped in prose: name, role, relations in words, the chapter of first appearance linking to that lesson.
+- Updated once per lesson; reached from the `Cast` link in the course index.
 
-1. H1 "Cast roster — as of chapter N"; short cross-link line (cast roster · glossary · chapter index, no lesson list). No kicker on reference pages.
-2. Roster — grouped prose list: every node, one to three lines, relations spelled out in words, each entry carrying its introduction chapter `(chN)` (absolute) plus an anchor link toward that chapter's lesson.
-3. Context section for parallels and offstage actors, with reason for table-only coverage.
-4. Palette table: workspace colour register mapping each colour toward its concern; each chapter subgraph keeps a complete legend for colours shown. Render each row's colour with `<span class="swatch" style="background:#hex"></span>`, row text with `class="legend-row"` — both classes live in `assets/lesson.css`; never a per-row inline SVG marker or a hand-copied `<style>` block for this.
+## Part 2: timeline (`reference/timeline.html`)
 
-### Updating per chapter
+Cumulative chronology, HTML flow layout (era sections, lists), no colour tags, no legend.
 
-- New players gain roster rows with `(chN)`; fresh relation kinds gain colours plus legend rows in the affected subgraph; established colour meanings hold steady.
-- Resolved unknowns gain updated fill description in roster prose plus corrected labels in the live subgraph; corrected links take the dispute colour while dispute stands, proper colour after resolution.
-- Each player stays listed; the roster grows cumulatively toward the position. Header advances toward "as of chapter N+1".
-- Cross-link anchors get re-verified after each touch; then publish plus probe.
-
-## Part 2 — Timeline (`reference/timeline.html`)
-
-Cumulative chronology, growing exactly like the roster: append plus move, resolved entries retained, header "as of chapter N".
-
-- **Layout**: era/act sections; each entry holds one date plus one-line event plus standing words. Flow layout (sections and lists) gives overlap-free construction; print-friendly output. No colour tags, no legend.
-- **Standing rides in text alone.** Each date states verified-against-record or source-claimed ("1971 (video's claim; records show 1970)"). No kind colours anywhere on this page.
-- **Corrections move entries**: record contradictions relocate the entry with correction labelled inside the entry; single current version stands per event.
-- In-lesson mini-timelines use `<ul class="tl">` with `<li><span class="when">1967</span><div>…</div></li>` — same standing labelling. Shared stylesheet styles `.tl`; per-page restyle stays out.
-
-A course workspace lacking `reference/timeline.html` gains a fresh build seeded from prior chapters, then the current chapter addition. Each chapter adds roster rows plus timeline entries; a quiet chapter still advances the "as of chapter N" header.
-
-## Part 3 — Verification gates (each time a visual changed)
-
-- **Geometry check (every SVG visual — each per-chapter subgraph in a lesson):**
-  `python <skill>/scripts/check_map_geometry.py "<file.html>"`
-  parses the first SVG on the page, sets `<defs>` aside, and reports: segments crossing a node box; boxes overlapping each other or nested (containment serves group frames alone); edge endpoints closer than `--arrowhead-gap` (default 8 px) where arrowheads would merge; and labels overlapping a box other than their own, measured on estimated glyph boxes — a node's own caption inside its box reads fine, while a caption spilling past its box edge counts as defect. Labels sitting on a line return as warnings; `--strict-labels` makes them fatal. Exit code 0 is the bar. Plus direction read: each edge label parsed as "A [verb] B" with arrowhead on B.
-- **Regression fixture for the checker itself:** after editing `check_map_geometry.py`, run it against `evals/fixtures/geom-fixture.html` and expect exactly one box-overlap (a node placed inside a fellow node) plus one label-on-box (a caption crossing a box edge), zero elsewhere. A framed member inside a group frame and a node's own caption stay unflagged. Numbers shifting means the edit broke a check — fix before trusting the checker on live art.
-- **Probe before screenshot skip.** Check for a browser explicitly (`Get-Command msedge, chrome`, or the known `msedge.exe` path — Edge ships with Windows). State the probe result with each pass.
-- **Screenshot pass (changed visuals), each time.** Mechanical checks miss text overflow, cramped labels, unreadably small render. After checks pass, screenshot the page and look at the image — the Firefox DevTools MCP (enabled by default) drives plus captures the page directly; the headless-browser route below serves as fallback:
-  `msedge --headless=new --disable-gpu --hide-scrollbars --screenshot=out.png "--window-size=1500,2400" "file:///<path>"`
-  then review that PNG (multimodal look serves) and fix weak reads. Three traps: window height at 2400 or below (Edge falls back toward a 756x488 default above it); always quote the `--window-size` value (unquoted inside a PowerShell loop it splits at the comma and drops); check PNG dimensions after capture — a 756x488 image means the flag dropped, and conclusions from it hold zero weight. Pages taller than one capture get banded screenshots through an iframe with a negative `top` offset.
-
-Changed artifacts pass all gates each time; untouched files rest.
+- Each entry: one date, one-line event, standing in words ("the video's claim; records show 1970").
+- A record contradiction relocates the entry with the correction inside it; one current version per event.
+- In-lesson mini-timelines: `<ul class="tl"><li><span class="when">1967</span><div>...</div></li></ul>`, styled by `lesson.css`.
+- Reached from the `Timeline` link in the course index.

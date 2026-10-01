@@ -174,8 +174,20 @@ def test_recommend_kind_row_and_course_rebuild_keeps_answers(env, monkeypatch):
     assert "Soviet Symphonies</a></td><td>Recommendation" in index
 
 
+def test_answer_kind_page_label_hub_row_and_rebuild(env, monkeypatch):
+    page = pt.build_answer_html("answer", "Is it true?", BODY, "2026-09-30")
+    assert '<p class="kicker">Answer</p>' in page
+    env.args.kind, env.args.title = "answer", "Is it true?"
+    live(monkeypatch, [(200, b"<title>Is it true?</title>")])
+    assert pt.publish_answer(env.args) is True
+    assert (env.staging / "answers" / "answer-is-it-true.html").is_file()
+    pt.write_hub(env.staging, pt.course_rows(env.staging))
+    index = (env.staging / "index.html").read_text(encoding="utf-8")
+    assert "Is it true?</a></td><td>Answer" in index
+
+
 def test_index_without_answers_has_no_answers_table():
-    assert "<h2>Answers</h2>" not in pt.build_top_index_html("", "now")
+    assert "<h2>Answers</h2>" not in pt.build_top_index_html("")
 
 
 def test_publish_answer_rejects_empty_slug_before_any_write(env):
@@ -233,3 +245,15 @@ def test_publish_with_paths_stages_only_those_paths(tmp_path, monkeypatch):
     assert pt.publish(repo, "r", "msg", 1, "keep.html", "k", ["keep.html"]) is True
     assert git("ls-files").stdout.split() == ["keep.html"]
     assert git("status", "--porcelain").stdout.strip() == "?? stray.txt"
+
+
+def test_rules_kind_page_label_hub_row(env, monkeypatch):
+    page = pt.build_answer_html("rules", "Ark Nova", BODY, "2026-10-01")
+    assert '<p class="kicker">Rules</p>' in page
+    env.args.kind, env.args.title = "rules", "Ark Nova"
+    live(monkeypatch, [(200, b"<title>Ark Nova</title>")])
+    assert pt.publish_answer(env.args) is True
+    assert (env.staging / "answers" / "rules-ark-nova.html").is_file()
+    pt.write_hub(env.staging, pt.course_rows(env.staging))
+    index = (env.staging / "index.html").read_text(encoding="utf-8")
+    assert "Ark Nova</a></td><td>Rules" in index

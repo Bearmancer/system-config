@@ -4,19 +4,49 @@
 		{
 			"id": 0,
 			"prompt": "https://www.youtube.com/watch?v=9_DJxgKeqdk – explain chapter 3",
-			"expected_output": "Fresh workspace in the sandbox: metadata, description, and captions fetched via yt-dlp; the description mined for cited sources; chapters extracted via extract_chapters.py --chapters all default; chapter 3 sliced with a corrections table for ASR garbles; full course stamped (every chapter, full work per pass); each treatise with merged nav (Home · Chapter Index · Glossary · Lesson NN plain · Cast Map, Title Case, zero dupes, no meta paragraph), inline verdicts plus inline-only citations, no quizzes or teacher apparatus; no timestamps anywhere; ADD-friendly prose (short sentences, pointers, no paragraph walls); cast block only with explicit non-empty cast (Name | Role, no 'first appears'); no method/teacher/primary-source/next-steps tail, no boundary narration, footer previous/next only; lesson files carry 2-digit lesson numbers (01-...); check_map_geometry.py exits 0 on changed SVG art; check_lesson.py exits 0; NOTES/RESOURCES present, no MISSION; RESOURCES carries at least one entry explicitly marked as cited by the source's description; dry-run only, nothing published or opened.",
+			"expected_output": "No intake questions unless the request is genuinely ambiguous; rigorous research; published to Bearmancer. Fresh workspace: metadata, description and captions fetched via yt-dlp; description mined for cited sources; chapters extracted via extract_chapters.py --chapters all; chapter 3 sliced with a corrections table for ASR garbles; full course stamped (every chapter, full work per pass; two short source chapters may merge into one lesson). Each lesson: bar = topic name (links course index) + chapter dropdown + Aa settings; H1 is the chapter name alone (no kicker, surtitle, 'Chapter N of M', date, timestamps); unnumbered headings, no 'Machinery' heading; Summary only when the body has 1200+ words; citations are hyperlinks on the words naming the source (no superscripts, no reference list); corrections folded into the prose (no 'Corrections:' ledger, no 'confirmed against' or 'verified' narration, no meta framing); no quizzes or teacher apparatus; footer previous/next only; lesson files carry 2-digit lesson numbers (01-). Course index rows read 'N · name' with Cast, Glossary, Timeline inside the index; home bar labels the picker 'Topic'; no date line. Cast page only for a long-running narrative and only its important recurring people. check_lesson.py exits 0 on every page; NOTES/RESOURCES present, no MISSION; RESOURCES carries at least one entry marked as cited by the source's description; dry-run only, nothing published or opened.",
 			"files": []
 		},
 		{
 			"id": 1,
 			"prompt": "https://www.youtube.com/watch?v=P9nA3pqSaf8&t=2247s – explain chapter 5",
-			"expected_output": "Existing amway-tools-cult workspace discovered and copied into the sandbox; chapters extracted via extract_chapters.py --chapters all default; chapter 5 (37:27-44:44) sliced with corrections applied; full course stamped per current spec (merged nav, no meta, inline verdicts, hyperlinked sources), no quizzes or teacher apparatus, no timestamps anywhere; ADD-friendly prose; cast block only with explicit cast plus '(chapter N)' links and no 'first appears'; no method/teacher/primary-source/next tail, no boundary narration, footer previous/next only; 2-digit lesson filenames; glossary reissued 'as of chapter 5' and stays titled Glossary (distinct from the cast map); chapter subgraph (only with cast, max 12 nodes) plus roster-index table (no cumulative mega-map); timeline text-only with standing words, no colour tags, no legend, no how-to-read box; arrow direction check passes; check_lesson.py and check_map_geometry.py both exit 0; full work per pass, no withheld chapters; the real workspace untouched; dry-run only, nothing published or opened.",
+			"expected_output": "Existing amway-tools-cult workspace discovered and copied into the sandbox; chapters extracted via extract_chapters.py --chapters all; chapter 5 (37:27-44:44) sliced with corrections applied; full course stamped per the current schema (topic, body, optional summary and diagram) with hyperlinked source-naming words, no quizzes or teacher apparatus, no timestamps anywhere; 2-digit lesson filenames; the chapter diagram is a computed layout (barycentre row order, spread ports, labels beside their line): colour = relationship type used by 2+ lines, single events neutral solid, arrows actor -> target, solid lines only, legend rows for every colour, node cap 12; check_lesson.py geometry gate passes (no overlap of lines, boxes or labels); glossary reissued and titled Glossary (distinct from the cast page); timeline text-only with standing in words, no colour tags, no legend; full work per pass, no withheld chapters; the real workspace untouched; dry-run only, nothing published or opened.",
 			"files": []
 		},
 		{
 			"id": 2,
 			"prompt": "Start a learning course on Machiavelli's The Prince (https://www.gutenberg.org/ebooks/1232) – explain chapter 3",
-			"expected_output": "New workspace for a text source: The Prince acquired (Project Gutenberg), chapter map from the book's own chapters, chapter 3 ('Concerning Mixed Principalities') sliced into reference/transcripts via extract_chapters.py --chapters all default with conversion artifacts corrected; full course stamped per current spec (merged nav, no meta, inline verdicts with hyperlinked sources) and no quizzes or teacher apparatus; no timestamps anywhere; ADD-friendly prose; cast block only with explicit cast per spec (no 'first appears'); no method/teacher/primary-source tail, no boundary narration; footer prev/next only; 2-digit lesson filenames; chapter subgraph only with cast (max 12 nodes) plus roster-index table with text-only timeline; arrow direction check passes; check_lesson.py exits 0; workspace admin files NOTES/RESOURCES present, no MISSION; dry-run only, nothing published or opened.",
+			"expected_output": "New workspace for a text source: The Prince acquired (Project Gutenberg), chapter map from the book's own chapters, chapter 3 ('Concerning Mixed Principalities') sliced into reference/transcripts via extract_chapters.py --chapters all with conversion artifacts corrected; full course stamped per the current schema and page rules (bar, chapter-name-only H1, unnumbered headings, links on source-naming words, corrections folded into prose, no verification narration); no quizzes or teacher apparatus; no timestamps anywhere; footer prev/next only; 2-digit lesson filenames; course index rows 'N · name' with Glossary and Timeline inside the index; a cast page and diagram only when the narrative has important recurring people; check_lesson.py exits 0; workspace admin files NOTES/RESOURCES present, no MISSION; dry-run only, nothing published or opened.",
+			"files": []
+		},
+		{
+			"id": 3,
+			"prompt": "How true is it that Napoleon was unusually short?",
+			"expected_output": "Answer mode: cited prose, no per-claim verdict table, verdict groups or claim ledger. Claim checked internally; the page opens with a 1-3 line bottom line (answer, confidence, what would change it), then short headed prose sections with inline hyperlinks on source-naming words; no cast list; published to Bearmancer with --kind verdict and the live bytes checked; terminal shows the short answer and the live link. No intake questions: the request has no real ambiguity.",
+			"files": []
+		},
+		{
+			"id": 4,
+			"prompt": "Is it true that the Great Wall of China is visible from space?",
+			"expected_output": "Answer mode: explanation in cited prose with a 1-3 line bottom line first; no per-claim table, no Verified/Unverified/False groups, no claim ledger; claims still verified internally with URL evidence; published to Bearmancer; terminal shows short answer and live link; no intake questions.",
+			"files": []
+		},
+		{
+			"id": 5,
+			"prompt": "Fact-check only: (1) Napoleon was 5'2\" tall; (2) Napoleon died on St Helena; (3) Napoleon crowned himself emperor.",
+			"expected_output": "Verdict mode (explicit fact-check-only request) with no cast list. 1-3 line bottom line first, then the claims in three groups: Verified (each marked full or partial), Unverified (no evidence either way), False; every entry carries a URL and quote; published to Bearmancer with --kind verdict and the live bytes checked; terminal shows the short answer and live link. No intake questions.",
+			"files": []
+		},
+		{
+			"id": 6,
+			"prompt": "Teach me how vaccines train the immune system, and is it true they can give you the disease?",
+			"expected_output": "Answer mode in teaching register: explains the mechanism like a knowledgeable teacher writing for an intelligent reader; citations are inline links on source-naming words woven into the explanation; where sources disagree or a common belief is wrong, the explanation tells that as part of the story; no verdict or report framing (no 'claim holds', 'confirmed', 'verified', confidence label, Verified/Unverified/False groups, per-claim table), no meta framing ('let's', 'this lesson shows', 'key takeaway'); prose rhythm: sentence lengths varied, connectives (because, which meant, so, yet) tie claims together, paragraphs build an argument, and no run of 3 or more consecutive sentences under 8 words, no stacked emphatic one-liners or bold emphasis; published to Bearmancer; terminal shows short answer and live link.",
+			"files": []
+		},
+		{
+			"id": 7,
+			"prompt": "how do I play Ark Nova, 4 players",
+			"expected_output": "Board-game mode, Tier 0, no intake questions. Sources: publisher rulebook, FAQ and errata first (Capstone Games), then BGG files and forums; public pages only, no login or cookies. Page order: theme; goal and how you win; turn structure; actions; one easiest strategy; easiest scoring path; 4-player changes only. No setup section and no end-game scoring section unless the strategy needs them. ADD-friendly bullets for actions and turn steps with explanations in calm prose; citations are hyperlinks on source-naming words, no Sources heading. Published with --kind rules (page label Rules); terminal shows short answer and live link.",
 			"files": []
 		}
 	]

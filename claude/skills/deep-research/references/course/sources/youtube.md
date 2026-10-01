@@ -42,7 +42,7 @@ Batch extraction is safe here because the ranges come from metadata; it is _teac
 The description is where creators put their citations, sources, corrections, and chapter lists. Read it every time, before verification:
 
 - Extract every link/source it cites into inline citations (annotated hyperlink to the actual page, no bare URLs — `references/course/page-design.md`) and treat them as the **first** verification targets — what the creator leaned on is the fastest route to the record.
-- Watch for errata ("correction:", pinned notes, "edit:"): those override the spoken claim; state the correction as an inline verdict in the narrative beside the quoted wording, citing both claim and erratum inline.
+- Watch for errata ("correction:", pinned notes, "edit:"): those override the spoken claim; fold the correction into the sentence beside the quoted wording, linking both claim and erratum on the words naming them.
 - Sponsors and advocacy: label them as such inline so the course keeps promotional framing visible as promotion.
 - The description's chapter list is also a second witness for `chapters[]`.
 

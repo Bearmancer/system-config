@@ -18,7 +18,7 @@
    ├── reference/transcripts/<chapter>-<range>.md
    └── learning-records/000N-slug.md
    ```
-   Lesson filenames: `NN-chK-<slug>.html` — a **2-digit lesson number** (`01`, `02`, …) plus the **absolute chapter number** (`ch2` = the source's chapter 2). The lesson number is navigation order only; chapter labels never derive from it. `learning-records/` keeps its own sequence (admin log of sessions).
+   Lesson filenames: `NN-chK-<slug>.html` — a **2-digit lesson number** (`01`, `02`, …) plus the **absolute chapter number** (`ch2` = the source's chapter 2). The lesson number is the `N` in the index row `N · name` (consecutive across the course); `chK` is the row id only. `learning-records/` keeps its own sequence (admin log of sessions).
 
 ## NOTES.md essentials
 
@@ -58,7 +58,7 @@ Lessons are stamped, never hand-authored. Shape lives in `assets/lesson.stencil.
   must pass the gate; every corrupt variant must fail with its rule tag) and
   `python scripts/fixtures/stencil/run_parity_test.py` (stamp and publisher
   derive identical row ids — drift alarm).
-- Migration: courses moved from `~/.omo/teach` are restamped wholesale with the current shell; lesson prose keeps its voice, only the shell changes.
+- Migration: an older lesson YAML is rewritten to the current schema (`topic`, `body`, optional `summary`/`diagram`); the stamp refuses retired fields and names the replacement.
 
 
 ## Glossary conventions (glossary stays distinct from the cast map)
@@ -71,7 +71,7 @@ Lessons are stamped, never hand-authored. Shape lives in `assets/lesson.stencil.
 
 ## Learning records
 
-Write one when the position advances with new insight, a verification norm emerges, or the user's preferences crystallize (depth, diagrams, method transparency). Format: title + standing + 1–3 sentences + evidence + implications. Verification findings use the per-chapter verdict format: claim → verdict (confirmed / partially correct / wrong / unfindable) → URL → quote, one line per claim.
+Write one when the position advances with new insight, a verification norm emerges, or the user's preferences crystallize (depth, diagrams, method transparency). Format: title + standing + 1–3 sentences + evidence + implications. Verification findings are recorded as prose with URLs; the per-chapter verdict format (claim → verdict (verified full / verified partial / unverified / false) → URL → quote, one line per claim) is used only when the user explicitly asked for a fact-check only.
 
 ## Standing behaviours
 

@@ -3,54 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course home — Fixture Course</title>
+<title>Fixture Course</title>
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
-  <header class="A-bar">
-    <div class="row">
-      <span class="title">Fixture Course</span>
-      <select aria-label="Chapter index" data-index data-base="lessons/">
-        <option value="../index.html">Home</option>
-        <option value="reference/glossary.html">Glossary</option>
-        <option value="reference/cast-map.html">Cast Map</option>
-      </select>
-      <div class="type-panel">
-        <select aria-label="Font" data-font-select>
-          <option>Literata</option>
-          <option>Source Serif 4</option>
-          <option>Newsreader</option>
-          <option>Crimson Pro</option>
-          <option>EB Garamond</option>
-          <option>Merriweather</option>
-          <option>Lora</option>
-          <option>Libre Baskerville</option>
-          <option>Atkinson Hyperlegible</option>
-          <option>Inter</option>
-          <option>IBM Plex Sans</option>
-          <option selected>Charter</option>
-        </select>
-        <select aria-label="Size" data-size-select>
-          <option>S</option>
-          <option selected>M</option>
-          <option>L</option>
-          <option>XL</option>
-        </select>
-      </div>
-    </div>
-  </header>
-  <p class="kicker">Course Home</p>
+  <header class="A-bar" data-state="home">
+			<div class="row">
+				<label class="grp"><span class="lbl">Topic</span><select aria-label="Topic" data-topic data-current="index-home" data-feed="../assets/course-index.js" data-base="../"></select></label>
+				<label class="grp"><span class="lbl">Chapter</span><select aria-label="Chapter" data-index data-placeholder="Select a chapter" data-base="lessons/">
+
+				</select></label>
+				<span class="sep" aria-hidden="true"></span>
+				<div class="type-panel">
+					<span class="aa" aria-hidden="true">Aa</span>
+					<select aria-label="Font" data-font-select>
+						<option>Literata</option>
+						<option>Source Serif 4</option>
+						<option>Newsreader</option>
+						<option>Crimson Pro</option>
+						<option>EB Garamond</option>
+						<option>Merriweather</option>
+						<option>Lora</option>
+						<option>Libre Baskerville</option>
+						<option>Atkinson Hyperlegible</option>
+						<option>Inter</option>
+						<option>IBM Plex Sans</option>
+						<option selected>Charter</option>
+					</select>
+					<select aria-label="Size" data-size-select>
+						<option>S</option>
+						<option selected>M</option>
+						<option>L</option>
+						<option>XL</option>
+					</select>
+				</div>
+			</div>
+		</header>
   <h1>Fixture Course</h1>
-  <h2>Chapter index</h2>
-  <ul>
-    <li id="ch1"><a href="lessons/01-ch1-a.html">ch1</a></li>
-    <li id="ch2"><a href="lessons/02-ch2-b.html">ch2</a></li>
-  </ul>
-  <h2>Cast roster · Glossary</h2>
-  <ul>
-    <li><a href="reference/cast-map.html">Cast roster</a></li>
-    <li><a href="reference/glossary.html">Glossary</a></li>
-  </ul>
+  <ol class="index-rows">
+    <li id="ch1"><a href="lessons/01-ch1-a.html">1 · A</a></li>
+    <li id="ch2"><a href="lessons/02-ch2-b.html">2 · B</a></li>
+  </ol>
+  <nav class="index-extras">
+    <a href="reference/cast-map.html">Cast</a>
+    <a href="reference/glossary.html">Glossary</a>
+  </nav>
   <script src="assets/course-index.js"></script>
   <script src="assets/shell.js"></script>
 </body>

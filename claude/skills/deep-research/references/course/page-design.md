@@ -1,142 +1,101 @@
-# Page design — style + stamp contract
+# Page design: style + stamp contract
 
-One visual language, one owner table, for every page this skill produces: lesson pages, `reference/*.html`, publish-generated hub/index pages. Content-field contract (what goes in the YAML): `references/course/lesson-schema.md`.
+One visual language for every page: lesson pages, `reference/*.html`, course index, site hub. Content fields: `references/course/lesson-schema.md`. Diagrams: `references/course/diagram-spec.md`.
 
-## Page structure (top to bottom)
+## Lesson page (top to bottom)
 
-Fixed by `assets/lesson.stencil.html`; identical on every lesson page.
+Fixed by `assets/lesson.stencil.html`; the bar comes from `render_bar` in `scripts/lesson_rules.py`.
 
-1. **Top bar** — sticky `<header class="A-bar">` above everything: chapter title, a chapter-index `<select>` (every chapter of this course plus Home, Chapter Index, Glossary, Cast Map), a font `<select>`, a size `<select>`. Chapter options are injected at runtime by `assets/shell.js` from `assets/course-index.js`; the four utility options are static markup.
-2. **Kicker** — series name, small caps-weight sans, not literal uppercase text.
-3. **H1** — chapter title.
-4. **Surtitle** — `Chapter N of M`. No time range, no timestamp anywhere on the page.
-5. **Numbered sections** — 1 Summary, [2 Cast only when `cast` is an explicit non-empty list,] 3 Narrative, 4 Machinery. Fixed Title Case headings, no renumbering when §2 omitted.
-6. **Footer** — previous/next lesson links only. No home, no glossary, no chapter index, no Sources/bibliography block, no workspace line.
+1. **Bar** (sticky `<header class="A-bar">`): topic name on the left, linking the course index (`../index.html`); chapter dropdown; divider; text settings behind an `Aa` mark (font select, size select). Chapter options injected by `assets/shell.js` from `<workspace>/assets/course-index.js`; no static options.
+2. **H1**: chapter name alone. No kicker, no surtitle, no "Chapter N of M", no date or time.
+3. **Summary** (`<h2>Summary</h2>` + one paragraph): only when the body has >= 1200 words. Otherwise absent.
+4. **Diagram** (`<figure class="map">`, at most 2 per chapter): only when the chapter has relationships to show; see `diagram-spec.md`.
+5. **Body**: author-written HTML with unnumbered headings named for what the section explains. No "Machinery" heading.
+6. **Footer**: previous/next lesson links only.
 
-Reference and hub/index pages reuse the same typography/color tokens but drop lesson-specific nav elements they don't need — a hub page has no chapter to back-link to, no glossary of its own.
+## Bar states
 
-## Typography & color tokens
+| State | Where | Contents |
+| --- | --- | --- |
+| Chapter | lessons, `reference/*.html` | topic name (link to `../index.html`, the course index), chapter dropdown, `Aa` + font + size |
+| Home (`data-state="home"`) | site hub, course index | labelled `Topic` picker, labelled `Chapter` picker, `Aa` + font + size |
 
-Canonical values live in `assets/lesson.css`'s `:root` block — the single home for every font-size and font-family; no other file hardcodes one.
+- Course index: the Topic picker reads the site topic feed (`data-feed="../assets/course-index.js"`) and navigates on change; the Chapter picker reads the course's own feed.
+- Site hub: the Topic picker reads `assets/course-index.js` (topics); choosing a topic fills the Chapter picker from `<topic>/assets/course-index.js` (`data-follows-topic`); choosing a chapter navigates.
+- `shell.js` reads each feed through `window.COURSE_INDEX` and restores the page's own list afterwards.
+- The picker label is `Topic`.
 
-- `--ink` / `--ink-soft` — body text / de-emphasized text (surtitle, footer, nav).
-- `--paper` / `--panel` — page background / A-bar background.
-- `--rule` — hairline borders (headings' top rule, table borders, footer top rule, A-bar bottom border).
-- `--accent` — links, kicker, table `.when` column. The one accent color on the page.
-- `--mono` — the rare monospace run (timeline `.when`, inline code-like tokens).
-- `--size-base` — the one size knob; every other size is a `calc()` ratio of it: `--size-kicker`, `--size-h1`, `--size-h2`, `--size-h3`, `--size-body`, `--size-lead`, `--size-table`, `--size-nav`, `--size-footer`, `--size-code`. `html[data-size="S|M|L|XL"]` sets `--size-base`; the A-bar's size `<select>` writes that attribute.
-- `--font-body` — set at runtime by the A-bar's font `<select>` (`assets/shell.js`), persisted to `localStorage`. Roster of 12, lazy-loaded from Google Fonts on selection (Charter is the one system font, no network fetch): Literata, Source Serif 4, Newsreader, Crimson Pro, EB Garamond, Merriweather, Lora, Libre Baskerville, Atkinson Hyperlegible, Inter, IBM Plex Sans, Charter.
+## Course index (`<workspace>/index.html`)
 
-Sans-serif for small UI text (kicker, surtitle, A-bar, footer). No third typeface.
+- One row per lesson: `<li id="chK"><a href="lessons/NN-chK-slug.html">N · Chapter name</a></li>`. `N` = the lesson number `NN` from the filename, consecutive across the course. `chK` (absolute source chapter) is the row id only.
+- Two source chapters merged into one lesson: one row, filename carries the first chapter's `K`, `N` stays consecutive.
+- After the rows: `<nav class="index-extras">` with Cast, Glossary, Timeline links (`reference/cast-map.html`, `reference/glossary.html`, `reference/timeline.html`); each only when that page exists. Cast page only for a long-running narrative with important recurring people.
+- No date line, no status/mission/spine wording, no separate "Cast roster · Glossary" section.
+
+## Prose rules (lessons)
+
+Prose follows SKILL.md Voice; the reader learns the subject, not the method.
+
+- Citations: hyperlink on the words that name the source ("the <a>Frontelligence Insight projection</a>"). No `<sup>`, no numeral or "here" as link text, no bare URL, no reference list, no Sources/References/Bibliography heading. A repeat mention links the same way.
+- Verification is not narrated: no "confirmed/checked/cross-checked/corrected/verified against", agentless "is/was/stays/remains (un)verified", "unfindable", "partially correct", no bold verdict labels, no "Corrections:" ledger (block-start label or heading). "UN monitors verified 1,200 deaths" and "the unverified video" are ordinary wording. Checking shows in the citations. An unfindable claim reads as the source's own account, stated as such.
+- Corrections fold into the sentence where the fact appears ("a million lives lost, not deployed troops"). No "Corrections:" ledger.
+- No commentary on the text's own structure ("the chapter works as a ladder", "the closing line delivers the thesis"). Explain the subject.
+- Headings carry no numbers; no `§N` cross-references.
+- Cast lists only the important people of a long-running narrative, on `reference/cast-map.html`. No per-chapter table of minor or unnamed actors.
+- Chapter count is a writing decision: merge two short source chapters into one lesson when it reads better.
+
+## Typography and colour tokens
+
+`assets/lesson.css` `:root` is the single home of every font-size, font-family and colour; a dark theme redefines the colour tokens under `prefers-color-scheme: dark`.
+
+- `--ink` / `--ink-soft`: text / secondary text. `--paper` / `--panel`: page / bar background. `--rule`: hairlines. `--accent`: links.
+- `--d1`..`--d6`, `--d-neutral`: diagram palette; each >= 4.5:1 against `--paper` in both themes (`--d-neutral` >= 7:1). Every pair of tokens, and each token against `--accent`, differs by CIE76 delta-E >= 30 in both themes. `scripts/tests/test_lesson_css.py` enforces both.
+- `--size-base` is the one size knob; every other size is a `calc()` ratio. `html[data-size="S|M|L|XL"]` sets it; the bar's size select writes the attribute.
+- `--font-body` set at runtime by the font select, persisted in `localStorage`. Roster of 12, lazy-loaded from Google Fonts (Charter = system font).
+- Sans for small UI text (bar, footer, legend). No third typeface.
 
 ## Casing
 
-- Headings and labels (h1, h2, box titles, kicker) — Title Case. Body prose — sentence case.
-- No `text-transform: uppercase` anywhere. Small-caps kicker *look* = font-size + letter-spacing + color (`.kicker` in `lesson.css`), never a CSS transform on real text.
-- Gate: `check_lesson.py` flags any run of 3+ consecutive ALL-CAPS words typed directly into content (acronyms like "FBI" are exempt).
-
-## Citations
-
-Inline-only, forever — no Sources block, no bibliography, no footer citation list, on any page type.
-
-- First mention of a source in a chapter: a full inline `<a href="https://...">`.
-- Every later mention of the *same* URL: a superscript character that is itself the link — `<sup><a href="...">n</a></sup>`. Never a bare superscript marker, never an unlinked repeat.
-- No bare tag codes: `[C4]`/`[O2]` point nowhere — numerals stand alone, every claim carries a real hyperlink beside it.
-- Gate: `check_lesson.py` flags any heading matching `/sources|references|bibliography/i` and any `<sup>` not wrapped in `<a>`; `stamp_lesson.py` refuses at write time if a repeat isn't wrapped.
-
-## Rendered example (annotated skeleton)
-
-```html
-<body>
-  <header class="A-bar">                                             <!-- 1. sticky top bar -->
-    <div class="row">
-      <span class="title">1996</span>
-      <select data-index data-current="ch13">                        <!-- chapter list injected by shell.js -->
-        <option value="../../index.html">Home</option>
-        <option value="../index.html#ch13">Chapter Index</option>
-        <option value="../reference/glossary.html">Glossary</option>
-        <option value="../reference/cast-map.html">Cast Map</option>
-      </select>
-      <select data-font-select>...12 fonts...</select>
-      <select data-size-select><option>S</option><option>M</option><option>L</option><option>XL</option></select>
-    </div>
-  </header>
-
-  <p class="kicker">Putin: The Rise to Power</p>                    <!-- 2. series name -->
-  <h1>1996</h1>                                                      <!-- 3. chapter title -->
-  <p class="surtitle">Chapter 13 of 18</p>                          <!-- 4. no time range -->
-
-  <h2>1. Summary</h2> ... [<h2>2. Cast</h2> only when humans involved] ... <h2>3. Narrative</h2> ... <h2>4. Machinery</h2>
-
-  <footer class="lesson-footer">                                     <!-- previous/next only -->
-    <nav><a href="...">Previous: ...</a> <a href="...">Next: ...</a></nav>
-  </footer>
-
-  <script src="../assets/course-index.js"></script>
-  <script src="../assets/shell.js"></script>
-</body>
-```
+- Headings and labels: Title Case. Body prose: sentence case. No `text-transform: uppercase`; small-caps look = size + letter-spacing.
+- Gate flags 3+ consecutive ALL-CAPS words (acronyms exempt).
 
 ## Row-id contract (shared with the publisher)
 
-- Lesson filename MUST be `NN-chK-<slug>.html` (2-digit lesson number, absolute chapter `K`). The stamp HARD-FAILS on a filename without `-chK-`.
-- Index row id = `chK`. The publisher derives it with `(?i)-ch0*(\d+)` → `ch$1` (fallback `^(\d+)` → `lesson-$1`, then `lesson-$fallbackNum` for legacy files only).
-- Lesson backlink (merged top nav) = `../index.html#chK`, derived from the same capture. One regex, one meaning, both sides.
+- Lesson filename `NN-chK-<slug>.html` (2-digit lesson number, absolute chapter `K`); stamp hard-fails otherwise.
+- Index row id = `chK`, derived with `(?i)-ch0*(\d+)` -> `ch$1` (fallback `ch$fallbackNum` for legacy files; the gate requires `ch\d+` ids).
+- Parity test: stamp's `row_id_from_filename` and `publish_teach.py` derive identical ids (`07-ch13-1996.html` -> `ch13`).
 
-## Owner table
+## Owner table (rule -> gate)
 
-| #  | Rule (gate check)                                      | Owner                  | Mechanism                                                                                                          |
-| -- | ------------------------------------------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| 1  | No quiz block / no "quiz" word                         | Template               | no quiz markup exists                                                                                              |
-| 2  | No teacher references                                  | Template               | no teacher blocks exist                                                                                            |
-| 3  | No boundary phrases                                    | Template + gate        | template has none; gate scans narrative                                                                            |
-| 4  | Surtitle `Chapter N of M` present                      | Template               | rendered from `chapter`, `chapters_total`; no time range, no timestamp anywhere on the page                        |
-| 5  | No timestamps anywhere on the page                     | Template + gate        | template emits none; gate scans the whole page, no surtitle exception                                              |
-| 6  | No method box / primary-source block / next-on-request | Template               | none exist                                                                                                         |
-| 7  | ≥1 hyperlinked source                                  | Content + stamp        | first citation is a full inline `<a href="https://...">` in narrative/machinery; stamp requires it                |
-| 8  | No bare URL text                                       | Content + stamp + gate | stamp scans & fails; gate backstop                                                                                 |
-| 9  | Link target ≤2 occurrences, repeats superscripted      | Stamp + gate           | first mention bare `<a>`, every repeat `<sup><a>`; stamp pre-counts; gate backstop                                 |
-| 9b | No bare tag codes (`[C4]`/`[O2]` outside a link)        | Stamp + gate           | numerals stand alone; every claim carries a real hyperlink; stamp refuses at write time, gate backstop              |
-| 10 | No fact-check H2 / box-fact / box-record               | Template               | none exist; verdicts live inline                                                                                   |
-| 11 | No "Open Threads"                                      | Template               | none exists                                                                                                         |
-| 12 | No Sources/References/Bibliography heading, anywhere   | Template + gate        | citations are inline-only — no separate section ever; gate scans every heading                                    |
-| 13 | ≥2 inline verdict words in narrative                   | Content + stamp        | stamp requires ≥2 in `narrative`; gate backstop                                                                    |
-| 14 | Footer present (`lesson-footer`)                       | Template               | fixed block, nav = previous/next lesson only                                                                       |
-| 15 | Single A-bar top bar, non-empty title | Template + gate | one `<header class="A-bar">` with a non-empty `.title`; gate refuses a second bar or any `<p class="meta">` |
-| 16 | Index select carries the four utility options, budget x1 each | Template + gate | Home → `../../index.html`; Chapter Index → `../index.html#chK` (derived from filename via row-id contract); Glossary → `../reference/glossary.html`; Cast Map → `../reference/cast-map.html` — each an `<option value=...>` in the `data-index` select, at most once; gate scans the select's option values |
-| 17 | Font + size menus present; per-workspace chapter feed | Template + gate | `data-font-select` (≥12 fonts) and `data-size-select` (S/M/L/XL) are static markup; `<script src=...course-index.js>` + `<script src=...shell.js>` load the chapter list and wire behaviour; `stamp_lesson.py` refreshes `assets/course-index.js` and copies `assets/shell.js` on every stamp so adding a lesson updates one file, not every page; gate requires both script tags |
-| 18 | Section refs (§N) match headings; no §2 ref when Cast omitted | Template + stamp + gate | headings are 1 Summary, 2 Cast (only when `cast: []` absent — explicit non-empty list), 3 Narrative, 4 Machinery; stamp refuses §2 refs when Cast omitted; gate matches refs against existing headings |
-| 19 | No dangling links (except publish-generated)           | Template + stamp       | `../../index.html`, `../index.html#chK`, `../reference/glossary.html`, `../reference/cast-map.html` are allowlisted; every other href must resolve on disk (stamp scans) |
-| 20 | Assets resolve                                         | Template               | template emits no `src` (optional subgraph slot is inline SVG)                                                     |
-| 22 | No YouTube URL, anywhere                                | Stamp + gate           | a YouTube URL is never a source; stamp refuses at write time, gate backstop                                        |
-| 23 | Headings and nav cells use Title Case                 | Template                | `Summary`, `Cast`, `Narrative`, `Machinery`, `Role This Chapter`, nav `Home`, `Chapter Index`, `Glossary`, `Cast Map` — fixed text in the template |
+| Rule | Owner |
+| --- | --- |
+| Exactly one bar; topic name links `../index.html`; chapter dropdown; `Aa` behind a divider; font >= 12, size S/M/L/XL; both scripts | template (`render_bar`) + gate |
+| Home bar on index pages: Topic picker (+ Chapter picker) | `render_bar(home=True)` + gate |
+| H1 chapter name alone; no kicker, surtitle, "Chapter N of M", date, meta row | template + gate |
+| Summary only in a chapter >= 1200 words | stamp + gate |
+| Unnumbered headings; no "Machinery"; no `§N` | stamp + gate |
+| Links on source-naming words; no `<sup>`, no weak link text, no bare URL, no tag codes, no reference list | stamp + gate |
+| No verification narration, verdict labels, correction ledger, meta framing | stamp + gate (`lesson_rules.prose_problems`) |
+| No timestamps in a lesson; no YouTube URL | stamp + gate |
+| >= 1 hyperlinked source per lesson | stamp + gate |
+| No quiz, teacher block, method box, boundary phrase, open threads, fact/record box | gate |
+| Footer = previous/next only | template + gate |
+| Diagram: geometry gate, palette tokens, per-diagram legend, colours only for repeating types | `layout_diagram.py` + gate |
+| Index rows `N · name`; extras nav; no date line; no "Book / Video" | gate |
+| Link budgets (`../index.html`, glossary, cast-map at most once per lesson; the bar's topic link is the `../index.html` use); no dangling links; assets resolve | gate |
 
-## Section order (conditional)
+`stamp_lesson.py` and `check_lesson.py` share `lesson_rules.py`; the stamp refuses at write time, the gate is the backstop on rendered pages.
 
-1. Summary · 2. Cast (only when `cast` is an explicit non-empty list — humans involved) · 3. Narrative · 4. Machinery · footer (previous/next nav only). When `cast: []`, §2 is omitted and headings run 1, 3, 4 with no renumbering.
+## Gate modes (`scripts/check_lesson.py` by path)
 
-## Surviving (not precluded by the stencil)
-
-- Content truth (verdicts, facts, citations) — verification fan-out + review.
-- Banned-phrase smuggle inside narrative HTML — gate scan stays.
-- Worker non-delivery — stamp contract (repo path + diff stat + mtime + gate exit in every report) + lead disk-verify.
-
-## Publisher parity test
-
-A contract test asserts the stamp's row-id capture and `publish_teach.py`'s `get_chapter_row_id` produce identical ids for a fixture set of filenames (`07-ch13-1996.html` → `ch13`; `01-ch7-…` → `ch7`; a legacy `nochapter.html` → `lesson-NN`), so the two sides can never drift.
-
-## Holistic gate modes (`scripts/check_lesson.py` by path)
-
-- `lessons/` → full lesson rules (merged nav, inline verdicts, superscript repeats, no bare tag codes, budgets).
-- Workspace `index.html` → chapter links present, no Status/Spine/Live/Pages/How-works/Mission wording, nav-only footer.
-- `reference/` (cast-map, glossary) → no kicker, short cross-link meta (never a lesson/slice list), no Links section, no how-read box, nav-only footer.
-- `reference/timeline.html` → reference rules plus text-only entries (no kind tags, no legend, standing words alone).
-- Fragments, slices, and stencil copies report SKIP.
+- `lessons/`: full lesson rules.
+- Workspace `index.html`: home bar, rows, extras, no date line, nav-only footer.
+- `reference/`: no kicker, short cross-link meta (never a lesson list), no Links section, no how-read box, nav-only footer.
+- `reference/timeline.html`: reference rules + text-only entries (no kind tags, no legend).
+- Fragments, slices, stencil copies: SKIP.
 
 ## Cross-references
 
-- Content field contract (YAML fields, fail-closed rules): `references/course/lesson-schema.md`.
-- Canonical stylesheet: `assets/lesson.css` — copy into each workspace verbatim, never restyle per-page.
-- Bar behaviour: `assets/shell.js` — copied into `<workspace>/assets/` by every `stamp_lesson.py` run.
-- Chapter feed: `<workspace>/assets/course-index.js` — generated by `stamp_lesson.py`, never hand-authored.
-- Publish/hub page generation: `references/course/publishing.md`.
+- Bar behaviour: `assets/shell.js`, copied into `<workspace>/assets/` by every stamp.
+- Chapter feed: `<workspace>/assets/course-index.js`, generated by the stamp (`window.COURSE_INDEX`, labels `N · name`); never hand-authored.
+- Publish + hub/index generation: `references/course/publishing.md`.

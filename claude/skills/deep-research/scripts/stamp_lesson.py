@@ -14,17 +14,15 @@ from pathlib import Path
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from layout_diagram import DiagramError, layout as layout_diagram
 from lesson_rules import (
-    ANCHOR,
-    SECTION_REF,
-    TAG_CODE,
-    TIMESTAMP as TS,
-    VERDICT,
-    BARE_URL as BARE,
+    SUMMARY_MIN_WORDS,
     YOUTUBE,
     bar_scripts,
-    find_unsuperscripted_repeats,
+    chapter_label,
+    prose_problems,
     render_bar,
+    word_count,
 )
 
 SKILL = Path(__file__).resolve().parent.parent
@@ -41,20 +39,18 @@ BANNED = (
     "nothing past",
     "stops there",
 )
-REQUIRED = (
-    "kicker",
-    "title",
-    "chapter",
-    "chapters_total",
-    "time_range",
-    "transcript",
-    "lead",
-    "narrative",
-    "machinery",
-    "sources",
-)
-# cast is optional-but-explicit: absent/None/"" refuses (fail-closed);
-# explicit `cast: []` omits §2 Cast (no humans this chapter).
+REQUIRED = ("topic", "title", "chapter", "time_range", "transcript", "body", "sources")
+# summary and diagram are optional; each renders only when present.
+MAX_DIAGRAMS = 2
+RETIRED = {
+    "kicker": "the topic name is `topic`",
+    "chapters_total": "no 'Chapter N of M' anywhere",
+    "lead": "use `summary`, only for a chapter long enough to need one",
+    "narrative": "one `body`, headings unnumbered",
+    "machinery": "fold into `body` under a heading that names what it explains",
+    "cast": "the cast lives on reference/cast-map.html",
+    "subgraph": "use `diagram`, a mapping (or a list of up to 2) the layout computes",
+}
 
 
 class StampError(Exception):
@@ -121,9 +117,12 @@ def write_course_index(lessons_dir, order):
         rid = row_id_from_filename(stem)
         if not rid:
             continue
-        num = rid[len("ch") :]
         entries.append(
-            {"id": rid, "label": f"{num}. {sibling_title(lessons_dir, name)}", "href": name}
+            {
+                "id": rid,
+                "label": chapter_label(lesson_number(name) or 0, sibling_title(lessons_dir, name)),
+                "href": name,
+            }
         )
     js = "window.COURSE_INDEX = " + json.dumps(entries) + ";\n"
     (assets_dir / "course-index.js").write_text(js, encoding="utf-8")
@@ -156,6 +155,16 @@ def upsert_bar(html_text, bar_html, scripts_html):
     return html_text
 
 
+def workspace_topic(workspace: Path) -> str:
+    lessons_dir = workspace / "lessons"
+    if lessons_dir.is_dir():
+        for y in sorted(lessons_dir.glob("*.yaml")):
+            topic = parse_yaml(y.read_text(encoding="utf-8")).get("topic")
+            if topic:
+                return str(topic)
+    return workspace.name.replace("-", " ").title()
+
+
 def refresh_bar(workspace: Path) -> list[Path]:
     """Inject/refresh the A-bar (+shell.js/course-index.js) on a workspace's
     hand-authored reference/index pages — the one shared path so those pages
@@ -169,16 +178,14 @@ def refresh_bar(workspace: Path) -> list[Path]:
         )
         write_course_index(lessons_dir, order)
 
+    topic = html_mod.escape(workspace_topic(workspace))
     touched = []
     ref_dir = workspace / "reference"
     if ref_dir.is_dir():
         for html in sorted(ref_dir.glob("*.html")):
-            title = html.stem.replace("-", " ").title()
-            options = [("Home", "../../index.html"), ("Course Index", "../index.html")]
-            for sibling in ("glossary.html", "cast-map.html", "timeline.html"):
-                if sibling != html.name and (ref_dir / sibling).exists():
-                    options.append((sibling.split(".")[0].replace("-", " ").title(), sibling))
-            bar = render_bar(title, options, base="../lessons/" if order else "")
+            bar = render_bar(
+                topic, [], title_href="../index.html", base="../lessons/" if order else ""
+            )
             text = upsert_bar(
                 html.read_text(encoding="utf-8"), bar, bar_scripts("../assets/")
             )
@@ -187,12 +194,14 @@ def refresh_bar(workspace: Path) -> list[Path]:
 
     index_html = workspace / "index.html"
     if index_html.is_file():
-        options = [("Home", "../index.html")]
-        for sibling, label in (("glossary.html", "Glossary"), ("cast-map.html", "Cast Map")):
-            if (ref_dir / sibling).exists():
-                options.append((label, f"reference/{sibling}"))
         bar = render_bar(
-            workspace.name.replace("-", " ").title(), options, base="lessons/" if order else ""
+            topic,
+            [],
+            current=workspace.name,
+            base="lessons/" if order else "",
+            home=True,
+            topic_feed="../assets/course-index.js",
+            topic_base="../",
         )
         text = upsert_bar(
             index_html.read_text(encoding="utf-8"), bar, bar_scripts("assets/")
@@ -201,18 +210,6 @@ def refresh_bar(workspace: Path) -> list[Path]:
         touched.append(index_html)
 
     return touched
-
-
-def chapter_sibling(lessons_dir, ref):
-    try:
-        ref_n = int(ref)
-    except (TypeError, ValueError):
-        raise StampError(f"cast ref: '{ref}' is not a valid chapter number")
-    for p in lessons_dir.glob("*.html"):
-        m = re.search(r"(?i)-ch0*(\d+)-", p.name)
-        if m and int(m.group(1)) == ref_n:
-            return p.name
-    return None
 
 
 def stamp(yaml_path, lessons_dir, stencil_path):
@@ -227,6 +224,9 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         raise StampError(f"filename rule: cannot derive a chapter id from '{stem}'")
 
     data = parse_yaml(yaml_path.read_text(encoding="utf-8"))
+    for field, why in RETIRED.items():
+        if field in data:
+            raise StampError(f"retired field: {field} ({why})")
     for field in REQUIRED:
         if field not in data or data[field] in ("", None, []):
             raise StampError(f"missing field: {field}")
@@ -245,108 +245,52 @@ def stamp(yaml_path, lessons_dir, stencil_path):
     sources = data["sources"]
     if not isinstance(sources, list) or not sources:
         raise StampError("sources: at least one source with label+url is required")
-    for s in sources:
-        if not isinstance(s, dict) or not s.get("label") or not s.get("url"):
+    for src in sources:
+        if not isinstance(src, dict) or not src.get("label") or not src.get("url"):
             raise StampError("sources: every entry needs label and url")
-        if YOUTUBE.search(s["url"]):
+        if YOUTUBE.search(src["url"]):
             raise StampError(
                 "sources: a YouTube URL is not a source — cite the non-YouTube primary"
             )
 
-    repeats = find_unsuperscripted_repeats(data["narrative"], data["machinery"])
-    if repeats:
-        target, _ = repeats[0]
-        raise StampError(
-            f"repeat citation not superscripted: {target} - "
-            "every mention after the first must be <sup><a href=...>"
-        )
+    summary = str(data.get("summary") or "").strip()
+    body = str(data["body"])
 
     def scan(textval, what):
         low = textval.lower()
         for phrase in BANNED:
             if phrase in low:
                 raise StampError(f"banned phrase in {what}: '{phrase}'")
-        if BARE.search(ANCHOR.sub(" ", textval)):
-            raise StampError(f"bare URL in {what}: wrap it in a link")
-        tag_hit = TAG_CODE.search(ANCHOR.sub(" ", textval))
-        if tag_hit:
-            raise StampError(
-                f"bare tag code in {what}: '{tag_hit.group(0)}' points nowhere — "
-                "use a real hyperlink beside bare numerals"
-            )
-        if TS.search(textval):
-            raise StampError(
-                f"timestamp in {what}: no timestamps anywhere on the page, not even the surtitle"
-            )
-        for match in SECTION_REF.findall(textval):
-            for ref in re.findall(r"\d+", match):
-                if not 1 <= int(ref) <= 4:
-                    raise StampError(f"section ref {ref} in {what}: sections run 1-4")
+        for rule, detail in prose_problems(textval):
+            raise StampError(f"{rule} in {what}: {detail}")
 
-    scan(data["lead"], "lead")
-    scan(data["narrative"], "narrative")
-    scan(data["machinery"], "machinery")
-    if len(VERDICT.findall(data["narrative"])) < 2:
+    scan(summary, "summary")
+    scan(body, "body")
+    if not re.search(r'<a\s[^>]*href="https://', body):
+        raise StampError("body: cite at least one source as a link on the words naming it")
+    if summary and word_count(body) < SUMMARY_MIN_WORDS:
         raise StampError(
-            "verdicts: the narrative needs at least two verdict words (confirmed / corrected / unfindable ...)"
+            f"summary: only a chapter of {SUMMARY_MIN_WORDS}+ words needs one (body has {word_count(body)})"
         )
 
-    lesson_no = lesson_number(stem)
-    if "cast" not in data or data["cast"] in ("", None):
-        raise StampError(
-            "missing field: cast (use explicit `cast: []` when no humans appear)"
-        )
-    cast = data["cast"]
-    if not isinstance(cast, list):
-        raise StampError(
-            "cast: must be a list (use explicit `cast: []` when no humans appear)"
-        )
-    has_cast = len(cast) > 0
-    cast_block = ""
-    if has_cast:
-        cast_rows = []
-        for c in cast:
-            role = html_mod.escape(str(c.get("role", "")))
-            if c.get("ref") is not None:
-                sib = chapter_sibling(lessons_dir, c["ref"])
-                if not sib:
-                    raise StampError(
-                        f"cast ref: chapter {c['ref']} has no sibling lesson file"
-                    )
-                role += f' <a href="{sib}">(chapter {c["ref"]})</a>'
-            cast_rows.append(
-                f"<tr><td>{html_mod.escape(str(c.get('name', '')))}</td><td>{role}</td></tr>"
-            )
-        subgraph = str(data.get("subgraph", "") or "").strip()
-        if subgraph:
-            if not (subgraph.startswith("<svg") and subgraph.endswith("</svg>")):
-                raise StampError(
-                    "subgraph: must be a single inline <svg>…</svg> fragment"
-                )
-            low_svg = subgraph.lower()
-            if 'href="http' in low_svg or 'src="http' in low_svg:
-                raise StampError("subgraph: no external references (inline only)")
-            subgraph = f'<figure class="map">\n{subgraph}\n</figure>'
-        cast_block = (
-            "\n\t\t<h2>2. Cast</h2>\n"
-            + (f"{subgraph}\n" if subgraph else "")
-            + '\t\t<table class="cast">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<th>Name</th>\n\t\t\t\t\t<th>Role This Chapter</th>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n'
-            + "\n".join(cast_rows)
-            + "\n\t\t\t</tbody>\n\t\t</table>\n\n"
-        )
-    else:
-        if str(data.get("subgraph", "") or "").strip():
-            raise StampError("subgraph: no cast — omit subgraph when `cast: []`")
-        for textval, what in (
-            (data["lead"], "lead"),
-            (data["narrative"], "narrative"),
-            (data["machinery"], "machinery"),
-        ):
-            for ref in SECTION_REF.findall(textval):
-                if int(ref) == 2:
-                    raise StampError(
-                        f"section ref 2 in {what}: no §2 Cast when `cast: []`"
-                    )
+    diagram_block = ""
+    specs = data.get("diagram") or []
+    if isinstance(specs, dict):
+        specs = [specs]
+    if not isinstance(specs, list) or not all(isinstance(d, dict) for d in specs):
+        raise StampError("diagram: must be a mapping (or a list of up to 2) with rows, types and edges")
+    if len(specs) > MAX_DIAGRAMS:
+        raise StampError(f"diagram: {len(specs)} diagrams, the cap is {MAX_DIAGRAMS} per chapter")
+    for i, spec in enumerate(specs, start=1):
+        try:
+            diagram = layout_diagram(spec, uid=f"d{i}")
+        except DiagramError as e:
+            raise StampError(str(e)) from e
+        if diagram.crossings:
+            print(f"WARN: diagram {i}: {diagram.crossings} line crossings")
+        else:
+            print(f"diagram {i}: 0 line crossings")
+        diagram_block += f"\t\t{diagram.figure}\n\n"
 
     order = sorted_lessons(lessons_dir, f"{stem}.html")
     write_course_index(lessons_dir, order)
@@ -359,26 +303,20 @@ def stamp(yaml_path, lessons_dir, stencil_path):
         n = order[idx + 1]
         next_link = f'<a href="{n}">Next: {html_mod.escape(sibling_title(lessons_dir, n))}</a>'
 
-    try:
-        chapters_total = int(data["chapters_total"])
-    except (TypeError, ValueError):
-        raise StampError(
-            f"chapters_total: '{data['chapters_total']}' is not a valid integer"
-        )
-
+    topic = html_mod.escape(str(data["topic"]))
+    title = html_mod.escape(str(data["title"]))
+    summary_block = (
+        f"\t\t<h2>Summary</h2>\n\t\t<p>{html_mod.escape(summary)}</p>\n\n" if summary else ""
+    )
     stencil = stencil_path.read_text(encoding="utf-8")
     subs = {
-        "PAGE_TITLE": f"Lesson {lesson_no:02d} — {data['title']}",
-        "KICKER": html_mod.escape(str(data["kicker"])),
-        "TITLE": html_mod.escape(str(data["title"])),
-        "CHAPTER_N": chapter,
-        "CHAPTER_M": chapters_total,
-        "CAST_BLOCK": cast_block,
-        "LEAD": f"<p>{html_mod.escape(str(data['lead']))}</p>",
-        "NARRATIVE": data["narrative"],
-        "MACHINERY": data["machinery"],
+        "PAGE_TITLE": f"{title} — {topic}",
+        "BAR": render_bar(topic, [], current=rid, title_href="../index.html"),
+        "TITLE": title,
+        "SUMMARY_BLOCK": summary_block,
+        "DIAGRAM_BLOCK": diagram_block,
+        "BODY": body,
         "NAV_LINKS": " ".join(link for link in (prev_link, next_link) if link),
-        "ROW_ID": rid,
     }
     rendered = stencil
     for k, v in subs.items():

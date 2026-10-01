@@ -1,11 +1,11 @@
 ---
 name: deep-research
-description: "One-stop research engine + web-data fleet router. Consult before any scrape, search, crawl or extract call: server pick, bot-block chain, credit failover. Input shape picks mode: question or claim ('how true is it that X', 'is it true', 'did X happen') -> cited verdict page; long source (book, article, paper, lecture notes, video URL + 'explain') or topic to learn -> per-chapter GitHub Pages course; classical works wanted (deep cuts, Soviet symphonies, bored of Beethoven, new concerto/overture) -> verified picks page. Use whenever facts must be checked not recalled (dates, figures, names, chronology, attributions, discography, durations), or user asks to research, fact-check, explain chapter N, go through a source chapter by chapter, make a course/notes/treatise, or continue a course workspace, even without naming this skill."
+description: "Use when the user asks to research, explain, teach or study something, or to check facts: 'teach me X', 'help me understand X', 'explain chapter N', 'go through <book/article/paper/lecture/video> chapter by chapter', make a course/notes/treatise, continue a course workspace. Long source or topic -> per-chapter GitHub Pages course; question, claim or topic ('is it true that X', 'how true is it that X', 'did X happen') -> answer in cited prose, no per-claim table; explicit fact-check-only request ('fact-check this', 'only fact check', 'verify these claims') -> per-claim verdict page; board-game rules ('how do I play X', 'rules for X') -> one rules page; classical works wanted (deep cuts, Soviet symphonies, bored of Beethoven, new concerto/overture) -> verified picks page. Facts are always verified, not recalled (dates, figures, names, chronology, attributions, discography, durations). Consult before any scrape, search, crawl or extract call (server pick, bot-block chain, credit failover), even without naming this skill."
 ---
 
 # Deep research
 
-Caveman lite for this skill's output and every subagent it launches: no filler, hedging or pleasantries; complete sentences and technical terms kept. Applies on every host.
+Caveman lite for agent-internal text only: subagent prompts, worker reports, notes files, terminal summary; no filler or pleasantries, technical terms kept. Reader-facing prose (lesson body, summary, answer/verdict/rules pages) never uses caveman style; Voice governs it. Applies on every host.
 
 Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if defined, else the host's general subagent; one self-contained worker per chapter/axis (prompt names deliverable, scope, verify step, stop condition, output schema); no launcher, or subagent lacks web tools -> run inline.
 
@@ -14,7 +14,7 @@ Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if
 Every run, stages in order:
 
 1. Classify: pick mode via "Mode router". Router covers every input shape.
-2. Intake: before any research, ask at least one AskUserQuestion batch covering scope, depth and output (up to 4 questions each, recommended option first). Skip only for quick work = plain fetch or single-claim check. After asking, stop and wait for answers; no research before them. Host with async question tool (OmO: answer arrives as next user message): end the turn after asking.
+2. Intake: Ask only on real ambiguity (scope, source or output that the request leaves open and a wrong guess would waste the run): one AskUserQuestion batch, up to 4 questions, recommended option first. Otherwise no questions. Defaults: rigorous research (Tier 1, contested claims Tier 2), output published to Bearmancer (stage 5). Quick work (plain fetch, single-claim check) never asks. After asking, stop and wait for answers. Host with async question tool (OmO: answer arrives as next user message): end the turn after asking.
 3. Research level: pick tier 0/1/2 ("Tier ladder"); state it in one line.
 4. Execute: the mode's steps.
 5. Publish, no asking, every mode: GitHub Pages (bearmancer.github.io) via `references/course/publishing.md` (course: workspace publish; verdict, recommend: "Single answer page", one page each). Terminal shows short answer + live link.
@@ -58,11 +58,13 @@ One skill, every research ask. Match first row that fits.
 
 | Input shape | Example | Mode | Load |
 |---|---|---|---|
-| Named source: URL, book, article, paper, lecture, video; any verb incl. "fact-check" | "<youtube url> - explain", "go through The Prince" | course | `references/modes/course.md` |
+| Explicit fact-check-only ask, any input: claims, URL, named source | "fact-check this", "only fact check", "verify these claims" | verdict; published (Workflow stage 5) | "Verdict mode" below |
+| Board-game rules ask | "how do I play <game>", "rules for <game>", "teach me <board game>" | boardgame; Tier 0; published (Workflow stage 5) | "Board-game mode" below |
+| Named source: URL, book, article, paper, lecture, video; any verb except an explicit fact-check-only ask | "<youtube url> - explain", "go through The Prince" | course | `references/modes/course.md` |
 | Topic to learn, no source | "teach me the Thirty Years' War" | course; syllabus researched, user approves before build | `references/modes/course.md` |
 | Existing course workspace | "continue the Prince course" | course | `references/modes/course.md` |
 | Classical works wanted | "Soviet symphonies from early 20th century" | recommend; published (Workflow stage 5) | `references/domains/music/classical/recommend.md` |
-| Question, claim, claim list, URL list | "How true is it Putin is fucked?" | verdict; published (Workflow stage 5) | "Verdict mode" below |
+| Question, claim, claim list, URL list, no fact-check-only ask | "How true is it Putin is fucked?", "is it true that X" | answer: cited prose, no claim table; published (Workflow stage 5) | "Answer mode" below |
 | Plain fetch/scrape, no research ask | "grab this page" | fast path only | none |
 | Fits no row above | mixed or unclear ask | AskUserQuestion: which mode | none |
 
@@ -72,11 +74,41 @@ Reference depth: every reference file is listed here, one hop from this file. A 
 
 Domain: before first search read `references/domains/<domain>/sources.md` + `exclusions.md`. Domains: `general` (non-music), `music/classical`, `music/popular`. Music domains also read `references/domains/music/rules.md` first. Domain source order replaces default preference order; domain bans always apply.
 
+## Voice
+
+All modes except explicit fact-check-only Verdict mode:
+- Write as knowledgeable teacher to intelligent reader: explain subject so it is understood.
+- Weave citations into explanation (inline links on source-naming words); checking folds into narrative.
+- Sources disagree or claim corrected: say so as part of story, explain why.
+- Register: flowing explanatory prose, sentence length varied; connectives show how ideas relate (because, which meant, so, yet); paragraphs build an argument step by step.
+- Claims carry calibrated confidence, stated plainly where evidence is firm and qualified where it is thin. No stacked emphatic one-liners, no rhetorical punch lines, no bold for emphasis in prose.
+- No report language: no verdict/confidence framing ("claim holds", "confirmed", "verdict"), no meta framing ("let's", "this lesson shows", "key takeaway").
+
+## Answer mode
+
+Default for any question, claim or topic. Facts are verified internally with the passes below; output is a cited explanation per Voice, not a verification report.
+
+1. Operationalize internally: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes; the answer names how it read the question in one plain sentence. Done when every axis has a binary observable.
+2. Pick domain; run passes. Done when every sub-claim has a verdict or pass cap hit.
+3. Compose cited prose per Voice: open with the direct answer in plain sentences (no confidence label), then explain in short headed sections with inline hyperlinks on source-naming words. Sub-claims and axes stay internal, never shown as a list. Contested points told as the story of the disagreement, sources named; unverified points read as the source's own account or as open. No per-claim verdict table, verdict groups or claim ledger. Publish per Workflow stage 5 with `--kind answer`.
+
+## Board-game mode
+
+Board-game rules ask. One ADD-friendly rules page per game, `--kind rules`, Tier 0.
+
+1. Sources in order: publisher rulebook, FAQ, errata; then BGG files and forums. Public pages and BGG XML API only; never log in, never handle cookies.
+2. Page order: theme; goal and how you win; turn structure; actions; ONE easiest strategy; easiest scoring path; player-count changes for the stated count only (default 4, else max).
+3. Cut setup and end-game scoring unless the strategy needs them.
+4. ADD-friendly: bullets for actions and turn steps, pointer lists over walls, sentences under ~25 words; explanations between them stay calm Voice prose.
+5. Voice applies. Citations = hyperlinks on source-naming words; no Sources heading.
+
 ## Verdict mode
+
+Runs only when the user explicitly asks for a fact-check only ("fact-check this", "only fact check", "verify these claims"). A question, claim or "is it true" alone is Answer mode.
 
 1. Operationalize: turn question into checkable sub-claims, one per axis. Vague or loaded wording ("fucked") becomes measurable axes (e.g. war outcome, economy, regime stability, succession); state axes chosen in one line. Done when every axis has a binary observable.
 2. Pick domain; run passes (below). Done when every sub-claim has a verdict or pass cap hit.
-3. Compose: bottom line first (1-3 lines: answer + confidence + what would change it), then verdict table, then `Unverified` annex, then exhausted-resources block if a rerun happened. Contested axes show both sides with sources; no synthesis beyond evidence. Publish per Workflow stage 5.
+3. Compose: bottom line first (1-3 lines: answer + confidence + what would change it), then claims in three groups: **Verified** (full or partial, each marked which), **Unverified** (no evidence either way), **False**; then exhausted-resources block if a rerun happened. No cast list: fact-check pages carry none. Contested axes show both sides with sources; no synthesis beyond evidence. Publish per Workflow stage 5.
 
 ## Research rules: always on
 
@@ -86,8 +118,8 @@ Domain: before first search read `references/domains/<domain>/sources.md` + `exc
 4. Pass prompt names deliverable, scope, verify step, stop condition. Split passes by source territory.
 5. Waiting on Pages build or long job: harness monitor or end turn. No sleep/poll loops.
 6. Defect met mid-run (dead link, failed gate, wrong claim): fix same run.
-7. Done = evidence: every verdict carries URL + quote; publish done only after live-bytes check.
-8. Claim about a specific site/tool behavior needs a fetch/render/test in this run, else mark untested in `Unverified` annex. Todo/step closes only with its evidence.
+7. Done = evidence: every claim carries URL + quote (verdict mode lists them per claim; otherwise inline links); publish done only after live-bytes check.
+8. Claim about a specific site/tool behavior needs a fetch/render/test in this run, else mark it untested. Todo/step closes only with its evidence.
 9. After each result ask "answerable with evidence now?" Yes: answer. Two exploration rounds, no new facts: stop exploring, act.
 
 ## Tier ladder
@@ -95,14 +127,14 @@ Domain: before first search read `references/domains/<domain>/sources.md` + `exc
 - Tier 0 cheap: cached search + highlights, score > 0.7, dedupe canonical URL, wiki paired with second source.
 - Tier 1 grounded: search then extract chosen URLs, `maxAge: 0` on stale only, complete markdown, query-reranked.
 - User asks "most comprehensive" / "thorough" / "exhaustive": Tier 2.
-- Tier 2 contested: 2+ independent domains + primary source + counter-search + `observed_at`/`valid_at`; code-verify behaviour claims; unresolved or refuted claims go to annex, never synthesis.
+- Tier 2 contested: 2+ independent domains + primary source + counter-search + `observed_at`/`valid_at`; code-verify behaviour claims; unresolved or refuted claims stay out of the prose synthesis (verdict mode: annex).
 
 ## Passes
 
 - Default 2 parallel passes; each gets claim list, source order, output shape. Each claim searched by one pass only.
-- Output per claim: `claim -> verdict (confirmed / partially correct / wrong / unfindable) -> URL -> quote`.
+- Worker output per claim, internal: `claim -> group (verified full / verified partial / unverified / false) -> URL -> quote`.
 - Loop until every claim resolves; stop after 5 passes, rest marked unverified. No witness = unverified.
-- Rerun on claims already searched: open with exhausted-resources block (every domain, source, tool per claim); new pass targets only sources outside it. Keep block beside verdict table.
+- Rerun on claims already searched: open with exhausted-resources block (every domain, source, tool per claim); new pass targets only sources outside it. Verdict mode keeps block beside the claim groups.
 - 3+ source territories, or unresolved by pass 3: one worker per axis.
 
 ## Source handling

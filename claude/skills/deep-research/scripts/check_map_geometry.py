@@ -9,6 +9,19 @@ def attrs(tag):
     return {k: v for k, v in ATTR.findall(tag)}
 
 
+GLYPH_EM = 0.56
+
+
+def glyph_width(text, size):
+    return GLYPH_EM * size * len(text)
+
+
+def text_rect(x, y, size, anchor, text):
+    width = glyph_width(text, size)
+    x0 = x - width / 2 if anchor == "middle" else x - width if anchor == "end" else x
+    return (x0, y - 0.75 * size, width, size)
+
+
 def safe(text):
     return text.encode("ascii", "backslashreplace").decode("ascii")
 
@@ -115,15 +128,7 @@ def load_labels(html):
         text = re.sub(r"<[^>]*>", "", body).strip()
         if not text:
             continue
-        anchor = a.get("text-anchor", "start")
-        width = 0.5 * size * len(text)
-        if anchor == "middle":
-            x0 = x - width / 2
-        elif anchor == "end":
-            x0 = x - width
-        else:
-            x0 = x
-        labels.append(((x0, y - 0.75 * size, width, size), text))
+        labels.append((text_rect(x, y, size, a.get("text-anchor", "start"), text), text))
     return labels
 
 
@@ -171,9 +176,89 @@ def contains(outer, inner):
     return ox <= ix and oy <= iy and ox + ow >= ix + iw and oy + oh >= iy + ih
 
 
+def view_box(svg):
+    m = re.search(r'<svg\b[^>]*\bviewBox="([^"]+)"', svg)
+    if not m:
+        return None
+    nums = [float(n) for n in m.group(1).replace(",", " ").split()]
+    return tuple(nums) if len(nums) == 4 else None
+
+
+def analyze(svg, min_overlap=2.0, arrowhead_gap=8.0):
+    """Every geometry defect of one <svg> string, as lists of hit tuples."""
+    vb = view_box(svg)
+    svg = re.sub(r"<defs\b.*?</defs>", "", svg, flags=re.S)
+    rects_all = load_all_rects(svg)
+    boxes = [r for r, is_frame in rects_all if not is_frame]
+    segs = load_segments(svg)
+    labels = load_labels(svg)
+    terminals = load_terminals(svg)
+    hits = {
+        "edge_box": [],
+        "box_box": [],
+        "label_line": [],
+        "label_box": [],
+        "label_label": [],
+        "arrow": [],
+        "bounds": [],
+    }
+    for si, (p1, p2) in enumerate(segs):
+        for bi, r in enumerate(boxes):
+            ov = overlap_length(p1, p2, r)
+            if ov > min_overlap:
+                hits["edge_box"].append((si, bi, ov, r, p1, p2))
+    for i in range(len(rects_all)):
+        for j in range(i + 1, len(rects_all)):
+            ri, i_is_frame = rects_all[i]
+            rj, j_is_frame = rects_all[j]
+            ox, oy = rect_overlap(ri, rj)
+            if ox > min_overlap and oy > min_overlap:
+                if (contains(rj, ri) and j_is_frame) or (
+                    contains(ri, rj) and i_is_frame
+                ):
+                    continue
+                hits["box_box"].append((i, j, ox, oy, ri, rj))
+    for rect, text in labels:
+        for si, (p1, p2) in enumerate(segs):
+            if overlap_length(p1, p2, rect) > min_overlap:
+                hits["label_line"].append((text, si, p1, p2))
+        for bi, r in enumerate(boxes):
+            ox, oy = rect_overlap(rect, r)
+            if ox > min_overlap and oy > min_overlap and not contains(r, rect):
+                hits["label_box"].append((text, bi, r, ox, oy))
+    for i in range(len(labels)):
+        for j in range(i + 1, len(labels)):
+            ox, oy = rect_overlap(labels[i][0], labels[j][0])
+            if ox > min_overlap and oy > min_overlap:
+                hits["label_label"].append((labels[i][1], labels[j][1], ox, oy))
+    for i in range(len(terminals)):
+        for j in range(i + 1, len(terminals)):
+            (ax, ay), (bx, by) = terminals[i], terminals[j]
+            gap = ((ax - bx) ** 2 + (ay - by) ** 2) ** 0.5
+            if gap < arrowhead_gap:
+                hits["arrow"].append((i, j, gap, terminals[i], terminals[j]))
+    if vb:
+        vx, vy, vw, vh = vb
+
+        def outside(x, y):
+            return x < vx or y < vy or x > vx + vw or y > vy + vh
+
+        for r in boxes + [rect for rect, _ in labels]:
+            if outside(r[0], r[1]) or outside(r[0] + r[2], r[1] + r[3]):
+                hits["bounds"].append(r)
+        for p1, p2 in segs:
+            if outside(*p1) or outside(*p2):
+                hits["bounds"].append((p1, p2))
+    hits["counts"] = (len(boxes), len(segs), len(labels))
+    return hits
+
+
+FATAL_KEYS = ("edge_box", "box_box", "label_box", "label_label", "arrow", "bounds")
+
+
 def main():
     ap = argparse.ArgumentParser(
-        description="Check a cast-map SVG: edges through boxes, overlapping boxes (including a node inside another node), merged arrowheads, labels on lines or boxes."
+        description="Check a cast-map SVG: edges through boxes, overlapping boxes (including a node inside another node), merged arrowheads, labels on lines, boxes or other labels, anything outside the viewBox."
     )
     ap.add_argument("files", nargs="+", help="HTML file(s) containing the inline SVG")
     ap.add_argument(
@@ -210,83 +295,37 @@ def main():
         file_fatal = 0
         for svg_idx, svg in enumerate(svg_matches, start=1):
             label = f"{path} SVG #{svg_idx}" if len(svg_matches) > 1 else path
-            svg = re.sub(r"<defs\b.*?</defs>", "", svg, flags=re.S)
-
-            rects_all = load_all_rects(svg)
-            boxes = [r for r, is_frame in rects_all if not is_frame]
-            segs = load_segments(svg)
-            labels = load_labels(svg)
-            terminals = load_terminals(svg)
-
-            edge_hits = []
-            for si, (p1, p2) in enumerate(segs):
-                for bi, r in enumerate(boxes):
-                    ov = overlap_length(p1, p2, r)
-                    if ov > args.min_overlap:
-                        edge_hits.append((si, bi, ov, r, p1, p2))
-
-            box_hits = []
-            for i in range(len(rects_all)):
-                for j in range(i + 1, len(rects_all)):
-                    ri, i_is_frame = rects_all[i]
-                    rj, j_is_frame = rects_all[j]
-                    ox, oy = rect_overlap(ri, rj)
-                    if ox > args.min_overlap and oy > args.min_overlap:
-                        if (contains(rj, ri) and j_is_frame) or (
-                            contains(ri, rj) and i_is_frame
-                        ):
-                            continue
-                        box_hits.append((i, j, ox, oy, ri, rj))
-
-            label_line_hits = []
-            for rect, text in labels:
-                for si, (p1, p2) in enumerate(segs):
-                    if overlap_length(p1, p2, rect) > args.min_overlap:
-                        label_line_hits.append((text, si, p1, p2))
-
-            label_box_hits = []
-            for rect, text in labels:
-                for bi, r in enumerate(boxes):
-                    ox, oy = rect_overlap(rect, r)
-                    if ox > args.min_overlap and oy > args.min_overlap:
-                        if contains(r, rect):
-                            continue
-                        label_box_hits.append((text, bi, r, ox, oy))
-
-            arrow_hits = []
-            for i in range(len(terminals)):
-                for j in range(i + 1, len(terminals)):
-                    (ax, ay), (bx, by) = terminals[i], terminals[j]
-                    gap = ((ax - bx) ** 2 + (ay - by) ** 2) ** 0.5
-                    if gap < args.arrowhead_gap:
-                        arrow_hits.append((i, j, gap, terminals[i], terminals[j]))
-
-            fatal = (
-                len(edge_hits)
-                + len(box_hits)
-                + len(label_box_hits)
-                + len(arrow_hits)
-                + (len(label_line_hits) if args.strict_labels else 0)
+            h = analyze(svg, args.min_overlap, args.arrowhead_gap)
+            nboxes, nsegs, nlabels = h["counts"]
+            fatal = sum(len(h[k]) for k in FATAL_KEYS) + (
+                len(h["label_line"]) if args.strict_labels else 0
             )
             print(
-                f"{'OK' if fatal == 0 else 'PROBLEMS'} {label}: {len(boxes)} boxes, {len(segs)} segments, "
-                f"{len(labels)} labels | edges-through-boxes={len(edge_hits)} box-overlaps={len(box_hits)} "
-                f"merged-arrowheads={len(arrow_hits)} labels-on-boxes={len(label_box_hits)} "
-                f"labels-on-lines={len(label_line_hits)}{' (fatal)' if args.strict_labels else ' (warnings)'}"
+                f"{'OK' if fatal == 0 else 'PROBLEMS'} {label}: {nboxes} boxes, {nsegs} segments, "
+                f"{nlabels} labels | edges-through-boxes={len(h['edge_box'])} box-overlaps={len(h['box_box'])} "
+                f"merged-arrowheads={len(h['arrow'])} labels-on-boxes={len(h['label_box'])} "
+                f"labels-on-labels={len(h['label_label'])} out-of-bounds={len(h['bounds'])} "
+                f"labels-on-lines={len(h['label_line'])}{' (fatal)' if args.strict_labels else ' (warnings)'}"
             )
-            for si, bi, ov, r, p1, p2 in edge_hits:
+            for si, bi, ov, r, p1, p2 in h["edge_box"]:
                 print(
                     f"   edge {si} {p1}->{p2} passes through box {bi} at x={r[0]} y={r[1]} w={r[2]} h={r[3]} by {ov:.1f}px"
                 )
-            for i, j, ox, oy, a, b in box_hits:
+            for i, j, ox, oy, a, b in h["box_box"]:
                 print(f"   boxes {i} {a} and {j} {b} overlap by {ox:.1f}x{oy:.1f}px")
-            for i, j, gap, p, q in arrow_hits:
+            for i, j, gap, p, q in h["arrow"]:
                 print(f"   arrowheads merge: endpoints {p} and {q} are {gap:.1f}px apart")
-            for text, bi, r, ox, oy in label_box_hits:
+            for text, bi, r, ox, oy in h["label_box"]:
                 print(
                     f'   label "{safe(text[:40])}" covers box {bi} at x={r[0]} y={r[1]} by {ox:.1f}x{oy:.1f}px'
                 )
-            for text, si, p1, p2 in label_line_hits:
+            for a, b, ox, oy in h["label_label"]:
+                print(
+                    f'   label "{safe(a[:40])}" overlaps label "{safe(b[:40])}" by {ox:.1f}x{oy:.1f}px'
+                )
+            for r in h["bounds"]:
+                print(f"   outside the viewBox: {r}")
+            for text, si, p1, p2 in h["label_line"]:
                 print(f'   label "{safe(text[:40])}" sits on edge {si} {p1}->{p2}')
             file_fatal += fatal
 
