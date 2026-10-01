@@ -1,4 +1,5 @@
 # deep-research: learning-first restructure plan
+nStatus: superseded 2026-10-01. Captain narrowed the goal to tone only; the SKILL.md Voice rule and opt-in verification landed instead. P0-P6 will not run.
 
 Read-only architect pass. Skill under `C:/Users/Lance/.claude/skills/deep-research/`. Two other agents edit it now: re-read line numbers before applying. Measurements taken 2026-09-30.
 
