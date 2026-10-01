@@ -350,7 +350,19 @@ def test_vendor_request_extra_header_sent(net):
 
 @pytest.mark.parametrize(
     "argv,code",
-    [(["exa", "GET", "search"], "bad_path"), (["exa", "GET", "/x", "--param", "novalue"], "bad_param")],
+    [
+        (["exa", "GET", "search"], "bad_path"),
+        (["exa", "GET", "/x", "--param", "novalue"], "bad_param"),
+        (["exa", "GET", "/a b"], "bad_path"),
+        (["exa", "GET", "/a\r\nX: y"], "bad_path"),
+        (["exa", "GET", "/../x"], "bad_path"),
+        (["exa", "GET", "//evil.test/x"], "bad_path"),
+        (["exa", "GET", "/a?b=1"], "bad_path"),
+        (["exa", "GET", "/a#f"], "bad_path"),
+        (["exa", "GET", "/x", "--header", "Host=evil.test"], "bad_header"),
+        (["exa", "GET", "/x", "--header", "x-api-key=k"], "bad_header"),
+        (["exa", "GET", "/x", "--header", "X-A=b\r\nX-B: c"], "bad_header"),
+    ],
 )
 def test_vendor_request_rejects_bad_input_before_network(net, capsys, argv, code):
     with pytest.raises(SystemExit) as exc:

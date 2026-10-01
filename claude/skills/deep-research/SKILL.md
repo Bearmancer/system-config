@@ -36,7 +36,10 @@ Terminal answer of a published run: bottom line (1-3 lines) + live link. Other s
 
 ## Fast path: every web call
 
-1. Pick by capability: `references/fleet.md` (need -> vendor, capability map, bot-block chain, POST scripts). Name row used. Route MCP first, then vendor CLI, then POST script. Then read only the picked vendor's file for tool names, CLI commands, REST bodies: `references/scrapers/tavily.md`, `firecrawl.md`, `exa.md`, `scrapegraph.md`, `apify.md`, `agentql.md`, `brightdata.md`, `browserbase.md`, `browser.md` (Firefox DevTools, Playwright).
+1. Pick by capability: `references/fleet.md` (need -> vendor, capability map, bot-block chain, POST scripts). Name row used. Route MCP first, then vendor CLI, then POST script. Then read only the picked vendor's file for tool names, CLI commands, REST bodies (all in `references/scrapers/`):
+   - `tavily.md`, `firecrawl.md`, `exa.md`, `scrapegraph.md`
+   - `apify.md`, `agentql.md`, `brightdata.md`, `browserbase.md`
+   - `browser.md` (Firefox DevTools, Playwright)
 2. Bot-blocked (401/403/429/503, challenge page, empty body): walk the fleet.md chain in order, stop at first fetch holding target content. Credit/auth failure on a step: walk accounts of that server ("Key rotation") before leaving it. Blocked: next step.
    Keep internal log `URL | status | method` per attempt. All steps and accounts exhausted: URL blocked, never guess content; flag or drop the claim it carried.
 3. Credit/quota/auth failure: "Key rotation" below; error codes and key table: `references/scrapers/keys-errors.md`.

@@ -34,6 +34,7 @@ VENDORS: dict[str, tuple[str, str, str]] = {
     "agentql": ("https://api.agentql.com/v1", "X-API-Key", ""),
 }
 
+PATH_OK = re.compile(r"^/[A-Za-z0-9._~%!$'()*+,;=:@/-]*$")
 CODE_HEADERS = ("x-brd-error-code", "x-brd-err-code")
 MESSAGE_HEADERS = ("x-brd-error", "x-brd-err-msg")
 
@@ -102,6 +103,11 @@ def call(
     headers: dict | None = None,
 ) -> tuple[int, Any]:
     base, auth_header, prefix = VENDORS[pool]
+    if not PATH_OK.match(path) or "//" in path or ".." in path.split("/"):
+        fail("-", "bad_path", "path must be /segment/... with URL-safe characters only")
+    for k, v in (headers or {}).items():
+        if k.lower() in ("host", auth_header.lower()) or re.search(r"[\x00-\x1f\x7f]", f"{k}{v}"):
+            fail("-", "bad_header", f"header {k!r} not allowed")
     url = base + path
     if params:
         url += "?" + urllib.parse.urlencode({k: v for k, v in params.items() if v is not None})
@@ -120,7 +126,7 @@ def call(
     except urllib.error.HTTPError as exc:
         payload = parse_body(exc.read())
         fail(exc.code, *vendor_code(exc.code, exc.headers, payload))
-    except (urllib.error.URLError, TimeoutError, OSError) as exc:
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError) as exc:
         fail("-", "network_error", str(getattr(exc, "reason", exc)))
 
 

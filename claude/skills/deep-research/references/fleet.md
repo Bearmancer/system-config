@@ -23,17 +23,17 @@ Detail lives in one file per vendor, read only the one you route to: `scrapers/<
 
 ## Capability map
 
-M = MCP, C = CLI, S = dedicated script in `scripts/`, R = raw REST via `scripts/vendor_request.py`, - = none. `*` = not on this cloud host's MCP. Names and bodies: the vendor file.
+M = MCP, C = CLI, S = dedicated script in `scripts/`, R = raw REST via `scripts/vendor_request.py`, - = none. `*` = not on this cloud host's MCP. Names and bodies: the vendor file. Tool names marked `(readme)` there come from vendor README/source, not a live `tools/list`; OpenCode registers `<server>_<tool>`.
 
 | Vendor | search | fetch | extract | crawl | map | research / answer | batch / async | monitor | browser |
 |---|---|---|---|---|---|---|---|---|---|
 | Tavily | MCR | MCR | - | MCR | MCR | MCR | `tvly research --no-wait` | - | - |
 | Firecrawl | MCR | MCR | M(json fmt) | M*CR | M*CR | M*CR agent, M papers | S batch | M*CR | - |
 | Exa | MR | MR | - | - | - | M `agent_run`, S stop/cancel, S answer | S batches | R | - |
-| ScrapeGraph | MCR | MCR | MCR | MCSR | - | MCR search | S crawl mgmt | CR (hosted M) | - |
+| ScrapeGraph | MCR | MCR | MCR | MCSR | M (legacy `sitemap`; none in v2) | MCR search | S crawl mgmt | CR (hosted M) | - |
 | Apify | MCR | MCR (rag-web-browser) | MCR (Actor) | Actor | Actor | - | MCR runs | R schedules | - |
 | AgentQL | - | - | MR | - | - | - | - | - | - |
-| Bright Data | MCR | MCR | - | - | - | - | S async Unlocker | - | - |
+| Bright Data | MCR | MCR | - | - | - | - | M `scrape_batch`/`search_engine_batch`, S async Unlocker | - | - |
 | Browserbase | CR | CR | M | - | - | S agent runs | S agent runs | - | MC |
 
 ## Bot-block chain
@@ -43,14 +43,14 @@ First step returning the target content wins. Credit/auth failure: rotate that s
 1. Tavily `tavily_extract`.
 2. Firecrawl `scrape` `proxy: "auto"`, `maxAge: 0`.
 3. Exa `web_fetch_exa` (cached); `SOURCE_NOT_AVAILABLE` -> next.
-4. ScrapeGraph `scrape` with `fetchConfig.stealth: true` (+5 credits). CLI `--stealth`; REST `POST /scrape`.
+4. ScrapeGraph `scrape` via hosted v2 MCP / CLI `--stealth` / REST `fetchConfig.stealth: true` (+5 credits per page); legacy MCP stealth support unverified.
 5. Apify `apify--rag-web-browser`, or site Actor via `search-actors` + `call-actor`.
 6. AgentQL `extract-web-data`.
 7. Firefox DevTools MCP, or Playwright `browser_navigate` -> `browser_snapshot`.
 8. Bright Data: MCP `scrape_as_markdown`, then CLI `brightdata scrape`, then `POST /request` / async script; 502 `reject_block` -> retry once.
 9. Browserbase (paid tier for CAPTCHA).
 
-Host lacks a step's MCP and CLI: use its REST row (`vendor_request.py`). Nothing returns content: URL blocked, never guess.
+Host lacks a step's MCP and CLI: REST via `vendor_request.py`: Tavily `POST /extract {"urls":[U]}`; Firecrawl `POST /scrape {"url":U,"proxy":"auto","maxAge":0}`; Exa `POST /contents {"urls":[U],"text":true}`; Apify `POST /actors/apify~rag-web-browser/run-sync-get-dataset-items {"query":U}`; ScrapeGraph and Bright Data rows in their vendor files. Nothing returns content: URL blocked, never guess.
 
 ## POST scripts
 
@@ -65,7 +65,7 @@ PEP 723 stdlib only: `uv run scripts/<name>.py ...`. Key from `~/.config/opencod
 | `brightdata_unlocker.py` | async Unlocker start / result `--wait` |
 | `browserbase_agent_run.py` | agent run start / status |
 
-Not scripted because MCP or CLI covers it: everything else in the capability map. Why `vendor_request.py` and not one script per endpoint: one doc line per vendor body beats 30 scripts to maintain; dedicated scripts stay only where polling or id plumbing earns them.
+Not scripted because MCP or CLI covers it: everything else in the capability map.
 
 ## House rules
 

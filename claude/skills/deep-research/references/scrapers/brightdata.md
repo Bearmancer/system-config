@@ -2,7 +2,7 @@
 
 Pick: WAF/Cloudflare/geo-blocked after cheaper tiers fail (chain step 8); SERP; structured platform data (`web_data_*`). Key `BRIGHTDATA_API_KEY` (MCP env `API_TOKEN`), pool `brightdata`, Bearer. No crawl/map.
 
-## MCP (R; server needs token to start)
+## MCP (readme; server needs token to start)
 
 `search_engine`, `search_engine_batch`, `scrape_as_markdown`, `scrape_as_html`, `scrape_batch`, `discover`, many `web_data_*` (full list not captured).
 

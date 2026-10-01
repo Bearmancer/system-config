@@ -32,8 +32,6 @@ def main(argv=None):
     ap.add_argument("--param", action="append")
     ap.add_argument("--header", action="append")
     args = ap.parse_args(argv)
-    if not args.path.startswith("/"):
-        pc.fail("-", "bad_path", "path must start with /")
     body = pc.load_json_arg(args.body) if args.body else None
     pc.run(
         args.pool,
