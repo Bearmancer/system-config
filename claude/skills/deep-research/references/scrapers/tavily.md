@@ -1,6 +1,6 @@
 # Tavily
 
-Pick: question in, cited answer + ranked URLs out; first stop for unknown-query factual lookups; chain step 1 (`tavily_extract`). Key `TAVILY_API_KEY`, pool `tavily`, Bearer `tvly-...`. Keyless mode exists, rate limited.
+Pick: question in, cited answer + ranked URLs out; first stop for unknown-query factual lookups; chain step 1 (`tavily_extract`). Key `TAVILY_API_KEY`, pool `tavily`, Bearer `tvly-...`. Always call with the key; no keyless use.
 
 ## MCP (names from npm server source (readme); hosted remote spelling unverified, docs prose says `tavily-search`)
 

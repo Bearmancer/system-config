@@ -1,6 +1,6 @@
 # Fleet: route a web call
 
-Order per capability: MCP tool the host carries -> vendor CLI -> POST script. Hosts carry different servers: list your tools first (this Claude cloud session: Firecrawl `scrape`/`search`/`research_*` only). OpenCode wiring: `~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/<pool>`; OmO: `~/.omo/agent/mcp.json`, keys from user env. No skill `mcp.json` (senpi sends remote servers without auth). Exa URL lists all 4 tools; Apify URL enables every category (actors, docs, runs, storage, tasks, schedules, builds, dev) plus `apify/rag-web-browser`, `apify/web-fetch`, `get-actor-list`.
+Order per capability: MCP tool the host carries -> vendor CLI -> POST script. Hosts carry different servers: list your tools first (this Claude cloud session: Firecrawl `scrape`/`search`/`research_*` only). OpenCode wiring: `~/.config/opencode/opencode.jsonc` `mcp.servers`, keys from `secrets/<pool>`; OmO: `~/.omo/agent/mcp.json`, keys from user env. No skill `mcp.json` (senpi sends remote servers without auth). Exa URL lists all 4 tools; Apify URL enables actors, docs, runs, storage (no schedules/tasks/builds/dev: paid-key cost control) plus `apify/rag-web-browser`, `apify/web-fetch`, `get-actor-list`.
 
 Detail lives in one file per vendor, read only the one you route to: `scrapers/<vendor>.md` (MCP tool names, CLI commands, POST endpoints + presets). On failure: `scrapers/keys-errors.md`.
 
@@ -30,7 +30,7 @@ M = MCP, C = CLI, S = dedicated script in `scripts/`, R = raw REST via `scripts/
 | Tavily | MCR | MCR | - | MCR | MCR | MCR | `tvly research --no-wait` | - | - |
 | Firecrawl | MCR | MCR | M(json fmt) | M*CR | M*CR | M*CR agent, M papers | S batch | M*CR | - |
 | Exa | MR | MR | - | - | - | M `agent_run`, S stop/cancel, S answer | S batches | R | - |
-| ScrapeGraph | MCR | MCR | MCR | MCSR | M (legacy `sitemap`; none in v2) | MCR search | S crawl mgmt | CR (hosted M) | - |
+| ScrapeGraph | MCR | MCR | MCR | MCSR | M (legacy `sitemap`; none in v2 REST) | MCR search | S crawl mgmt | CR (hosted M untested) | - |
 | Apify | MCR | MCR (rag-web-browser) | MCR (Actor) | Actor | Actor | - | MCR runs | R schedules | - |
 | AgentQL | - | - | MR | - | - | - | - | - | - |
 | Bright Data | MCR | MCR | - | - | - | - | M `scrape_batch`/`search_engine_batch`, S async Unlocker | - | - |
@@ -43,7 +43,7 @@ First step returning the target content wins. Credit/auth failure: rotate that s
 1. Tavily `tavily_extract`.
 2. Firecrawl `scrape` `proxy: "auto"`, `maxAge: 0`.
 3. Exa `web_fetch_exa` (cached); `SOURCE_NOT_AVAILABLE` -> next.
-4. ScrapeGraph `scrape` via hosted v2 MCP / CLI `--stealth` / REST `fetchConfig.stealth: true` (+5 credits per page); legacy MCP stealth support unverified.
+4. ScrapeGraph `scrape` via CLI `--stealth` / REST `fetchConfig.stealth: true` (+5 credits per page); legacy MCP stealth support unverified.
 5. Apify `apify--rag-web-browser`, or site Actor via `search-actors` + `call-actor`.
 6. AgentQL `extract-web-data`.
 7. Firefox DevTools MCP, or Playwright `browser_navigate` -> `browser_snapshot`.

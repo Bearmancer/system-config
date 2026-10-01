@@ -149,7 +149,7 @@
       },
       "apify": {
         "type": "remote",
-        "url": "https://mcp.apify.com?tools=actors,docs,runs,storage,tasks,schedules,builds,dev,get-actor-list,apify/rag-web-browser,apify/web-fetch",
+        "url": "https://mcp.apify.com?tools=actors,docs,runs,storage,get-actor-list,apify/rag-web-browser,apify/web-fetch",
         "headers": {
           "Authorization": "Bearer {file:~/.config/opencode/secrets/apify}"
         },
@@ -195,15 +195,17 @@
         }
       },
       "scrapegraph": {
-        "type": "remote",
-        "url": "https://mcp.scrapegraphai.com/mcp",
-        "headers": {
-          "Authorization": "Bearer {file:~/.config/opencode/secrets/scrapegraph}"
+        "type": "local",
+        "command": [
+          "scrapegraph-mcp"
+        ],
+        "environment": {
+          "SGAI_API_KEY": "{file:~/.config/opencode/secrets/scrapegraph}"
         },
-        "oauth": false,
         "timeout": {
-          "catalog": 30000,
-          "execution": 60000
+          "startup": 120000,
+          "catalog": 60000,
+          "execution": 30000
         }
       },
       "codegraph": {

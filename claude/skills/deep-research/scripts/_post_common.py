@@ -1,6 +1,6 @@
 """Shared plumbing for the POST scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*, vendor_request).
 
-Key: ~/.config/opencode/secrets/<pool>, read here and sent only as the auth header.
+Key: ~/.config/opencode/secrets/<pool>, else the pool env var (POOL_ENV, for cloud hosts with no secrets dir), read here and sent only as the auth header.
 Success: JSON payload to stdout, exit 0. HTTP or network error: one JSON line to stderr
 {"status", "code", "message"}, exit 1. Vendor code comes from the response, else the status number.
 Error shapes: references/scrapers/keys-errors.md.
@@ -9,6 +9,7 @@ Redirects are refused so the auth header never leaves the vendor host.
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import time
@@ -35,6 +36,7 @@ VENDORS: dict[str, tuple[str, str, str]] = {
 }
 
 PATH_OK = re.compile(r"^/[A-Za-z0-9._~%!$'()*+,;=:@/-]*$")
+ENCODED_DOT = re.compile(r"%2e", re.I)
 CODE_HEADERS = ("x-brd-error-code", "x-brd-err-code")
 MESSAGE_HEADERS = ("x-brd-error", "x-brd-err-msg")
 
@@ -52,12 +54,26 @@ def fail(status: int | str, code: str, message: str) -> NoReturn:
     sys.exit(1)
 
 
+POOL_ENV = {
+    "exa": "EXA_API_KEY",
+    "firecrawl": "FIRECRAWL_API_KEY",
+    "brightdata": "BRIGHTDATA_API_KEY",
+    "browserbase": "BROWSERBASE_API_KEY",
+    "scrapegraph": "SCRAPEGRAPH_API_KEY",
+    "tavily": "TAVILY_API_KEY",
+    "apify": "APIFY_TOKEN",
+    "agentql": "AGENTQL_API_KEY",
+}
+
+
 def load_key(pool: str) -> str:
     path = SECRETS_DIR / pool
     try:
         key = path.read_text(encoding="utf-8").strip()
     except OSError:
-        fail("-", "key_unreadable", f"cannot read {path}")
+        key = os.environ.get(POOL_ENV.get(pool, ""), "").strip()
+        if not key:
+            fail("-", "key_unreadable", f"cannot read {path} and {POOL_ENV.get(pool, '?')} is unset")
     if not key:
         fail("-", "key_empty", f"{path} is empty")
     if re.search(r"\s", key):
@@ -103,7 +119,7 @@ def call(
     headers: dict | None = None,
 ) -> tuple[int, Any]:
     base, auth_header, prefix = VENDORS[pool]
-    if not PATH_OK.match(path) or "//" in path or ".." in path.split("/"):
+    if not PATH_OK.match(path) or "//" in path or ENCODED_DOT.search(path) or ".." in path.split("/"):
         fail("-", "bad_path", "path must be /segment/... with URL-safe characters only")
     for k, v in (headers or {}).items():
         if k.lower() in ("host", auth_header.lower()) or re.search(r"[\x00-\x1f\x7f]", f"{k}{v}"):

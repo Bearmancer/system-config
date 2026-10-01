@@ -6,7 +6,7 @@ Pick: site-specific Actor (Amazon, Maps, social) or generic `apify/rag-web-brows
 
 - `apify--rag-web-browser` (Actor tool; Actor ID `apify/rag-web-browser`, input `query`, required), `search-actors`, `call-actor`.
 - Auto-added with `call-actor`: `get-actor-run`, `get-dataset-items`, `get-key-value-store-record`, `abort-actor-run`.
-- Also enabled by the config URL: `docs` (`search-apify-docs`, `fetch-apify-docs`), `apify--web-fetch`, `fetch-actor-details`, `get-actor-list`, `dev` (`report-problem`), `runs` (+ `get-actor-run-list`, `get-actor-run-log`), `storage` (+ dataset/KV list, get, keys, schema tools). Categories `builds` (`build-actor`, `get-actor-build`, `get-actor-build-log`, `get-actor-build-list`), `schedules` (`create-schedule`, `get-schedule`, `update-schedule`, `delete-schedule`), `tasks` (`create-actor-task`, `get-actor-task`, `update-actor-task`, `publish-actor-task`, `unpublish-actor-task`). An explicit `tools=` list replaces defaults, so the URL names every category.
+- Also enabled by the config URL: `docs` (`search-apify-docs`, `fetch-apify-docs`), `apify--web-fetch`, `fetch-actor-details`, `get-actor-list`, `runs` (+ `get-actor-run-list`, `get-actor-run-log`), `storage` (+ dataset/KV list, get, keys, schema tools). Categories `builds`, `schedules`, `tasks`, `dev` are deliberately NOT in the URL: with a paid key they let an agent create recurring paid runs; use REST/CLI by hand when needed. An explicit `tools=` list replaces defaults, so the URL names every category.
 
 ## CLI `apify` (npm `apify-cli`; `APIFY_TOKEN` or `apify login`)
 

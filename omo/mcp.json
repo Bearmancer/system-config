@@ -13,7 +13,7 @@
       "bearerTokenEnv": "FIRECRAWL_API_KEY"
     },
     "apify": {
-      "url": "https://mcp.apify.com?tools=actors,docs,runs,storage,tasks,schedules,builds,dev,get-actor-list,apify/rag-web-browser,apify/web-fetch",
+      "url": "https://mcp.apify.com?tools=actors,docs,runs,storage,get-actor-list,apify/rag-web-browser,apify/web-fetch",
       "bearerTokenEnv": "APIFY_TOKEN"
     },
     "browserbase": {
@@ -30,8 +30,9 @@
       "url": "https://learn.microsoft.com/api/mcp"
     },
     "scrapegraph": {
-      "url": "https://mcp.scrapegraphai.com/mcp",
-      "bearerTokenEnv": "SCRAPEGRAPH_API_KEY"
+      "connectTimeoutMs": 120000,
+      "command": "scrapegraph-mcp",
+      "env": { "SGAI_API_KEY": "${SCRAPEGRAPH_API_KEY}" }
     },
     "codegraph": {
       "command": "codegraph",

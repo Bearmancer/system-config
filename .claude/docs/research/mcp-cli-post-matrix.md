@@ -71,7 +71,7 @@ Sources: Exa https://exa.ai/docs/reference/answer (Agent Instructions block) and
 | Deep research | `POST /research` | `{"input":"..."}` (required: `input`; `model` enum `mini`, `pro`, `auto`) |
 | Async job | `GET /research/{request_id}` | none. `POST /research` returns `201` with `request_id`, `status: pending`; the GET returns `200` (`completed` or `failed`) or `202` (`pending` or `in_progress`) |
 
-- Search and Extract also have a documented keyless mode (rate limited), https://docs.tavily.com/documentation/keyless.
+- Tavily also documents a keyless mode (rate limited); this repo always sends a paid-account key and never uses it.
 - Sources: https://docs.tavily.com/documentation/api-reference/endpoint/research, https://docs.tavily.com/documentation/api-reference/endpoint/research-get, and the `search`, `extract`, `crawl`, `map` pages under the same `endpoint/` path.
 
 ### Firecrawl

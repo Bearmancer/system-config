@@ -189,7 +189,8 @@ def test_key_never_reaches_output_on_error(net, capsys):
     assert FAKE_KEY not in out.out + out.err
 
 
-def test_missing_key_file_exits_1_naming_path_only(net, tmp_path, capsys):
+def test_missing_key_file_exits_1_naming_path_only(net, tmp_path, capsys, monkeypatch):
+    monkeypatch.delenv("EXA_API_KEY", raising=False)
     (tmp_path / "exa").unlink()
     with pytest.raises(SystemExit) as exc:
         exa_answer.main(["q"])
@@ -357,6 +358,7 @@ def test_vendor_request_extra_header_sent(net):
         (["exa", "GET", "/a\r\nX: y"], "bad_path"),
         (["exa", "GET", "/../x"], "bad_path"),
         (["exa", "GET", "//evil.test/x"], "bad_path"),
+        (["exa", "GET", "/%2e%2e/x"], "bad_path"),
         (["exa", "GET", "/a?b=1"], "bad_path"),
         (["exa", "GET", "/a#f"], "bad_path"),
         (["exa", "GET", "/x", "--header", "Host=evil.test"], "bad_header"),
@@ -370,3 +372,11 @@ def test_vendor_request_rejects_bad_input_before_network(net, capsys, argv, code
     assert exc.value.code == 1
     assert json.loads(capsys.readouterr().err)["code"] == code
     assert net.sent == []
+
+
+def test_key_falls_back_to_pool_env_var(net, tmp_path, monkeypatch):
+    (tmp_path / "exa").unlink()
+    monkeypatch.setenv("EXA_API_KEY", "env-key-123")
+    net.reply(200, {})
+    vendor_request.main(["exa", "GET", "/x"])
+    assert net.sent[0].get_header("X-api-key") == "env-key-123"

@@ -17,9 +17,9 @@ Read on a credit/auth/quota failure or a missing-secret problem only.
 
 - Active key sits in `~/.config/opencode/secrets/<pool>`; POST scripts read it there and send it only as the vendor auth header. `switch_api_key.py --next` rewrites that file; OpenCode reconnects only the changed server. OmO: SKILL.md Key rotation.
 - Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
-- ScrapeGraphAI starts without a key and fails per call: a silent dead server = missing key.
-- `uvx` servers pay ~4 s cold install on first launch.
-- Container hosts (no secrets dir): POST scripts exit 1 `key_unreadable`; use only the MCP/CLI the host has.
+- ScrapeGraphAI (legacy local MCP) starts without a key and fails per call: a silent dead server = missing key.
+- Container hosts (no secrets dir): POST scripts fall back to the pool env var (`POOL_ENV` in `_post_common.py`, e.g. `TAVILY_API_KEY`); neither set -> exit 1 `key_unreadable`.
+- A key is always required: no keyless or free-tier path is used for any vendor.
 
 ## Error codes per service
 
