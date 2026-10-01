@@ -19,7 +19,7 @@ Read on a credit/auth/quota failure or a missing-secret problem only.
 - Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
 - ScrapeGraphAI hosted MCP answers 401 without a valid key: a dead server = missing or wrong key.
 - Container hosts (no secrets dir): POST scripts fall back to the pool env var (`POOL_ENV` in `_post_common.py`, e.g. `TAVILY_API_KEY`); neither set -> exit 1 `key_unreadable`.
-- A key is always required: no keyless or free-tier path is used for any vendor.
+- An API key is always required: no keyless access for any vendor. A free-plan key is fine; only keyless calls are banned.
 
 ## Error codes per service
 
