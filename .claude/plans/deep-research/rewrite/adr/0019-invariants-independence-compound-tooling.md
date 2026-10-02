@@ -2,6 +2,6 @@
 
 - `ledger check` enforces: true = truth bar met and no credible contradiction; untrue = contradicting evidence meets the bar and no credible support; interpretive = at least 2 positions, each with a T1/T2 source; not-found = 5 rounds done with no qualifying evidence either way; visual-read adds the two-read rule.
 - Independence of sources has two parts. Script floor: the two-source path to `true` or `untrue` needs at least two distinct publishers among the T1/T2 evidence. Agent judgement: the verifier decides whether the sources are independent (neither cites the other) and records a one-line rationale in `independence_rationale` on the evidence entry; the check requires one on at least one counted evidence entry. Publisher and cites are still recorded for audit.
-- A lesson sentence is publishable only if every mapped claim is true, or is labelled interpretive in a debate block. The sentence check implements exactly these two blocks.
+- A lesson sentence is publishable only if every mapped claim is true (plain text), is labelled interpretive in a debate block, or is untrue and sits in the errata box (ADR 0014 names errata as a place status labels appear). The sentence check implements exactly these three blocks.
 - The ledger check also audits `attempts.jsonl` (ADR 0015): rotation order and repeats are errors, and a settled claim's `rounds` and `paradigms_tried` must match the logged discovery attempts.
 - Enforcement: JSON Schema + Python `ledger check` + pytest fixtures including a seeded bad claim. The same check runs in the gate and in tests.

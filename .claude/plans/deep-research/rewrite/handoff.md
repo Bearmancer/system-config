@@ -21,7 +21,7 @@ Decisions recorded 2026-10-02 (user, final):
 | Area | State |
 |---|---|
 | Design | Settled by the user. 24 ADRs. No open grilling. |
-| Draft code | Built and tested: registry, ledger schemas and checker (including the attempt-log audit and the visual-read family rule), attempt log, mode inference, key memory with OS-level rotation lock, generation counter and unknown-failure counter, driver skeleton with `render` phase, role prompts, layout picker. 86 pytest tests pass: `uv run --with pytest --with pyyaml --with jsonschema pytest ledgerlab/tests --basetemp <empty temp dir>` from the deep-research repo root. |
+| Draft code | Built and tested: registry, ledger schemas and checker (including the attempt-log audit and the visual-read family rule), attempt log, mode inference, key memory with OS-level rotation lock, generation counter and unknown-failure counter, driver skeleton with `render` phase, role prompts, layout picker. 88 pytest tests pass: `uv run --with pytest --with pyyaml --with jsonschema pytest ledgerlab/tests --basetemp <empty temp dir>` from the deep-research repo root. |
 | Agent handlers | **Not built.** The driver fails honestly at the first missing handler (`ingest`). |
 | Site shell and 12 layout components | **Not built.** |
 | Fixture runs (rules, verify, learn) | **Not run.** Need local host, keys, models. |
@@ -50,11 +50,11 @@ From `system-config/CLAUDE.md` and the session:
 3. CLIs already installed per fleet notes: `tvly`, `firecrawl`, `apify`, `brightdata`, `just-scrape`, `browse`.
 4. Key pools in `~/.secrets/.env` (8-9 keys per pooled service). Active keys materialised under `~/.config/opencode/secrets/<pool>`. If any file is missing the OpenCode config fails to load: `uv run <skill>/scripts/switch_api_key.py --service all --materialize`.
 5. A clone of `Bearmancer/bearmancer.github.io` (the site, public, Pages on `main`). Old source repo: `Bearmancer/deep-research` (to be archived last).
-6. `pip install pytest pyyaml jsonschema` in the interpreter the driver will use.
+6. Python dependencies come from `uv run --with pyyaml --with jsonschema` (tests add `--with pytest`); never `pip`.
 
 ## 3. Activation steps (do in order)
 
-1. Pull the deep-research branch with `ledgerlab/`. Run the draft tests (command in section 0; expect 86 pass).
+1. Pull the deep-research branch with `ledgerlab/`. Run the draft tests (command in section 0; expect 88 pass).
 2. Only when the user says so: copy `ledgerlab/` to `~/.claude/skills/ledgerlab` (live). The next backup mirrors it into `claude/skills/ledgerlab`. Scripts run as `uv run --directory ~/.claude/skills/ledgerlab --with pyyaml --with jsonschema python -m scripts.<module>`.
 3. Confirm OpenCode sees the skill (new session, ask it to list skills). Skill frontmatter is `name: ledgerlab`.
 4. Do **not** delete or edit `deep-research` yet.
@@ -191,7 +191,7 @@ Status: pending (`ledgerlab/references/voice.md` in the deep-research repo). The
 
 - Per-step system prompt and tool-less extractor in `opencode run` (section 4.5).
 - All four model ids (`opencode models` returned nothing); vision and audio capability; qwen 3.7 vs 3.8.
-- Errata box: the glossary and `roles.md` put `untrue` claims in an errata box, but ADR 0019 allows only `true` (plain) and `interpretive` (debate) sentences, and `ledger.check_sentences` follows ADR 0019. Decide whether errata sentences need an ADR and their own check.
+- Errata box: ADR 0014, the glossary and `roles.md` put `untrue` claims in an errata box; ADR 0019 now lists it as a third sentence block and `ledger.check_sentences` accepts it. If the user wants errata dropped from lessons, remove the `errata` block there and in ADR 0019.
 - POST routes in `registry.yaml` name `uv run scripts/<x>.py` files that live in the old `deep-research` skill; port them into `ledgerlab/` or point the routes at the old path before relying on them.
 - ADR 0024 says archive `deep-research` after the fixtures; `ledgerlab/` is staged inside it (section 3).
 - Registry tool names for Brave, Dappier, Crawl4AI; Tavily `tavily_extract` spelling; ScrapeGraph missing tools.
@@ -206,7 +206,7 @@ Status: pending (`ledgerlab/references/voice.md` in the deep-research repo). The
 
 - No cap means a run can be long and costly; the stops are saturation, 5 rounds per claim, whole-pool key exhaustion, per-agent timeouts. Watch the first fixture run live.
 - A key swap mid-call fails parallel agents: always take the rotation lock.
-- A timed-out worker thread cannot be killed from `run_wave`. A task still running at the batch deadline is marked failed and not re-run beside the original; the wave returns without waiting for it. The `OpencodeRunner` subprocess timeout is the real kill switch.
+- A timed-out worker thread cannot be killed from `run_wave`. The task is requeued for its retry, but a still-running original makes the retry fail instead of running a second copy; the wave returns without waiting for it. The `OpencodeRunner` subprocess timeout is the real kill switch.
 - One active key per MCP is shared by every parallel agent.
 - Prompt injection: only the tool-less extractor sees raw pages. If OpenCode cannot disable tools per step, find another way (separate agent definition) before any unattended run.
 - YAML pitfall: bare `true`/`false` parse as booleans. `ledger.load_claims` normalises; always write via `ledger.dump_claims` (quotes the status).
