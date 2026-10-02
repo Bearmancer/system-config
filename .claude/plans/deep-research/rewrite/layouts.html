@@ -1,0 +1,235 @@
+<title>Lesson Layout Atlas</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap">
+<style>
+/* Layout concept: a specimen sheet. One sample topic rendered twelve ways, each in a bordered frame with fit notes. */
+:root{
+  --bg:#f3f4f2; --panel:#ffffff; --ink:#1c2321; --mute:#5d6a66; --line:#d5dad7;
+  --accent:#0d6b63; --accent-soft:#dcefec;
+  --true:#1d7a46; --true-bg:#e0f2e7;
+  --untrue:#b3261e; --untrue-bg:#fbe4e1;
+  --interp:#8a5a00; --interp-bg:#fbefd0;
+  --nf:#555f5b; --nf-bg:#e6e9e7;
+  --font-body:"Public Sans",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --font-disp:"Fraunces",Georgia,serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141917; --panel:#1c2321; --ink:#e6ebe8; --mute:#9aa7a2; --line:#313b37;
+  --accent:#4fc2b6; --accent-soft:#17332f;
+  --true:#6fd09a; --true-bg:#17301f; --untrue:#ff8d84; --untrue-bg:#3a1b19;
+  --interp:#f0c05a; --interp-bg:#3a2d0e; --nf:#a3afaa; --nf-bg:#262e2b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141917; --panel:#1c2321; --ink:#e6ebe8; --mute:#9aa7a2; --line:#313b37;
+  --accent:#4fc2b6; --accent-soft:#17332f;
+  --true:#6fd09a; --true-bg:#17301f; --untrue:#ff8d84; --untrue-bg:#3a1b19;
+  --interp:#f0c05a; --interp-bg:#3a2d0e; --nf:#a3afaa; --nf-bg:#262e2b; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.55;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-inline:16px;padding-block:24px 64px}
+h1{font-family:var(--font-disp);font-size:clamp(28px,5vw,40px);line-height:1.1;margin:0 0 8px;text-wrap:balance}
+h2{font-family:var(--font-disp);font-size:22px;margin:0;text-wrap:balance}
+.lede{color:var(--mute);max-width:65ch;margin:0 0 20px}
+.banner{background:var(--interp-bg);color:var(--interp);border:1px solid var(--interp);padding:10px 12px;border-radius:6px;font-size:13px;margin-bottom:20px}
+nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px}
+nav a{font-family:var(--font-mono);font-size:12px;color:var(--ink);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:4px 8px;border-radius:4px}
+nav a:hover,nav a:focus-visible{border-color:var(--accent);outline:none;color:var(--accent)}
+section.spec{margin-bottom:36px;scroll-margin-top:12px}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:6px}
+.tag{font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute)}
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:13px;color:var(--mute);margin:0 0 10px}
+.fit b{color:var(--ink);font-weight:600}
+@media(max-width:560px){.fit{grid-template-columns:1fr}}
+.frame{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.frame h3{font-size:16px;margin:0 0 8px}
+.pill{display:inline-block;font-family:var(--font-mono);font-size:11px;padding:1px 7px;border-radius:99px;white-space:nowrap}
+.s-true{background:var(--true-bg);color:var(--true)}
+.s-untrue{background:var(--untrue-bg);color:var(--untrue)}
+.s-interp{background:var(--interp-bg);color:var(--interp)}
+.s-nf{background:var(--nf-bg);color:var(--nf)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+ul,ol{margin:6px 0;padding-left:20px}
+details{border:1px solid var(--line);border-radius:5px;padding:6px 10px;margin:6px 0}
+summary{cursor:pointer;font-weight:600}
+summary:focus-visible{outline:2px solid var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.card{border:1px solid var(--line);border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.src{font-family:var(--font-mono);font-size:11px;color:var(--mute)}
+.qa dt{font-weight:600;margin-top:8px}
+.qa dd{margin:2px 0 0;color:var(--ink)}
+.tl{list-style:none;padding:0;margin:0;border-left:2px solid var(--line)}
+.tl li{padding:0 0 10px 14px;position:relative}
+.tl li::before{content:"";position:absolute;left:-6px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.tl time{font-family:var(--font-mono);font-size:12px;color:var(--mute);display:block}
+.cheat{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);font-size:13px}
+.cheat div{background:var(--panel);padding:8px 10px}
+.cheat b{display:block;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--accent)}
+.entry{font-size:13.5px;margin:4px 0}
+.entry b{font-family:var(--font-mono)}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.chain span.n{border:1px solid var(--line);border-radius:5px;padding:4px 8px;font-size:13px;background:var(--accent-soft)}
+.chain span.a{color:var(--mute)}
+.compare{width:100%;font-size:13px}
+pre.mermaid{margin:0;overflow-x:auto}
+.verdict{margin-top:36px}
+.verdict td:first-child{font-family:var(--font-mono);font-size:12px;white-space:nowrap}
+</style>
+
+<div class="wrap">
+<h1>Lesson Layout Atlas</h1>
+<p class="lede">Twelve ways to lay out one direct-explanation page. Same sample topic in every frame, so the differences come from the layout alone. The agent picks per lesson from the shape of the claims.</p>
+<div class="banner"><b>Sample content.</b> Every claim below is illustrative, to show the layouts. None of it has been through the verification loop.</div>
+
+<nav aria-label="Layouts">
+<a href="#l1">1 Concept</a><a href="#l2">2 Glossary</a><a href="#l3">3 Q&amp;A</a><a href="#l4">4 Table-first</a><a href="#l5">5 Decision tree</a><a href="#l6">6 Steps</a><a href="#l7">7 Timeline</a><a href="#l8">8 Claim cards</a><a href="#l9">9 Layered</a><a href="#l10">10 Cause-effect</a><a href="#l11">11 Cheat sheet</a><a href="#l12">12 Diagram</a><a href="#pick">Picker rules</a>
+</nav>
+
+<p class="lede"><b>Sample topic:</b> why a Wi-Fi printer shows "offline". Its claims have different shapes (attributes, sequence, cause, branch), so each layout shows what it does well and badly with the same material.</p>
+
+<section class="spec" id="l1">
+<div class="head"><h2>1 · Concept page</h2><span class="tag">definition → mechanism → edge cases</span></div>
+<div class="fit"><div><b>Fits:</b> one mechanic, one idea</div><div><b>Weak at:</b> many parallel items, long sequences</div></div>
+<div class="frame">
+<h3>Printer goes offline</h3>
+<p><b>What it is.</b> The computer can no longer reach the printer at the address it saved.</p>
+<p><b>How it works.</b> The computer stores the printer's IP address. The router can hand the printer a new IP when its lease expires. The saved address then points at nothing.</p>
+<p><b>Edge cases.</b></p>
+<ul><li>Printer asleep: the first job may fail, the second succeeds.</li><li>Printer on a guest network: computer cannot see it at all.</li></ul>
+</div></section>
+
+<section class="spec" id="l2">
+<div class="head"><h2>2 · Glossary entries</h2><span class="tag">1–3 lines, cross-linked</span></div>
+<div class="fit"><div><b>Fits:</b> vocabulary, hover targets</div><div><b>Weak at:</b> anything needing explanation or order</div></div>
+<div class="frame">
+<p class="entry"><b>DHCP lease</b> — time the router lends an IP address to a device. See <u>IP address</u>.</p>
+<p class="entry"><b>IP address</b> — a device's network address. Changes when a lease is renewed on a new one.</p>
+<p class="entry"><b>SSID</b> — the Wi-Fi network name. See <u>Band</u>.</p>
+<p class="entry"><b>Band</b> — 2.4 GHz or 5 GHz radio range. Many printers join 2.4 GHz only.</p>
+</div></section>
+
+<section class="spec" id="l3">
+<div class="head"><h2>3 · Q&amp;A stack</h2><span class="tag">plain questions, short answers</span></div>
+<div class="fit"><div><b>Fits:</b> "what is / why does" topics</div><div><b>Weak at:</b> ordering, tables, relationships between answers</div></div>
+<div class="frame"><dl class="qa">
+<dt>Why does my printer say offline when it is on?</dt><dd>The computer's saved address no longer matches the printer's current one.</dd>
+<dt>Does restarting the router fix it?</dt><dd>Sometimes. It forces new leases, which can break or repair the match.</dd>
+<dt>Why only on some networks?</dt><dd>Printers that join only 2.4 GHz can't see a 5 GHz-only network name.</dd>
+</dl></div></section>
+
+<section class="spec" id="l4">
+<div class="head"><h2>4 · Table-first</h2><span class="tag">items × attributes</span></div>
+<div class="fit"><div><b>Fits:</b> many items, same attributes</div><div><b>Weak at:</b> explaining why</div></div>
+<div class="frame scroll"><table>
+<thead><tr><th>Cause</th><th>Symptom</th><th>Fix</th><th>Effort</th></tr></thead>
+<tbody>
+<tr><td>IP changed</td><td>Offline after days</td><td>Reserve IP in router</td><td>Medium</td></tr>
+<tr><td>Wrong band</td><td>Never joins</td><td>Enable 2.4 GHz</td><td>Low</td></tr>
+<tr><td>Sleeping printer</td><td>First job fails</td><td>Change sleep delay</td><td>Low</td></tr>
+<tr><td>Guest network</td><td>Not found</td><td>Join main network</td><td>Low</td></tr>
+</tbody></table></div></section>
+
+<section class="spec" id="l5">
+<div class="head"><h2>5 · Decision tree</h2><span class="tag">if X, do Y</span></div>
+<div class="fit"><div><b>Fits:</b> troubleshooting, rules edge cases</div><div><b>Weak at:</b> background knowledge</div></div>
+<div class="frame">
+<pre class="mermaid">
+flowchart TD
+  A[Printer shows offline] --> B{Can you ping its IP?}
+  B -- No --> C{Is it on the same network?}
+  C -- No --> D[Join the main network]
+  C -- Yes --> E[Print its config page, check IP]
+  B -- Yes --> F[Re-add the printer port]
+  E --> G[Reserve that IP in the router]
+</pre></div></section>
+
+<section class="spec" id="l6">
+<div class="head"><h2>6 · Step list</h2><span class="tag">numbered procedure</span></div>
+<div class="fit"><div><b>Fits:</b> setup, fixed procedures</div><div><b>Weak at:</b> anything without a real order</div></div>
+<div class="frame"><ol>
+<li>Print the printer's configuration page.</li>
+<li>Note its current IP address.</li>
+<li>In the router, reserve that address for the printer.</li>
+<li>Edit the computer's printer port to match.</li>
+<li>Send a test page.</li>
+</ol></div></section>
+
+<section class="spec" id="l7">
+<div class="head"><h2>7 · Timeline</h2><span class="tag">dated events</span></div>
+<div class="fit"><div><b>Fits:</b> history, geopolitics, incident sequences</div><div><b>Weak at:</b> concepts with no dates</div></div>
+<div class="frame"><ul class="tl">
+<li><time>Day 0</time>Printer joins, gets IP .20</li>
+<li><time>Day 1</time>Computer saves .20 as the printer port</li>
+<li><time>Day 3</time>Lease expires, router assigns .27</li>
+<li><time>Day 3, evening</time>Job to .20 fails, printer shows offline</li>
+</ul></div></section>
+
+<section class="spec" id="l8">
+<div class="head"><h2>8 · Claim cards</h2><span class="tag">one card per claim</span></div>
+<div class="fit"><div><b>Fits:</b> verify mode, contested topics</div><div><b>Weak at:</b> teaching; cards don't connect</div></div>
+<div class="frame"><div class="cards">
+<div class="card"><span class="pill s-true">true</span><b>Routers can change a device's IP when its lease expires.</b><span class="src">3 sources · round 1</span></div>
+<div class="card"><span class="pill s-untrue">untrue</span><b>A stronger Wi-Fi signal fixes an offline printer.</b><span class="src">2 sources · round 2</span></div>
+<div class="card"><span class="pill s-interp">interpretive</span><b>Static IPs are the best long-term fix.</b><span class="src">sources disagree · round 3</span></div>
+<div class="card"><span class="pill s-nf">not-found</span><b>Printers drop off after exactly 72 hours.</b><span class="src">5 rounds · 0 sources</span></div>
+</div></div></section>
+
+<section class="spec" id="l9">
+<div class="head"><h2>9 · Layered page</h2><span class="tag">answer → detail → sources</span></div>
+<div class="fit"><div><b>Fits:</b> default wrapper for any lesson</div><div><b>Weak at:</b> hides detail until opened</div></div>
+<div class="frame">
+<h3>Short answer: the computer is looking at an old address.</h3>
+<details><summary>Detail</summary><p>The router renews addresses on a timer. When the printer gets a new one, the computer's saved port points at nothing.</p></details>
+<details><summary>Edge cases</summary><p>Sleeping printers and guest networks produce the same message for different reasons.</p></details>
+<details><summary>Sources read (3) · failed to grab (1)</summary><p class="src">read: vendor kb, router manual, network docs · failed: forum thread (403)</p></details>
+</div></section>
+
+<section class="spec" id="l10">
+<div class="head"><h2>10 · Cause–effect map</h2><span class="tag">A → B → C</span></div>
+<div class="fit"><div><b>Fits:</b> systems, geopolitics, failures</div><div><b>Weak at:</b> unordered facts</div></div>
+<div class="frame">
+<div class="chain"><span class="n">Lease expires</span><span class="a">→</span><span class="n">Router assigns new IP</span><span class="a">→</span><span class="n">Saved port stale</span><span class="a">→</span><span class="n">Job fails</span><span class="a">→</span><span class="n">Shows offline</span></div>
+</div></section>
+
+<section class="spec" id="l11">
+<div class="head"><h2>11 · Cheat sheet</h2><span class="tag">one screen, dense</span></div>
+<div class="fit"><div><b>Fits:</b> rules quick-reference</div><div><b>Weak at:</b> first-time learning</div></div>
+<div class="frame"><div class="cheat">
+<div><b>Offline but on</b>Stale IP. Reserve it.</div>
+<div><b>Never joins</b>Band. Use 2.4 GHz.</div>
+<div><b>First job fails</b>Sleep mode.</div>
+<div><b>Not found</b>Guest network.</div>
+</div></div></section>
+
+<section class="spec" id="l12">
+<div class="head"><h2>12 · Diagram + caption</h2><span class="tag">picture carries the content</span></div>
+<div class="fit"><div><b>Fits:</b> spatial and process content</div><div><b>Weak at:</b> precise values, edge cases</div></div>
+<div class="frame">
+<pre class="mermaid">
+flowchart LR
+  P[Printer] -- Wi-Fi 2.4 GHz --> R[Router]
+  C[Computer] -- Wi-Fi 5 GHz --> R
+  R -- DHCP lease --> P
+  C -. saved IP .-> P
+</pre>
+<p class="src">Caption: the dotted line breaks when the lease changes.</p>
+</div></section>
+
+<section class="spec verdict" id="pick">
+<div class="head"><h2>Picker rules (proposal)</h2><span class="tag">agent decides from claim shape</span></div>
+<div class="frame scroll"><table>
+<thead><tr><th>Claim shape</th><th>Layout</th><th>Mode</th></tr></thead>
+<tbody>
+<tr><td>one mechanism</td><td>1 concept page</td><td>learn</td></tr>
+<tr><td>items × attributes</td><td>4 table-first</td><td>learn, rules</td></tr>
+<tr><td>ordered procedure</td><td>6 steps</td><td>rules</td></tr>
+<tr><td>dated events</td><td>7 timeline</td><td>learn</td></tr>
+<tr><td>causal chain</td><td>10 cause–effect (+12)</td><td>learn</td></tr>
+<tr><td>conditions and outcomes</td><td>5 decision tree</td><td>rules</td></tr>
+<tr><td>terms</td><td>2 glossary, auto-linked</td><td>all</td></tr>
+<tr><td>status-bearing claims</td><td>8 claim cards</td><td>verify</td></tr>
+<tr><td>any lesson</td><td>9 layered wrapper around the above</td><td>learn</td></tr>
+<tr><td>quick reference</td><td>11 cheat sheet</td><td>rules</td></tr>
+<tr><td>question-shaped topic</td><td>3 Q&amp;A stack</td><td>learn (sparingly)</td></tr>
+</tbody></table></div></section>
+</div>

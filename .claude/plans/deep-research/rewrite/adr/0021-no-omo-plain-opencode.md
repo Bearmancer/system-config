@@ -1,0 +1,3 @@
+# No oh-my-opencode (OmO) plugin dependency
+
+The design assumes plain OpenCode only: `opencode run` agents, native MCP config, plain SKILL.md. No OmO/slim agents, loops, councils, sidecar `mcp.json`, or plugin-defined MCPs. Consequences: Context7 and gh_grep come from the slim plugin and are dropped from the fleet unless added to `opencode.jsonc` directly. Keys use the `{file:}` rotation only (ADR 0003 in system-config), not OmO env-var sidecars. The Ralph loop is the driver's own per-claim loop (ADR 0020), not OmO's. Follow-up for the user: remove the plugin and `omo/` from system-config when ready; nothing in this design needs it.
