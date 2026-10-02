@@ -1,0 +1,31 @@
+# Firecrawl
+
+Pick: known URL or whole site to clean markdown; academic papers; proxy ladder `proxy: "auto"`; keyed typed data (Alexandria).
+
+## MCP
+
+| Server | Tools |
+|---|---|
+| Hosted `https://mcp.firecrawl.dev/v2/mcp` | Live unauthenticated: `firecrawl_scrape`, `firecrawl_search`, `firecrawl_parse`. README adds (authenticated list unverified): `firecrawl_map`, `firecrawl_crawl`, `firecrawl_check_crawl_status`, `firecrawl_agent`, `firecrawl_agent_status`, `firecrawl_monitor_{create,list,get,update,delete,run,checks,check}`, `firecrawl_research_*` |
+
+- `firecrawl_scrape`: `url`; `formats` markdown, html, rawHtml, screenshot, links, summary, json, query, branding, changeTracking, audio; `onlyMainContent`; `maxAge` (0 = live); `proxy` basic|stealth|enhanced|auto; `waitFor`; `includeTags`/`excludeTags`; `location`; `mobile`; `jsonOptions {prompt,schema}`; `queryOptions {prompt,mode}`; `profile {name,saveChanges}`; `parsers ["pdf"]`; `lockdown`; `zeroDataRetention`. `alexandria {provider,capability,options}` replaces `url` to run a typed data capability.
+- `firecrawl_search`: `query`; `sources` web|images|news|alexandria|exchange; `categories` research|pdf|developer; `includeDomains` xor `excludeDomains`; `limit` <=100; `tbs`; `location`; `highlights`; `toolDetail`.
+- `firecrawl_developer_search` `{query,k<=100,skills:"only"}`: repos, issues, merged PRs, READMEs, docs. `firecrawl_find_tools`: browse Alexandria providers (free); execute via scrape `alexandria`.
+- Research: `search_papers {query,authors,categories,from,to,k<=500}`; `inspect_paper {paperId}`; `read_paper {paperId,question,k}`; `related_papers {seed_ids<=10,intent,mode similar|citers|references}`. IDs `arxiv:`, `pmid:`, `pmcid:`, `doi:`.
+
+## CLI `firecrawl` (npm `firecrawl-cli`, Node >=22)
+
+`firecrawl search`, `scrape` (several URLs concurrent), `crawl <url> [--wait | --cancel]`, `crawl <job-id>`, `map`, `agent "<prompt>" [--wait]` / `agent <job-id>`, `research`, `monitor`.
+
+## POST (base `https://api.firecrawl.dev/v2`, preset `vendor_request.py firecrawl`)
+
+| Need | Call |
+|---|---|
+| search / scrape / map | `POST /search` `{"query":Q,"limit":3}`; `POST /scrape` `{"url":U}`; `POST /map` `{"url":U}` |
+| crawl | `POST /crawl` `{"url":U,"limit":10}`; `GET\|DELETE /crawl/{id}`; `GET /crawl/{id}/errors` |
+| batch scrape | raw `POST /batch/scrape` `{"urls":[...],"formats":["markdown"]}`, `GET\|DELETE /batch/scrape/{id}`, `GET /batch/scrape/{id}/errors`; or `scripts/firecrawl_batch_scrape.py start <url>... [--formats ...]` then `status\|cancel\|errors <id>` |
+| agent | `POST /agent` `{"prompt":P,"maxCredits":100}`; `GET\|DELETE /agent/{jobId}` |
+| papers | `GET /search/research/papers?query=Q&k=10` |
+| monitors | `POST /monitor` plus list/get/update/delete/run/checks siblings (exact paths unverified) |
+
+Burn: map before crawl, set `limit`. Blocked page still costs 1 credit.

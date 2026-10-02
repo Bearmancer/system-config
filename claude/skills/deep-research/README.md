@@ -21,7 +21,8 @@ deep-research/
   SKILL.md              router + rules every mode needs (loaded on trigger)
   README.md             this file (never loaded by agents)
   references/
-    fleet.md            which web tool to use for what
+    fleet.md            routing: need -> vendor, capability map, bot-block chain, POST scripts
+    scrapers/           one file per vendor (MCP tools, CLI, REST presets), browser.md, keys-errors.md
     modes/course.md     course steps 0-9 and page standards
     course/             course detail: workflow, page design, schema, diagrams, publishing, source adapters
     domains/
@@ -30,7 +31,7 @@ deep-research/
         rules.md        shared by every genre: streaming ban, discography method, timing rules
         classical/      sources, exclusions (ban list), recommend (pick format)
         popular/        sources, exclusions
-  scripts/              run, not read: fetch, slice, stamp, gate, publish, URL audit, key rotation
+  scripts/              run, not read: fetch, slice, stamp, gate, publish, URL audit, key rotation, vendor REST presets (vendor_request.py + exa/firecrawl/brightdata/browserbase/scrapegraph scripts)
   assets/               page shell: lesson.css, stencil, shell.js
   evals/                test prompts and fixtures
 ```

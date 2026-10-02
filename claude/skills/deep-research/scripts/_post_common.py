@@ -1,14 +1,15 @@
-"""Shared plumbing for the POST-only vendor scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*).
+"""Shared plumbing for the POST scripts (exa_*, firecrawl_*, brightdata_*, browserbase_*, scrapegraph_*, vendor_request).
 
-Key: ~/.config/opencode/secrets/<pool>, read here and sent only as the auth header.
+Key policy: references/scrapers/keys-errors.md (secrets file, else the pool env var; sent only as the auth header).
 Success: JSON payload to stdout, exit 0. HTTP or network error: one JSON line to stderr
 {"status", "code", "message"}, exit 1. Vendor code comes from the response, else the status number.
-Error shapes: references/fleet.md "Error codes per service".
+Error shapes: references/scrapers/keys-errors.md.
 Redirects are refused so the auth header never leaves the vendor host.
 """
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import time
@@ -22,15 +23,20 @@ from switch_api_key import DEFAULT_SECRETS_DIR as SECRETS_DIR
 
 UA = "deep-research-post-scripts/1"
 
-# pool -> (base URL, auth header, header value prefix)
-VENDORS: dict[str, tuple[str, str, str]] = {
-    "exa": ("https://api.exa.ai", "x-api-key", ""),
-    "firecrawl": ("https://api.firecrawl.dev/v2", "Authorization", "Bearer "),
-    "brightdata": ("https://api.brightdata.com", "Authorization", "Bearer "),
-    "browserbase": ("https://api.browserbase.com/v1", "X-BB-API-Key", ""),
-    "scrapegraph": ("https://v2-api.scrapegraphai.com/api", "SGAI-APIKEY", ""),
+# pool -> (base URL, auth header, header value prefix, env var holding the key)
+VENDORS: dict[str, tuple[str, str, str, str]] = {
+    "exa": ("https://api.exa.ai", "x-api-key", "", "EXA_API_KEY"),
+    "firecrawl": ("https://api.firecrawl.dev/v2", "Authorization", "Bearer ", "FIRECRAWL_API_KEY"),
+    "brightdata": ("https://api.brightdata.com", "Authorization", "Bearer ", "BRIGHTDATA_API_KEY"),
+    "browserbase": ("https://api.browserbase.com/v1", "X-BB-API-Key", "", "BROWSERBASE_API_KEY"),
+    "scrapegraph": ("https://v2-api.scrapegraphai.com/api", "SGAI-APIKEY", "", "SCRAPEGRAPH_API_KEY"),
+    "tavily": ("https://api.tavily.com", "Authorization", "Bearer ", "TAVILY_API_KEY"),
+    "apify": ("https://api.apify.com/v2", "Authorization", "Bearer ", "APIFY_TOKEN"),
+    "agentql": ("https://api.agentql.com/v1", "X-API-Key", "", "AGENTQL_API_KEY"),
 }
 
+PATH_OK = re.compile(r"^/[A-Za-z0-9._~%!$'()*+,;=:@/-]*$")
+ENCODED_DOT = re.compile(r"%2e", re.I)
 CODE_HEADERS = ("x-brd-error-code", "x-brd-err-code")
 MESSAGE_HEADERS = ("x-brd-error", "x-brd-err-msg")
 
@@ -50,12 +56,14 @@ def fail(status: int | str, code: str, message: str) -> NoReturn:
 
 def load_key(pool: str) -> str:
     path = SECRETS_DIR / pool
+    env_var = VENDORS[pool][3]
     try:
         key = path.read_text(encoding="utf-8").strip()
     except OSError:
-        fail("-", "key_unreadable", f"cannot read {path}")
+        key = ""
+    key = key or os.environ.get(env_var, "").strip()
     if not key:
-        fail("-", "key_empty", f"{path} is empty")
+        fail("-", "key_unreadable", f"cannot read {path} (missing or empty) and {env_var} is unset")
     if re.search(r"\s", key):
         fail("-", "key_malformed", f"{path} has whitespace")
     return key
@@ -98,7 +106,12 @@ def call(
     params: dict | None = None,
     headers: dict | None = None,
 ) -> tuple[int, Any]:
-    base, auth_header, prefix = VENDORS[pool]
+    base, auth_header, prefix, _ = VENDORS[pool]
+    if not PATH_OK.match(path) or "//" in path or ENCODED_DOT.search(path) or {".", ".."} & set(path.split("/")):
+        fail("-", "bad_path", "path must be /segment/... with URL-safe characters only")
+    for k, v in (headers or {}).items():
+        if k.lower() in ("host", auth_header.lower()) or re.search(r"[\x00-\x1f\x7f]", f"{k}{v}"):
+            fail("-", "bad_header", f"header {k!r} not allowed")
     url = base + path
     if params:
         url += "?" + urllib.parse.urlencode({k: v for k, v in params.items() if v is not None})

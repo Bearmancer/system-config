@@ -7,7 +7,7 @@ description: "Use when the user asks to research, explain, teach or study someth
 
 Caveman lite for agent-internal text only: subagent prompts, worker reports, notes files, terminal summary; no filler or pleasantries, technical terms kept. Reader-facing prose (lesson body, summary, answer/verdict/rules pages) never uses caveman style; Voice governs it. Applies on every host.
 
-Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if defined, else the host's general subagent; one self-contained worker per chapter/axis (prompt names deliverable, scope, verify step, stop condition, output schema); no launcher, or subagent lacks web tools -> run inline.
+Host-neutral. Fan-out probe: subagent launcher present -> launch `researcher` if defined, else the host's general subagent; one self-contained worker per chapter/axis (prompt names deliverable, scope, verify step, stop condition, output schema); no launcher, or subagent lacks web tools -> run inline. OpenCode: `opencode run --agent X` keeps the session model, not X's (anomalyco/opencode#42561); pass `--model`. Subagent spawn applies X's model.
 
 ## Workflow
 
@@ -36,19 +36,13 @@ Terminal answer of a published run: bottom line (1-3 lines) + live link. Other s
 
 ## Fast path: every web call
 
-1. Pick server by capability: `references/fleet.md`. Name row used. Route MCP first, then vendor CLI, then POST script.
-2. Bot-blocked (401/403/429/503, challenge page, empty body): walk chain in order, stop at first fetch holding target content. Credit/auth failure on a step: walk accounts of that server ("Key rotation") before leaving it. Blocked: next step.
-   1. Tavily `tavily_extract`.
-   2. Firecrawl `firecrawl_scrape` `proxy: "auto"`, `maxAge: 0`.
-   3. Exa `web_fetch_exa` (cached copy); `SOURCE_NOT_AVAILABLE` -> next.
-   4. ScrapeGraph `scrape` `stealth: true` (+5 credits).
-   5. Apify tool `apify--rag-web-browser` (Actor ID `apify/rag-web-browser`), or site Actor via `search-actors` + `call-actor`.
-   6. AgentQL `extract-web-data`.
-   7. Firefox DevTools MCP, or Playwright MCP `browser_navigate` -> `browser_snapshot`.
-   8. Bright Data Web Unlocker: MCP `scrape_as_markdown`, then CLI `brightdata scrape`; 502 `reject_block` -> retry once.
-   9. Browserbase (paid tier for CAPTCHA).
+1. Pick by capability: `references/fleet.md` (need -> vendor, capability map, bot-block chain, POST scripts). Name row used. Route MCP first, then vendor CLI, then POST script. Then read only the picked vendor's file for tool names, CLI commands, REST bodies (all in `references/scrapers/`):
+   - `tavily.md`, `firecrawl.md`, `exa.md`, `scrapegraph.md`
+   - `apify.md`, `agentql.md`, `brightdata.md`, `browserbase.md`
+   - `browser.md` (Firefox DevTools, Playwright)
+2. Bot-blocked (401/403/429/503, challenge page, empty body): walk the fleet.md chain in order, stop at first fetch holding target content. Credit/auth failure on a step: walk accounts of that server ("Key rotation") before leaving it. Blocked: next step.
    Keep internal log `URL | status | method` per attempt. All steps and accounts exhausted: URL blocked, never guess content; flag or drop the claim it carried.
-3. Credit/quota/auth failure: "Key rotation" below; error codes per service: `references/fleet.md`.
+3. Credit/quota/auth failure: "Key rotation" below; error codes and key table: `references/scrapers/keys-errors.md`.
 
 Plain fetch, no research asked: stop after fast path.
 
@@ -161,11 +155,11 @@ Every URL emitted to user or written to file (citations, links, issue/PR bodies,
 
 Account pools live in `~/.secrets/.env`. Never read that file by any means, not even for variable names. `scripts/switch_api_key.py` is its only reader; it prints account names + sha256 fingerprints only.
 
-Trigger: credit/quota/payment/auth failure per `references/fleet.md` table (e.g. Firecrawl 402, ScrapeGraph `insufficient_credits`, key 401 after working). Plain rate limit (429): retry once first.
+Trigger: credit/quota/payment/auth failure per `references/scrapers/keys-errors.md` table (e.g. Firecrawl 402, ScrapeGraph `insufficient_credits`, key 401 after working). Plain rate limit (429): retry once first.
 
 1. Run `uv run <skill>/scripts/switch_api_key.py --service <name> --next`. It writes the active key to `~/.config/opencode/secrets/<name>` and to the user env var. OpenCode: config watcher reconnects only that MCP server in about 1 s, no restart (verified: system-config `.claude/docs/research/secrets-subdir-reload.md`).
 2. Relay its output line verbatim (already masked). Its watcher-reconnect wording holds on OpenCode only.
 3. Retry the failed call on the same server. Repeat `--next` per failure until the output returns to the first account: pool exhausted, go to next chain step. Output `pool empty for <svc>: move to next chain step`: go to next chain step, tell user in one line.
 4. OmO host: `~/.omo/agent/mcp.json` reads env vars from OmO's parent process at server spawn; rotated key applies only after OmO restarts from a new terminal. Tell user; continue chain on other servers meanwhile.
 
-Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`, `--materialize`. Service list and env vars: `references/fleet.md`.
+Controls: `--list`, `--service all --list`, `--set <ACCOUNT>`, `--next --dry-run`, `--materialize`. Service list and env vars: `references/scrapers/keys-errors.md`.

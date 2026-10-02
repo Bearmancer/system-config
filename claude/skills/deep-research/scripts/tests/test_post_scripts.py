@@ -14,10 +14,10 @@ import _post_common as pc  # noqa: E402
 import brightdata_unlocker  # noqa: E402
 import browserbase_agent_run  # noqa: E402
 import exa_agent_run  # noqa: E402
-import exa_answer  # noqa: E402
 import exa_batches  # noqa: E402
 import firecrawl_batch_scrape  # noqa: E402
 import scrapegraph_crawl  # noqa: E402
+import vendor_request  # noqa: E402
 
 FAKE_KEY = "fake-key-1234567890"
 
@@ -77,9 +77,8 @@ def sent_json(req):
 
 
 CASES = [
-    (exa_answer, ["hello"], "POST", "https://api.exa.ai/answer", {"query": "hello"}),
-    (exa_answer, ["q", "--model", "exa-fast", "--output-schema", '{"type":"object"}'], "POST",
-     "https://api.exa.ai/answer", {"query": "q", "model": "exa-fast", "outputSchema": {"type": "object"}}),
+    (vendor_request, ["exa", "POST", "/answer", "--body", '{"query":"hello"}'], "POST",
+     "https://api.exa.ai/answer", {"query": "hello"}),
     (exa_agent_run, ["stop", "run_1"], "POST", "https://api.exa.ai/agent/runs/run_1/stop", None),
     (exa_agent_run, ["cancel", "run_1"], "POST", "https://api.exa.ai/agent/runs/run_1/cancel", None),
     (exa_batches, ["start", "--requests", '[{"customId":"a"}]'], "POST", "https://api.exa.ai/batches",
@@ -110,6 +109,19 @@ CASES = [
 ]
 
 
+CASES += [
+    (vendor_request, ["scrapegraph", "GET", "/credits"], "GET", "https://v2-api.scrapegraphai.com/api/credits", None),
+    (vendor_request, ["exa", "POST", "/findSimilar", "--body", '{"url":"https://a.test"}'], "POST",
+     "https://api.exa.ai/findSimilar", {"url": "https://a.test"}),
+    (vendor_request, ["apify", "GET", "/store", "--param", "search=maps", "--param", "limit=3"], "GET",
+     "https://api.apify.com/v2/store?search=maps&limit=3", None),
+    (vendor_request, ["agentql", "POST", "/query-data", "--body", '{"query":"{ a }","url":"https://a.test"}'], "POST",
+     "https://api.agentql.com/v1/query-data", {"query": "{ a }", "url": "https://a.test"}),
+    (vendor_request, ["tavily", "POST", "/research", "--body", '{"input":"q"}'], "POST",
+     "https://api.tavily.com/research", {"input": "q"}),
+]
+
+
 @pytest.mark.parametrize("mod,argv,method,url,body", CASES)
 def test_request_shape(net, capsys, mod, argv, method, url, body):
     net.reply(200, {"ok": True})
@@ -135,6 +147,9 @@ def test_exa_batches_send_beta_header(net, argv):
         ("brightdata", "Authorization", f"Bearer {FAKE_KEY}"),
         ("browserbase", "X-bb-api-key", FAKE_KEY),
         ("scrapegraph", "Sgai-apikey", FAKE_KEY),
+        ("tavily", "Authorization", f"Bearer {FAKE_KEY}"),
+        ("apify", "Authorization", f"Bearer {FAKE_KEY}"),
+        ("agentql", "X-api-key", FAKE_KEY),
     ],
 )
 def test_auth_header_per_vendor(net, pool, header, value):
@@ -167,15 +182,16 @@ def test_http_error_exits_1_with_vendor_code(net, capsys, status, body, headers,
 def test_key_never_reaches_output_on_error(net, capsys):
     net.reply(401, {"error": "bad key"})
     with pytest.raises(SystemExit):
-        exa_answer.main(["q"])
+        vendor_request.main(["exa", "GET", "/x"])
     out = capsys.readouterr()
     assert FAKE_KEY not in out.out + out.err
 
 
-def test_missing_key_file_exits_1_naming_path_only(net, tmp_path, capsys):
+def test_missing_key_file_exits_1_naming_path_only(net, tmp_path, capsys, monkeypatch):
+    monkeypatch.delenv("EXA_API_KEY", raising=False)
     (tmp_path / "exa").unlink()
     with pytest.raises(SystemExit) as exc:
-        exa_answer.main(["q"])
+        vendor_request.main(["exa", "GET", "/x"])
     assert exc.value.code == 1
     assert json.loads(capsys.readouterr().err)["code"] == "key_unreadable"
     assert net.sent == []
@@ -248,7 +264,7 @@ def test_error_message_falls_back_to_err_msg_header(net, capsys):
 def test_key_with_inner_whitespace_rejected_without_echo(net, tmp_path, capsys):
     (tmp_path / "exa").write_text("part1 part2", encoding="utf-8")
     with pytest.raises(SystemExit) as exc:
-        exa_answer.main(["q"])
+        vendor_request.main(["exa", "GET", "/x"])
     assert exc.value.code == 1
     err = capsys.readouterr().err
     assert json.loads(err)["code"] == "key_malformed"
@@ -278,7 +294,7 @@ def test_redirect_refused_and_auth_not_forwarded(tmp_path, monkeypatch, capsys):
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     (tmp_path / "exa").write_text(FAKE_KEY, encoding="utf-8")
     monkeypatch.setattr(pc, "SECRETS_DIR", tmp_path)
-    monkeypatch.setitem(pc.VENDORS, "exa", (f"http://127.0.0.1:{srv.server_port}", "x-api-key", ""))
+    monkeypatch.setitem(pc.VENDORS, "exa", (f"http://127.0.0.1:{srv.server_port}", "x-api-key", "", "EXA_API_KEY"))
     try:
         with pytest.raises(SystemExit) as exc:
             pc.call("exa", "GET", "/start")
@@ -323,3 +339,62 @@ def test_bad_json_arg_exits_1(capsys):
     with pytest.raises(SystemExit) as exc:
         pc.load_json_arg("{nope")
     assert exc.value.code == 1
+
+
+def test_vendor_request_extra_header_sent(net):
+    net.reply(200, {})
+    vendor_request.main(["exa", "GET", "/batches/b1", "--header", "Exa-Beta=batches-2026-06-06"])
+    assert net.sent[0].get_header("Exa-beta") == "batches-2026-06-06"
+
+
+@pytest.mark.parametrize(
+    "argv,code",
+    [
+        (["exa", "GET", "search"], "bad_path"),
+        (["exa", "GET", "/x", "--param", "novalue"], "bad_param"),
+        (["exa", "GET", "/a b"], "bad_path"),
+        (["exa", "GET", "/a\r\nX: y"], "bad_path"),
+        (["exa", "GET", "/../x"], "bad_path"),
+        (["exa", "GET", "/./x"], "bad_path"),
+        (["exa", "GET", "/a/./x"], "bad_path"),
+        (["exa", "GET", "//evil.test/x"], "bad_path"),
+        (["exa", "GET", "/%2e%2e/x"], "bad_path"),
+        (["exa", "GET", "/a?b=1"], "bad_path"),
+        (["exa", "GET", "/a#f"], "bad_path"),
+        (["exa", "GET", "/x", "--header", "Host=evil.test"], "bad_header"),
+        (["exa", "GET", "/x", "--header", "x-api-key=k"], "bad_header"),
+        (["exa", "GET", "/x", "--header", "X-A=b\r\nX-B: c"], "bad_header"),
+    ],
+)
+def test_vendor_request_rejects_bad_input_before_network(net, capsys, argv, code):
+    with pytest.raises(SystemExit) as exc:
+        vendor_request.main(argv)
+    assert exc.value.code == 1
+    assert json.loads(capsys.readouterr().err)["code"] == code
+    assert net.sent == []
+
+
+def test_key_falls_back_to_pool_env_var(net, tmp_path, monkeypatch):
+    (tmp_path / "exa").unlink()
+    monkeypatch.setenv("EXA_API_KEY", "env-key-123")
+    net.reply(200, {})
+    vendor_request.main(["exa", "GET", "/x"])
+    assert net.sent[0].get_header("X-api-key") == "env-key-123"
+
+
+def test_empty_key_file_falls_back_to_env_var(net, tmp_path, monkeypatch):
+    (tmp_path / "exa").write_text("  ", encoding="utf-8")
+    monkeypatch.setenv("EXA_API_KEY", "env-key-123")
+    net.reply(200, {})
+    vendor_request.main(["exa", "GET", "/x"])
+    assert net.sent[0].get_header("X-api-key") == "env-key-123"
+
+
+def test_empty_key_file_and_no_env_exits_1(net, tmp_path, capsys, monkeypatch):
+    (tmp_path / "exa").write_text("", encoding="utf-8")
+    monkeypatch.delenv("EXA_API_KEY", raising=False)
+    with pytest.raises(SystemExit) as exc:
+        vendor_request.main(["exa", "GET", "/x"])
+    assert exc.value.code == 1
+    assert json.loads(capsys.readouterr().err)["code"] == "key_unreadable"
+    assert net.sent == []
