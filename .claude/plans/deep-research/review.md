@@ -5,7 +5,7 @@ These are independent Opus code-review passes on the live skill (`~/.claude/skil
 ## Round 1 (2026-09-29): FAIL on both axes
 
 The review found 11 issues.
-- **HIGH:** removing "disabled by default" for AgentQL and Browserbase was wrong, because the OmO sidecar `mcp.json` still has `"enabled": false` for both.
+- **HIGH (stale, checked 2026-10-02):** the finding said the OmO sidecar `mcp.json` had `"enabled": false` for AgentQL and Browserbase, so "disabled by default" had to stay. Live `omo/mcp.json` and `opencode/opencode.jsonc` configure both servers with no `enabled` key, so both are enabled and the note no longer applies.
 - **MEDIUM:**
   - The #45 gap was stated twice, and line 79 described a workaround.
   - Step 8 named a CLI before MCP `scrape_as_markdown`.
