@@ -22,6 +22,6 @@ A PostToolUse hook backed up agent config after edits, and it produced many smal
 
 - A change is backed up at the next daily run or manual run, not immediately.
 - The rewritten history needs local clones to reset. The old history survives on the local tags until they are purged.
-- The squash is one-time, not a standing rule: new daily commits stay as they are.
+- Squashes run only on the captain's order, not as a standing rule. A second squash ran on 2026-10-03 (local tag `pre-squash-20261003`), also covering Toolbox, media-research-tools and bearmancer.github.io.
 
 Sources: `.claude/plans/specs/deep-interview-setup-end-state.md` (Backup); map #2; #9; #10.
