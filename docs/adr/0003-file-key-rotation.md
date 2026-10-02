@@ -11,7 +11,7 @@ The deep-research MCP servers need API keys. Several services hold a pool of acc
 The active key for each service sits in its own file at `~/.config/opencode/secrets/<service>`, referenced from `opencode.jsonc` through `{file:}` substitution.
 
 - `switch_api_key.py` is the only reader of `~/.secrets/.env`. `--next` writes the next account's key into that file.
-- OpenCode's config watcher sees the change and reconnects only the changed MCP server, with no restart. This was verified live in `.claude/docs/research/secrets-subdir-reload.md`.
+- OpenCode's config watcher sees the change and reconnects only the changed MCP server, with no restart. This was verified live in `.claude/docs/research/file-key-hot-reload.md`.
 
 ## Alternatives considered
 
@@ -25,4 +25,4 @@ The active key for each service sits in its own file at `~/.config/opencode/secr
 - OmO reads keys from `~/.omo/agent/mcp.json` (backed up as `omo/mcp.json`) through `bearerTokenEnv` and `${VAR}`, i.e. from user environment variables at server spawn, so an OmO rotation needs a restart from a new terminal.
 - The deep-research POST scripts read the same `secrets/<service>` file; when it is missing or empty they fall back to the service env var (`EXA_API_KEY`, `FIRECRAWL_API_KEY`, `BRIGHTDATA_API_KEY`, `BROWSERBASE_API_KEY`, `SCRAPEGRAPH_API_KEY`, `TAVILY_API_KEY`, `APIFY_TOKEN`, `AGENTQL_API_KEY`), which lets cloud hosts with no secrets file run them. Table: `claude/skills/deep-research/references/scrapers/keys-errors.md`.
 
-Sources: `.claude/plans/specs/deep-interview-setup-end-state.md` (MCP keys); `.claude/docs/research/secrets-subdir-reload.md`; #3; #14.
+Sources: `.claude/plans/specs/deep-interview-setup-end-state.md` (MCP keys); `.claude/docs/research/file-key-hot-reload.md`; #3; #14.

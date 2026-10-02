@@ -1,6 +1,6 @@
 # `{file:}` MCP key hot-reload on OpenCode v2.0.18
 
-Ticket: Bearmancer/system-config #3 (R1). Tested 2026-09-29 on the installed binary `opencode v2.0.18` (Windows).
+Ticket: Bearmancer/system-config #3 (R1). Tested 2026-09-29 on the installed binary `opencode v2.0.18` (Windows). Two test rounds: local stdio servers with `{file:}` in `environment` (sections 1 to 6), then a remote server with `{file:~/...}` in `headers` under the `secrets/` subdirectory (section 7).
 
 ## Question
 
@@ -9,6 +9,7 @@ When an MCP server's key is injected with `{file:path}` inside `mcp.servers.<nam
 1. Does the MCP server reconnect with the new key automatically, and does that depend on whether the file sits in a watched path?
 2. Does `opencode reload` make it reconnect?
 3. How are a trailing newline and a missing file handled?
+4. Does a remote MCP server with `{file:~/.config/opencode/secrets/<name>}` in `headers` reconnect with the new key when `switch_api_key.py` replaces the file inside the `secrets/` subdirectory of the global config dir?
 
 ## Answer (short)
 
@@ -16,6 +17,7 @@ When an MCP server's key is injected with `{file:path}` inside `mcp.servers.<nam
 - A key file outside those paths (for example `./secrets/key`) is not picked up automatically. It is picked up by `opencode reload`, or by any other reload that happens for another reason.
 - `opencode reload` restarts every MCP server in that location, including unchanged ones, with freshly read `{file:}` values.
 - Trailing newlines, CRLF and surrounding whitespace are trimmed.
+- A key file in the `secrets/` subdirectory of the global config dir, referenced from a remote server's `headers`, reconnects with the new key about 0.3 s after an atomic replace, with no restart and no reload command.
 - A missing file makes config loading fail. At startup the location returns HTTP 500 and no MCP server starts. `opencode reload` with the file missing kills the running MCP servers and does not restart them.
 
 ## Test setup
@@ -84,9 +86,37 @@ Times below are UTC from `mcp.log`.
 - `~/` is expanded to the home directory. A relative path resolves against the config file's directory (`variable.ts:56-58`).
 - `{env:X}` with X unset becomes an empty string with no error (`variable.ts:28-31`).
 
+### 7. Remote server, `headers`, `secrets/` subdirectory
+
+Setup (second isolated run, same binary):
+
+- HOME, USERPROFILE, XDG_CONFIG/DATA/CACHE/STATE_HOME and OPENCODE_DB all pointed at a temp dir. The live config and running service were never touched.
+- `opencode serve --hostname 127.0.0.1 --port 47831`.
+- One remote MCP server pointing at a local Python stub HTTP MCP that logs the `Authorization` header of every request.
+- Header: `Authorization: Bearer {file:~/.config/opencode/secrets/stub}` (tilde form, `secrets/` subdirectory).
+- Fake keys only. The replacement used `tempfile.mkstemp` in the same dir plus `os.replace`, the same as `write_secret` in `switch_api_key.py`.
+
+Result: reconnect works.
+
+```
+[  7.838s] STUB initialize Authorization='Bearer KEY-ONE-fake'
+[  7.850s] STUB tools/list Authorization='Bearer KEY-ONE-fake'
+[  9.890s] REPLACE secrets/stub with KEY-TWO via tempfile+os.replace
+[ 10.175s] STUB initialize Authorization='Bearer KEY-TWO-fake'
+[ 10.181s] STUB tools/list Authorization='Bearer KEY-TWO-fake'
+[ 10.195s] VERDICT RECONNECT OK: key2 seen 0.30s after replace, no restart
+```
+
+- The watcher covers the `secrets/` subdirectory. A `{file:~/...}` path in a remote `headers` value is re-resolved, and an atomic rename triggers the reload.
+- Together with sections 1 to 5 (the `environment` form for local servers), both server shapes in the live config rotate without a restart.
+
+### 8. OmO differs
+
+OmO (senpi) reads `bearerTokenEnv` and stdio env from its own process environment snapshot (senpi `packages/coding-agent/src/core/extensions/builtin/mcp/transport.ts:226`, `:121`). A User-scope env var written by the key script is not seen until OmO restarts, and `/mcp reconnect` re-reads the same snapshot.
+
 ## Practical guidance
 
-- To get automatic key rotation, put the key file under the global config dir (`~/.config/opencode/`) or a project `.opencode/` directory. Do not commit real keys there.
+- To get automatic key rotation, put the key file under the global config dir (`~/.config/opencode/`, including its `secrets/` subdirectory) or a project `.opencode/` directory. Do not commit real keys there.
 - For a key file elsewhere (for example `~/.secrets/x`), run `opencode reload` after changing it. Expect every MCP server in that location to restart.
 - Never delete or rename a referenced key file while OpenCode is running or before `opencode reload`. A missing file takes down all MCP servers for that location until the next request after the file is restored.
 
@@ -98,4 +128,6 @@ Times below are UTC from `mcp.log`.
 - The file-deletion case for a watched file was tested once. It was not tested for an unwatched file.
 - Only the Windows watcher backend was exercised (`backend=windows` and `backend=node` in `serve.log`). Behavior on other platforms is untested.
 - Whether the real running service (`opencode serve --service`) behaves identically was not tested by design.
+- Real remote endpoints (Exa, Tavily, Firecrawl, Apify) were not exercised; the stub in section 7 stands in for them.
+- The 0.30 s reconnect time in section 7 is one run on one machine.
 - The tests used relative paths from a project config and one absolute path in the global config. A `{file:~/...}` path outside any watched root was not run separately, though it is covered by the same code path as `./secrets/key`.
