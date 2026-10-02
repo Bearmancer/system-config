@@ -8,7 +8,7 @@ Runs this machine's daily jobs and backs up its AI agent config. One private rep
 |---|---|---|
 | `Toolbox` (`Dev\Toolbox`) | CLI commands; its `.env`, `state/toolbox.db`, `state/logs`; DB backup to Azure blob and dashboard redeploy inside `toolbox sync lastfm` / `toolbox sync youtube` | Scheduling, tasks, system-config |
 | `system-config` (this repo, private) | The three scheduled tasks, `install.ps1`, `run-sync.ps1`, `backup-agents.ps1`, agent config backup, foobar2000 mirror, `scripts/ubuntu-setup.sh` (manual Ubuntu bootstrap) | Toolbox internals. It only calls `toolbox sync lastfm` and `toolbox sync youtube` from PATH |
-| `bearmancer.github.io` | Built HTML of learning courses, published by the `learning-course` skill | Course sources (transient, not backed up anywhere) |
+| `bearmancer.github.io` | Built HTML of courses and answer pages, published by the `deep-research` skill | Course working files (`work/`, gitignored, not backed up anywhere) |
 
 `toolbox` on PATH resolves to `C:\Users\Lance\Dev\Toolbox\artifacts\publish\src\App\release\toolbox.exe`. This repo never builds or publishes Toolbox and never reads its `.env`.
 
@@ -17,9 +17,6 @@ Runs this machine's daily jobs and backs up its AI agent config. One private rep
 - **Daily sync** (09:00): `run-sync.ps1` — lastfm sync, youtube sync, agent config backup, foobar2000 mirror, then checks the OpenCode service and starts it if it is down.
 - **Topgrade** (10:00): `topgrade --yes --verbose`, all stdout/stderr/child output tee'd to `%LOCALAPPDATA%\topgrade-logs\topgrade-<timestamp>.log` and copied to `%LOCALAPPDATA%\topgrade-task.log` at the end (`Get-TopgradeTaskArgument`). Local `topgrade.toml` (not backed up) adds `[pre_commands]` "Stop codegraph" (npm 11 `update -g` rewrites every global package and a running codegraph MCP locks its node.exe) and `[commands]` "uv tools" and "github-mcp-server".
 - **OpenCode service** (at logon): `opencode service start`.
-
-All three registered by `install.ps1` (run once, elevated, by hand — this repo's scripts never register scheduled tasks themselves).
-
 ## Agent config backup (`claude/`, `opencode/`, `omo/`, `agents/`)
 
 `backup-agents.ps1` mirrors whitelisted local config into this repo via `robocopy`, then commits and pushes if anything changed (only when the repo is on `master`; on any other branch it warns and skips).
@@ -31,15 +28,15 @@ All three registered by `install.ps1` (run once, elevated, by hand — this repo
 | `claude/agents/`, `claude/commands/` | `~/.claude/agents`, `~/.claude/commands` | `/MIR` |
 | `opencode/` (AGENTS.md, opencode.jsonc, oh-my-opencode-slim.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
-| `omo/` (mcp.json, settings.json) | `~/.omo/agent/` | files (settings.json credential-guarded) |
+| `omo/` (mcp.json, settings.json) | `~/.omo/agent/` | files (both credential-guarded) |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
 | `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 
-Excluded on purpose: plugin caches, sessions, credentials, `secrets/`, `auth.json`, `service.json`, `~/.omo/teach`, `ulw-research`, `notepads`, `cache`, `codegraph`. `claude/settings.json` and `omo/settings.json` are dropped from a backup if it appears to hold a credential.
+Excluded on purpose: plugin caches, sessions, credentials, `secrets/`, `auth.json`, `service.json`, `~/.omo/teach`, `ulw-research`, `notepads`, `cache`, `codegraph`. `claude/settings.json`, `omo/settings.json` and `omo/mcp.json` are dropped from a backup if the file appears to hold a credential.
 
 A whitelisted source that is absent is removed from its mirror path; nothing else in the repo is touched.
 
-Sync direction is one-way: local machine → repo. Restore is a manual reverse copy — nothing here writes back to `~/.claude`, `~/.config/opencode`, or `~/.omo` automatically.
+Sync is one-way, local machine → repo (`docs/standards/architecture.md`). Restore is a manual reverse copy.
 
 ## Reinstall, not backup
 
@@ -53,18 +50,18 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | OpenCode credentials (`auth.json`, `mcp-auth.json` in `~/.local/share/opencode`) | `opencode auth login` for providers, `opencode mcp auth` for OAuth MCP servers (both verified in `--help`) |
 | OmO credentials (`~/.omo/agent/auth.json`) | Log in again in the app; `omo --help` lists no login command. Check afterwards with `omo auth check --provider <name>` |
 | Secret pools (`~/.secrets/.env`) | Manual, from the password manager or an offline copy. Never backed up |
-| Secrets | `uv run ~/.claude/skills/deep-research/scripts/switch_api_key.py --service all --materialize`, from the key pools in `~/.secrets/.env` |
+| Key files (`~/.config/opencode/secrets/`) | `uv run ~/.claude/skills/deep-research/scripts/switch_api_key.py --service all --materialize`, from the key pools in `~/.secrets/.env` |
 | MCP key env vars (read by `omo/mcp.json`) | `switch_api_key.py --service <name> --set <ACCOUNT>` per service writes the secrets file and the user env var; set `GITHUB_PERSONAL_ACCESS_TOKEN` by hand. Restart OmO from a new terminal afterwards |
 | Vendor CLIs (deep-research) | `uv tool install --upgrade tavily-cli; npm install -g firecrawl-cli@latest apify-cli@latest @brightdata/cli@latest just-scrape@latest browse@latest` (verified with each `--version`; sources in `.claude/docs/research/mcp-cli-post-matrix.md`) |
 | Local MCP servers (OpenCode `opencode.jsonc`, OmO `omo/mcp.json`) | `npm install -g @playwright/mcp@latest @modelcontextprotocol/server-sequential-thinking@latest agentql-mcp@latest @brightdata/mcp@latest @mozilla/firefox-devtools-mcp@latest @colbymchenry/codegraph@latest firecrawl-mcp@latest`; `github-mcp-server.exe` from the `github/github-mcp-server` release zip (`github-mcp-server_Windows_x86_64.zip`) into `~/.local/bin`. Configs start the npm servers as `node <npm root -g>/<package>/<entry>`. Updates: topgrade `node` step plus its `[commands]` entries `uv tools` and `github-mcp-server`. Remote servers (Exa, Tavily, Firecrawl, Apify, Browserbase, ScrapeGraph, Microsoft Learn) upgrade server-side with no local step |
-| Repos | `gh repo clone <owner>/<repo>`, e.g. `gh repo clone Bearmancer/deep-research ~/Dev/deep-research` |
+| Repos | `gh repo clone <owner>/<repo>`, e.g. `gh repo clone Bearmancer/bearmancer.github.io ~/Dev/bearmancer.github.io` |
 | Scheduled Tasks | `install.ps1`, elevated |
 | `service.json` | `opencode service set hostname 127.0.0.1` |
 | Tailscale serve | `tailscale serve --bg 49374` |
 
 ## Ubuntu setup
 
-`scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt] [--no-purge]` is a manual, user-run script and the one exception to this repo's never-write-live-config rule (ADR-0005). It lists every purge path first, then removes Bun, OpenCode, OmO and oh-my-opencode-slim state and the npm globals it installs (`~/.config/opencode/secrets` is backed up, restored, then the backup is deleted; `~/.secrets/.env`, `~/.npm` and other `~/.local/lib/node_modules` packages are untouched). It installs Bun, OpenCode v2 (`https://opencode.ai/v2/install`), uv, the MCP servers, vendor CLIs and language servers, and deploys `AGENTS.md`, `tui.json` and `opencode.jsonc` to `~/.config/opencode`. Skills are copied into `~/.claude/skills` without overwriting existing files. `--no-purge` skips the purge and installs and only redeploys config, for example after adding a key. Models are the models.dev `opencode` ones with zero cost that are not deprecated (override with `FREE_MODELS=id1,id2,id3`, which must be on that list). MCP servers that need a key are enabled only when `~/.config/opencode/secrets/<name>` holds a free-plan key; the rest are listed as skipped.
+`scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt] [--no-purge]` is a manual, user-run script and the one exception to the never-write-live-config rule (ADR-0005). It lists every purge path first, then removes Bun, OpenCode, OmO and oh-my-opencode-slim state and the npm globals it installs (`~/.config/opencode/secrets` is backed up, restored, then the backup is deleted; `~/.secrets/.env`, `~/.npm` and other `~/.local/lib/node_modules` packages are untouched). It installs Bun, OpenCode v2 (`https://opencode.ai/v2/install`), uv, the MCP servers, vendor CLIs and language servers, and deploys `AGENTS.md`, `tui.json`, `opencode.jsonc` and `oh-my-opencode-slim.jsonc` to `~/.config/opencode`. Skills are copied into `~/.claude/skills` without overwriting existing files. `--no-purge` skips the purge and installs and only redeploys config, for example after adding a key. Models are the models.dev `opencode` ones with zero cost that are not deprecated (override with `FREE_MODELS=id1,id2,id3`, which must be on that list). MCP servers that need a key are enabled only when `~/.config/opencode/secrets/<name>` holds a free-plan key; the rest are listed as skipped.
 
 ## foobar2000 mirror
 
@@ -72,4 +69,4 @@ One-way `rclone sync` of `%APPDATA%\foobar2000-v2` to the `gdrive` remote's `foo
 
 ## Setup
 
-Run `install.ps1` elevated. It registers the three tasks and creates the `gdrive` rclone remote if missing (a browser opens once for Google sign-in).
+Run `install.ps1` once, elevated, by hand. It registers the three tasks and creates the `gdrive` rclone remote if missing (a browser opens once for Google sign-in).

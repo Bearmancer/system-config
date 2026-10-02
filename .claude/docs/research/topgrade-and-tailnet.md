@@ -19,7 +19,9 @@ Q2. The OpenCode service at 127.0.0.1:49374 is exposed by `tailscale serve --bg 
 - Tool-owned logs show winget (`DiagOutputDir\WinGet-2026-09-29-10-00-*.log`: "Leaf command succeeded") and gcloud (`%APPDATA%\gcloud\logs\2026.09.29\`) succeeded. None of the other steps leaves a per-run log.
 - **The failed step cannot be named from the available evidence.**
 
-### Proposed native fix
+### Native fix (issue #46, closed)
+
+`Get-TopgradeTaskArgument` in `SystemConfig.psm1` implements console capture with `Tee-Object` into `%LOCALAPPDATA%\topgrade-logs`. The options evaluated:
 
 1. Capture the console with `Start-Transcript` (https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.host/start-transcript?view=powershell-7.5). Task argument sketch for `Install-TopgradeTask`: `-NoProfile -Command "Start-Transcript -Path $env:LOCALAPPDATA\topgrade-task.log -Append -UseMinimalHeader; topgrade --yes; $rc = $LASTEXITCODE; Stop-Transcript; if ($rc) { Read-Host 'topgrade FAILED'; exit 1 }"`.
 2. Once the transcript names the step, handle it in `topgrade.toml`: add it to `[misc] ignore_failures`, add it to `[misc] disable`, or fix it with that step's own section key (source: `topgrade --config-reference`).

@@ -36,7 +36,3 @@ No path was found by which the purge tooling deletes or corrupts Claude's auto-m
 1. The delete step `fd -u -t f -t l . <path> -X rm --` has no allowlist. Safety rests on the operator choosing narrow `<path>` values; the never list is prose, not a code fence. Handing `~/.claude` as a root would take `projects/` with it.
 2. `*.tmp.*` is applied recursively, so it reaches inside `plugins/**` (three live hits today), contradicting the same block's "never: plugins/**".
 3. The `*.lock` "repo-root strays" class matches `~/.claude/daemon.lock`, a live lock file for the running daemon.
-
-## Verification
-
-A skeptical gate-reviewer pass (Oracle) was run against these claims; no verdict was recorded.

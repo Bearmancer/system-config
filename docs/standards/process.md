@@ -1,6 +1,6 @@
 # Process Standards
 
-Checkable rules, each with its why. An empty section means no rule has been settled yet; launch's C5 sediment pass fills it.
+Checkable rules, each with its why.
 
 ## Execution
 
