@@ -1,0 +1,3 @@
+# Surfaces = the MCP fleet, enumerated by direct tools/list
+
+Research rounds call the user's MCP fleet (Firecrawl, Tavily, Exa, ScrapeGraphAI, Apify, AgentQL, Bright Data, Browserbase, Firefox DevTools, Microsoft Learn; Brave, Dappier, Crawl4AI to be wired). Route per capability: MCP, then vendor CLI, then POST script. Rotation unit = server × capability; a claim's later rounds must use a server not yet tried for it. Inventory comes from direct `tools/list` per server (see system-config `.claude/docs/research/mcp-tool-catalog.md`); keyed servers use the existing `{file:}` key rotation. No enforcement MCP server (rejected: Q48).
