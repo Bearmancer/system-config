@@ -25,7 +25,6 @@ Decisions recorded 2026-10-02 (user, final):
 | Agent handlers | **Not built.** The driver fails honestly at the first missing handler (`ingest`). |
 | Site shell and 12 layout components | **Not built.** |
 | Fixture runs (rules, verify, learn) | **Not run.** Need local host, keys, models. |
-| Voice rule | **Pending.** Needs user samples. |
 | Activation | **Not done** (user decision). `ledgerlab/` is staged in the deep-research repo. |
 | Cutover | **Not started.** Old `deep-research` skill and old repo stay live until all three fixtures pass. |
 
@@ -146,7 +145,7 @@ The three fixtures are the eval prompts. Create `evals/evals.json` (schema in sk
 | `scripts/check_lesson.py`, `lesson_rules.py`, `check_map_geometry.py`, `layout_diagram.py` | drop or rewrite | old lesson rules and map geometry; reuse diagram idea only if still wanted |
 | `assets/lesson.css`, `shell.js`, `lesson.stencil.html` | seed for shell | restyle for the 12 layouts |
 | `references/fleet.md` | superseded | content moved into `registry.yaml`; delete the hand table after cutover |
-| `references/course/*`, `modes/course.md` | read for lessons learned | do not port Voice rule; ADR 0014 replaces it |
+| `references/course/*`, `modes/course.md` | read for lessons learned | do not port Voice rule; no voice rule exists (ADR 0014) |
 | `evals/` | replace | new fixtures |
 | SKILL.md Voice, Tier ladder, Passes, Verdict mode | replaced | by ADRs 0008, 0014, 0019, 0023 |
 | Carry over: caveman-lite for agent-internal text; reader profile (India-aware, INR only when cost is the topic); fetch/bot-block order idea; "no sleep/poll loops" | keep | |
@@ -179,15 +178,7 @@ Order: **rules (Ark Nova) -> verify (Russia morale) -> learn (Saudi military)**.
 4. Update `system-config/CLAUDE.md` index, README, CONTEXT.md glossary (add terms: claim, ledger, status, round, surface, paradigm, wave, gate, fixture), and add a pointer from `docs/adr/` to the rewrite ADRs in `.claude/plans/deep-research/rewrite/adr/`.
 5. Close or update trackers: system-config map #55 (course vNext) and #56 (board-game mode) per `.claude/plans/backlog-2026-10-01.md`.
 
-## 9. Voice rule: collection protocol
-
-Status: pending (`ledgerlab/references/voice.md` in the deep-research repo). The user rejected the old agent's "phrasing style itself" and wants flowing, explanatory, easy-to-understand prose, even if slightly longer, not narrative.
-1. Ask the user for 2-3 before/after samples (a paragraph from an existing course they dislike, and how they would phrase it).
-2. Pull two or three paragraphs from live courses as candidates if they cannot supply samples; show old-style vs proposed.
-3. Write the rule in `voice.md` with the samples as examples; add a lint (banned phrases, sentence length) only if the user agrees.
-4. Carry over: no report language, inline-link citations on source-naming words, India-aware global scope.
-
-## 10. Open or unverified items
+## 9. Open or unverified items
 
 - Per-step system prompt and tool-less extractor in `opencode run` (section 4.5).
 - All four model ids (`opencode models` returned nothing); vision and audio capability; qwen 3.7 vs 3.8.
@@ -202,7 +193,7 @@ Status: pending (`ledgerlab/references/voice.md` in the deep-research repo). The
 - Q39: the user asked for unlimited reproduction of source text on the public site. Not adopted; paraphrase + cite stands (ADR 0010). Revisit only with the user.
 - Check whether the live `deep-research` skill's `references/` still reference OmO sidecars; clean at cutover.
 
-## 11. Risks and gotchas
+## 10. Risks and gotchas
 
 - No cap means a run can be long and costly; the stops are saturation, 5 rounds per claim, whole-pool key exhaustion, per-agent timeouts. Watch the first fixture run live.
 - A key swap mid-call fails parallel agents: always take the rotation lock.
@@ -216,24 +207,23 @@ Status: pending (`ledgerlab/references/voice.md` in the deep-research repo). The
 - Auto-merge to main on gate pass plus auto-revert on a failed live check: test the revert path on a throwaway branch before the first real publish.
 - Public ledger exposes URLs, locators and short quotes; fine by decision, but re-check before publishing anything sensitive.
 
-## 12. Definition of done
+## 11. Definition of done
 
 - [ ] Section 3 activation complete; draft tests green live.
 - [ ] Config reconciled (model ids verified, OmO removed after ledgerlab is live, Brave/Dappier/Crawl4AI wired or dropped).
 - [ ] Probes recorded (inventory, error codes, reset windows, fingerprints, reconnect latency, vision).
 - [ ] Handlers B3 built with tests; driver runs a fixture end to end.
 - [ ] Shell and 12 layouts built; index generator; noindex for verify.
-- [ ] Voice rule written from the user's samples.
 - [ ] All three fixtures pass the 4-step test, including the seeded false claim.
 - [ ] `/skill-creator` evals exist and pass.
 - [ ] Cutover steps done; old repo archived.
 
-## 13. Suggested skills and order of operations
+## 12. Suggested skills and order of operations
 
 - `/skill-creator` (user-invoked) for B7. `tdd` for B1-B3 scripts. `grilling` + `domain-modeling` for any new decision; update `GLOSSARY.md` and add ADRs numbered 0025+. `research` for probe write-ups. `code-review` before merging. `handoff` when pausing.
 - Suggested order: sections 3, 4, 5 -> B1, B2 -> B3 ingest/discover/verify on the rules fixture -> B3 write/gates/publish -> B4 -> rules fixture pass -> verify fixture -> learn fixture -> cutover.
 
-## 14. Command cheat sheet
+## 13. Command cheat sheet
 
 ```
 # tests (deep-research repo root)
