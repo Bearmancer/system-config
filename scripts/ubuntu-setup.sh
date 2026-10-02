@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Ubuntu: full purge of Bun/npm globals/OpenCode/omo/oh-my-opencode-slim state, then install and
-# configure everything from this repo. Free models only (OpenCode Zen "-free"); no paid accounts.
-# Run as your own user (sudo is used for apt only). Never reads ~/.secrets/.env.
-#   scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt]
-# Env: FREE_MODELS=id1,id2,id3 (override auto-picked free models), SKIP_BROWSERS=1 (skip Chromium).
+# Ubuntu: purge Bun/npm globals/OpenCode/omo/oh-my-opencode-slim state, then install and
+# configure everything from this repo. Free models only (models.dev opencode provider, zero cost, not deprecated).
+# Manual, user-run only (ADR-0005). Run as your own user (sudo is used for apt only). Never reads ~/.secrets/.env.
+#   scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt] [--no-purge]
+#   --no-purge: configure only (restore secrets, deploy config, verify); no purge or installs.
+# Env: FREE_MODELS=id1,id2,id3 (must be free models; overrides auto-pick), SKIP_BROWSERS=1 (skip Chromium).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-YES=0 DRY=0 SKIP_APT=0
+YES=0 DRY=0 SKIP_APT=0 NO_PURGE=0
 STATE="$HOME/.local/state/system-config-setup"
 CFG="$HOME/.config/opencode"
 MARK_BEGIN="# >>> system-config setup >>>"
@@ -24,6 +25,7 @@ for a in "$@"; do
     --yes|-y) YES=1 ;;
     --dry-run) DRY=1 ;;
     --skip-apt) SKIP_APT=1 ;;
+    --no-purge) NO_PURGE=1 ;;
     -h|--help) sed -n '2,7p' "${BASH_SOURCE[0]}"; exit 0 ;;
     *) die "unknown option: $a" ;;
   esac
@@ -48,29 +50,19 @@ MCP_PKGS=(@playwright/mcp @modelcontextprotocol/server-sequential-thinking agent
 CLI_PKGS=(firecrawl-cli apify-cli @brightdata/cli just-scrape browse)
 LSP_PKGS=(typescript typescript-language-server vscode-langservers-extracted bash-language-server basedpyright)
 
-# ---------------------------------------------------------------- purge
 purge() {
   say "Purge plan"
   local -a paths=(
-    "$HOME/.bun" "$HOME/.opencode" "$HOME/.omo" "$HOME/.agents" "$HOME/.npm" "$HOME/.npm-global"
-    "$HOME/.local/lib/node_modules" "$HOME/.cache/bun" "$HOME/.cache/node" "$HOME/.cache/ms-playwright"
-    "$HOME/.firefox-devtools-mcp"
+    "$HOME/.bun" "$HOME/.opencode" "$HOME/.omo" "$HOME/.agents" "$HOME/.cache/bun" "$HOME/.cache/ms-playwright"
+    "$HOME/.firefox-devtools-mcp" "$CFG" "$HOME/.local/share/opencode" "$HOME/.local/state/opencode"
+    "$HOME/.cache/opencode" "$HOME/.cache/oh-my-opencode-slim"
+    "$HOME"/.local/bin/{opencode,opencode2,bun,bunx,github-mcp-server}
   )
-  local base pat
-  for base in "$HOME/.config" "$HOME/.local/share" "$HOME/.local/state" "$HOME/.cache"; do
-    for pat in 'opencode*' 'oh-my-opencode*' 'omo' '.omo' 'cortexkit*' 'magic-context*' 'slkiser*'; do
-      while IFS= read -r -d '' p; do
-        [[ "$p" == "$STATE"* ]] || paths+=("$p")
-      done < <(find "$base" -maxdepth 1 -iname "$pat" -print0 2>/dev/null)
-    done
-  done
-  for p in "$HOME"/.local/bin/{opencode,opencode2,bun,bunx,github-mcp-server,codegraph,firefox-devtools-mcp,agentql-mcp,tvly,firecrawl,apify,brightdata,bdata,just-scrape,browse,tsc,tsserver,typescript-language-server,vscode-json-language-server,bash-language-server,basedpyright,basedpyright-langserver}; do
-    [[ -e "$p" || -L "$p" ]] && paths+=("$p")
-  done
+  local p
   local -a existing=()
   for p in "${paths[@]}"; do [[ -e "$p" || -L "$p" ]] && existing+=("$p"); done
   printf '  %s\n' "${existing[@]:-<nothing to remove>}"
-  printf '  (kept: ~/.secrets/.env, ~/.claude, ~/.npmrc, system node/apt packages; %s is backed up and restored)\n' "$CFG/secrets"
+  printf '  (kept: ~/.secrets/.env, ~/.claude, ~/.npm, ~/.npmrc, other ~/.local/lib/node_modules packages, system node/apt packages; %s is backed up and restored)\n' "$CFG/secrets"
 
   if ((!YES && !DRY)); then
     [[ -t 0 || -r /dev/tty ]] || die "not a terminal: pass --yes"
@@ -86,6 +78,7 @@ purge() {
   if [[ -d "$CFG/secrets" ]]; then
     run mkdir -p "$STATE"; run chmod 700 "$STATE"
     run rm -rf "$STATE/secrets"; run cp -a "$CFG/secrets" "$STATE/secrets"
+    run chmod -R go-rwx "$STATE/secrets"
   fi
 
   say "Uninstall npm globals (user prefix)"
@@ -97,18 +90,15 @@ purge() {
   say "Delete"
   ((${#existing[@]})) && run rm -rf -- "${existing[@]}"
 
-  say "Clean shell startup files (backup: *.bak-setup)"
+  say "Remove setup PATH block from shell startup files (backup: *.bak-setup)"
   local rc
   for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile" "$HOME/.bash_profile"; do
     [[ -f "$rc" ]] || continue
     run cp -a "$rc" "$rc.bak-setup"
-    run sed -i -e "/$MARK_BEGIN/,/$MARK_END/d" \
-      -e '/^# bun$/d' -e '/BUN_INSTALL/d' -e '/\.bun\/bin/d' -e '/\.opencode\/bin/d' \
-      -e '/^# opencode/Id' -e '/OPENCODE_/d' -e '/OH_MY_OPENCODE/d' "$rc"
+    run sed -i "/$MARK_BEGIN/,/$MARK_END/d" "$rc"
   done
 }
 
-# ---------------------------------------------------------------- install
 install_system() {
   say "System packages"
   if ((SKIP_APT)); then
@@ -117,7 +107,7 @@ install_system() {
     run $SUDO apt-get update -y
     run $SUDO apt-get install -y curl ca-certificates unzip git jq python3 tmux ripgrep
     if ! command -v node >/dev/null || (( $(node -p 'process.versions.node.split(".")[0]') < 22 )); then
-      run bash -c "curl -fsSL https://deb.nodesource.com/setup_22.x | $SUDO -E bash -"
+      run bash -c "curl -fsSL https://deb.nodesource.com/setup_22.x | ${SUDO:+$SUDO -E} bash -"
       run $SUDO apt-get install -y nodejs
     fi
   fi
@@ -134,11 +124,8 @@ install_tools() {
   run bash -c 'curl -LsSf https://astral.sh/uv/install.sh | UV_NO_MODIFY_PATH=1 sh'
 
   say "Shell PATH block"
-  local rc
-  for rc in "$HOME/.bashrc"; do
-    run bash -c "printf '%s\n' '$MARK_BEGIN' 'export BUN_INSTALL=\"\$HOME/.bun\"' \
-'export PATH=\"\$HOME/.bun/bin:\$HOME/.opencode/bin:\$HOME/.local/bin:\$PATH\"' '$MARK_END' >> '$rc'"
-  done
+  run bash -c "printf '%s\n' '$MARK_BEGIN' 'export BUN_INSTALL=\"\$HOME/.bun\"' \
+'export PATH=\"\$HOME/.bun/bin:\$HOME/.opencode/bin:\$HOME/.local/bin:\$PATH\"' '$MARK_END' >> '$HOME/.bashrc'"
 
   say "npm globals (MCP servers, vendor CLIs, language servers) -> ~/.local"
   local pkg
@@ -167,20 +154,23 @@ install_tools() {
 
   say "oh-my-opencode-slim"
   run bunx oh-my-opencode-slim@latest install --no-tui --companion=no --background-subagents=yes \
-    --background-subagents-target="$HOME/.bashrc" --preset=opencode-go --reset || warn "slim installer failed"
+    --background-subagents-target="$HOME/.bashrc" --reset || warn "slim installer failed"
 }
 
-# ---------------------------------------------------------------- configure
 configure() {
   say "Restore secrets"
   run mkdir -p "$CFG/secrets"; run chmod 700 "$CFG/secrets"
-  [[ -d "$STATE/secrets" ]] && run cp -an "$STATE/secrets/." "$CFG/secrets/"
+  if [[ -d "$STATE/secrets" ]]; then
+    run cp -an "$STATE/secrets/." "$CFG/secrets/"
+    run rm -rf -- "$STATE/secrets"
+    run rmdir "$STATE" 2>/dev/null || true
+  fi
 
   say "AGENTS.md, tui.json, skills"
   run mkdir -p "$CFG" "$HOME/.claude/skills" "$CFG/skills"
   run cp -f "$REPO/opencode/AGENTS.md" "$CFG/AGENTS.md"
   run cp -f "$REPO/opencode/tui.json" "$CFG/tui.json"
-  run cp -a "$REPO/claude/skills/." "$HOME/.claude/skills/"
+  run cp -an "$REPO/claude/skills/." "$HOME/.claude/skills/"
   local d
   for d in "$HOME"/.claude/skills/*/; do
     [[ -d "$d" ]] && run ln -sfn "${d%/}" "$CFG/skills/$(basename "$d")"
@@ -225,16 +215,21 @@ PREFER = ["muse-spark-1.3-contributor-free", "deepseek-v4-flash-free", "kimi-k2.
 
 
 def free_models():
-    env = os.environ.get("FREE_MODELS")
-    if env:
-        return [m.strip() for m in env.split(",") if m.strip()]
     try:
         req = urllib.request.Request("https://models.dev/api.json", headers={"User-Agent": "curl/8"})
         models = json.load(urllib.request.urlopen(req, timeout=60))["opencode"]["models"]
     except Exception as exc:
-        sys.exit(f"cannot list free models ({exc}); set FREE_MODELS=id1,id2,id3")
+        sys.exit(f"cannot list free models from models.dev ({exc})")
     free = {k: v for k, v in models.items()
-            if (v.get("cost") or {}).get("input") == 0 and (v.get("cost") or {}).get("output") == 0}
+            if (v.get("cost") or {}).get("input") == 0 and (v.get("cost") or {}).get("output") == 0
+            and v.get("status") != "deprecated"}
+    env = os.environ.get("FREE_MODELS")
+    if env:
+        picked = [m.strip() for m in env.split(",") if m.strip()]
+        bad = [m for m in picked if m not in free]
+        if bad:
+            sys.exit(f"FREE_MODELS not in the free list: {', '.join(bad)}")
+        return picked
     rest = sorted((k for k in free if k not in PREFER), key=lambda k: -(free[k].get("limit") or {}).get("context", 0))
     return [k for k in PREFER if k in free] + rest
 
@@ -245,10 +240,10 @@ if not ids:
 M = ["opencode/" + ids[i % len(ids)] for i in range(3)]
 print("free models:", ", ".join(M))
 
-# ---- opencode.jsonc
 cfg = load_jsonc(f"{repo}/opencode/opencode.jsonc")
 cfg.pop("shell", None)
 cfg.pop("providers", None)
+cfg["plugin"] = [p for p in cfg.get("plugin", []) if not str(p).startswith("@slkiser/opencode-quota")]
 cfg["model"] = cfg["small_model"] = M[0]
 for name, agent in cfg.get("agents", {}).items():
     if "model" in agent:
@@ -257,8 +252,9 @@ for name, agent in cfg.get("agents", {}).items():
 firefox = shutil.which("firefox") or shutil.which("firefox-esr")
 SUBS = [("C:/Users/Lance/AppData/Roaming/npm/node_modules", npm_root),
         ("C:\\Users\\Lance\\.local\\bin\\github-mcp-server.exe", f"{home}/.local/bin/github-mcp-server"),
-        ("C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile", f"{home}/.firefox-devtools-mcp/profile"),
-        ("C:/Program Files/Mozilla Firefox/firefox.exe", firefox or "")]
+        ("C:/Users/Lance/.firefox-devtools-mcp/profile/firefox_devtools_mcp_profile", f"{home}/.firefox-devtools-mcp/profile")]
+if firefox:
+    SUBS.append(("C:/Program Files/Mozilla Firefox/firefox.exe", firefox))
 
 
 def walk(o):
@@ -277,8 +273,8 @@ kept, skipped = {}, []
 for name, server in cfg["mcp"]["servers"].items():
     server = walk(server)
     text = json.dumps(server)
-    if "C:" in text or ".exe" in text or '""' in text:
-        skipped.append((name, "Windows-only or Firefox not installed")); continue
+    if re.search(r"\b[A-Za-z]:[\\/]", text) or ".exe" in text:
+        skipped.append((name, "Windows-only path or Firefox not installed")); continue
     need = re.findall(r"secrets/([\w-]+)\}", text)
     missing = [n for n in need
                if not (os.path.isfile(f"{cfg_dir}/secrets/{n}") and os.path.getsize(f"{cfg_dir}/secrets/{n}") > 0)]
@@ -296,7 +292,6 @@ if "pyright" in lsp:
 os.makedirs(cfg_dir, exist_ok=True)
 json.dump(cfg, open(f"{cfg_dir}/opencode.jsonc", "w", encoding="utf-8"), indent=2)
 
-# ---- oh-my-opencode-slim.jsonc
 slim = load_jsonc(f"{repo}/opencode/oh-my-opencode-slim.jsonc")
 chain = [{"id": m} for m in M]
 
@@ -342,8 +337,12 @@ verify() {
   fi
 }
 
-purge
-install_system
-install_tools
+if ((NO_PURGE)); then
+  say "--no-purge: configure only"
+else
+  purge
+  install_system
+  install_tools
+fi
 configure
 verify
