@@ -12,6 +12,31 @@ function Sync-Youtube {
     return $?
 }
 
+function Build-AgentInstructions {
+    param(
+        [Parameter(Mandatory)][string]$SourcePath,
+        [Parameter(Mandatory)][string[]]$TargetPath
+    )
+    if (-not (Test-Path $SourcePath)) { return $true }
+    $body = ([IO.File]::ReadAllText($SourcePath)).Replace("`r`n", "`n").Trim("`n")
+    $pattern = '(?s)(<!-- SHARED:START -->)\r?\n(?:.*?\r?\n)?(<!-- SHARED:END -->)'
+    $ok = $true
+    foreach ($target in $TargetPath) {
+        if (-not (Test-Path $target)) { continue }
+        $text = [IO.File]::ReadAllText($target)
+        if ($text -notmatch $pattern) {
+            Write-Warning "$target has no SHARED:START/SHARED:END markers; shared rules not written."
+            $ok = $false
+            continue
+        }
+        $eol = if ($text.Contains("`r`n")) { "`r`n" } else { "`n" }
+        $block = $body.Replace("`n", $eol)
+        $updated = [regex]::Replace($text, $pattern, { param($m) $m.Groups[1].Value + $eol + $block + $eol + $m.Groups[2].Value })
+        if ($updated -ne $text) { [IO.File]::WriteAllText($target, $updated, [Text.UTF8Encoding]::new($false)) }
+    }
+    return $ok
+}
+
 function Backup-AgentConfig {
     param(
         [string]$HomeRoot = $HOME,
@@ -54,6 +79,10 @@ function Backup-AgentConfig {
             }
         }
     }
+
+    $built = Build-AgentInstructions -SourcePath "$HomeRoot\.config\agent-rules\shared.md" -TargetPath "$HomeRoot\.claude\CLAUDE.md", "$HomeRoot\.config\opencode\AGENTS.md"
+    if (-not $built) { $script:failed = $true }
+    Copy-Files -SourceDir "$HomeRoot\.config\agent-rules" -Files @('shared.md') -Dest "$repoRoot\agent-rules"
 
     # claude/
     Copy-Files -SourceDir "$HomeRoot\.claude" -Files @('CLAUDE.md', 'keybindings.json', 'settings.json') -Dest "$repoRoot\claude"
@@ -225,4 +254,4 @@ function Install-SystemConfigTasks {
     Write-Host 'Registered: Daily sync (09:00), Topgrade (10:00), OpenCode service (at logon).'
 }
 
-Export-ModuleMember -Function Sync-Lastfm, Sync-Youtube, Backup-AgentConfig, Sync-Foobar2000, Invoke-DailySync, Install-DailySyncTask, Install-TopgradeTask, Install-OpenCodeServiceTask, Install-SystemConfigTasks
+Export-ModuleMember -Function Sync-Lastfm, Sync-Youtube, Build-AgentInstructions, Backup-AgentConfig, Sync-Foobar2000, Invoke-DailySync, Install-DailySyncTask, Install-TopgradeTask, Install-OpenCodeServiceTask, Install-SystemConfigTasks

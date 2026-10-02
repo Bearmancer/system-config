@@ -9,7 +9,7 @@ $sources = @(
     '.claude\CLAUDE.md', '.claude\settings.json',
     '.claude\skills\a\SKILL.md', '.claude\skills\a\__pycache__\m.pyc', '.claude\skills\a\.pytest_cache\c',
     '.claude\skills\synced\x.md', '.claude\agents\a.md', '.claude\commands\c.md',
-    '.config\opencode\opencode.jsonc', '.config\opencode\oh-my-opencode-slim.jsonc', '.config\opencode\tui.json', '.config\opencode\AGENTS.md',
+    '.config\opencode\opencode.jsonc', '.config\opencode\oh-my-opencode-slim.jsonc', '.config\opencode\tui.json', '.config\opencode\AGENTS.md', '.config\agent-rules\shared.md',
     '.config\opencode\agents\a.md',
     '.config\opencode\secrets\key.txt', '.config\opencode\auth.json', '.config\opencode\service.json',
     '.config\opencode\skills\s.md',
@@ -17,7 +17,7 @@ $sources = @(
     '.agents\.skill-lock.json', '.agents\skills\s.md'
 )
 $expected = @(
-    'agents/.skill-lock.json',
+    'agent-rules/shared.md', 'agents/.skill-lock.json',
     'claude/CLAUDE.md', 'claude/agents/a.md', 'claude/commands/c.md',
     'claude/settings.json', 'claude/skills/a/SKILL.md',
     'omo/mcp.json', 'omo/settings.json',
@@ -30,6 +30,7 @@ try {
         New-Item -ItemType Directory -Force -Path (Split-Path $p) | Out-Null
         Set-Content -Path $p -Value '{}'
     }
+    foreach ($f in '.claude\CLAUDE.md', '.config\opencode\AGENTS.md') { Set-Content -Path (Join-Path $fakeHome $f) -Value "<!-- SHARED:START -->`n<!-- SHARED:END -->" }
     foreach ($stale in 'claude\keybindings.json', 'opencode\commands\c.md') {
         $p = Join-Path $fakeRepo $stale
         New-Item -ItemType Directory -Force -Path (Split-Path $p) | Out-Null
