@@ -8,14 +8,13 @@ python "<skill>/scripts/publish_teach.py"
 
 The script:
 
-- commits and pushes the source dir (`~/Dev/deep-research`, private repo `Bearmancer/deep-research`) first; a failure aborts before any HTML is mirrored or published (skipped with `--no-push`),
-- mirrors `~/Dev/deep-research/*` **HTML + `assets/` only** to the site working copy (`~/Dev/bearmancer.github.io`),
-- converts `.md` links to plain text in the published copy (local files are untouched),
+- reads course dirs (`<slug>/lessons/*.html`) authored in the site working copy (`~/Dev/bearmancer.github.io`),
+- converts `.md` links to plain text in those pages,
 - refreshes the root index page,
 - commits and pushes to `Bearmancer/bearmancer.github.io` (public site: `https://bearmancer.github.io/`),
 - prints the page count.
 
-Course flow scope is fixed: **course pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
+Course flow scope is fixed: **course pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcript slices) live in `~/Dev/bearmancer.github.io/work/<slug>/`, gitignored, so they never publish.
 
 ## Single answer page (answer, verdict, recommend, rules)
 
@@ -29,17 +28,17 @@ python "<skill>/scripts/publish_teach.py" --page <body.html> --kind answer|verdi
 - Probes the page URL (8 x 15 s) for HTTP 200 and the escaped title in the live bytes; prints `live: <url>`. Exit 0 only when both hold; exit 1: wait for the build with the harness monitor, then re-fetch.
 - Body content per mode: answer = `SKILL.md` "Answer mode" step 3 (`--kind answer`); verdict (explicit fact-check-only, `--kind verdict`) = `SKILL.md` "Verdict mode" step 3; recommend = `recommend.md` pick blocks; rules (board-game) = `SKILL.md` "Board-game mode" page order.
 
-## Dry run (no flag — preview by hand)
+## Dry run (`--no-push`)
 
-The script ships no `--dry-run` / `-WhatIf` flag: one run mirrors, commits, and pushes. To preview the mirror selection, copy one workspace's HTML + `assets/` into a temp dir first and confirm the file set looks right; the script prints `no changes to commit` when staging matches the last push, and the page count at the end tells what went out.
+`--no-push` builds course indexes and the root hub in the site working copy and stops before commit; `git status` there shows the file set. A normal run commits and pushes the site repo only; it prints `no changes to commit` when nothing changed, and the page count at the end tells what went out.
 
 ## Verify
 
 One command. Never gate a bare download — a lone file false-fails the
-dangling-link checks, so live verification mirrors the tree:
+dangling-link checks, so live verification reproduces the tree:
 
 ```powershell
-python <skill>/scripts/verify_live.py <workspace-dir> https://bearmancer.github.io/<workspace>
+python <skill>/scripts/verify_live.py ~/Dev/bearmancer.github.io/<slug> https://bearmancer.github.io/<slug>
 ```
 
 It downloads lessons plus their link targets (assets, reference, index) into a
@@ -57,8 +56,8 @@ Assets come back byte-identical to the local copies (`Get-FileHash` both sides).
 
 - `warning: LF will be replaced by CRLF` in git output is harmless noise.
 - A fresh page can 404 for the first ~30 s while Pages rebuilds — retry before assuming failure.
-- A published page rendering unstyled points at a missed `assets/` mirror — confirm the workspace has `assets/lesson.css` and re-run.
-- The script mirrors HTML + assets only; author page content in HTML.
+- A published page rendering unstyled points at a missing `assets/lesson.css` — confirm the course dir has it and re-run.
+- Pages are authored as HTML directly in the course dir.
 - Live pages differ from local **by design**: the `.md` links are flattened. Compare with that expectation (assets identical, pages differing only in flattened links and a small size delta); any other difference is a real problem worth chasing.
 
 ## Fallback (script missing / other machine)

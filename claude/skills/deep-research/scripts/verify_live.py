@@ -11,7 +11,7 @@ against its live copy.
 Usage:
     python scripts/verify_live.py <workspace-dir> <site-workspace-url>
 Example:
-    python scripts/verify_live.py ~/Dev/deep-research/historians-on-trump https://bearmancer.github.io/historians-on-trump
+    python scripts/verify_live.py ~/Dev/bearmancer.github.io/historians-on-trump https://bearmancer.github.io/historians-on-trump
 
 Exit 0 only when every lesson gates OK, no `.md` hrefs remain live, and all
 assets match. Anything else exits 1 with the failing paths named.

@@ -25,7 +25,7 @@ Requirements: `yt-dlp` on PATH. The `[youtube] No supported JavaScript runtime` 
 
 ```
 python <skill>/scripts/extract_chapters.py "<video-url-or-id>" \
-  --out <workspace>/reference/transcripts --chapters all --title
+  --out <work>/reference/transcripts --chapters all --title
 ```
 
 One command does the whole extraction job, and the ranges stay metadata-derived: they are read out of `info.json`, which is the video's own metadata. So ranges persist across chapters with no recompute — a chapter range that was correct yesterday is still correct today, and a re-run costs a cache hit.

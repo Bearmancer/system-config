@@ -2,19 +2,20 @@
 
 ## Workspace discovery & creation
 
-1. Search `~/Dev/deep-research` (`fd -t d --max-depth 1 . ~/Dev/deep-research`) before creating anything. One workspace per source; its slug names the source directory.
+1. Search workspaces and published courses (`fd -t d --max-depth 1 . ~/Dev/bearmancer.github.io/work`, `fd -t d --max-depth 1 . ~/Dev/bearmancer.github.io`) before creating anything. One course per source; its slug names both directories.
 2. Topic slug: dash-case, content-based (`amway-tools-cult`, `putin-rise-to-power`); derive it from the topic.
 3. Layout:
    ```
-   ~/Dev/deep-research/<slug>/
-   ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/standing
-   ├── RESOURCES.md          # tiered sources, every entry annotated, + Gaps
+   ~/Dev/bearmancer.github.io/<slug>/            # published, authored in place
    ├── assets/lesson.css     # copy from this skill's assets/ (font-pinned)
    ├── index.html            # course home — chapters + reference pages, linked from the root hub
    ├── lessons/01-ch2-slug.html
    ├── reference/glossary.html
    ├── reference/cast-map.html   # full-course roster/index (not a per-chapter reading aid)
-   ├── reference/timeline.html
+   └── reference/timeline.html
+   ~/Dev/bearmancer.github.io/work/<slug>/       # gitignored, never published
+   ├── NOTES.md              # chapter map, extraction recipe, corrections log, quirks, queue/standing
+   ├── RESOURCES.md          # tiered sources, every entry annotated, + Gaps
    ├── reference/transcripts/<chapter>-<range>.md
    └── learning-records/000N-slug.md
    ```
@@ -30,7 +31,7 @@
   ```
 - **Extraction recipe** (so any future session can re-derive): fetch command, slicing command, boundary rules, temp-dir location. Default extraction for video sources:
   ```
-  python <skill>/scripts/extract_chapters.py "<video-url>" --out <workspace>/reference/transcripts --chapters all
+  python <skill>/scripts/extract_chapters.py "<video-url>" --out <work>/reference/transcripts --chapters all
   ```
   `--chapters all` is the default; narrow to a subset only for a re-run or a targeted pass. Ranges come from the video's own `info.json` metadata, so hand-typed ranges stay override-only.
 - **Corrections log**: recurring garble patterns for this source (ASR mangling, OCR artifacts) and the canonical forms they resolve to.
@@ -86,4 +87,4 @@ Test mode: copy the existing workspace into the outputs folder; write everything
 
 Pre-existing files in the outputs folder you didn't create this session: leave untouched, say so in the report (usually residue from an earlier/sibling attempt; deleting someone else's evidence is worse than leaving it). Own earlier partial tree: state plainly which tree is the deliverable.
 
-Confine all writes to the outputs tree; leave `~/Dev/deep-research` untouched; publish/open steps are for live runs only.
+Confine all writes to the outputs tree; leave `~/Dev/bearmancer.github.io` untouched; publish/open steps are for live runs only.
