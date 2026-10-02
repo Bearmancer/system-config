@@ -62,7 +62,7 @@ system-config is the single documented, daily-backed-up home for everything auth
 ## Acceptance Criteria
 - [x] Restore drill: following README restore + reinstall list on a fresh folder brings back every authored file; OpenCode, Claude and OmO start with the same skills and rules. PASS: #20.
 - [x] Drift check: every README backup row exists locally and in repo; no stale files; one commit/day; no links under `~/Dev`; no `.codegraph` junctions. PASS: #20.
-- [ ] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict. Partial: bare OpenCode researcher chain walk PASS (#20 drill, Tavily -> Firecrawl); slim and OmO variants and key rotation during the drill not exercised.
+- [x] Block-chain drill: deep-research on a known bot-protected URL on bare OpenCode, slim and OmO; log shows chain walked in order, one key rotation with no restart, correct verdict. PASS: bare OpenCode #20; slim, OmO and key rotation 2026-10-02 (see Drill 2026-10-02). Chain steps 3-9 not exercised: Firecrawl returned content at step 2.
 - [x] Remote + tasks check: after reboot + logon, OpenCode service up, reachable only via tailnet HTTPS, not LAN IP; all three Scheduled Tasks defined in code and registered. PASS: #20 (reboot check).
 
 ## Open unknowns (research tickets)
@@ -77,3 +77,35 @@ system-config is the single documented, daily-backed-up home for everything auth
 - Issues: anomalyco/opencode #51341, #50882, #51637
 - Chain ordering: https://danielmiessler.com/blog/progressive-web-scraping-four-tier-system
 - Dotfile managers: https://www.chezmoi.io/comparison-table/
+
+## Drill 2026-10-02
+
+Target: https://boardgamegeek.com/boardgame/342942/ark-nova (`curl` returns 403 to bots). Model on every host: `opencode-go/muse-spark-1.3-contributor`. Prompt named only "the deep-research skill's bot-block chain"; the chain order came from the skill, not the prompt. Chain order below is taken from tool-call records, not agent prose.
+
+### Slim (`opencode serve --port 49390` in psmux, global config with `oh-my-opencode-slim`, no `--agent`, so the slim orchestrator ran)
+
+| Step | Result |
+|---|---|
+| Turn 1, chain step 1 Tavily `tavily_extract` on key GITHUB | `429` "blocked due to excessive requests" (real quota failure, not simulated) |
+| Rotation | `switch_api_key.py --service tavily --next`: GITHUB(641dc3c4) -> GOOGLE(0d0c008a), exit 0, secrets file hash prefix 0d0c008a |
+| Server | PID 12816 before, during and after; log shows `config.updated` then `mcp connected server=tavily` only (no other MCP reconnected) |
+| Turn 2 (same session), step 1 retry on rotated key | `results: []`, `Failed to fetch url` (bot block, not a 429) |
+| Turn 2, step 2 Firecrawl `firecrawl_scrape` `proxy:"auto"`, `maxAge:0` | `statusCode 200`, title `Ark Nova \| Board Game \| BoardGameGeek` |
+
+Slim: PASS (order Tavily -> Firecrawl, rotation with no restart, correct verdict). The rotation was operator-triggered after a real 429, not by an out-of-credit code.
+
+### OmO 5.0.1 (`omo -p --mode json --no-session --model opencode-go/muse-spark-1.3-contributor`, fresh process, User-scope keys loaded into its env after the rotation)
+
+| Run | Result |
+|---|---|
+| 1 | Default model `opencode-go/gpt-6-luna` hit token rate limits then a 400; no tool call. Not a chain result. |
+| 2-5 | `--permission-preset workspace` (and per-tool `--permission` allows) denied MCP, `tool_search` or `webfetch` calls; agent reported `permission-denied`. Not a chain result. |
+| 6 | `--permission-preset full-access`: Tavily `Failed to fetch url`; Firecrawl call used non-existent name `default.mcp_firecrawl_firecrawl_scrape` (`not found`); agent skipped to Exa `web_fetch_exa` (content, title correct). Order Tavily -> Exa, step 2 missed by the model. |
+| 7 | Same preset: Tavily `Failed to fetch url`; Firecrawl via `eval` + `tool.mcp_firecrawl_firecrawl_scrape` with `proxy:"auto"`, `maxAge:0` returned content; title `Ark Nova \| Board Game \| BoardGameGeek`. Order Tavily -> Firecrawl. |
+
+OmO: PASS on run 7 (chain order, correct verdict). Gaps: needs `full-access` for non-interactive MCP use; the deferred MCP tool needs `tool_search` and sometimes mis-names the Firecrawl tool (run 6). OmO reads keys from env at process start, so rotation applies to the next process, as ADR-0003 states; the post-rotation OmO process got `Failed to fetch url` from Tavily instead of the 429 seen with GITHUB.
+
+### Restore
+
+`switch_api_key.py --service tavily --set GITHUB`: file hash prefix 641dc3c4, User env fingerprint 641dc3c4, firecrawl untouched (KARAJAN, d5788fd4). Server log shows `config.updated` and `mcp connected server=tavily` again. The drill server and all psmux sessions were killed; the OpenCode background service (49374) was not touched.
+
