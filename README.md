@@ -17,9 +17,9 @@ Runs this machine's daily jobs and backs up its AI agent config. One private rep
 - **Daily sync** (09:00): `run-sync.ps1` — lastfm sync, youtube sync, agent config backup, foobar2000 mirror, then checks the OpenCode service and starts it if it is down.
 - **Topgrade** (10:00): `topgrade --yes --verbose`, all stdout/stderr/child output tee'd to `%LOCALAPPDATA%\topgrade-logs\topgrade-<timestamp>.log` and copied to `%LOCALAPPDATA%\topgrade-task.log` at the end (`Get-TopgradeTaskArgument`). Local `topgrade.toml` (not backed up) adds `[pre_commands]` "Stop codegraph" (npm 11 `update -g` rewrites every global package and a running codegraph MCP locks its node.exe) and `[commands]` "uv tools" and "github-mcp-server".
 - **OpenCode service** (at logon): `opencode service start`.
-## Agent config backup (`claude/`, `opencode/`, `omo/`, `agents/`)
+## Agent config backup (`agent-rules/`, `claude/`, `opencode/`, `omo/`, `agents/`)
 
-`backup-agents.ps1` mirrors whitelisted local config into this repo via `robocopy`, then commits and pushes if anything changed (only when the repo is on `master`; on any other branch it warns and skips).
+`backup-agents.ps1` first runs `Build-AgentInstructions`, which writes `~/.config/agent-rules/shared.md` between the `<!-- SHARED:START -->` and `<!-- SHARED:END -->` markers of `~/.claude/CLAUDE.md` and `~/.config/opencode/AGENTS.md` (ADR-0002). It then mirrors whitelisted local config into this repo via `robocopy`, then commits and pushes if anything changed (only when the repo is on `master`; on any other branch it warns and skips).
 
 | Repo folder | Local home | Mode |
 |---|---|---|
@@ -29,6 +29,7 @@ Runs this machine's daily jobs and backs up its AI agent config. One private rep
 | `opencode/` (AGENTS.md, opencode.jsonc, oh-my-opencode-slim.jsonc, tui.json) | `~/.config/opencode/` | files |
 | `opencode/agents/`, `opencode/commands/` | `~/.config/opencode/...` | `/MIR` |
 | `omo/` (mcp.json, settings.json) | `~/.omo/agent/` | files (both credential-guarded) |
+| `agent-rules/shared.md` | `~/.config/agent-rules/shared.md` | files |
 | `agents/.skill-lock.json` | `~/.agents/.skill-lock.json` | files |
 | `powershell/` | `$PROFILE` directory's profile file(s) + dot-sourced files | files |
 

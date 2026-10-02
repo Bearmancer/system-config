@@ -15,6 +15,10 @@ One entry per term: definition, boundaries. Agents write here the moment a term 
 - Definition: `toolbox sync lastfm` and `toolbox sync youtube`. Toolbox pulls service data into its own DB, backs up its DB and redeploys its dashboard as part of these calls.
 - Boundary: system-config only invokes these two commands from PATH. It never reads Toolbox's `.env`, DB, or logs.
 
+## Shared agent rules
+- Definition: rules common to Claude Code and OpenCode, kept once in `~/.config/agent-rules/shared.md` and written by `Build-AgentInstructions` between `<!-- SHARED:START -->` and `<!-- SHARED:END -->` in `~/.claude/CLAUDE.md` and `~/.config/opencode/AGENTS.md` (ADR-0002).
+- Boundary: edit `shared.md`, never the text between the markers. Runtime-specific rules live outside the markers in each file.
+
 ## Agent config backup
 - Definition: `backup-agents.ps1`'s robocopy mirror of whitelisted agent config (`claude/`, `opencode/`, `omo/`, `agents/`) into this repo, committed and pushed only when something changed.
 - Boundary: one-way, local → repo; restore is a manual reverse copy. Plugins, skill bundles, secrets and `service.json` are excluded and reinstalled (README "Reinstall, not backup").
