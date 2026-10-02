@@ -85,11 +85,20 @@ def remove_empty_dirs(root: Path) -> None:
             d.rmdir()
 
 
+def is_course_workspace(ws: Path) -> bool:
+    lessons = ws / "lessons"
+    return lessons.is_dir() and any(lessons.glob("*.html"))
+
+
 def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
     published: list[dict[str, str]] = []
+    skipped: list[str] = []
     for ws in sorted(
         p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
+        if not is_course_workspace(ws):
+            skipped.append(ws.name)
+            continue
         dest = staging / ws.name
         if dest.exists():
             shutil.rmtree(dest)
@@ -120,6 +129,9 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
             title_match = TITLE_PATTERN.search(text)
             title = title_match.group(1).strip() if title_match else "untitled"
             published.append({"workspace": ws.name, "path": rel, "title": title})
+
+    if skipped:
+        print(f"== skipped, no lessons/*.html: {', '.join(skipped)}", file=sys.stderr)
 
     return published
 
@@ -185,6 +197,8 @@ def build_hub_rows(
     for ws in sorted(
         p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
+        if not is_course_workspace(ws):
+            continue
         ws_pages = [p for p in published if p["workspace"] == ws.name]
         if not ws_pages:
             continue
@@ -254,6 +268,8 @@ def course_rows(staging: Path) -> list[dict[str, object]]:
         and not d.name.startswith(".")
         and d.name != "assets"
         and (d / "index.html").is_file()
+        and (d / "lessons").is_dir()
+        and any((d / "lessons").glob("*.html"))
     ]
 
 
@@ -537,9 +553,7 @@ def publish_answer(args: argparse.Namespace) -> bool:
     (staging / ANSWERS_DIR).mkdir(exist_ok=True)
     rel = f"{ANSWERS_DIR}/{args.kind}-{slug}.html"
     (staging / rel).write_text(
-        build_answer_html(
-            args.kind, args.title, body, f"{datetime.now():%Y-%m-%d}"
-        ),
+        build_answer_html(args.kind, args.title, body, f"{datetime.now():%Y-%m-%d}"),
         encoding="utf-8",
     )
     write_hub(staging, course_rows(staging))
@@ -573,7 +587,9 @@ def main() -> None:
         "--commit", default=f"Publish courses {datetime.now():%Y-%m-%d %H:%M}"
     )
     parser.add_argument("--no-push", action="store_true")
-    parser.add_argument("--page", type=Path, help="HTML body fragment of one answer page")
+    parser.add_argument(
+        "--page", type=Path, help="HTML body fragment of one answer page"
+    )
     parser.add_argument("--kind", choices=sorted(ANSWER_KINDS))
     parser.add_argument("--title")
     args = parser.parse_args()

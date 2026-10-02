@@ -33,11 +33,13 @@ MD_HREF = re.compile(r'href="[^"]*\.md"')
 
 
 def fetch(url, timeout=20):
-    req = urllib.request.Request(
-        url, headers={"User-Agent": "deep-research-verify/1"}
-    )
+    req = urllib.request.Request(url, headers={"User-Agent": "deep-research-verify/1"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.status, resp.read()
+
+
+def normalize_eol(data: bytes) -> bytes:
+    return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
 
 
 def get(url, timeout=20):
@@ -90,7 +92,9 @@ def main():
         if asset.is_file():
             local = asset.read_bytes()
             target = pull(f"assets/{asset.name}", required=False)
-            if target is not None and target.read_bytes() != local:
+            if target is not None and normalize_eol(
+                target.read_bytes()
+            ) != normalize_eol(local):
                 failures.append(f"assets/{asset.name}: live bytes differ from local")
     for ref in sorted((ws / "reference").glob("*.html")):
         pull(f"reference/{ref.name}", required=False)
