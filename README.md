@@ -1,13 +1,13 @@
 # system-config
 
-Runs this machine's daily jobs and backs up its AI agent config. One private repo, three Windows Scheduled Tasks.
+Runs this machine's daily jobs and backs up its AI agent config. One private repo, three Windows Scheduled Tasks, plus a manual Ubuntu bootstrap script (ADR-0005).
 
 ## Repo boundaries
 
 | Repo | Owns | Knows nothing about |
 |---|---|---|
 | `Toolbox` (`Dev\Toolbox`) | CLI commands; its `.env`, `state/toolbox.db`, `state/logs`; DB backup to Azure blob and dashboard redeploy inside `toolbox sync lastfm` / `toolbox sync youtube` | Scheduling, tasks, system-config |
-| `system-config` (this repo, private) | The three scheduled tasks, `install.ps1`, `run-sync.ps1`, `backup-agents.ps1`, agent config backup, foobar2000 mirror | Toolbox internals. It only calls `toolbox sync lastfm` and `toolbox sync youtube` from PATH |
+| `system-config` (this repo, private) | The three scheduled tasks, `install.ps1`, `run-sync.ps1`, `backup-agents.ps1`, agent config backup, foobar2000 mirror, `scripts/ubuntu-setup.sh` (manual Ubuntu bootstrap) | Toolbox internals. It only calls `toolbox sync lastfm` and `toolbox sync youtube` from PATH |
 | `bearmancer.github.io` | Built HTML of learning courses, published by the `learning-course` skill | Course sources (transient, not backed up anywhere) |
 
 `toolbox` on PATH resolves to `C:\Users\Lance\Dev\Toolbox\artifacts\publish\src\App\release\toolbox.exe`. This repo never builds or publishes Toolbox and never reads its `.env`.
@@ -61,6 +61,10 @@ Plugins, skills and secrets are not backed up as files. Each is restored by one 
 | Scheduled Tasks | `install.ps1`, elevated |
 | `service.json` | `opencode service set hostname 127.0.0.1` |
 | Tailscale serve | `tailscale serve --bg 49374` |
+
+## Ubuntu setup
+
+`scripts/ubuntu-setup.sh [--yes] [--dry-run] [--skip-apt] [--no-purge]` is a manual, user-run script and the one exception to this repo's never-write-live-config rule (ADR-0005). It lists every purge path first, then removes Bun, OpenCode, OmO and oh-my-opencode-slim state and the npm globals it installs (`~/.config/opencode/secrets` is backed up, restored, then the backup is deleted; `~/.secrets/.env`, `~/.npm` and other `~/.local/lib/node_modules` packages are untouched). It installs Bun, OpenCode v2 (`https://opencode.ai/v2/install`), uv, the MCP servers, vendor CLIs and language servers, and deploys `AGENTS.md`, `tui.json` and `opencode.jsonc` to `~/.config/opencode`. Skills are copied into `~/.claude/skills` without overwriting existing files. `--no-purge` skips the purge and installs and only redeploys config, for example after adding a key. Models are the models.dev `opencode` ones with zero cost that are not deprecated (override with `FREE_MODELS=id1,id2,id3`, which must be on that list). MCP servers that need a key are enabled only when `~/.config/opencode/secrets/<name>` holds a free-plan key; the rest are listed as skipped.
 
 ## foobar2000 mirror
 
