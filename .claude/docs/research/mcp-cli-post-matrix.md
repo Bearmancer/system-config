@@ -24,7 +24,7 @@ Per service (Exa, Tavily, Firecrawl, Apify, Bright Data, ScrapeGraphAI, Browserb
 - Apify builds, schedules, actor-tasks: verified. MCP has opt-in categories for all three (not in the default tool set) and the CLI has `apify builds ...`, `apify task run`, and a generic authenticated `apify api`. No script needed.
 - Bright Data `POST /request`: verified (Web Unlocker and SERP share it, selected by `zone`). There is no bare `/unblocker` endpoint; the async Unlocker flow is `POST /unblocker/req?zone=` then `GET /unblocker/get_result?response_id=`.
 - Official CLIs exist for Tavily, Firecrawl, Apify, Bright Data, ScrapeGraph, Browserbase. AgentQL's `agentql-cli` only scaffolds SDK projects. Exa has none.
-- Needs py script (7 rows, see section 4): Exa `/answer`, Exa agent stop/cancel, Exa `/batches`, Firecrawl batch scrape, Bright Data async Unlocker result retrieval, Browserbase agent runs, ScrapeGraph crawl management.
+- Needs py script (6 rows, see section 4): Exa agent stop/cancel, Exa `/batches`, Firecrawl batch scrape, Bright Data async Unlocker result retrieval, Browserbase agent runs, ScrapeGraph crawl management (dedicated scripts; the hosted ScrapeGraph v2 MCP at `https://mcp.scrapegraphai.com/mcp`, 20 tools incl. `crawl_*`, `monitor_*`, `credits`, `history_*`, also covers crawl management and is what the configs use). Exa `/answer`, `/findSimilar` and `/monitors*` have no MCP or CLI and go through the generic `scripts/vendor_request.py`. Current routing: `claude/skills/deep-research/references/fleet.md` and `references/scrapers/`.
 
 ## 1. Direct HTTP API per service
 
@@ -69,7 +69,7 @@ Sources: Exa https://exa.ai/docs/reference/answer (Agent Instructions block) and
 | Deep research | `POST /research` | `{"input":"..."}` (required: `input`; `model` enum `mini`, `pro`, `auto`) |
 | Async job | `GET /research/{request_id}` | none. `POST /research` returns `201` with `request_id`, `status: pending`; the GET returns `200` (`completed` or `failed`) or `202` (`pending` or `in_progress`) |
 
-- Search and Extract also have a documented keyless mode (rate limited), https://docs.tavily.com/documentation/keyless.
+- Tavily also documents a keyless mode (rate limited); this repo always sends an API key (any plan, free plans included) and never uses keyless access.
 - Sources: https://docs.tavily.com/documentation/api-reference/endpoint/research, https://docs.tavily.com/documentation/api-reference/endpoint/research-get, and the `search`, `extract`, `crawl`, `map` pages under the same `endpoint/` path.
 
 ### Firecrawl
