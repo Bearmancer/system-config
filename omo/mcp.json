@@ -13,7 +13,7 @@
       "bearerTokenEnv": "FIRECRAWL_API_KEY"
     },
     "apify": {
-      "url": "https://mcp.apify.com?tools=apify/rag-web-browser,search-actors,call-actor",
+      "url": "https://mcp.apify.com?tools=actors,docs,runs,storage,tasks,schedules,builds,dev,get-actor-list,apify/rag-web-browser,apify/web-fetch",
       "bearerTokenEnv": "APIFY_TOKEN"
     },
     "browserbase": {
