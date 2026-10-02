@@ -2,17 +2,17 @@
 
 Written 2026-10-01 from a cloud session; split and corrected 2026-10-02. Audience: the next agent (or the user) working **on the user's own machine**, where OpenCode, the MCP fleet, API keys and the models exist. Everything here is work the cloud session could not do or could not verify, plus the migration order and per-domain tests.
 
-Related, do not duplicate here: `README.md` (index), `GLOSSARY.md`, `adr/0001-0024` (rewrite-design ADRs, numbered separately from `docs/adr/`), `layouts.html` (layout atlas; published copy https://claude.ai/artifact/5VdRcdc4UN5gmkziqDbmub), and the draft code in Bearmancer/deep-research `ledgerlab/` (its README lists what is built).
+Related, do not duplicate here: `README.md` (index), `GLOSSARY.md`, `adr/0001-0024` (rewrite-design ADRs, numbered separately from `docs/adr/`), `layouts.html` (layout atlas; published copy https://claude.ai/artifact/5VdRcdc4UN5gmkziqDbmub), and the draft code in `~/.claude/skills/ledgerlab` (mirrored to `claude/skills/ledgerlab/`; its README lists what is built).
 
 Existing system to read: `claude/skills/deep-research/`, `.claude/docs/research/mcp-tool-catalog.md`, `mcp-cli-post-matrix.md`, `fleet.md`.
 
 Decisions recorded 2026-10-02 (user, final):
-- Full rewrite supersedes the learning-first "tone only" plan (`.claude/plans/deep-research-learning-first/plan.md`).
+- Full rewrite replaces the learning-first "tone only" plan.
 - Visual-read fallback: while only one vision model family is available, `true` needs one visual read plus text corroboration (ADR 0012, enforced in `ledger.py`).
 - OmO removal waits until ledgerlab is live (ADR 0021 stands; section 4.3).
 - Independence (ADR 0019): script floor of two distinct publishers; the verifier's rationale sits on the evidence entry.
 - AgentQL and Browserbase stay `wired: true`; live `omo/mcp.json` and `opencode/opencode.jsonc` configure both.
-- The skill is not activated: nothing is copied to `~/.claude/skills`.
+- The skill stays a draft: `~/.claude/skills/ledgerlab` holds the code and its frontmatter marks it not activated.
 
 ---
 
@@ -21,12 +21,12 @@ Decisions recorded 2026-10-02 (user, final):
 | Area | State |
 |---|---|
 | Design | Settled by the user. 24 ADRs. No open grilling. |
-| Draft code | Built and tested: registry, ledger schemas and checker (including the attempt-log audit and the visual-read family rule), attempt log, mode inference, key memory with OS-level rotation lock, generation counter and unknown-failure counter, driver skeleton with `render` phase, role prompts, layout picker. 88 pytest tests pass: `uv run --with pytest --with pyyaml --with jsonschema pytest ledgerlab/tests --basetemp <empty temp dir>` from the deep-research repo root. |
+| Draft code | Built and tested: registry, ledger schemas and checker (including the attempt-log audit and the visual-read family rule), attempt log, mode inference, key memory with OS-level rotation lock, generation counter and unknown-failure counter, driver skeleton with `render` phase, role prompts, layout picker. 88 pytest tests pass (checked 2026-10-03): `uv run --with pytest --with pyyaml --with jsonschema pytest --basetemp <empty temp dir>` from the skill folder. |
 | Agent handlers | **Not built.** The driver fails honestly at the first missing handler (`ingest`). |
 | Site shell and 12 layout components | **Not built.** |
 | Fixture runs (rules, verify, learn) | **Not run.** Need local host, keys, models. |
-| Activation | **Not done** (user decision). `ledgerlab/` is staged in the deep-research repo. |
-| Cutover | **Not started.** Old `deep-research` skill and old repo stay live until all three fixtures pass. |
+| Activation | **Not done** (user decision). The code sits in `~/.claude/skills/ledgerlab`, marked draft. |
+| Cutover | **Not started.** The old `deep-research` skill stays live until all three fixtures pass. |
 
 ## 1. Hard constraints (obey these first)
 
@@ -40,7 +40,7 @@ From `system-config/CLAUDE.md` and the session:
 - Published pages paraphrase and cite. Quotes are 25 words or fewer, attributed. Raw fetched text stays in gitignored `work/`.
 - No questions to the user at run start. The one allowed stop: a whole key pool exhausted, via `NEEDS_YOU.md`.
 - Do not assume oh-my-opencode (OmO) or the slim plugin (ADR 0021). Plain OpenCode only.
-- The daily backup (`SystemConfig.psm1:60`) mirrors `~/.claude/skills` into repo `claude/skills/` with `/MIR`. A skill that exists only in the repo is deleted at the next backup. Install live first; never add `claude/skills/ledgerlab/` by hand.
+- The daily backup (`SystemConfig.psm1:60`) mirrors `~/.claude/skills` into repo `claude/skills/` with `/MIR`. A skill that exists only in the repo is deleted at the next backup. Edit `~/.claude/skills/ledgerlab` live; never edit `claude/skills/ledgerlab/` by hand.
 
 ## 2. Local prerequisites
 
@@ -48,16 +48,15 @@ From `system-config/CLAUDE.md` and the session:
 2. Python 3.11+, `uv`, `git`, `pdftotext`, `tesseract` (OCR), `yt-dlp`, Playwright (or the Firefox DevTools MCP). Check each: `<tool> --version`.
 3. CLIs already installed per fleet notes: `tvly`, `firecrawl`, `apify`, `brightdata`, `just-scrape`, `browse`.
 4. Key pools in `~/.secrets/.env` (8-9 keys per pooled service). Active keys materialised under `~/.config/opencode/secrets/<pool>`. If any file is missing the OpenCode config fails to load: `uv run <skill>/scripts/switch_api_key.py --service all --materialize`.
-5. A clone of `Bearmancer/bearmancer.github.io` (the site, public, Pages on `main`). Old source repo: `Bearmancer/deep-research` (to be archived last).
+5. A clone of `Bearmancer/bearmancer.github.io` (the site, public, Pages on `main`).
 6. Python dependencies come from `uv run --with pyyaml --with jsonschema` (tests add `--with pytest`); never `pip`.
 
 ## 3. Activation steps (do in order)
 
-1. Pull the deep-research branch with `ledgerlab/`. Run the draft tests (command in section 0; expect 88 pass).
-2. Only when the user says so: copy `ledgerlab/` to `~/.claude/skills/ledgerlab` (live). The next backup mirrors it into `claude/skills/ledgerlab`. Scripts run as `uv run --directory ~/.claude/skills/ledgerlab --with pyyaml --with jsonschema python -m scripts.<module>`.
+1. Run the draft tests from `~/.claude/skills/ledgerlab` (command in section 0; expect 88 pass).
+2. Scripts run as `uv run --directory ~/.claude/skills/ledgerlab --with pyyaml --with jsonschema python -m scripts.<module>`.
 3. Confirm OpenCode sees the skill (new session, ask it to list skills). Skill frontmatter is `name: ledgerlab`.
 4. Do **not** delete or edit `deep-research` yet.
-5. `ledgerlab/` in the deep-research repo is staging. Remove it there in the cutover PR, so archiving that repo (section 8) strands nothing.
 
 ## 4. Config changes on the local machine
 
@@ -68,15 +67,14 @@ Edit live config, then let the backup mirror it. Do not hand-edit repo copies of
 3. **Remove OmO** (user asked to ditch it; ADR 0021). Deferred until ledgerlab is live: the old skill still depends on the sidecar. Checklist, ask before deleting:
    - `oh-my-opencode-slim` in `opencode.jsonc` plugin list; `opencode/oh-my-opencode-slim.jsonc`; `omo/` folder (`mcp.json`, `settings.json`); README and CLAUDE.md references; backup whitelist entries for `omo/`; `dprint.json` include of `omo/**`.
    - Context7 and gh_grep come from the slim plugin. Re-add natively to `opencode.jsonc` only if wanted.
-   - Skill sidecar `mcp.json` assumptions in `deep-research/references/fleet.md` die with OmO.
    - Verify OpenCode still starts: `opencode mcp list` shows servers connected; `opencode api mcp.list`.
-4. **Wire the unwired MCPs** (ADR 0016 wants maximal coverage): Brave and Dappier already have pool entries in `switch_api_key.py` (`SERVICE_MAP`) but are not in `MATERIALIZE_SERVICES`. Add Brave, Dappier (and Crawl4AI, keyless) to `opencode.jsonc` with `{file:}` key substitution (ADR 0003), add to `MATERIALIZE_SERVICES`, run `--materialize`, then flip `wired: true` in `registry/registry.yaml` and regenerate `references/routing.md` (`python -m scripts.gen_routing_table` from `ledgerlab/`; the drift test fails otherwise). Verify the real MCP tool names for each; the registry guesses (`brave_web_search`, `dappier`, `crawl4ai`).
+4. **Wire the unwired MCPs** (ADR 0016 wants maximal coverage): Brave and Dappier already have pool entries in `switch_api_key.py` (`SERVICE_MAP`) but are not in `MATERIALIZE_SERVICES`. Add Brave, Dappier (and Crawl4AI, keyless) to `opencode.jsonc` with `{file:}` key substitution (ADR 0003), add to `MATERIALIZE_SERVICES`, run `--materialize`, then flip `wired: true` in `registry/registry.yaml` and regenerate `references/routing.md` (`python -m scripts.gen_routing_table` from the skill folder; the drift test fails otherwise). Verify the real MCP tool names for each; the registry guesses (`brave_web_search`, `dappier`, `crawl4ai`).
 5. **`opencode run` flags.** Verified against `opencode run --help` (v2.0.21): `--model provider/model#variant` and `--format default|json` exist, so `OpencodeRunner.command` is valid. Still open: how to pass a per-step system prompt (`--agent <name>` selects an agent defined in config), how to make the extractor tool-less (ADR 0009), and whether unattended steps need `--auto` (auto-approves permissions not explicitly denied).
 6. **Update the system-config docs index** (CLAUDE.md "Index", README tables) after cutover, not before.
 
 ## 5. Probes to run and record
 
-Write results to `ledgerlab/registry/` in the deep-research repo or a research note under `.claude/docs/research/` (existing convention: `mcp-tool-catalog.md`).
+Write results to `registry/` in the ledgerlab skill folder or a research note under `.claude/docs/research/` (existing convention: `mcp-tool-catalog.md`).
 
 1. **Surface inventory (`tools/list`).** OpenCode has no native tool-listing route. Send MCP `tools/list` directly to each server (method documented in `.claude/docs/research/mcp-tool-catalog.md`). Keyed servers (agentql, apify, brightdata, exa, tavily) refuse without a key; run with the active key from the secrets file **inside the probe script only**, never echo it. Output: JSON per server of tool names. Compare against `registry.yaml` `routes.mcp` lists; fix mismatches (known: ScrapeGraph MCP 1.0.1 lacks `crawl_start`/monitor tools; Tavily extract spelling `tavily_extract` vs `tavily-extract`).
 2. **Error-code verification.** Registry `unverified` lists (Tavily bad_key/out_of_credit/rate_limit; AgentQL out_of_credit/blocked/rate_limit; Browserbase all; Apify blocked; ScrapeGraph blocked; Brightdata rate_limit). As real failures occur, record codes and move the class out of `unverified`. Until then unknown errors follow ADR 0017 (retry once, log `unknown`, rotate only after 2 different URLs fail alike).
@@ -86,7 +84,7 @@ Write results to `ledgerlab/registry/` in the deep-research repo or a research n
 
 ## 6. Build tasks (ordered, with acceptance)
 
-Existing tested modules to build on (package `ledgerlab/scripts/`): `registry.py`, `ledger.py`, `ledger_check.py`, `log_attempt.py`, `infer_mode.py`, `keystate.py`, `driver.py` (phases, suspend/resume, `run_wave`, `OpencodeRunner`), `cli.py`. Add tests for everything new; follow `tdd` skill. Keep the seeded-bad-claim test green.
+Existing tested modules to build on (package `scripts/` in the skill folder): `registry.py`, `ledger.py`, `ledger_check.py`, `log_attempt.py`, `infer_mode.py`, `keystate.py`, `driver.py` (phases, suspend/resume, `run_wave`, `OpencodeRunner`), `cli.py`. Add tests for everything new; follow `tdd` skill. Keep the seeded-bad-claim test green.
 
 ### B1. Surface inventory script
 `scripts/inventory.py`: probes each registry server, writes `work/inventory.json`, reports servers that are wired but unreachable or missing tools. Acceptance: unreachable server flagged; mismatched tool names reported; no key in output.
@@ -127,7 +125,7 @@ Review each old script; decide keep, port, or drop (see section 7). `check_lesso
 ### B6. Site repo layout (`bearmancer.github.io`)
 - Built pages at published paths (URLs stay stable). Per topic `_ledger/<topic>/` with `claims.yaml`, `sources.yaml`, `attempts.jsonl`, `runs/<run_id>/` (run.yaml, RUN_RECORD.yaml, REPORT.md or NEEDS_YOU.md). `.nojekyll` already exists so underscore dirs are served; the ledger is public by design (ADR 0024).
 - Add `work/` to `.gitignore`. Existing `.gitignore` has `.omc/` and slim-worktree lines; the slim lines are OmO leftovers, remove when OmO is removed.
-- Gotcha from `learning-records/0001`: `core.autocrlf=true` caused a 1-byte CR delta between local and live `course-index.js`. Compare live bytes after stripping CR, or set `.gitattributes`.
+- Gotcha: `core.autocrlf=true` caused a 1-byte CR delta between local and live `course-index.js`. Compare live bytes after stripping CR, or set `.gitattributes`.
 
 ### B7. Evals with `/skill-creator`
 The three fixtures are the eval prompts. Create `evals/evals.json` (schema in skill-creator `references/schemas.md`). Assertions: unattended run; every claim has a status; appendix lists covered and failed; seeded false claim blocked. Baseline = no skill. `/skill-creator` is user-invoked.
@@ -167,24 +165,21 @@ Order: **rules (Ark Nova) -> verify (Russia morale) -> learn (Saudi military)**.
 4. Diff against the old course: every old claim is retained, reclassified, or listed as dropped with a reason.
 
 ### Domain-specific notes
-- **Ark Nova (rules):** authority order rulebook > publisher page > FAQ > errata (supersedes; check version date) > designer/publisher posts; player forum = `interpretive`. Existing evidence to mine: `deep-research/ark-nova/research/bgg-official-findings.md`, `bgg-forum-findings.md`, `base-visual-read.md`, `marine-worlds-visual-read.md`; source list in `.claude/docs/research/boardgame-sources-and-bgg-access.md`. Known gotchas: rulebook strength numbers, table rows and icon glyphs do not survive PDF text extraction (drop or mark unverified); BGG returns 403 to automated fetches (Cloudflare); BGG file downloads need login (user supplies PDFs). Rules page scope: essentials only, plus one "easiest strategy" section whose claims are `interpretive` (ADR 0022). Default player count 4 else max. Cut setup and endgame scoring unless the strategy needs them (the live Ark Nova course later included them; the rules page stays short).
+- **Ark Nova (rules):** authority order rulebook > publisher page > FAQ > errata (supersedes; check version date) > designer/publisher posts; player forum = `interpretive`. Prior research: `.claude/docs/research/boardgame-sources-and-bgg-access.md`; the published course is `ark-nova/` in `bearmancer.github.io`. Known gotchas: rulebook strength numbers, table rows and icon glyphs do not survive PDF text extraction (drop or mark unverified); BGG returns 403 to automated fetches (Cloudflare); BGG file downloads need login (user supplies PDFs). Rules page scope: essentials only, plus one "easiest strategy" section whose claims are `interpretive` (ADR 0022). Default player count 4 else max. Cut setup and endgame scoring unless the strategy needs them.
 - **Russia morale (verify):** old course has 14 chapters; transcript `subs.en.vtt` was never fetched (429). Verify page: untrue and interpretive cards only, `noindex`, unlisted, at `answers/verify-<slug>-<date>.html`. Header counts: checked, true (not listed), untrue, interpretive, not-found; skipped opinions/predictions counted.
-- **Saudi (learn):** richest ledger-shaped content. Old unresolved items: `NOTES.md` pending list is stale; fact-check ledger at `~/.claude/docs/research/saudi-military/NOTES.md` (axis 1 of several done). Gulf verdicts folded into ch8-9 already.
+- **Saudi (learn):** richest ledger-shaped content. Open item: fact-check ledger at `~/.claude/docs/research/saudi-military/NOTES.md` (axis 1 of several done). Gulf verdicts folded into ch8-9 already.
 
 ### Cutover (only after all three pass)
-1. Remove `ledgerlab/` from `Bearmancer/deep-research` (the skill now lives under `~/.claude/skills`), then archive that repo (GitHub archive, read-only; do not delete). Its NOTES, RESOURCES, learning-records stay readable.
-2. Rename or remove the live `deep-research` skill; the new skill takes its triggers. Update the `claude/skills/` mirror via the normal backup.
-3. Delete hand-maintained `fleet.md` table; keep the generated routing table.
-4. Update `system-config/CLAUDE.md` index, README, CONTEXT.md glossary (add terms: claim, ledger, status, round, surface, paradigm, wave, gate, fixture), and add a pointer from `docs/adr/` to the rewrite ADRs in `.claude/plans/deep-research/rewrite/adr/`.
-5. Close or update trackers: system-config map #55 (course vNext) and #56 (board-game mode) per `.claude/plans/backlog-2026-10-01.md`.
+1. Rename or remove the live `deep-research` skill; the new skill takes its triggers. Update the `claude/skills/` mirror via the normal backup.
+2. Delete hand-maintained `fleet.md` table; keep the generated routing table.
+3. Update `system-config/CLAUDE.md` index, README, CONTEXT.md glossary (add terms: claim, ledger, status, round, surface, paradigm, wave, gate, fixture), and add a pointer from `docs/adr/` to the rewrite ADRs in `.claude/plans/deep-research/rewrite/adr/`.
 
 ## 9. Open or unverified items
 
 - Per-step system prompt and tool-less extractor in `opencode run` (section 4.5).
 - All four model ids (`opencode models` returned nothing); vision and audio capability; qwen 3.7 vs 3.8.
-- Errata box: ADR 0014, the glossary and `roles.md` put `untrue` claims in an errata box; ADR 0019 now lists it as a third sentence block and `ledger.check_sentences` accepts it. If the user wants errata dropped from lessons, remove the `errata` block there and in ADR 0019.
+- Errata box: ADR 0014, the glossary and `roles.md` put `untrue` claims in an errata box; ADR 0019 lists it as a third sentence block and `ledger.check_sentences` accepts it. If the user wants errata dropped from lessons, remove the `errata` block there and in ADR 0019.
 - POST routes in `registry.yaml` name `uv run scripts/<x>.py` files that live in the old `deep-research` skill; port them into `ledgerlab/` or point the routes at the old path before relying on them.
-- ADR 0024 says archive `deep-research` after the fixtures; `ledgerlab/` is staged inside it (section 3).
 - Registry tool names for Brave, Dappier, Crawl4AI; Tavily `tavily_extract` spelling; ScrapeGraph missing tools.
 - Vendor reset windows; unverified error cells.
 - Context7 and gh_grep dropped with OmO; re-add natively if wanted.
@@ -209,14 +204,14 @@ Order: **rules (Ark Nova) -> verify (Russia morale) -> learn (Saudi military)**.
 
 ## 11. Definition of done
 
-- [ ] Section 3 activation complete; draft tests green live.
+- [ ] Section 3 checks pass; draft tests green live.
 - [ ] Config reconciled (model ids verified, OmO removed after ledgerlab is live, Brave/Dappier/Crawl4AI wired or dropped).
 - [ ] Probes recorded (inventory, error codes, reset windows, fingerprints, reconnect latency, vision).
 - [ ] Handlers B3 built with tests; driver runs a fixture end to end.
 - [ ] Shell and 12 layouts built; index generator; noindex for verify.
 - [ ] All three fixtures pass the 4-step test, including the seeded false claim.
 - [ ] `/skill-creator` evals exist and pass.
-- [ ] Cutover steps done; old repo archived.
+- [ ] Cutover steps done.
 
 ## 12. Suggested skills and order of operations
 
@@ -226,10 +221,9 @@ Order: **rules (Ark Nova) -> verify (Russia morale) -> learn (Saudi military)**.
 ## 13. Command cheat sheet
 
 ```
-# tests (deep-research repo root)
-uv run --with pytest --with pyyaml --with jsonschema pytest ledgerlab/tests --basetemp <empty temp dir>
-# scripts run from ledgerlab/ as the `scripts` package
-cd ledgerlab
+# tests and scripts run from the skill folder, where `scripts` is the package
+cd ~/.claude/skills/ledgerlab
+uv run --with pytest --with pyyaml --with jsonschema pytest --basetemp <empty temp dir>
 # regenerate routing table after any registry edit (drift test enforces it)
 uv run --with pyyaml --with jsonschema python -m scripts.gen_routing_table
 # ledger gate on a topic dir

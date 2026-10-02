@@ -23,8 +23,6 @@ Ordered by trust. Use the first kind that answers the question; use later kinds 
 | Beginner strategy guides | Only for a "how to start" section, never for rules. | https://boardgamegeek.com/thread/3648569/ark-nova-for-new-players-in-five-easy-steps-2025-e ; https://boardgamestrategy.blog/2026/05/20/ark-nova-first-three-rounds/ |
 | Other rules sites | Second witness for numbers and icons; community-run, never a primary. | http://en.doc.boardgamearena.com/Tips_arknova |
 
-The existing Ark Nova workspace (`C:\Users\Lance\Dev\deep-research\ark-nova\RESOURCES.md`) already holds the publisher rulebook links above and confirms BGG id 342942.
-
 URL audit (`check_urls.py`, 2026-09-30): the five non-BGG URLs above returned 200. Every boardgamegeek.com HTML URL returned 403 (Cloudflare challenge) and the `xmlapi2` URL returned 401; the BGG pages were confirmed live through Firecrawl (`proxy: "auto"`, HTTP 200).
 
 ## BGG access answer

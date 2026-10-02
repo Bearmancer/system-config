@@ -10,7 +10,7 @@ The deep-research MCP servers need API keys. Several services hold a pool of acc
 
 The active key for each service sits in its own file at `~/.config/opencode/secrets/<service>`, referenced from `opencode.jsonc` through `{file:}` substitution.
 
-- `switch_api_key.py --next` is the only reader of `~/.secrets/.env`. It writes the next account's key into that file.
+- `switch_api_key.py` is the only reader of `~/.secrets/.env`. `--next` writes the next account's key into that file.
 - OpenCode's config watcher sees the change and reconnects only the changed MCP server, with no restart. This was verified live in `.claude/docs/research/secrets-subdir-reload.md`.
 
 ## Alternatives considered

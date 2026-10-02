@@ -6,6 +6,6 @@
 - BGG: public pages and XML API only; never log in or handle cookies. Files behind login: the user supplies local PDFs; the driver accepts file paths as input.
 - No-text-layer PDFs: local OCR plus vision reads under the visual-read rule (ADR 0012).
 - Layouts for rules: concept page, table-first, decision tree, cheat sheet, picked by the agent from claim shape (ADR 0005).
-- Default player count when unstated: 4, else the maximum (carried over).
+- Default player count when unstated: 4, else the maximum.
 - Strategy: every rules page carries one "easiest strategy" section (user choice). Its claims are `interpretive` with attributed sources and are labelled as such, never `true`.
-- Scope: essentials only. Setup and endgame scoring are cut unless the strategy section needs them (carried over from the old board-game mode). Note: the live Ark Nova course later included them; the rules page stays short by design.
+- Scope: essentials only. Setup and endgame scoring are cut unless the strategy section needs them. The rules page stays short by design.

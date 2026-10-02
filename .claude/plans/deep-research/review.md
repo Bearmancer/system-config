@@ -1,11 +1,11 @@
 # deep-research skill edit: review record (#33 steps 4, 7, 8)
 
-These are independent Opus code-review passes on the live skill (`~/.claude/skills/deep-research/SKILL.md` and `references/fleet.md`), each diffed against the pre-edit copies. The edit is mirrored in system-config commit `e630ec3`. Sources of truth: `.claude/docs/research/mcp-cli-post-matrix.md` and `mcp-tool-catalog.md`, the skill sidecar `mcp.json`, and the captain decisions recorded on #33.
+Independent Opus code-review passes on the live skill (`~/.claude/skills/deep-research/SKILL.md` and `references/fleet.md`), each diffed against the pre-edit copies. The skill is mirrored in `claude/skills/deep-research/`. Sources of truth: `.claude/docs/research/mcp-cli-post-matrix.md` and `mcp-tool-catalog.md`, and the captain decisions recorded on #33.
 
 ## Round 1 (2026-09-29): FAIL on both axes
 
-The review found 11 issues.
-- **HIGH (stale, checked 2026-10-02):** the finding said the OmO sidecar `mcp.json` had `"enabled": false` for AgentQL and Browserbase, so "disabled by default" had to stay. Live `omo/mcp.json` and `opencode/opencode.jsonc` configure both servers with no `enabled` key, so both are enabled and the note no longer applies.
+11 issues.
+- **HIGH:** the finding said the OmO sidecar `mcp.json` had `"enabled": false` for AgentQL and Browserbase. `omo/mcp.json` and `opencode/opencode.jsonc` configure both servers with no `enabled` key, so both are enabled (checked 2026-10-02).
 - **MEDIUM:**
   - The #45 gap was stated twice, and line 79 described a workaround.
   - Step 8 named a CLI before MCP `scrape_as_markdown`.
@@ -19,12 +19,12 @@ The review found 11 issues.
   - "aggressively" was not checkable;
   - the pin sentence was missing.
 
-All 11 were fixed in a Sonnet executor pass. Three follow-up edits were then made in the main session: stage 5 wording, the frontmatter description, and the fleet.md sidecar note.
+All 11 were fixed in a Sonnet executor pass, followed by three main-session edits: stage 5 wording, the frontmatter description, and the fleet.md sidecar note.
 
 ## Round 2 (2026-09-30): PASS on both axes
 
 - **Axis 1 (spec and facts): PASS.**
-  - All 11 round-1 findings are confirmed fixed, with line citations.
+  - All 11 round-1 findings confirmed fixed, with line citations.
   - Every tool name, CLI command, endpoint and issue number matches the matrix, the catalog and `mcp.json`.
   - LOW notes:
     - The live Tavily MCP tool spelling is unpinned (source-derived `tavily_extract`).

@@ -2,7 +2,7 @@
 
 ## Question
 
-Issue #57 (Refs #55, the "deep-research course vNext" map) asks: which Bearmancer course pages exist now, which were deleted or reverted, and which of each need a rebuild under the vNext rules? For every live lesson it also asks for the vNext violations. This document answers that from `Bearmancer/bearmancer.github.io` at `105c42e` (main), the private `Bearmancer/deep-research` repo at `35b0de6` (main), and the local workspaces in `C:\Users\Lance\Dev\deep-research\`.
+Issue #57 (Refs #55, the "deep-research course vNext" map) asks: which Bearmancer course pages exist now, which were deleted or reverted, and which of each need a rebuild under the vNext rules? For every live lesson it also asks for the vNext violations. This document answers that, as of 2026-09-30, from `Bearmancer/bearmancer.github.io` at `105c42e` (main), the then-private `Bearmancer/deep-research` repo at `35b0de6` (main), and the local workspaces in `C:\Users\Lance\Dev\deep-research\`.
 
 The rules used are the signed captain directives listed in issue #55 (letters d, h, i, j, k, l, n, o, q, s) plus the checks listed in issue #57. Where a directive and a check name the same thing, both are counted once.
 
@@ -70,13 +70,12 @@ Deleted-course rows count headings that exist, not whether their entries are min
 
 ## Unverified
 
-- The single-event diagram colour check. Issue #57 lists it, but issue #63 (diagram colour semantics) is still open and no rule text defines "single-event". The only diagram in the live courses is the SVG in `afghanistan-turning-against-taliban/lessons/05-ch5-armed-opposition-rivals.html`, which colours edges by relationship type (green resistance pressure, crimson jihadist rivalry, purple leadership split) with a legend. Whether that violates the rule cannot be decided yet.
-- The citation-form rule. Issue #61 (three citation variants) is open, so the sup-plus-link counts show where the current pattern occurs, not which variant will win.
+- The single-event diagram colour check. Issue #57 lists it, but no rule text defines "single-event". The only diagram in the live courses is the SVG in `afghanistan-turning-against-taliban/lessons/05-ch5-armed-opposition-rivals.html`, which colours edges by relationship type (green resistance pressure, crimson jihadist rivalry, purple leadership split) with a legend.
+- The citation-form rule. The sup-plus-link counts show where the current pattern occurs, not which citation variant applies.
 - Teacher-voice violations are only partly measured. Exact hits: 14 of 14 Russia Machinery sections open with "The chapter works", and 6 of 8 Ark Nova summaries use second person. Whether the Afghanistan and Russia "The video argues" summaries count as teacher voice is a judgement no grep answers.
 - Whether the `e3d6838` deletions were intentional. The commit has no message body, no deep-research history exists before 2026-09-29, and the publish script's pruning behaviour is not read here; `publishing.md` states mirroring but not deletion.
 - Why the two answer pages were reverted. The revert commits have no explanation; they may have been test publishes.
 - Whether the deleted courses' raw sources exist anywhere else (other machines, Drive, old backups). Searched: one `fd` over `C:\Users\Lance` (excluding `AppData` and `node_modules`) for directories named after the nine slugs, which found none. Not searched: `AppData`, other machines, Drive, backups, and the pre-2026-09-29 workspace root (the old site index says "local teaching workspaces", and that path is unknown).
 - The source videos or books for `control-story`, `historians-on-trump`, `political-spectrum`, `soviet-afghan-war`, `stalin-red-tsar`, and `putin-rise-to-power`. A `git grep` at each last-live commit for YouTube ids, "Video:" lines, and author names found ids only for Amway and Watergate. The Watergate pages name Sean Munger; the Putin pages cite timestamps but no id. Only the pages were searched, not the deleted `reference/` transcripts.
 - Violation counts for deleted courses are at the last-live commit and cover lessons only; reference pages (glossary, cast map, timeline) were not audited for any course.
-- Whether Ark Nova should follow the board-game map. Issue #55 puts board-game rules mode out of scope and issue #64 (rules sources for `ark-nova`) belongs to map #56; only #64 was read, and its findings are not in yet.
 - Cast-table entries for the deleted courses were not read, so how many of their rows are minor mentions is unknown. Only the Russia live tables were classified (8 of 23 rows generic or unnamed groups; the rest named people introduced as "cited for" something), and that split is a judgement under directive n.

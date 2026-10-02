@@ -31,7 +31,7 @@ When an MCP server's key is injected with `{file:path}` inside `mcp.servers.<nam
 
 ## Evidence
 
-Times below are UTC from `mcp.log`. Log lines are in `C:\Users\Lance\.claude\jobs\da241933\tmp\r1\mcp.log`.
+Times below are UTC from `mcp.log`.
 
 ### 1. Watched vs unwatched, no reload
 
@@ -99,9 +99,3 @@ Times below are UTC from `mcp.log`. Log lines are in `C:\Users\Lance\.claude\job
 - Only the Windows watcher backend was exercised (`backend=windows` and `backend=node` in `serve.log`). Behavior on other platforms is untested.
 - Whether the real running service (`opencode serve --service`) behaves identically was not tested by design.
 - The tests used relative paths from a project config and one absolute path in the global config. A `{file:~/...}` path outside any watched root was not run separately, though it is covered by the same code path as `./secrets/key`.
-
-## Safety and cleanup notes
-
-- No file under `~/.config/opencode` or `~/.secrets` was edited. The real `opencode service` was not stopped or restarted.
-- One command, `opencode debug config`, was run once without `--server` while the isolated environment variables were set. It hung, and its two processes (PIDs 1836 and 5808) were terminated. It may have contacted or started a background service. Only PIDs recorded above were killed.
-- Both isolated servers (ports 47811 and 47812), their tee process, their launcher shells and the MCP child processes were stopped at the end. `tmp/r1` still holds the test files and logs (job tmp, deleted with the job). Nothing was committed.

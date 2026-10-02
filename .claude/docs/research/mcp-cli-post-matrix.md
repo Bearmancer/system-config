@@ -255,7 +255,7 @@ Legend for the MCP column: (L) name returned by a live `tools/list` in the catal
 
 Config-hidden gaps recorded in the catalog: the Exa URL pins 4 tools and the Apify URL pins 3, so the Apify builds, schedules and tasks tools above exist upstream but are not enabled in the current config, and Exa `agent_run` depends on the pinned list including it. Enabling them is a config change, not a script.
 
-## 4. Needs py script (each row becomes a child issue)
+## 4. Needs py script
 
 Limited to the skill's five capability buckets. Each row has no MCP tool and no CLI command in the primary sources above.
 
@@ -281,4 +281,3 @@ Not needing a script: all Tavily capabilities (MCP and CLI cover `/research`), a
 - ScrapeGraphAI: the installed MCP is `scrapegraph-mcp` 1.0.1, the latest PyPI release (2025-11-19), with v1-style tool names; GitHub main is 3.0.0 (v3 names such as `crawl_start`) and was not on PyPI at fetch time. Whether 1.0.1 calls the deprecated v1 host is unverified. The CLI's documented default `SGAI_API_URL` (`https://api.scrapegraphai.com/api/v2`) differs from the API docs base URL (`https://v2-api.scrapegraphai.com/api`). MCP `scrape` support for `stealth` was not inspected (the REST `fetchConfig.stealth` field is documented). Windows support and any crawl stop or resume command for `just-scrape`.
 - Browserbase: the MCP list is the unauthenticated live list from the catalog; an authenticated list may be larger. No CLI command for agent runs is documented (`browse cloud` documents projects, sessions, contexts, extensions, fetch, search). Windows support for `browse`.
 - AgentQL: the MCP tool name is from the README and source only (the server exits without a key). Windows support for `agentql-cli`.
-- The catalog file cited throughout is on PR #35's branch (`research-drill-catalog-topgrade`), not master; its live results were not re-run here.

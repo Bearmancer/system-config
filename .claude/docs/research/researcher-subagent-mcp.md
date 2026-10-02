@@ -9,8 +9,6 @@ Answer: yes to all three. Tested 2026-09-29 on Windows against a local stdio MCP
 - Isolated environment: `HOME`, `XDG_*`, `OPENCODE_CONFIG_DIR`, `OPENCODE_DB` and `OPENCODE_TEST_HOME` point at a temp dir (the variable set from `packages/cli/test/fixture/environment.ts` in the OpenCode v2 source). Project-level `opencode.json`. Runs used `opencode run --standalone --auto --format json`.
 - MCP: a 20-line Node stdio server exposing `web_search`. It appends every `tools/call` (including `_meta.ai.opencode/sessionID`) to `calls.log`.
 - Model: `opencode/muse-spark-1.3-contributor-free`.
-- Raw evidence: `C:\Users\Lance\.claude\jobs\da241933\tmp\r2\` (`run1.jsonl`, `runB.jsonl`, `runS2.jsonl`, `runN.jsonl`, `*/calls.log`).
-
 ## Minimal working config
 
 ```json
