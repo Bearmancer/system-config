@@ -31,7 +31,7 @@ def report(info, info_path, vtt, chapters):
         )
         print(
             f'  python extract_chapters.py "{info.get("url") or info.get("id")}" '
-            f"--out <workspace>/reference/transcripts --chapters all"
+            f"--out <work>/reference/transcripts --chapters all"
         )
     else:
         print(

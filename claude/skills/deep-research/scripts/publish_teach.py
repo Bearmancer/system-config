@@ -76,49 +76,23 @@ def get_chapter_num(title: str, rel_path: str) -> int:
     return 999999
 
 
-def remove_empty_dirs(root: Path) -> None:
-    while True:
-        empty_dirs = [d for d in root.rglob("*") if d.is_dir() and not any(d.iterdir())]
-        if not empty_dirs:
-            break
-        for d in empty_dirs:
-            d.rmdir()
-
-
 def is_course_workspace(ws: Path) -> bool:
     lessons = ws / "lessons"
     return lessons.is_dir() and any(lessons.glob("*.html"))
 
 
-def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
+def process_workspaces(staging: Path) -> list[dict[str, str]]:
     published: list[dict[str, str]] = []
-    skipped: list[str] = []
-    for ws in sorted(
-        p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
+    for dest in sorted(
+        p for p in staging.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
-        if not is_course_workspace(ws):
-            skipped.append(ws.name)
+        if not is_course_workspace(dest):
             continue
-        dest = staging / ws.name
-        if dest.exists():
-            shutil.rmtree(dest)
-        shutil.copytree(ws, dest)
-
-        for f in list(dest.rglob("*")):
-            if not f.is_file():
-                continue
-            in_assets = "assets" in [part.lower() for part in f.relative_to(dest).parts]
-            if f.suffix.lower() != ".html" and not in_assets:
-                f.unlink()
-
-        remove_empty_dirs(dest)
-
-        if any(dest.rglob("*.html")):
-            (dest / "assets").mkdir(exist_ok=True)
-            shutil.copyfile(SHELL_JS, dest / "assets" / "shell.js")
-            feed = dest / "assets" / "course-index.js"
-            if not feed.exists():
-                feed.write_text("window.COURSE_INDEX = [];\n", encoding="utf-8")
+        (dest / "assets").mkdir(exist_ok=True)
+        shutil.copyfile(SHELL_JS, dest / "assets" / "shell.js")
+        feed = dest / "assets" / "course-index.js"
+        if not feed.exists():
+            feed.write_text("window.COURSE_INDEX = [];\n", encoding="utf-8")
 
         for html in sorted(dest.rglob("*.html")):
             text = html.read_text(encoding="utf-8")
@@ -128,10 +102,7 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
             rel = html.relative_to(staging).as_posix()
             title_match = TITLE_PATTERN.search(text)
             title = title_match.group(1).strip() if title_match else "untitled"
-            published.append({"workspace": ws.name, "path": rel, "title": title})
-
-    if skipped:
-        print(f"== skipped, no lessons/*.html: {', '.join(skipped)}", file=sys.stderr)
+            published.append({"workspace": dest.name, "path": rel, "title": title})
 
     return published
 
@@ -192,10 +163,10 @@ def build_top_index_html(rows: str, answer_rows_html: str = "") -> str:
 
 
 def build_hub_rows(
-    source: Path, staging: Path, published: list[dict[str, str]]
+    staging: Path, published: list[dict[str, str]]
 ) -> list[dict[str, object]]:
     for ws in sorted(
-        p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
+        p for p in staging.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
         if not is_course_workspace(ws):
             continue
@@ -203,7 +174,7 @@ def build_hub_rows(
         if not ws_pages:
             continue
 
-        dest = staging / ws.name
+        dest = ws
         ws_title = ws.name.replace("-", " ").title()
 
         lesson_pages = [p for p in ws_pages if LESSON_PATH_PATTERN.match(p["path"])]
@@ -327,30 +298,6 @@ def answer_rows(staging: Path) -> list[dict[str, str]]:
 
 def run_checked(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(args, cwd=cwd, capture_output=True, text=True, check=False)
-
-
-def push_sources(source: Path) -> None:
-    add = run_checked(["git", "add", "-A"], source)
-    if add.returncode != 0:
-        raise RuntimeError(f"source git add failed in {source}: {add.stderr.strip()}")
-    staged = run_checked(["git", "diff", "--cached", "--quiet"], source)
-    if staged.returncode == 1:
-        message = f"Update course sources {datetime.now():%Y-%m-%d}"
-        commit = run_checked(["git", "commit", "-m", message], source)
-        if commit.returncode != 0:
-            raise RuntimeError(
-                f"source commit failed in {source}: {commit.stderr.strip() or commit.stdout.strip()}"
-            )
-        print(f"== sources committed: {message}")
-    elif staged.returncode != 0:
-        raise RuntimeError(
-            f"source git diff failed in {source}: {staged.stderr.strip()}"
-        )
-    push = run_checked(["git", "push"], source)
-    if push.returncode != 0:
-        raise RuntimeError(
-            f"source push failed in {source}; not publishing HTML with unpushed sources: {push.stderr.strip()}"
-        )
 
 
 def probe(
@@ -576,9 +523,6 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-name", default="bearmancer.github.io")
     parser.add_argument(
-        "--source", type=Path, default=Path.home() / "Dev" / "deep-research"
-    )
-    parser.add_argument(
         "--staging",
         type=Path,
         default=Path.home() / "Dev" / "bearmancer.github.io",
@@ -601,24 +545,20 @@ def main() -> None:
         sys.exit(0 if ok else 1)
 
     staging: Path = args.staging
-    source: Path = args.source
 
     ensure_staging(args.repo_name, staging)
 
-    if not args.no_push:
-        push_sources(source)
-
     print(f"== staging: {staging}")
-    published = process_workspaces(source, staging)
+    published = process_workspaces(staging)
 
     sync_shared_assets(staging)
 
-    hub_rows = build_hub_rows(source, staging, published)
+    hub_rows = build_hub_rows(staging, published)
     write_hub(staging, hub_rows)
 
     if args.no_push:
         print(
-            f"== --no-push: {len(hub_rows)} courses in hub, {len(published)} pages from source"
+            f"== --no-push: {len(hub_rows)} courses in hub, {len(published)} pages"
         )
         return
     publish(
