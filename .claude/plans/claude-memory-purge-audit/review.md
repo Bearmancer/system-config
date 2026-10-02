@@ -39,4 +39,4 @@ No path was found by which the purge tooling deletes or corrupts Claude's auto-m
 
 ## Verification
 
-A skeptical gate-reviewer pass (Oracle) was run against these claims; its verdict is recorded below when it lands.
+A skeptical gate-reviewer pass (Oracle) was run against these claims; no verdict was recorded.
