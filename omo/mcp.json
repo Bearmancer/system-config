@@ -30,9 +30,8 @@
       "url": "https://learn.microsoft.com/api/mcp"
     },
     "scrapegraph": {
-      "connectTimeoutMs": 120000,
-      "command": "scrapegraph-mcp",
-      "env": { "SGAI_API_KEY": "${SCRAPEGRAPH_API_KEY}" }
+      "url": "https://mcp.scrapegraphai.com/mcp",
+      "headers": { "Authorization": "Bearer ${SCRAPEGRAPH_API_KEY}" }
     },
     "codegraph": {
       "command": "codegraph",

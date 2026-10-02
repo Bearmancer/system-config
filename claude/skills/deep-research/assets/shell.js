@@ -1,4 +1,4 @@
-/* shell.js — wires the A-bar: chapter index select, font menu, size menu.
+/* shell.js — wires the A-bar: topic picker, chapter picker, font menu, size menu.
    Persists font + size in localStorage; every storage access is try/catch
    wrapped since file:// and locked-down browsers can throw. */
 (function () {
@@ -65,21 +65,71 @@
 		document.querySelectorAll("[data-size-select]").forEach(function (s) { s.value = savedSize; });
 	}
 
-	document.querySelectorAll("[data-index]").forEach(function (sel) {
-		var current = sel.dataset.current;
-		var base = sel.dataset.base || "";
-		var chapters = window.COURSE_INDEX || [];
+	function fill(sel, entries, base) {
+		while (sel.firstChild) sel.removeChild(sel.firstChild);
 		var frag = document.createDocumentFragment();
-		chapters.forEach(function (c) {
+		if (sel.dataset.placeholder) {
+			var p = document.createElement("option");
+			p.value = "";
+			p.textContent = sel.dataset.placeholder;
+			frag.appendChild(p);
+		}
+		entries.forEach(function (c) {
 			var o = document.createElement("option");
 			o.value = base + c.href;
 			o.textContent = c.label;
-			if (c.id === current) o.selected = true;
+			if (c.id === sel.dataset.current) o.selected = true;
 			frag.appendChild(o);
 		});
-		sel.insertBefore(frag, sel.firstChild);
+		sel.appendChild(frag);
 		sel.onchange = function (e) {
 			if (e.target.value) location.href = e.target.value;
 		};
+	}
+
+	// Every feed defines window.COURSE_INDEX: read one, then restore the page's own list.
+	// A feed that fails to load reads as empty.
+	function loadFeed(src, done) {
+		var keep = window.COURSE_INDEX;
+		var s = document.createElement("script");
+		function finish(list) {
+			window.COURSE_INDEX = keep;
+			s.remove();
+			done(list);
+		}
+		s.onload = function () { finish(window.COURSE_INDEX || []); };
+		s.onerror = function () { finish([]); };
+		s.src = src;
+		document.head.appendChild(s);
+	}
+
+	var chapters = window.COURSE_INDEX || [];
+	document.querySelectorAll("[data-index]").forEach(function (sel) {
+		if (sel.hasAttribute("data-follows-topic")) {
+			fill(sel, [], "");
+			return;
+		}
+		fill(sel, chapters, sel.dataset.base || "");
+	});
+	document.querySelectorAll("[data-topic]").forEach(function (sel) {
+		var base = sel.dataset.base || "";
+		var follower = sel.closest(".A-bar").querySelector("[data-follows-topic]");
+		var request = 0;
+		function ready(topics) {
+			fill(sel, topics, base);
+			if (!follower) return;
+			sel.onchange = function (e) {
+				if (!e.target.value) return;
+				var dir = e.target.value.replace(/[^/]*$/, "");
+				var mine = ++request;
+				loadFeed(dir + "assets/course-index.js", function (list) {
+					if (mine !== request) return;
+					follower.dataset.current = "";
+					fill(follower, list, dir + "lessons/");
+				});
+			};
+		}
+		if (sel.dataset.feed) loadFeed(sel.dataset.feed, ready);
+		else ready(chapters);
 	});
 })();

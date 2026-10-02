@@ -7,54 +7,11 @@
 		<link rel="stylesheet" href="../assets/lesson.css">
 	</head>
 	<body>
-		<header class="A-bar">
-			<div class="row">
-				<span class="title">{{TITLE}}</span>
-				<select aria-label="Chapter index" data-index data-current="{{ROW_ID}}">
-					<option value="../../index.html">Home</option>
-					<option value="../index.html#{{ROW_ID}}">Chapter Index</option>
-					<option value="../reference/glossary.html">Glossary</option>
-					<option value="../reference/cast-map.html">Cast Map</option>
-				</select>
-				<div class="type-panel">
-					<select aria-label="Font" data-font-select>
-						<option>Literata</option>
-						<option>Source Serif 4</option>
-						<option>Newsreader</option>
-						<option>Crimson Pro</option>
-						<option>EB Garamond</option>
-						<option>Merriweather</option>
-						<option>Lora</option>
-						<option>Libre Baskerville</option>
-						<option>Atkinson Hyperlegible</option>
-						<option>Inter</option>
-						<option>IBM Plex Sans</option>
-						<option selected>Charter</option>
-					</select>
-					<select aria-label="Size" data-size-select>
-						<option>S</option>
-						<option selected>M</option>
-						<option>L</option>
-						<option>XL</option>
-					</select>
-				</div>
-			</div>
-		</header>
+		{{BAR}}
 
-		<p class="kicker">{{KICKER}}</p>
 		<h1>{{TITLE}}</h1>
-		<p class="surtitle">
-			Chapter {{CHAPTER_N}} of {{CHAPTER_M}}
-		</p>
 
-		<h2>1. Summary</h2>
-		{{LEAD}}
-
-{{CAST_BLOCK}}		<h2>3. Narrative</h2>
-		{{NARRATIVE}}
-
-		<h2>4. Machinery</h2>
-		{{MACHINERY}}
+{{SUMMARY_BLOCK}}{{DIAGRAM_BLOCK}}		{{BODY}}
 
 		<footer class="lesson-footer">
 			<nav>

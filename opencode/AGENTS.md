@@ -17,11 +17,20 @@
 
 ## Question Boundary
 
-- Question tool = only channel for design, plan, review, decision, approval, open question, manual command. No prose paragraphs for user to judge.
-- Ask early, ask often: ambiguity, mid-task finding, new evidence, conflicting instruction. Never guess, never park as TODO.
-- Limit: ≤4 questions per call (batch), 2-4 options each.
-- Options: recommended first, then no/alternate. Each states pros + cons. Facts in option text, not prose.
-- Status replies: few short bullets. No recap, no restating answers.
+- Scope: every item you cannot auto-resolve goes through the question tool: design, plan, review, decision, approval, open question, blocker, unverifiable claim, ambiguity, conflicting instruction, step needing user (elevation, login, secret, account/UI action). Never in prose, never parked as TODO or status bullet.
+- Timing: ask the moment the item appears. Batch pending items: ≤4 questions per call, 2-4 options each.
+- Question text: one decision, ≤25 words. No evidence dump in question text.
+- Options: recommended first, then alternates. Label ≤5 words. Description ≤2 lines: fact, pro, con. Manual step option carries the exact one-liner (Terminal Input Format).
+- Turn end with pending decision: ≤3 bullets, then question tool. Never a report followed by a question.
+
+## Reply Budget
+
+- Reply: ≤5 bullets, ≤20 words each. No headings, bold labels, tables, sections.
+- Bullet = result + pointer (PR/issue URL, `path:line`). No explanation of how things work unless asked.
+- Never restate: user answers, subagent reports, running-agent lists, prior turn content.
+- Overflow detail: write to durable home (issue/PR comment, `.claude/plans/<area>/`), link it; never paste.
+- Pre-send check: count bullets + words. Over budget: cut or move to file.
+- User asks a question: answer first, ≤5 bullets.
 
 ## Sequential Task Discipline
 
@@ -88,6 +97,7 @@ Purge procedure (git-bash):
 
 ## Terminal Input Format
 
+- Step you cannot run (elevation, interactive login, secret entry, local-only action): print exact command, never describe it.
 - User-typed command (not your tool call): one line, `;`-joined, any shell. Skip if already one line.
 
 ## Shell Tool Preference

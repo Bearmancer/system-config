@@ -22,7 +22,7 @@ The course engine is source-agnostic (see `references/modes/course.md`); this ad
 - Bibliography, footnotes, endnotes, reference list = the source's own citations → inline citation entries (hyperlinked to the actual page, no bare URLs — `references/course/page-design.md`) and the **first** verification targets.
 - Preface/introduction usually states method and sources; the abstract does it for papers.
 - Editions and translations matter: record translator and edition in NOTES.md, and name the translation when quoting.
-- Integrate: corrections land as inline verdicts in the narrative beside the quoted wording, cited inline; unfindables read "the source's account, unverified" in narrative and land in RESOURCES Gaps too.
+- Integrate: corrections fold into the sentence beside the quoted wording, linked on the source-naming words; unfindables read as the source's own account in the prose and land in RESOURCES Gaps too.
 
 ## Corrections pass (mandatory — `references/modes/course.md` Step 3)
 

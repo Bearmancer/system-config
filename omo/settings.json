@@ -47,20 +47,34 @@
     "files-command": 1790746451197,
     "diff-command": 1790746728611,
     "todo-command": 1790748703715,
-    "goal-command": 1790748731155
+    "goal-command": 1790748731155,
+    "btw-command": 1790763774485,
+    "lookat-command": 1790763814982,
+    "mcp-command": 1790764533508,
+    "rules-command": 1790764590853,
+    "hooks-command": 1790767535752,
+    "websearch-command": 1790768337235,
+    "settings-locations": 1790768374584,
+    "permission-preset": 1790772568313,
+    "packages-setting": 1790772624554,
+    "custom-themes": 1790772673439,
+    "reload-resources": 1790772700655,
+    "project-trust": 1790772800773
   },
   "theme": "dark",
-  "defaultProvider": "qwen-token-plan",
-  "defaultModel": "deepseek-v4.1-flash",
+  "defaultProvider": "opencode-go",
+  "defaultModel": "gpt-6-luna",
   "modelThinkingLevels": {
     "opencode-go/kimi-k3": "max",
-    "qwen-token-plan/deepseek-v4.1-flash": "high",
-    "qwen-token-plan/qwen3.6-flash": "low"
+    "qwen-token-plan/deepseek-v4.1-flash": "max",
+    "qwen-token-plan/qwen3.6-flash": "low",
+    "opencode-go/gpt-6-luna": "high"
   },
   "modelLastOnThinkingLevels": {
     "opencode-go/kimi-k3": "max",
-    "qwen-token-plan/deepseek-v4.1-flash": "high",
-    "qwen-token-plan/qwen3.6-flash": "low"
+    "qwen-token-plan/deepseek-v4.1-flash": "max",
+    "qwen-token-plan/qwen3.6-flash": "low",
+    "opencode-go/gpt-6-luna": "high"
   },
   "defaultThinkingLevel": "high",
   "enabledModels": [
@@ -71,7 +85,8 @@
     "opencode-go/deepseek-v4.1-flash",
     "opencode-go/mimo-v2.6-flash",
     "opencode-go/qwen3.7-plus",
-    "opencode-go/gpt-6-luna"
+    "opencode-go/gpt-6-luna",
+    "opencode-go/qwen3.8-flash"
   ],
   "favoriteModels": [
     "opencode-go/qwen3.8-flash",
@@ -103,8 +118,10 @@
   "treeFilterMode": "all",
   "tuiMode": "fullscreen",
   "fullscreenCopyOnSelect": false,
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "skills": [
     "~/.claude/skills"
-  ]
+  ],
+  "fullscreenScrollbar": "always",
+  "fullscreenExitOutput": "transcript"
 }

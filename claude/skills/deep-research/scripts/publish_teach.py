@@ -15,6 +15,7 @@ from pathlib import Path
 
 MD_LINK_PATTERN = re.compile(r'(?s)<a\s+[^>]*href="[^"]*\.md"[^>]*>(.*?)</a>')
 TITLE_PATTERN = re.compile(r"(?s)<title>(.*?)</title>")
+H1_PATTERN = re.compile(r"(?s)<h1[^>]*>(.*?)</h1>")
 CHAPTER_ROW_CH_PATTERN = re.compile(r"(?i)-ch0*(\d+)")
 CHAPTER_ROW_LESSON_PATTERN = re.compile(r"^(\d+)")
 CHAPTER_NUM_PATTERN = re.compile(r"(?i)ch(?:apter)?\.?\s*0*(\d+)")
@@ -24,11 +25,16 @@ SOURCES_HEADING_PATTERN = re.compile(
     r"(?i)<h[1-6][^>]*>[^<]*(sources|references|bibliography)"
 )
 EXTERNAL_LINK_PATTERN = re.compile(r'(?i)<a\s[^>]*href="https?://')
-ANSWER_KINDS = {"verdict": "Verdict", "recommend": "Recommendation"}
+ANSWER_KINDS = {
+    "answer": "Answer",
+    "verdict": "Verdict",
+    "recommend": "Recommendation",
+    "rules": "Rules",
+}
 ANSWERS_DIR = "answers"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from lesson_rules import bar_scripts, render_bar
+from lesson_rules import bar_scripts, chapter_label, render_bar
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
 CANONICAL_CSS = ASSETS / "lesson.css"
@@ -48,10 +54,19 @@ def get_chapter_row_id(rel_path: str, fallback_num: int) -> str:
     m = CHAPTER_ROW_CH_PATTERN.search(file_name)
     if m:
         return f"ch{m.group(1)}"
-    n = CHAPTER_ROW_LESSON_PATTERN.match(file_name)
-    if n:
-        return f"lesson-{n.group(1)}"
-    return f"lesson-{fallback_num}"
+    return f"ch{fallback_num}"
+
+
+def get_lesson_number(rel_path: str, fallback_num: int) -> int:
+    n = CHAPTER_ROW_LESSON_PATTERN.match(Path(rel_path).name)
+    return int(n.group(1)) if n else fallback_num
+
+
+def chapter_name(html: str, title: str) -> str:
+    h1 = H1_PATTERN.search(html)
+    if h1:
+        return " ".join(re.sub(r"<[^>]+>", " ", h1.group(1)).split())
+    return title.split(" — ")[0]
 
 
 def get_chapter_num(title: str, rel_path: str) -> int:
@@ -70,11 +85,20 @@ def remove_empty_dirs(root: Path) -> None:
             d.rmdir()
 
 
+def is_course_workspace(ws: Path) -> bool:
+    lessons = ws / "lessons"
+    return lessons.is_dir() and any(lessons.glob("*.html"))
+
+
 def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
     published: list[dict[str, str]] = []
+    skipped: list[str] = []
     for ws in sorted(
         p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
+        if not is_course_workspace(ws):
+            skipped.append(ws.name)
+            continue
         dest = staging / ws.name
         if dest.exists():
             shutil.rmtree(dest)
@@ -106,6 +130,9 @@ def process_workspaces(source: Path, staging: Path) -> list[dict[str, str]]:
             title = title_match.group(1).strip() if title_match else "untitled"
             published.append({"workspace": ws.name, "path": rel, "title": title})
 
+    if skipped:
+        print(f"== skipped, no lessons/*.html: {', '.join(skipped)}", file=sys.stderr)
+
     return published
 
 
@@ -115,29 +142,25 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str, bar: str) ->
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Course home — {ws_title}</title>
+<title>{ws_title}</title>
 <link rel="stylesheet" href="assets/lesson.css">
 </head>
 <body>
 {bar}
-  <p class="home-link"><a href="../index.html">Home</a></p>
-  <p class="kicker">Course Home</p>
   <h1>{ws_title}</h1>
-  <h2>Chapter index</h2>
-  <ul>
+  <ol class="index-rows">
 {lesson_rows}
-  </ul>
-  <h2>Cast roster · Glossary</h2>
-  <ul>
+  </ol>
+  <nav class="index-extras">
 {ref_rows}
-  </ul>
+  </nav>
 {bar_scripts("assets/")}
 </body>
 </html>"""
 
 
-def build_top_index_html(rows: str, generated_at: str, answer_rows_html: str = "") -> str:
-    bar = render_bar("Index", [])
+def build_top_index_html(rows: str, answer_rows_html: str = "") -> str:
+    bar = render_bar("Index", [], home=True)
     answers = (
         f"""  <h2>Answers</h2>
   <table class="hub-table">
@@ -159,9 +182,8 @@ def build_top_index_html(rows: str, generated_at: str, answer_rows_html: str = "
 <body>
 {bar}
   <h1>Index</h1>
-  <p class="meta">Published from the local course workspaces · {generated_at} · pick a book/video, then its chapters</p>
   <table class="hub-table">
-    <tr><th>Book / Video</th><th>Chapters</th></tr>
+    <tr><th>Topic</th><th>Chapters</th></tr>
 {rows}
   </table>
 {answers}{bar_scripts("assets/")}
@@ -175,6 +197,8 @@ def build_hub_rows(
     for ws in sorted(
         p for p in source.iterdir() if p.is_dir() and not p.name.startswith(".")
     ):
+        if not is_course_workspace(ws):
+            continue
         ws_pages = [p for p in published if p["workspace"] == ws.name]
         if not ws_pages:
             continue
@@ -192,24 +216,40 @@ def build_hub_rows(
         ):
             leaf = p["path"].split("/", 1)[1]
             row_id = get_chapter_row_id(p["path"], i)
+            number = get_lesson_number(p["path"], i)
+            name = chapter_name(
+                (staging / p["path"]).read_text(encoding="utf-8"), p["title"]
+            )
             lesson_rows_list.append(
-                f'    <li id="{row_id}"><a href="{leaf}">{row_id}</a></li>'
+                f'    <li id="{row_id}"><a href="{leaf}">{chapter_label(number, name)}</a></li>'
             )
 
-        ref_labels = {"cast-map.html": "Cast roster", "glossary.html": "Glossary"}
+        ref_labels = {
+            "cast-map.html": "Cast",
+            "glossary.html": "Glossary",
+            "timeline.html": "Timeline",
+        }
         ref_rows_list: list[str] = []
         for p in sorted(ref_pages, key=lambda p: p["path"]):
             label = ref_labels.get(Path(p["path"]).name.lower())
             if label is None:
                 continue
             leaf = p["path"].split("/", 1)[1]
-            ref_rows_list.append(f'    <li><a href="{leaf}">{label}</a></li>')
+            ref_rows_list.append(f'    <a href="{leaf}">{label}</a>')
 
         home_html = build_home_html(
             ws_title,
             "\n".join(lesson_rows_list),
             "\n".join(ref_rows_list),
-            render_bar(ws_title, []),
+            render_bar(
+                ws_title,
+                [],
+                current=ws.name,
+                base="lessons/",
+                home=True,
+                topic_feed="../assets/course-index.js",
+                topic_base="../",
+            ),
         )
         (dest / "index.html").write_text(home_html, encoding="utf-8")
 
@@ -228,6 +268,8 @@ def course_rows(staging: Path) -> list[dict[str, object]]:
         and not d.name.startswith(".")
         and d.name != "assets"
         and (d / "index.html").is_file()
+        and (d / "lessons").is_dir()
+        and any((d / "lessons").glob("*.html"))
     ]
 
 
@@ -495,9 +537,7 @@ def write_hub(staging: Path, hub_rows: list[dict[str, object]]) -> None:
         f'    <tr><td><a href="{a["link"]}">{a["title"]}</a></td><td>{a["kind"]}</td></tr>'
         for a in answer_rows(staging)
     )
-    top_index = build_top_index_html(
-        rows, f"{datetime.now():%Y-%m-%d %H:%M}", answers
-    )
+    top_index = build_top_index_html(rows, answers)
     (staging / "index.html").write_text(top_index, encoding="utf-8")
 
 
@@ -513,9 +553,7 @@ def publish_answer(args: argparse.Namespace) -> bool:
     (staging / ANSWERS_DIR).mkdir(exist_ok=True)
     rel = f"{ANSWERS_DIR}/{args.kind}-{slug}.html"
     (staging / rel).write_text(
-        build_answer_html(
-            args.kind, args.title, body, f"{datetime.now():%Y-%m-%d}"
-        ),
+        build_answer_html(args.kind, args.title, body, f"{datetime.now():%Y-%m-%d}"),
         encoding="utf-8",
     )
     write_hub(staging, course_rows(staging))
@@ -549,7 +587,9 @@ def main() -> None:
         "--commit", default=f"Publish courses {datetime.now():%Y-%m-%d %H:%M}"
     )
     parser.add_argument("--no-push", action="store_true")
-    parser.add_argument("--page", type=Path, help="HTML body fragment of one answer page")
+    parser.add_argument(
+        "--page", type=Path, help="HTML body fragment of one answer page"
+    )
     parser.add_argument("--kind", choices=sorted(ANSWER_KINDS))
     parser.add_argument("--title")
     args = parser.parse_args()
@@ -581,7 +621,14 @@ def main() -> None:
             f"== --no-push: {len(hub_rows)} courses in hub, {len(published)} pages from source"
         )
         return
-    publish(staging, args.repo_name, args.commit, len(published))
+    publish(
+        staging,
+        args.repo_name,
+        args.commit,
+        len(published),
+        paths=sorted({p["workspace"] for p in published})
+        + ["index.html", "assets", ".nojekyll"],
+    )
 
 
 if __name__ == "__main__":

@@ -50,11 +50,11 @@ Not wired (pool entries only in `switch_api_key.py`; wire before use): Dappier, 
 | Bright Data | discover, platform data | `discover`, `web_data_*` | `brightdata discover`, `brightdata pipelines` | - |
 | Bright Data | async Unlocker | none | `brightdata scrape --async` (rejected by API, see POST) | `uv run scripts/brightdata_unlocker.py start --zone <zone>` then `result <response_id> --wait` (zone needs async on; `mcp_unlocker` works, live 2026-09-30). CLI `scrape --async` returns 400 `"async" is not allowed` (live 2026-09-30): no CLI id reaches `result` |
 | Bright Data | crawl/map | none | none | none |
-| ScrapeGraph | scrape, extract, search | `scrape` (live), `markdownify` (live), `smartscraper` (live), `searchscraper` (live) | `just-scrape scrape`, `extract`, `search` | - |
-| ScrapeGraph | crawl start, poll | `smartcrawler_initiate` (live), `smartcrawler_fetch_results` (live) | `just-scrape crawl` | managed crawl (stop, resume, delete, pages): `uv run scripts/scrapegraph_crawl.py start\|status` |
-| ScrapeGraph | crawl management (stop, resume, delete, pages) | none | none | `uv run scripts/scrapegraph_crawl.py stop\|resume\|delete\|pages <id>`; ids come from the script's `start` (MCP `smartcrawler_initiate` ids unverified on the v2 host) |
-| ScrapeGraph | sitemap | `sitemap` (live) | none | - |
-| ScrapeGraph | monitors | none installed | `just-scrape monitor` | - |
+| ScrapeGraph | scrape, extract, search | `scrape`, `extract`, `search` (live 2026-10-01 on remote endpoint) | `just-scrape scrape`, `extract`, `search` | - |
+| ScrapeGraph | crawl start, poll | `crawl_start`, `crawl_get` (live) | `just-scrape crawl` | managed crawl (stop, resume, delete, pages): `uv run scripts/scrapegraph_crawl.py start\|status` |
+| ScrapeGraph | crawl management (stop, resume, delete, pages) | `crawl_stop`, `crawl_resume`, `crawl_delete`, `crawl_pages` (live) | none | `uv run scripts/scrapegraph_crawl.py stop\|resume\|delete\|pages <id>`; ids come from the script's `start` |
+| ScrapeGraph | history, credits | `history_list`, `history_get`, `credits` (live) | none | - |
+| ScrapeGraph | monitors | `monitor_list`, `monitor_create`, `monitor_get`, `monitor_activity`, `monitor_pause`, `monitor_resume`, `monitor_update`, `monitor_delete` (live) | `just-scrape monitor` | - |
 | Browserbase | search, fetch | none | `browse cloud search`, `browse cloud fetch` | - |
 | Browserbase | browser session | `start`, `end`, `navigate`, `act`, `observe`, `extract` (live, unauthenticated list) | `browse open`, `snapshot`, `click`, `fill`, `screenshot`, `browse cloud sessions` | - |
 | Browserbase | agent runs | none | none documented | `uv run scripts/browserbase_agent_run.py start\|status` |
@@ -63,8 +63,8 @@ Not wired (pool entries only in `switch_api_key.py`; wire before use): Dappier, 
 ## House rules
 
 - One URL, markdown: `firecrawl_scrape` or ScrapeGraph `scrape`.
-- Whole site: `firecrawl_map` before `firecrawl_crawl` with explicit limit (CLI `firecrawl map` / `firecrawl crawl` otherwise); or ScrapeGraph `smartcrawler_initiate` then poll `smartcrawler_fetch_results`.
-- Page-change watching: `firecrawl_monitor_*` or CLI `just-scrape monitor`. Installed ScrapeGraph MCP 1.0.1 has no monitor tools.
+- Whole site: `firecrawl_map` before `firecrawl_crawl` with explicit limit (CLI `firecrawl map` / `firecrawl crawl` otherwise); or ScrapeGraph `crawl_start` then poll `crawl_get`.
+- Page-change watching: `firecrawl_monitor_*` or ScrapeGraph `monitor_create` (MCP and CLI `just-scrape monitor`).
 - Tavily `extract_depth: advanced` = depth only, not a bypass. Exa `livecrawl` = freshness knob, not bot-block bypass.
 
 ## Keys and ops
@@ -82,7 +82,8 @@ Not wired (pool entries only in `switch_api_key.py`; wire before use): Dappier, 
 
 - Every server takes its key as a bearer header or env var; the active key sits in `~/.config/opencode/secrets/<pool name>`. `switch_api_key.py --next` rewrites that file; on OpenCode the watcher reconnects only the changed server. OmO: see SKILL.md Key rotation.
 - Missing secrets file breaks config load: `switch_api_key.py --service all --materialize` creates every missing one.
-- ScrapeGraphAI starts without key, fails per call: silent dead server = missing key.
+- ScrapeGraph serves from the remote MCP `https://mcp.scrapegraphai.com/mcp` with `Authorization: Bearer <key>`; the local `scrapegraph-mcp.exe` wrapper points at `api.scrapegraphai.com`, whose Cloudflare edge fails every TLS handshake from Windows (Schannel, OpenSSL, BoringSSL alike, `SEC_E_ILLEGAL_MESSAGE` / `SSLV3_ALERT_HANDSHAKE_FAILURE` / `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`) while `www.scrapegraphai.com` on the same IPs works, so the local wrapper is unusable, not misconfigured. CLI `just-scrape` reaches the API fine.
+- ScrapeGraphAI starts without key, fails per call: silent dead server = missing key. Its free plan meters per call: `credits` reports the balance before a batch.
 - `uvx` servers pay ~4 s cold install on first launch.
 
 ## Error codes per service

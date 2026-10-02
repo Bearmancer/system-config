@@ -17,17 +17,17 @@ The script:
 
 Course flow scope is fixed: **course pages only**. `.md` admin files (NOTES / RESOURCES / learning-records / transcripts) stay local; the mirror step excludes them. The transcript slices live as `.md` inside `reference/transcripts/` and stay out of the published copy the same way.
 
-## Single answer page (verdict, recommend)
+## Single answer page (answer, verdict, recommend, rules)
 
 ```
-python "<skill>/scripts/publish_teach.py" --page <body.html> --kind verdict|recommend --title "<title>"
+python "<skill>/scripts/publish_teach.py" --page <body.html> --kind answer|verdict|recommend|rules --title "<title>"
 ```
 
 - Body = HTML fragment, no `<html>`/`<head>`. The script wraps it in the shared layout (A-bar, kicker = kind, H1 = title, date, Home footer) with `assets/lesson.css` + `shell.js`.
-- Body gate, refuses before any git call: at least one inline `https` `<a href>`; no Sources/References/Bibliography heading (citations inline only, `page-design.md` "Citations").
+- Body gate, refuses before any git call: at least one inline `https` `<a href>`; no Sources/References/Bibliography heading (citations are links in the prose, `page-design.md` "Prose rules").
 - Writes `answers/<kind>-<slug>.html` in the site working copy, adds a row under "Answers" on the root index (course publishes keep answer rows), commits and pushes the Pages repo only. Same title overwrites its page.
 - Probes the page URL (8 x 15 s) for HTTP 200 and the escaped title in the live bytes; prints `live: <url>`. Exit 0 only when both hold; exit 1: wait for the build with the harness monitor, then re-fetch.
-- Body content per mode: verdict = `SKILL.md` "Verdict mode" step 3; recommend = `recommend.md` pick blocks.
+- Body content per mode: answer = `SKILL.md` "Answer mode" step 3 (`--kind answer`); verdict (explicit fact-check-only, `--kind verdict`) = `SKILL.md` "Verdict mode" step 3; recommend = `recommend.md` pick blocks; rules (board-game) = `SKILL.md` "Board-game mode" page order.
 
 ## Dry run (no flag — preview by hand)
 
@@ -49,7 +49,7 @@ of that holds. The publish script already probes the root index (retries
 8 x 15 s, warns on lag); per-page 200s are inside the verifier's download
 step — any non-200 fails the run.
 
-Gates apply by artifact: any SVG visual that changed (the cast map) also gets the geometry checker on its live copy; the timeline is HTML-flow, so the screenshot pass covers it when it changed. Citations ride inline inside the lesson HTML, so they publish with the lesson; RESOURCES stays local and never publishes.
+Gates apply by artifact: any SVG visual that changed (the cast map) also gets the geometry checker on its live copy; the timeline is HTML-flow, so the screenshot pass covers it when it changed. Citations are links inside the lesson HTML, so they publish with the lesson; RESOURCES stays local and never publishes.
 
 Assets come back byte-identical to the local copies (`Get-FileHash` both sides). Pages legitimately differ from local in exactly one way — `.md` links are flattened to plain text — so expect zero `href="*.md"` live, a small size delta, and matching content otherwise; any further difference means investigate before reporting success. A `200` proves a page exists; the downloaded bytes prove the right page went out. Report the live URLs and the gate results in chat.
 
@@ -70,4 +70,4 @@ Assets come back byte-identical to the local copies (`Get-FileHash` both sides).
 
 ## Report format (chat)
 
-- Short lines: page path + live URL per new page, 200 status, headline inline-verdict corrections (one line each). No queued-next lines, no closing questions.
+- Short lines: page path + live URL per new page, 200 status, headline corrections (one line each). No queued-next lines, no closing questions.

@@ -6,10 +6,12 @@ A human-facing guide. Agents load `SKILL.md`, not this file.
 
 | You say | What happens |
 |---|---|
-| "How true is it Putin is fucked?" | **Verdict mode.** The question is split into measurable axes (war, economy, regime stability, succession). Each axis is checked with sources, and the reply opens with a bottom line and then a verdict table. |
+| "How true is it Putin is fucked?", "is it true that X" | **Answer mode.** The question is split into measurable axes and each is checked with sources internally. The reply is cited explanatory prose that opens with the direct answer, with no per-claim table. |
+| "Fact-check this", "only fact check", "verify these claims" | **Verdict mode**, only on an explicit fact-check-only request. The reply opens with a bottom line and then the claims grouped as verified (full or partial), unverified, and false. |
 | "<video url> - explain", or naming a book, article or paper | **Course mode.** The source is fetched and split into chapters, each chapter becomes a verified treatise page, and the course is published to GitHub Pages. |
 | "Teach me the Thirty Years' War" | **Course mode, topic variant.** A chapter list is researched first and you approve it before anything is built. |
 | "Soviet symphonies from early 20th century" | **Recommend mode** (classical only). Returns verified deep-cut picks with timings, skipping the ban list. |
+| "How do I play Ark Nova, 4 players" | **Board-game mode.** Quick tier. Reads the publisher rulebook, FAQ and errata first, then BGG files and forums (public pages only, no login). Publishes one short rules page: theme, goal, turn, actions, one easy strategy, easiest scoring path, and the stated player count. |
 | "Grab this page" | **Fast path.** Picks the right scraper, climbs the bot-block chain if needed, and stops. |
 
 ## Layout

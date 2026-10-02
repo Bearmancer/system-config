@@ -91,7 +91,7 @@
       "model": "opencode-go/muse-spark-1.3-contributor"
     },
     "plan": {
-      "model": "opencode-go/deepseek-v4.1-flash#xhigh"
+      "model": "opencode-go/deepseek-v4.1-flash#max"
     },
     "general": {
       "disabled": true
@@ -107,6 +107,9 @@
     }
   },
   "mcp": {
+    "timeout": {
+      "startup": 120000
+    },
     "servers": {
       "exa": {
         "type": "remote",
@@ -192,17 +195,14 @@
         }
       },
       "scrapegraph": {
-        "type": "local",
-        "command": [
-          "scrapegraph-mcp"
-        ],
-        "environment": {
-          "SGAI_API_KEY": "{file:~/.config/opencode/secrets/scrapegraph}"
+        "type": "remote",
+        "url": "https://mcp.scrapegraphai.com/mcp",
+        "headers": {
+          "Authorization": "Bearer {file:~/.config/opencode/secrets/scrapegraph}"
         },
         "timeout": {
-          "startup": 120000,
           "catalog": 60000,
-          "execution": 30000
+          "execution": 120000
         }
       },
       "codegraph": {

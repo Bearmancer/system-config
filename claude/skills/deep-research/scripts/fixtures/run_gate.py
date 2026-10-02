@@ -4,6 +4,7 @@ import re
 import sys
 
 BASE = os.path.dirname(os.path.abspath(__file__))
+LESSONS = os.path.join(BASE, "index-home", "lessons")
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--check-dir", default=os.path.dirname(BASE))
@@ -22,66 +23,69 @@ def footer_hrefs(path):
 
 fails = []
 
-p = check(os.path.join(BASE, "pass.html"))
-if p:
-    fails.append(f"pass.html expected [] got {p}")
 
-o = check(os.path.join(BASE, "fail-old.html"))
-low = " | ".join(o).lower()
-if not ("a-bar" in low and "top bar" in low):
-    fails.append(f"fail-old.html expected missing top-bar issue, got {o}")
-if not ("footer" in low and "glossary" in low):
-    fails.append(f"fail-old.html expected footer nav-link leak issue, got {o}")
-
-b = check(os.path.join(BASE, "fail-budget.html"))
-blow = " | ".join(b).lower()
-if not ("a-bar" in blow and "repeats" in blow and "home" in blow):
-    fails.append(f"fail-budget.html expected repeated Home option issue, got {b}")
-
-rp = check(os.path.join(BASE, "pass-real-footer.html"))
-if rp:
-    fails.append(f"pass-real-footer.html expected [] got {rp}")
-
-hi = check(os.path.join(BASE, "index-home", "index.html"))
-if hi:
-    fails.append(f"index-home/index.html expected [] got {hi}")
-
-hu = check(os.path.join(BASE, "hub-home", "index.html"))
-if hu:
-    fails.append(f"hub-home/index.html expected [] got {hu}")
-
-rg = check(os.path.join(BASE, "index-home", "reference", "glossary.html"))
-if rg:
-    fails.append(f"index-home/reference/glossary.html expected [] got {rg}")
-
-rn = check(os.path.join(BASE, "fail-footer-nonav.html"))
-rnl = " | ".join(rn).lower()
-if not ("a-bar" in rnl and "top bar" in rnl):
-    fails.append(f"fail-footer-nonav.html expected missing top-bar issue, got {rn}")
-if not ("footer" in rnl and "glossary" in rnl):
-    fails.append(f"fail-footer-nonav.html expected footer nav-link leak issue, got {rn}")
+def expect_clean(label, path):
+    issues = check(path)
+    if issues:
+        fails.append(f"{label} expected [] got {issues}")
+    return issues
 
 
-ph = footer_hrefs(os.path.join(BASE, "pass-real-footer.html"))
+def expect_issues(label, path, *fragments):
+    issues = check(path)
+    joined = " | ".join(issues).lower()
+    for fragment in fragments:
+        if fragment.lower() not in joined:
+            fails.append(f"{label} expected an issue naming '{fragment}', got {issues}")
+    return issues
+
+
+p = expect_clean("pass.html", os.path.join(LESSONS, "pass.html"))
+rp = expect_clean("pass-real-footer.html", os.path.join(LESSONS, "pass-real-footer.html"))
+hi = expect_clean("index-home/index.html", os.path.join(BASE, "index-home", "index.html"))
+hu = expect_clean("hub-home/index.html", os.path.join(BASE, "hub-home", "index.html"))
+rg = expect_clean(
+    "index-home/reference/glossary.html",
+    os.path.join(BASE, "index-home", "reference", "glossary.html"),
+)
+rc = expect_clean(
+    "index-home/reference/cast-map.html",
+    os.path.join(BASE, "index-home", "reference", "cast-map.html"),
+)
+
+o = expect_issues(
+    "fail-old.html",
+    os.path.join(LESSONS, "fail-old.html"),
+    "chapter N of M",
+    "surtitle",
+    "kicker",
+    "superscript",
+    "numbered-heading",
+    "verify-narration",
+    "correction-ledger",
+    "a-bar",
+    "sources/references",
+)
+rn = expect_issues(
+    "fail-footer-nonav.html",
+    os.path.join(LESSONS, "fail-footer-nonav.html"),
+    "footer holds a nav link",
+    "glossary",
+)
+
+ph = footer_hrefs(os.path.join(LESSONS, "pass-real-footer.html"))
 if ph is None:
+    fails.append("pass-real-footer.html: footer parse yielded None (regex missed </footer>)")
+elif "../../index.html" in ph or re.search(r"\.\./index\.html", " ".join(ph)):
     fails.append(
-        "pass-real-footer.html: footer parse yielded None (regex missed </footer>)"
-    )
-elif "../../index.html" in ph or re.search(r"\.\./index\.html#ch\d+", " ".join(ph)):
-    fails.append(
-        f"pass-real-footer.html: footer should hold only previous/next links "
-        f"(home + chapter-index backlink belong in top-nav), got {ph}"
+        f"pass-real-footer.html: footer should hold only previous/next links, got {ph}"
     )
 
-nh = footer_hrefs(os.path.join(BASE, "fail-footer-nonav.html"))
+nh = footer_hrefs(os.path.join(LESSONS, "fail-footer-nonav.html"))
 if nh is None:
-    fails.append(
-        "fail-footer-nonav.html: footer parse yielded None (regex missed </footer>)"
-    )
-elif "../../index.html" in nh or re.search(r"\.\./index\.html#ch\d+", " ".join(nh)):
-    fails.append(
-        f"fail-footer-nonav.html: footer hrefs should lack nav targets, got {nh}"
-    )
+    fails.append("fail-footer-nonav.html: footer parse yielded None (regex missed </footer>)")
+elif "../index.html" not in nh:
+    fails.append(f"fail-footer-nonav.html: footer hrefs should carry the leaked nav link, got {nh}")
 
 if fails:
     print("RED:")
@@ -91,9 +95,8 @@ if fails:
 print("GREEN: all fixtures behave per spec")
 print("  pass issues:", p)
 print("  fail-old issues:", o)
-print("  fail-budget issues:", b)
 print("  pass-real-footer issues:", rp)
 print("  fail-footer-nonav issues:", rn)
-print("  index-home/reference/glossary.html issues:", rg)
+print("  index-home + hub-home + reference pages:", hi, hu, rg, rc)
 print("  pass-real-footer hrefs:", ph)
 print("  fail-footer-nonav hrefs:", nh)

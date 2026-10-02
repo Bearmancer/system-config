@@ -76,7 +76,7 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 # Style Guide
 
-ALWAYS run all agents and subagents in caveman mode set to ultra; a skill that sets its own caveman level overrides the global level. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Always prioritize using bulletins for explanations instead of long paragraph. Questions: see `qa_boundary`.
+ALWAYS run all agents and subagents in caveman mode set to ultra; a skill that sets its own caveman level overrides the global level. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Questions: `qa_boundary`. Reply shape: `reply_budget`.
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
@@ -101,23 +101,34 @@ Stale (files changed, symbols missing, line numbers wrong): `codegraph init` aga
 Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conflict.
 
 <qa_boundary>
-AskUserQuestion = only channel for design, plan, review, decision, approval, open question, manual command. Never prose paragraphs for user to read and judge.
-Ask early, ask often: ambiguity, mid-task finding, new evidence, conflicting instruction. Never guess, never park as TODO.
-Tool limit: ≤4 questions/call (batch, don't serialize), 2-4 options each, Other auto-added.
-Options: recommended first, then no/alternate. Each description states pros + cons. Facts in option text, not prose.
-Status replies: few short bullets. No recap, no restating answers.
+Scope: every item you cannot auto-resolve goes through AskUserQuestion: design, plan, review, decision, approval, open question, blocker, unverifiable claim, ambiguity, conflicting instruction, step needing user (elevation, login, secret, account/UI action). Never in prose, never parked as TODO or status bullet.
+Timing: ask the moment the item appears. Batch pending items: ≤4 questions/call, 2-4 options each (Other auto-added).
+Question text: one decision, ≤25 words. No evidence dump in question text.
+Options: recommended first, then alternates. Label ≤5 words. Description ≤2 lines: fact, pro, con. Manual step option carries the exact one-liner (`terminal_input_format`).
+Turn end with pending decision: ≤3 bullets, then AskUserQuestion. Never a report followed by a question.
 </qa_boundary>
+
+<reply_budget>
+Hard limits on user-facing text.
+- Reply: ≤5 bullets, ≤20 words each. No headings, bold labels, tables, sections.
+- Bullet = result + pointer (PR/issue URL, `path:line`). No explanation of how things work unless asked.
+- Never restate: user answers, subagent reports, running-agent lists, prior turn content.
+- Overflow detail: write to durable home (issue/PR comment, `.claude/plans/<area>/`), link it; never paste.
+- Progress ping ("user hasn't heard from you"): one line.
+- Pre-send check: count bullets + words. Over budget: cut or move to file.
+- User asks a question: answer first, ≤5 bullets.
+</reply_budget>
 
 <sequential_task_discipline>
 Multi-item batch: enumerate all items first, complete one at a time — don't blur two into one status/action. Tool calls for ONE item still batch parallel (OMC `execution_protocols`).
 Never guess a vague instruction's "spirit" — resolve via `qa_boundary` first.
 Never treat a subagent's self-report ("done", "tests pass") as fact — verify (read file, run test) first.
-Blocked (missing dep, unresolved ambiguity): stop, report plainly — never skip silently, never sub a partial result as done.
+Blocked (missing dep, unresolved ambiguity): stop, raise via `qa_boundary` — never skip silently, never sub a partial result as done.
 </sequential_task_discipline>
 
 <verified_claims_only>
 Plans, specs, tickets, configs, QA options: every factual claim (header, flag, tool name, package, env var, endpoint, runtime behavior) rests on primary source checked this session or linked research: official doc, source code, or live test. Cite it.
-Unverified claim: verify first (research agent or live test) before planning, building, or offering it as option. Unverifiable: state so, stop, ask. Never "from memory", never "assume works, drill later".
+Unverified claim: verify first (research agent or live test) before planning, building, or offering it as option. Unverifiable: state so, stop, raise via `qa_boundary`. Never "from memory", never "assume works, drill later".
 Subagent claims same bar: executor-chosen values need source before use.
 Native solutions only: use the tool's own documented mechanism (config key, hosted endpoint, supported auth). Never shell wrappers, duplicate env vars, shims, or patches around a gap. No native route: report the gap, ask.
 </verified_claims_only>
@@ -177,6 +188,7 @@ Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegat
 </model_tier_default>
 
 <terminal_input_format>
+Step you cannot run (elevation, interactive login, secret entry, local-only action): add it to `C:\Users\Lance\z.ps1` (self-elevating, `Start-Transcript` log `C:\Users\Lance\z-<timestamp>.log`, one `Step` per item, verify check after each). Keep z.ps1 = pending steps only: drop steps the log shows done. Tell user `pwsh -File C:\Users\Lance\z.ps1`; read newest log after they run it.
 User-typed command (not your tool call): one line, `;`-joined, any shell, absolute paths only (`C:\Users\Lance\...`; never `~`, `$HOME`, `$env:USERPROFILE`, relative paths or cwd-dependent `cd`). Skip if already one line.
 </terminal_input_format>
 
