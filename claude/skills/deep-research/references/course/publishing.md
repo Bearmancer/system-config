@@ -56,7 +56,7 @@ Assets come back byte-identical to the local copies (`Get-FileHash` both sides).
 
 - `warning: LF will be replaced by CRLF` in git output is harmless noise.
 - A fresh page can 404 for the first ~30 s while Pages rebuilds — retry before assuming failure.
-- A published page rendering unstyled points at a missing `assets/lesson.css` — confirm the course dir has it and re-run.
+- A published page rendering unstyled points at a missing `assets/lesson.css` — confirm the site root `assets/` has it and re-run publish.
 - Pages are authored as HTML directly in the course dir.
 - Live pages differ from local **by design**: the `.md` links are flattened. Compare with that expectation (assets identical, pages differing only in flattened links and a small size delta); any other difference is a real problem worth chasing.
 

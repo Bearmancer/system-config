@@ -18,10 +18,6 @@ Sonarr, Radarr, Prowlarr same mutation pattern for anything pluggable (download 
 3. `POST`/`PUT` whole object back (not just changed field) — API want
    full resource
 
-See [[shell-gotchas]] for general PowerShell foot-gun (`$var?query=`
-interpolation, NTFS case-only rename, `Where-Object`-pipeline field
-mutation) — also apply when script against these APIs.
-
 `references/api-reference.md` — single home for exact endpoint, auth
 header/param, request body, category code table
 (Movies/TV/Music/XXX/Books/etc.), and per-app quirk for Sonarr,

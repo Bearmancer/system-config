@@ -21,6 +21,7 @@ def run_stamp(yaml_text, name, ws=WS):
     tmp = Path(tempfile.mkdtemp(prefix="stencil-", dir=str(BASE)))
     work = tmp / "ws"
     shutil.copytree(ws, work)
+    shutil.copytree(SCRIPTS.parent / "assets", tmp / "assets", ignore=shutil.ignore_patterns("*.stencil.html"))
     lessons = work / "lessons"
     yaml_path = lessons / name
     yaml_path.write_text(yaml_text, encoding="utf-8")

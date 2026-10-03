@@ -171,10 +171,11 @@ def render_bar(title, options, current="", base="", home=False,
     return head + _bar_type_panel() + "\n\t\t\t</div>\n\t\t</header>"
 
 
-def bar_scripts(prefix):
-    """Both script tags the A-bar needs, at the given path prefix (e.g.
-    '../assets/', 'assets/'). Returned joined so callers append once."""
+def bar_scripts(index_prefix, shell_prefix):
+    """Both script tags the A-bar needs. course-index.js is per-course data
+    (index_prefix); shell.js is the one site-root copy (shell_prefix).
+    Returned joined so callers append once."""
     return (
-        f'\t\t<script src="{prefix}course-index.js"></script>\n'
-        f'\t\t<script src="{prefix}shell.js"></script>'
+        f'\t\t<script src="{index_prefix}course-index.js"></script>\n'
+        f'\t\t<script src="{shell_prefix}shell.js"></script>'
     )

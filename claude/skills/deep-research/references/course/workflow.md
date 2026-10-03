@@ -7,7 +7,7 @@
 3. Layout:
    ```
    ~/Dev/bearmancer.github.io/<slug>/            # published, authored in place
-   ├── assets/lesson.css     # copy from this skill's assets/ (font-pinned)
+   ├── assets/course-index.js  # per-course chapter feed; lesson.css + shell.js live at the site root assets/
    ├── index.html            # course home — chapters + reference pages, linked from the root hub
    ├── lessons/01-ch2-slug.html
    ├── reference/glossary.html

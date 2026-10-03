@@ -89,7 +89,6 @@ def process_workspaces(staging: Path) -> list[dict[str, str]]:
         if not is_course_workspace(dest):
             continue
         (dest / "assets").mkdir(exist_ok=True)
-        shutil.copyfile(SHELL_JS, dest / "assets" / "shell.js")
         feed = dest / "assets" / "course-index.js"
         if not feed.exists():
             feed.write_text("window.COURSE_INDEX = [];\n", encoding="utf-8")
@@ -114,7 +113,7 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str, bar: str) ->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{ws_title}</title>
-<link rel="stylesheet" href="assets/lesson.css">
+<link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 {bar}
@@ -125,7 +124,7 @@ def build_home_html(ws_title: str, lesson_rows: str, ref_rows: str, bar: str) ->
   <nav class="index-extras">
 {ref_rows}
   </nav>
-{bar_scripts("assets/")}
+{bar_scripts("assets/", "../assets/")}
 </body>
 </html>"""
 
@@ -157,7 +156,7 @@ def build_top_index_html(rows: str, answer_rows_html: str = "") -> str:
     <tr><th>Topic</th><th>Chapters</th></tr>
 {rows}
   </table>
-{answers}{bar_scripts("assets/")}
+{answers}{bar_scripts("assets/", "assets/")}
 </body>
 </html>"""
 
@@ -277,7 +276,7 @@ def build_answer_html(kind: str, title: str, body: str, date: str) -> str:
   <footer class="lesson-footer">
     <nav><a href="../index.html">Home</a></nav>
   </footer>
-{bar_scripts("../assets/")}
+{bar_scripts("../assets/", "../assets/")}
 </body>
 </html>"""
 

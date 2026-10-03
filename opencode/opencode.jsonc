@@ -1,214 +1,213 @@
 {
 	"$schema": "https://opencode.ai/config.json",
 	"shell": "C:\\Users\\Lance\\.local\\pwsh\\pwsh.exe",
-	"model": "opencode-go/muse-spark-1.3-contributor",
-	"small_model": "opencode-go/muse-spark-1.3-contributor",
-	// OpenCode Go: only muse-spark-1.3-contributor, deepseek-v4.1-flash, qwen3.7-plus, mimo-v2.6-flash are allowed.
-	// v2 has no allow-list; per-model disabled removes a model from the catalog and rejects it for sessions and subagents.
+	"model": "opencode/mimo-v2.6-flash-free",
+	"small_model": "opencode/mimo-v2.6-flash-free",
+
 	"providers": {
 		"opencode-go": {
 			"models": {
 				"deepseek-v4-flash": {
-					"disabled": true
+					"disabled": true,
 				},
 				"deepseek-v4-flash-vision-exp": {
-					"disabled": true
+					"disabled": true,
 				},
 				"deepseek-v4-pro": {
-					"disabled": true
+					"disabled": true,
 				},
 				"glm-5.2": {
-					"disabled": true
+					"disabled": true,
 				},
 				"glm-5.3": {
-					"disabled": true
+					"disabled": true,
 				},
 				"glm-5.3-flash": {
-					"disabled": true
+					"disabled": true,
 				},
 				"gpt-5.6-luna": {
-					"disabled": true
+					"disabled": true,
 				},
 				"gpt-6-luna": {
-					"disabled": true
+					"disabled": true,
 				},
 				"grok-4.6": {
-					"disabled": true
+					"disabled": true,
 				},
 				"grok-4.7": {
-					"disabled": true
+					"disabled": true,
 				},
 				"hy3": {
-					"disabled": true
+					"disabled": true,
 				},
 				"hy4-preview": {
-					"disabled": true
+					"disabled": true,
 				},
 				"kimi-k2.7-code": {
-					"disabled": true
+					"disabled": true,
 				},
 				"kimi-k3": {
-					"disabled": true
+					"disabled": true,
 				},
 				"longcat-2.0": {
-					"disabled": true
+					"disabled": true,
 				},
 				"longcat-2.5-preview-free": {
-					"disabled": true
+					"disabled": true,
 				},
 				"mimo-v2.5": {
-					"disabled": true
+					"disabled": true,
 				},
 				"mimo-v2.5-pro": {
-					"disabled": true
+					"disabled": true,
 				},
 				"mimo-v2.6-pro": {
-					"disabled": true
+					"disabled": true,
 				},
 				"minimax-m2.7": {
-					"disabled": true
+					"disabled": true,
 				},
 				"minimax-m3": {
-					"disabled": true
+					"disabled": true,
 				},
 				"muse-spark-1.2-contributor": {
-					"disabled": true
+					"disabled": true,
 				},
 				"qwen3.8-max": {
-					"disabled": true
+					"disabled": true,
 				},
 				"space-bunny-free": {
-					"disabled": true
-				}
-			}
-		}
+					"disabled": true,
+				},
+			},
+		},
 	},
 	"agents": {
 		"build": {
-			"model": "opencode-go/muse-spark-1.3-contributor"
+			"model": "opencode/mimo-v2.6-flash-free",
 		},
 		"plan": {
-			"model": "opencode-go/muse-spark-1.3-contributor"
+			"model": "opencode/mimo-v2.6-flash-free",
 		},
 		"general": {
-			"disabled": true
+			"disabled": true,
 		},
 		"explore": {
-			"disabled": true
+			"disabled": true,
 		},
 		"researcher": {
 			"description": "Web researcher. Use for any web lookup, scrape, search or crawl.",
 			"mode": "subagent",
-			"model": "opencode-go/muse-spark-1.3-contributor",
-			"system": "Use the web MCP tools (via execute) for every question. Report exact returned text with source URLs."
-		}
+			"model": "opencode/mimo-v2.6-flash-free",
+			"system": "Use the web MCP tools (via execute) for every question. Report exact returned text with source URLs.",
+		},
 	},
 	"mcp": {
 		"timeout": {
-			"startup": 120000
+			"startup": 120000,
 		},
 		"servers": {
 			"exa": {
 				"type": "remote",
 				"url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa,agent_run",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/exa}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/exa}",
 				},
 				"oauth": false,
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"tavily": {
 				"type": "remote",
 				"url": "https://mcp.tavily.com/mcp/",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/tavily}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/tavily}",
 				},
 				"oauth": false,
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"firecrawl": {
 				"type": "remote",
 				"url": "https://mcp.firecrawl.dev/v2/mcp",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/firecrawl}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/firecrawl}",
 				},
 				"oauth": false,
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"apify": {
 				"type": "remote",
 				"url": "https://mcp.apify.com?tools=actors,docs,runs,storage,tasks,schedules,builds,dev,get-actor-list,apify/rag-web-browser,apify/web-fetch",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/apify}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/apify}",
 				},
 				"oauth": false,
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"browserbase": {
 				"type": "remote",
 				"url": "https://mcp.browserbase.com/mcp",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/browserbase}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/browserbase}",
 				},
 				"oauth": false,
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"agentql": {
 				"type": "local",
 				"command": [
 					"node",
-					"C:/Users/Lance/AppData/Roaming/npm/node_modules/agentql-mcp/dist/index.js"
+					"C:/Users/Lance/AppData/Roaming/npm/node_modules/agentql-mcp/dist/index.js",
 				],
 				"environment": {
-					"AGENTQL_API_KEY": "{file:~/.config/opencode/secrets/agentql}"
+					"AGENTQL_API_KEY": "{file:~/.config/opencode/secrets/agentql}",
 				},
 				"timeout": {
 					"startup": 120000,
 					"catalog": 60000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"microsoft-learn": {
 				"type": "remote",
 				"url": "https://learn.microsoft.com/api/mcp",
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"scrapegraph": {
 				"type": "remote",
 				"url": "https://mcp.scrapegraphai.com/mcp",
 				"headers": {
-					"Authorization": "Bearer {file:~/.config/opencode/secrets/scrapegraph}"
+					"Authorization": "Bearer {file:~/.config/opencode/secrets/scrapegraph}",
 				},
 				"timeout": {
 					"catalog": 60000,
-					"execution": 120000
-				}
+					"execution": 120000,
+				},
 			},
 			"codegraph": {
 				"type": "local",
 				"command": ["codegraph", "serve", "--mcp"],
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"firefox-devtools": {
 				"type": "local",
@@ -221,67 +220,67 @@
 					"--viewport",
 					"1280x720",
 					"--tool-preset",
-					"all"
+					"all",
 				],
 				"timeout": {
 					"startup": 120000,
 					"catalog": 60000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"brightdata": {
 				"type": "local",
 				"command": [
 					"node",
-					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@brightdata/mcp/server.js"
+					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@brightdata/mcp/server.js",
 				],
 				"environment": {
-					"API_TOKEN": "{file:~/.config/opencode/secrets/brightdata}"
+					"API_TOKEN": "{file:~/.config/opencode/secrets/brightdata}",
 				},
 				"timeout": {
 					"startup": 120000,
 					"catalog": 60000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"github": {
 				"type": "local",
 				"command": [
 					"C:\\Users\\Lance\\.local\\bin\\github-mcp-server.exe",
-					"stdio"
+					"stdio",
 				],
 				"environment": {
-					"GITHUB_PERSONAL_ACCESS_TOKEN": "{file:~/.config/opencode/secrets/github}"
-				}
+					"GITHUB_PERSONAL_ACCESS_TOKEN": "{file:~/.config/opencode/secrets/github}",
+				},
 			},
 			"playwright": {
 				"type": "local",
 				"command": [
 					"node",
-					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@playwright/mcp/cli.js"
+					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@playwright/mcp/cli.js",
 				],
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
+					"execution": 30000,
+				},
 			},
 			"sequential-thinking": {
 				"type": "local",
 				"command": [
 					"node",
-					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-sequential-thinking/dist/index.js"
+					"C:/Users/Lance/AppData/Roaming/npm/node_modules/@modelcontextprotocol/server-sequential-thinking/dist/index.js",
 				],
 				"timeout": {
 					"catalog": 30000,
-					"execution": 30000
-				}
-			}
-		}
+					"execution": 30000,
+				},
+			},
+		},
 	},
 	"plugin": [
 		"oh-my-opencode-slim",
-		// OpenCode Quota: loads the server plugin for slash commands and quota checks.
-		"@slkiser/opencode-quota@next"
+
+		"@slkiser/opencode-quota@next",
 	],
 	"lsp": {
 		"typescript": {
@@ -294,23 +293,23 @@
 				".mjs",
 				".cjs",
 				".mts",
-				".cts"
-			]
+				".cts",
+			],
 		},
 		"json": {
 			"command": ["vscode-json-language-server", "--stdio"],
-			"extensions": [".json", ".jsonc"]
+			"extensions": [".json", ".jsonc"],
 		},
 		"csharp": {
 			"command": ["csharp-ls"],
-			"extensions": [".cs", ".csx"]
+			"extensions": [".cs", ".csx"],
 		},
 		"pyright": {
 			"command": [
 				"C:/Users/Lance/AppData/Local/Python/pythoncore-3.14-64/Scripts/basedpyright-langserver.exe",
-				"--stdio"
+				"--stdio",
 			],
-			"extensions": [".py", ".pyi"]
+			"extensions": [".py", ".pyi"],
 		},
 		"powershell": {
 			"command": [
@@ -328,19 +327,22 @@
 				"OpenCode",
 				"-HostVersion",
 				"1.0",
-				"-Stdio"
+				"-Stdio",
 			],
-			"extensions": [".ps1", ".psm1", ".psd1"]
+			"extensions": [".ps1", ".psm1", ".psd1"],
 		},
 		"bash": {
 			"command": ["bash-language-server", "start"],
-			"extensions": [".sh", ".bash", ".zsh", ".ksh"]
-		}
+			"extensions": [".sh", ".bash", ".zsh", ".ksh"],
+		},
 	},
 	"formatter": true,
 	"compaction": {
 		"auto": false,
-		"prune": false
+		"prune": false,
 	},
-	"plugins": ["@cortexkit/opencode-magic-context@latest"]
+	"plugins": [
+		"@cortexkit/opencode-magic-context@latest",
+		"@dietrichgebert/ponytail",
+	],
 }

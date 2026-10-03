@@ -61,9 +61,18 @@
     "reload-resources": 1790772700655,
     "project-trust": 1790772800773,
     "tips-toggle": 1790950956422,
-    "print-mode": 1790951793464
+    "print-mode": 1790951793464,
+    "tool-flags": 1790990552931,
+    "workflow-skills.plan": 1790991118582,
+    "workflow-skills.start-work": 1790991123959,
+    "workflow-skills.ultrawork": 1790991492057,
+    "workflow-skills.research": 1790991614487,
+    "workflow-skills.hyperplan": 1790991770966,
+    "workflow-skills.review": 1790992015436,
+    "workflow-skills.init-deep": 1790992150856,
+    "workflow-skills.debugging": 1790992386733
   },
-  "theme": "dark",
+  "theme": "system",
   "defaultProvider": "opencode-go",
   "defaultModel": "muse-spark-1.3-contributor",
   "modelThinkingLevels": {

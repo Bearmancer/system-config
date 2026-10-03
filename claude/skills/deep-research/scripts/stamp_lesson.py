@@ -7,7 +7,6 @@ import argparse
 import html as html_mod
 import json
 import re
-import shutil
 import sys
 from pathlib import Path
 
@@ -27,7 +26,6 @@ from lesson_rules import (
 
 SKILL = Path(__file__).resolve().parent.parent
 DEFAULT_STENCIL = SKILL / "assets" / "lesson.stencil.html"
-SHELL_JS = SKILL / "assets" / "shell.js"
 
 BANNED = (
     "open threads",
@@ -126,8 +124,6 @@ def write_course_index(lessons_dir, order):
         )
     js = "window.COURSE_INDEX = " + json.dumps(entries) + ";\n"
     (assets_dir / "course-index.js").write_text(js, encoding="utf-8")
-    if SHELL_JS.exists():
-        shutil.copyfile(SHELL_JS, assets_dir / "shell.js")
 
 
 BAR_BLOCK_RE = re.compile(
@@ -166,7 +162,7 @@ def workspace_topic(workspace: Path) -> str:
 
 
 def refresh_bar(workspace: Path) -> list[Path]:
-    """Inject/refresh the A-bar (+shell.js/course-index.js) on a workspace's
+    """Inject/refresh the A-bar (+course-index.js) on a workspace's
     hand-authored reference/index pages — the one shared path so those pages
     never drift from the lesson stencil's shell by hand-editing."""
     lessons_dir = workspace / "lessons"
@@ -187,7 +183,7 @@ def refresh_bar(workspace: Path) -> list[Path]:
                 topic, [], title_href="../index.html", base="../lessons/" if order else ""
             )
             text = upsert_bar(
-                html.read_text(encoding="utf-8"), bar, bar_scripts("../assets/")
+                html.read_text(encoding="utf-8"), bar, bar_scripts("../assets/", "../../assets/")
             )
             html.write_text(text, encoding="utf-8")
             touched.append(html)
@@ -204,7 +200,7 @@ def refresh_bar(workspace: Path) -> list[Path]:
             topic_base="../",
         )
         text = upsert_bar(
-            index_html.read_text(encoding="utf-8"), bar, bar_scripts("assets/")
+            index_html.read_text(encoding="utf-8"), bar, bar_scripts("assets/", "../assets/")
         )
         index_html.write_text(text, encoding="utf-8")
         touched.append(index_html)
@@ -345,7 +341,7 @@ def main():
     ap.add_argument(
         "--refresh-bar",
         metavar="WORKSPACE",
-        help="inject/refresh the A-bar + shell.js/course-index.js on "
+        help="inject/refresh the A-bar + course-index.js on "
         "<workspace>/reference/*.html and <workspace>/index.html",
     )
     args = ap.parse_args()

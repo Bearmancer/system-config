@@ -74,10 +74,6 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 <!-- User customizations -->
 
-# Style Guide
-
-ALWAYS run all agents and subagents in caveman mode set to ultra; a skill that sets its own caveman level overrides the global level. ALWAYS caveman-compress AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md); human-read docs, specs and published artifacts stay plain prose. Questions: `qa_boundary`. Reply shape: `reply_budget`.
-
 <!-- CODEGRAPH_START -->
 ## CodeGraph — mandatory index, always init
 
@@ -100,16 +96,24 @@ Stale (files changed, symbols missing, line numbers wrong): `codegraph init` aga
 
 Not touched by `omc-setup`/`omc release` regen. Beats OMC defaults above on conflict.
 
-<qa_boundary>
-Scope: every item you cannot auto-resolve goes through AskUserQuestion: design, plan, review, decision, approval, open question, blocker, unverifiable claim, ambiguity, conflicting instruction, step needing user (elevation, login, secret, account/UI action). Never in prose, never parked as TODO or status bullet.
-Timing: ask the moment the item appears. Batch pending items: ≤4 questions/call, 2-4 options each (Other auto-added).
-Question text: one decision, ≤25 words. No evidence dump in question text.
-Options: recommended first, then alternates. Label ≤5 words. Description ≤2 lines: fact, pro, con. Manual step option carries the exact one-liner (`terminal_input_format`).
-Turn end with pending decision: ≤3 bullets, then AskUserQuestion. Never a report followed by a question.
-</qa_boundary>
+<!-- SHARED:START -->
+# Style Guide
 
-<reply_budget>
-Hard limits on user-facing text.
+- Caveman mode ultra for all agents and subagents; a skill that sets its own caveman level overrides the global level.
+- Explanations as bullets, not paragraphs.
+- AI-consumed instruction files (skills, CLAUDE.md, AGENTS.md): caveman-compress. Human-read docs, specs, published artifacts: plain prose.
+- Questions: see Question Boundary. Reply shape: see Reply Budget.
+
+## Question Boundary
+
+- Scope: every item you cannot auto-resolve goes through the question tool: design, plan, review, decision, approval, open question, blocker, unverifiable claim, ambiguity, conflicting instruction, step needing user (elevation, login, secret, account/UI action). Never in prose, never parked as TODO or status bullet.
+- Timing: ask the moment the item appears. Batch pending items: ≤4 questions per call, 2-4 options each (Other auto-added).
+- Question text: one decision, ≤25 words. No evidence dump in question text.
+- Options: recommended first, then alternates. Label ≤5 words. Description ≤2 lines: fact, pro, con. Manual step option carries the exact command (Terminal Input Format).
+- Turn end with pending decision: ≤3 bullets, then question tool. Never a report followed by a question.
+
+## Reply Budget
+
 - Reply: ≤5 bullets, ≤20 words each. No headings, bold labels, tables, sections.
 - Bullet = result + pointer (PR/issue URL, `path:line`). No explanation of how things work unless asked.
 - Never restate: user answers, subagent reports, running-agent lists, prior turn content.
@@ -117,71 +121,114 @@ Hard limits on user-facing text.
 - Progress ping ("user hasn't heard from you"): one line.
 - Pre-send check: count bullets + words. Over budget: cut or move to file.
 - User asks a question: answer first, ≤5 bullets.
-</reply_budget>
 
-<sequential_task_discipline>
-Multi-item batch: enumerate all items first, complete one at a time — don't blur two into one status/action. Tool calls for ONE item still batch parallel (OMC `execution_protocols`).
-Never guess a vague instruction's "spirit" — resolve via `qa_boundary` first.
-Never treat a subagent's self-report ("done", "tests pass") as fact — verify (read file, run test) first.
-Blocked (missing dep, unresolved ambiguity): stop, raise via `qa_boundary` — never skip silently, never sub a partial result as done.
-</sequential_task_discipline>
+## Sequential Task Discipline
 
-<verified_claims_only>
-Plans, specs, tickets, configs, QA options: every factual claim (header, flag, tool name, package, env var, endpoint, runtime behavior) rests on primary source checked this session or linked research: official doc, source code, or live test. Cite it.
-Unverified claim: verify first (research agent or live test) before planning, building, or offering it as option. Unverifiable: state so, stop, raise via `qa_boundary`. Never "from memory", never "assume works, drill later".
-Subagent claims same bar: executor-chosen values need source before use.
-Native solutions only: use the tool's own documented mechanism (config key, hosted endpoint, supported auth). Never shell wrappers, duplicate env vars, shims, or patches around a gap. No native route: report the gap, ask.
-</verified_claims_only>
+- Multi-item batch: enumerate all items first, complete one at a time, don't blur two into one status/action. Tool calls for ONE item still batch in parallel.
+- Vague instruction: never guess its spirit; ask via Question Boundary.
+- Subagent self-report ("done", "tests pass") is not fact. Verify (read file, run test).
+- Blocked (missing dep, unresolved ambiguity): stop, raise via Question Boundary. Never skip silently, never substitute partial result as done.
 
-<no_stub_docs>
-Never create a tiny stub README/doc. New doc file only when its concern is clearly separate and it carries real content; otherwise add a line or section to the nearest existing doc. Applies `minimal-code-discipline` to docs, with judgement.
-</no_stub_docs>
+## Verified Claims Only
 
-<retry_scope_discipline>
-Haiku deliverable fails review, retries on Sonnet: fix only reviewer-named items, leave rest untouched.
-Exception: full rebuild only if the finding shows the whole method untrustworthy (e.g. fabrication via spot-check) — state that first; costs far more than a narrow fix.
-</retry_scope_discipline>
+- Plans, specs, tickets, configs, question options: every factual claim (header, flag, tool name, package, env var, endpoint, runtime behavior) rests on a primary source checked this session or linked research: official doc, source code, or live test. Cite it.
+- Unverified claim: verify first (research agent or live test) before planning, building, or offering it as an option. Unverifiable: say so, stop, raise via Question Boundary. Never "from memory", never "assume works, drill later".
+- Subagent claims meet the same bar: subagent-chosen values need a source before use.
+- Native solutions only: use the tool's own documented mechanism (config key, hosted endpoint, supported auth). Never shell wrappers, duplicate env vars, shims, or patches around a gap. No native route: report the gap, ask.
 
-<ai_artifacts>
-Durable docs (plans, specs, reviews, status): tracked `.claude/plans/` — OMC `planOutput.directory` set there in `.claude/omc.jsonc`; specs → `.claude/plans/specs/`, area review → `.claude/plans/<area>/review.md`. Research data → `.claude/docs/research/`. Other scripts/markdown: `.claude/<type>`, never root, never scattered. No handoff docs outside plan folders. Temp files, incl. codegraph-init clone repos: `mktemp`.
-Exception: `deep-research` course data → `~/Dev/bearmancer.github.io/<slug>/` (published pages, assets/) and `~/Dev/bearmancer.github.io/work/<slug>/` (NOTES.md, RESOURCES.md, learning-records/, gitignored), no ask.
+## No Stub Docs
+
+- Never create a tiny stub README/doc. New doc file only when its concern is clearly separate and it carries real content; otherwise add a line or section to the nearest existing doc. Applies minimal-code discipline to docs, with judgement.
+
+## Retry Scope Discipline
+
+- Deliverable from cheaper model fails review, retried on stronger model: fix only reviewer-named items, leave rest untouched.
+- Exception: full rebuild only if finding shows whole method untrustworthy (e.g. fabrication found by spot-check). State that first.
+
+## AI Artifacts
+
+- Durable docs (plans, specs, reviews, status): tracked `.claude/plans/`. Specs: `.claude/plans/specs/`. Area review: `.claude/plans/<area>/review.md`.
+- Research data: `.claude/docs/research/`.
+- Other scripts/markdown: `.claude/<type>`. Never repo root, never scattered.
+- No handoff docs outside plan folders.
+- Temp files (incl. codegraph-init clone repos): `mktemp`.
+- deep-research course data: `~/Dev/bearmancer.github.io/<slug>/` (published pages, assets/) and `~/Dev/bearmancer.github.io/work/<slug>/` (NOTES.md, RESOURCES.md, learning-records/, gitignored). No ask.
 
 Runtime-state roots. Keep by default; purge only listed paths; unlisted = leave:
+
 - `.omc/` (any repo, `~/.omc`): purge `state/`, `plans/`, `handoffs/`, `research/`, `artifacts/`, `logs/`, `notepad.md`, `project-memory.json`. Keep `skills/`, `ultragoal/`.
 - `.omo/` (any repo, `~/.omo`): purge `agent/`, `senpi-task/`, `thread-tools/`, `lsp-daemon/*.stamp` (fd `--full-path`). Keep `omo.jsonc`, `plans/`, `drafts/`, `memory/`, `teach/`.
-- `~/.codex/`: live state (`memories_*.sqlite`, `goals_*.sqlite`, `auth.json`, `config.toml`, `installation_id`); skip unless user names a file. `~/.local/share/omo-codex/`: inspect contents + mtime first, no default purge.
-- `~/.config/opencode/`: purge only dirs matching `fd -u -t d -g cache`; rest keep.
+- `~/.codex/`: live state (`memories_*.sqlite`, `goals_*.sqlite`, `auth.json`, `config.toml`, `installation_id`). Skip unless user names a file. `~/.local/share/omo-codex/`: inspect contents + mtime first, no default purge.
+- `~/.config/opencode/`: purge only dirs matching `fd -u -t d -g cache`. Rest keep.
 - `~/.claude/`: purge only `cache/`, `paste-cache/`, `shell-snapshots/`, `session-env/`, `*.tmp.*`. Ask first: `file-history/`, `backups/`. Never: `.credentials.json`, `~/.claude.json`, `settings*.json`, `CLAUDE.md`, `keybindings.json`, `skills/`, `agents/`, `commands/`, `hooks/`, `projects/`, `plugins/**` (vendored, incl. nested `.omc/`/`.claude/`). Per-repo `.claude/plans/`, `.claude/state/`, `.claude/worktrees/`: keep.
-- Scratch: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**` (exclude current session id on every fd call), `~/AppData/Local/Temp/{bunx-*,opencode}` (`--max-depth 1`, named patterns only, never sweep Temp), `~/.cache/opencode/`, `~/.cache/deep-research/`. Per session-id subdir: modified <24h = likely active, lead with leave-alone.
+- Scratch: `~/AppData/Roaming/Claude/scratch-workspaces/**`, `~/AppData/Local/Temp/claude/**` (exclude current session id on every fd call), `~/AppData/Local/Temp/{bunx-*,opencode}` (`--max-depth 1`, named patterns only, never sweep Temp), `~/.cache/opencode/`, `~/.cache/deep-research/`. Session-id subdir modified <24h = likely active; lead with leave-alone.
 - Repo-root strays outside roots above (`*-state.json`, `*-state-tracking*.json`, `*.heartbeat.json`, `*.lock`, `*-sync.log`): purge candidate.
-- Dev caches, locate via tool never hardcode: `npm config get cache`, `bun pm cache`, `pip cache dir`, `uv cache dir`. VSCode + Insiders (`~/AppData/Roaming/Code*/`): `Cache`, `GPUCache`, `CachedData`, `CachedProfilesData`, `CachedExtensionVSIXs`, `WebStorage`, `Partitions`, `logs`, `chatDictation*`, `agent-host`, `agentPlugins`; never `User/`, `extensions/`; `agentSessionData` ask first; close app first. JetBrains `AppData/Local/JetBrains/*/{Transient,Daemon}/`; never product version dir (LocalHistory).
+- Dev caches: locate via tool, never hardcode: `npm config get cache`, `bun pm cache`, `pip cache dir`, `uv cache dir`. VSCode + Insiders (`~/AppData/Roaming/Code*/`): `Cache`, `GPUCache`, `CachedData`, `CachedProfilesData`, `CachedExtensionVSIXs`, `WebStorage`, `Partitions`, `logs`, `chatDictation*`, `agent-host`, `agentPlugins`. Never `User/`, `extensions/`. `agentSessionData` ask first. Close app first. JetBrains `AppData/Local/JetBrains/*/{Transient,Daemon}/`. Never product version dir (LocalHistory).
 - Duplicate clone (same origin twice): discard only when `git status --short --ignored`, `git log --branches HEAD --not --remotes --oneline`, `git stash list` all empty. `.claude/worktrees/<n>` without `.git` and absent from `git worktree list` = orphan; list contents + mtime first.
 
-Purge procedure (Bash tool, git-bash):
-1. Enumerate per root with `fd -u` (dirs `-t d --prune`, files `-t f`); fd globs only, never shell globs.
-2. AskUserQuestion, one question per finding: delete / inspect first / narrower / leave. Deletion needs listed category AND explicit approval.
+Purge procedure (git-bash):
+
+1. Enumerate per root with `fd -u` (dirs `-t d --prune`, files `-t f`). fd globs only, never shell globs.
+2. Question tool, one question per finding: delete / inspect first / narrower / leave. Deletion needs listed category AND explicit approval.
 3. Pre-size: `dust -P -d 0 <path>`.
-4. Delete: `fd -u -t f -t l . <path> -X rm --`, then `fd -u -t d . <path> | sort -r | while IFS= read -r d; do rmdir -- "$d"; done`, then `rmdir -- <path>`. Never `rm -rf` (guard hook blocks it; `-f` hides failures).
+4. Delete: `fd -u -t f -t l . <path> -X rm --`, then `fd -u -t d . <path> | sort -r | while IFS= read -r d; do rmdir -- "$d"; done`, then `rmdir -- <path>`. Never `rm -rf`.
 5. "Device or resource busy": retry once, then report blocked.
-6. Post-size same command; removed root must error "No such file or directory".
-7. Manifest (deleted / blocked / left, pre + post sizes) outside `Temp/claude/**`; report its path.
+6. Post-size same command. Removed root must error "No such file or directory".
+7. Manifest (deleted / blocked / left, pre + post sizes) outside `Temp/claude/**`. Report its path.
 
-Never purge without listing exact paths + byte/file counts first (`auto_purge` governs timing and report format); `rm -rf` and other irreversible-destruction commands route through the user when the auto-mode classifier blocks them — hand back the exact command, don't retry via another tool.
-</ai_artifacts>
+- Never purge without listing exact paths + byte/file counts first (Auto Purge governs timing and report format).
 
-<content_provenance>
-Compression, rewrites (incl. PS1→Python), lint/format passes: user-created content only. Never touch third-party/bundled plugin skills, vendored scripts, or anything under a plugin cache/marketplace dir — those are overwritten on update regardless, and edits there don't survive.
-Caveman-compression (any mode) on AI-consumed instruction files (SKILL.md, CLAUDE.md, AGENTS.md): keep text only if removing it changes model behavior (a rule becomes ambiguous, ambiguity resolves the wrong way). Narrative/historical/motivational "why" that doesn't change what the model does next: delete unconditionally, regardless of resulting length either direction.
-State the current fact only, never as a diff against a prior state. Write `X used for Z`, not `X no longer does Y but now does Z` or `X previously A, now B`. Applies to any instruction/reference file edit (SKILL.md, CLAUDE.md, AGENTS.md, ref docs). Purge existing before/after narration on sight when editing a file in scope, retroactively.
-</content_provenance>
+## Content Provenance
 
-<no_comments>
-Never add a comment that restates what identifiers/structure already say. Keep or add one only for a hidden constraint or gotcha the code can't show and that isn't already documented at that exact call site elsewhere (SKILL.md/CLAUDE.md cover project/skill-level intent, not point-of-use — a script read in isolation, e.g. via grep, won't have loaded them). Purge restating comments when editing a file in scope (user-created code only — see `content_provenance`); keep gotcha comments.
-</no_comments>
+- Compression, rewrites, lint/format passes: user-created content only.
+- Caveman-compression on AI-consumed instruction files (SKILL.md, CLAUDE.md, AGENTS.md): keep text only if removing it changes model behavior. Delete narrative/historical/motivational "why" unconditionally.
+- State current fact only, never as diff against prior state. Write `X used for Z`, not `X no longer does Y but now Z`. Applies to any instruction/reference file edit (SKILL.md, CLAUDE.md, AGENTS.md, ref docs). Purge existing before/after narration on sight when editing a file in scope.
 
-<auto_purge>
-Task done: auto-purge artifacts created, not deliverables: state tracking, temp files, plugin temp files, scratch dirs, run logs, duplicate trees, stale backups. Purge at task end, never mid-task (running work needs state), never before evidence review. Report purged paths + count delta. Keep only what user asked keep: deliverables, plans, retained evidence.
-</auto_purge>
+## No Comments
+
+- Never add a comment restating what identifiers/structure say.
+- Keep/add one only for a hidden constraint or gotcha the code can't show and not documented at that call site elsewhere (instruction files cover project/skill-level intent, not point-of-use; a script read in isolation won't have loaded them).
+- Purge restating comments when editing a file in scope (user-created code only; see Content Provenance). Keep gotcha comments.
+
+## Auto Purge
+
+- Task done: purge artifacts created that are not deliverables (state tracking, temp files, plugin temp files, scratch dirs, run logs, duplicate trees, stale backups).
+- Purge at task end only. Never mid-task (running work needs state), never before evidence review.
+- Report purged paths + count delta.
+- Keep only what user asked keep: deliverables, plans, retained evidence.
+
+## User-Typed Commands
+
+- Command the user types (not your tool call): one line, `;`-joined, any shell, absolute paths only (`C:\Users\Lance\...`; never `~`, `$HOME`, `$env:USERPROFILE`, relative paths, cwd-dependent `cd`). Skip if already one line.
+
+## Shell Tool Preference
+
+- Prefer `fd`(find/gci), `dust`(du), `jaq`(jq/ConvertFrom-Json), `rg`(grep/Get-Content), `ouch`(Compress-Archive/tar).
+
+## Python Packages
+
+- `uv` only. Never `pip`, `pip3`, `python -m pip`.
+- One-off script: `uv run --with <pkg> script.py`, or `uv run script.py` with PEP 723 header.
+- Project: `uv venv`, then `uv pip install` inside it. Never `--user`, `--system`, global site-packages.
+- CLI tools: `uv tool install <pkg>`. Never pipx or global pip.
+- Stray global pip package: delete its site-packages dir + dist-info (never run pip). Verify import fails on bare `python`, works via `uv run --with`.
+
+## Background Job Discipline
+
+- Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmux`: `tmux new-session -d -s <name> '<command>'`.
+- Never `nohup ... &` or redirect output away; unobservable later. Check: `tmux capture-pane -t <name> -p`.
+
+## Sibling Duplication Check
+
+- Before adding a file for a variant of an existing concept (new format/grammar/handler/parser), diff planned structure against every existing file in the same directory with the same role.
+- 2+ siblings would share >half their logic with the new one (same field-extraction shape, same validate-construct-filter sequence, same dict/table): stop. Extract shared part into one parameterized module (constructor args/delegates/enums, not a premature interface) before writing a 3rd near-duplicate.
+- Applies to any repo, any file family.
+- Copy-pasting a whole dictionary/table byte-for-byte into a new file = instant stop-and-check.
+<!-- SHARED:END -->
+
+<question_tool>
+Question tool = `AskUserQuestion`. Use it for every Question Boundary item; ask prose only when it is unavailable or a free-form value is required.
+</question_tool>
 
 <model_tier_default>
 Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegated agents. `haiku`: lookups, search, quick reads. `opus`: reviews + one-time architect/plan pass (design, decompose, decide approach) only. `fable`/above: only on explicit ask.
@@ -189,28 +236,11 @@ Execution + authoring: always `sonnet` (Sonnet 5.5), never `opus`, incl. delegat
 
 <terminal_input_format>
 Step you cannot run (elevation, interactive login, secret entry, local-only action): add it to `C:\Users\Lance\z.ps1` (self-elevating, `Start-Transcript` log `C:\Users\Lance\z-<timestamp>.log`, one `Step` per item, verify check after each). Keep z.ps1 = pending steps only: drop steps the log shows done. Tell user `pwsh -File C:\Users\Lance\z.ps1`; read newest log after they run it.
-User-typed command (not your tool call): one line, `;`-joined, any shell, absolute paths only (`C:\Users\Lance\...`; never `~`, `$HOME`, `$env:USERPROFILE`, relative paths or cwd-dependent `cd`). Skip if already one line.
 </terminal_input_format>
-
-<shell_tool_preference>
-Prefer `fd`(find/gci), `dust`(du), `jaq`(jq/ConvertFrom-Json), `rg`(grep/Get-Content), `ouch`(Compress-Archive/tar).
-</shell_tool_preference>
-
-<python_packages>
-Python packages: `uv` only; never `pip`, `pip3`, `python -m pip`.
-- One-off script: `uv run --with <pkg> script.py`, or `uv run script.py` when it has a PEP 723 header.
-- Project: `uv venv`, then `uv pip install` inside it. Never `--user`, `--system`, global site-packages.
-- CLI tools: `uv tool install <pkg>`; never pipx or global pip.
-- Stray global pip package: delete its site-packages dir + dist-info (never run pip); verify import fails on bare `python`, works via `uv run --with`.
-</python_packages>
-
-<background_job_discipline>
-Long-running command (ssh, corpus scan, sync, long build): detached `tmux`/`psmux` — `tmux new-session -d -s <name> '<command>'`. Never `nohup ... &` or redirect output away — unobservable later. Check: `tmux capture-pane -t <name> -p`.
-</background_job_discipline>
 
 <native_mode_state>
 Mode with own state file = activate natively via `state_write` at start, before first work step. Never run it on conversation memory alone — no state file means HUD shows nothing, `/cancel` has nothing to clear, and resume after compaction or crash is impossible.
-Write-eligible (`state_write`): `autopilot`, `autoresearch`, `team`, `ralph`, `deep-interview`, `self-improve`, `ralplan`, `omc-teams`, `skill-active`. Dedicated HUD element: `autopilot`, `ralph`. Read/clear only, never hand-written: `merge-readiness`, `ultragoal` (runtime-owned). No state mode at all: `ask-navigator`, `launch`, `harbor` — they track in the issue tracker and `.omc/` artifacts.
+Write-eligible (`state_write`): `autopilot`, `autoresearch`, `team`, `ralph`, `deep-interview`, `self-improve`, `ralplan`, `skill-active`. Dedicated HUD element: `autopilot`, `ralph`. Read/clear only, never hand-written: `merge-readiness`, `ultragoal` (runtime-owned). No state mode at all: `ask-navigator`, `launch`, `harbor` — they track in the issue tracker and `.omc/` artifacts.
 Ultragoal accounting: local session checkpoints each stage via `omc ultragoal` the moment it finishes — never bulk afterwards, never hand-edit goals.json/ledger.jsonl. Session without the `omc` CLI (cloud) never touches `.omc/ultragoal`; records stage status (commit, tests, LOC) in the area `handoff.md` status row; next local session checkpoints it citing those commits.
 Pass `session_id` so state is session-scoped. Update `current_phase` on every stage transition. Two modes in one session (e.g. autopilot + team) each get their own write.
 `state_write` fails: HARD STOP. Do not continue on memory, do not silently degrade, do not retry in a loop. Debug the cause, then fix it or stop and report. `state mutation lock unavailable` almost never means contention — check `better-sqlite3` has a compiled binding first (`OMC_LOCK_DEBUG=1` prints the real error). Still broken after one debug pass: stop and report to user, do not start the mode.
@@ -223,9 +253,5 @@ Worktree with commits → push + `gh pr create` same turn, never teardown unpush
 <key_rotation>
 Web-data API credit, quota or auth failure (MCP, CLI, POST script; any host): rotate per deep-research SKILL.md "Key rotation", no ask. claude.ai connectors (`mcp__claude_ai_*`) hold no local key: switch to local server of same vendor instead.
 </key_rotation>
-
-<sibling_duplication_check>
-Before adding a new file for a variant of an existing concept (a new format/grammar/handler/parser sibling), diff its planned structure against every existing file in the same directory implementing the same interface/role. If 2+ siblings would share more than half their logic with the new one (same field-extraction shape, same validate-construct-filter sequence, same dict/table), stop — extract the shared part into one parameterized module (constructor args/delegates/enums, not a premature interface) before writing the 3rd near-duplicate file. Applies to any repo, any file family — not just OCR/grammar-shaped code. Red flag: copy-pasting a whole dictionary/table byte-for-byte into a new file is an instant stop-and-check trigger, not a "fix it later" note.
-</sibling_duplication_check>
 
 <!-- USER:END -->

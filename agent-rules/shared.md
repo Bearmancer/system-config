@@ -1,4 +1,3 @@
-<!-- SHARED:START -->
 # Style Guide
 
 - Caveman mode ultra for all agents and subagents; a skill that sets its own caveman level overrides the global level.
@@ -126,18 +125,3 @@ Purge procedure (git-bash):
 - 2+ siblings would share >half their logic with the new one (same field-extraction shape, same validate-construct-filter sequence, same dict/table): stop. Extract shared part into one parameterized module (constructor args/delegates/enums, not a premature interface) before writing a 3rd near-duplicate.
 - Applies to any repo, any file family.
 - Copy-pasting a whole dictionary/table byte-for-byte into a new file = instant stop-and-check.
-<!-- SHARED:END -->
-
-## CodeGraph
-
-- Every repo needs `.codegraph/` at root. No skip. No optional.
-- Session start or enter repo: check `.codegraph/` exists; missing = `codegraph init` there, wait for finish, then use.
-- Monorepo/multi-repo: each sub-project has own `.codegraph/` (nearest at or above project path). Init each missing.
-- Indexed: use CodeGraph BEFORE grep/find/read.
-  - MCP: `codegraph_explore`, one call. Verbatim source + call paths. Name file/symbol in query. Pass `projectPath` for a sub-project.
-  - Shell: `codegraph explore "<query>"`.
-- Stale (files changed, symbols missing, line numbers wrong): `codegraph init` again or repo refresh.
-
-## Terminal Input Format
-
-- Step you cannot run (elevation, interactive login, secret entry, local-only action): print exact command, never describe it.

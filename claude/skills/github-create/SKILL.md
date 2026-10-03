@@ -19,7 +19,7 @@ Calibrate depth to https://github.com/code-yeongyu/oh-my-openagent/issues/6167 f
 
 ## Confirm before filing
 
-Filing anything on GitHub is visible and hard to reverse (can't unpublish a community discussion). Before running any create/push command, state the draft title(s) + one-line summary (plus base/head for a PR) and get explicit go-ahead — unless the user already gave blanket authorization for this specific repo/session.
+Filing anything on GitHub is visible and hard to reverse (can't unpublish a community discussion). Before running any create/push command, state the draft title(s) + one-line summary (plus base/head for a PR) and get explicit go-ahead via AskUserQuestion — unless the user already gave blanket authorization for this specific repo/session.
 
 ## Counter-scenarios — try them, then say so
 

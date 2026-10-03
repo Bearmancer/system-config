@@ -1,104 +1,100 @@
 {
 	"$schema": "https://unpkg.com/oh-my-opencode-slim@latest/oh-my-opencode-slim.schema.json",
-	// ── MODEL POLICY (user constraint) ────────────────────────────────────────
-	// All roles use opencode-go/muse-spark-1.3-contributor.
-	// ──────────────────────────────────────────────────────────────────────────
+
 	"preset": "opencode-go",
 	"presets": {
 		"opencode-go": {
 			"orchestrator": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor",
-						"variant": "high"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+						"variant": "high",
+					},
 				],
 				"skills": [
-					"*"
+					"*",
 				],
 				"mcps": [
-					"*"
-				]
+					"*",
+				],
 			},
 			"oracle": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor",
-						"variant": "max"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+						"variant": "xhigh",
+					},
 				],
 				"skills": [
-					"simplify"
+					"simplify",
 				],
-				"mcps": []
+				"mcps": [],
 			},
 			"explorer": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor",
-						"variant": "low"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+						"variant": "low",
+					},
 				],
 				"skills": [],
-				"mcps": []
+				"mcps": [],
 			},
 			"librarian": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor",
-						"variant": "low"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+						"variant": "low",
+					},
 				],
 				"skills": [
-					"deep-research"
+					"deep-research",
 				],
 				"mcps": [
-					"*"
-				]
+					"*",
+				],
 			},
 			"designer": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+					},
 				],
 				"skills": [],
-				"mcps": []
+				"mcps": [],
 			},
 			"fixer": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor",
-						"variant": "high"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+						"variant": "high",
+					},
 				],
 				"skills": [],
-				"mcps": []
+				"mcps": [],
 			},
 			"observer": {
 				"model": [
 					{
-						"id": "opencode-go/muse-spark-1.3-contributor"
-					}
+						"id": "opencode/mimo-v2.6-flash-free",
+					},
 				],
 				"skills": [],
-				"mcps": []
-			}
-		}
+				"mcps": [],
+			},
+		},
 	},
-	// Observer is disabled by default upstream; [] turns it ON (all-features).
+
 	"disabled_agents": [],
-	// Image attachments route to the Observer agent (read-only visual analysis).
+
 	"image_routing": "auto",
-	// ── Multiplexer: psmux (tmux-compatible) instead of tmux ──────────────────
-	// psmux exports tmux-compatible TMUX / TMUX_PANE, so the tmux adapter is the
-	// correct driver. Requires a reachable server: `psmux` then `opencode --port N`.
+
 	"multiplexer": {
 		"type": "tmux",
 		"layout": "main-vertical",
-		"main_pane_size": 60
+		"main_pane_size": 60,
 	},
-	// ── Desktop companion: OFF (user request) ─────────────────────────────────
+
 	"companion": {
 		"enabled": false,
 		"position": "bottom-right",
@@ -106,9 +102,9 @@
 		"gifPack": "default",
 		"loopStyle": "classic",
 		"speed": 1,
-		"debug": false
+		"debug": false,
 	},
-	// ── Background orchestration (full opt-in set) ────────────────────────────
+
 	"backgroundJobs": {
 		"maxSessionsPerAgent": 3,
 		"strategy": "checkpoint-compatible",
@@ -118,7 +114,7 @@
 			"intervalMs": 300000,
 			"mode": "auto",
 			"wakeOnTerminalPublication": true,
-			"publicationWakeMinIntervalMs": 30000
+			"publicationWakeMinIntervalMs": 30000,
 		},
 		"wallClockTimeoutMs": 1800000,
 		"abortGraceMs": 15000,
@@ -129,25 +125,25 @@
 			"defaultConcurrency": 4,
 			"providerConcurrency": {
 				"opencode": 4,
-				"opencode-go": 4
-			}
-		}
+				"opencode-go": 4,
+			},
+		},
 	},
-	// ── Foreground model-chain failover ───────────────────────────────────────
+
 	"fallback": {
 		"enabled": true,
 		"maxRetries": 3,
 		"initialRetryDelayMs": 0,
-		"retryDelayMs": 500
+		"retryDelayMs": 500,
 	},
-	// ── Interview (/interview browser Q&A -> structured spec) ─────────────────
+
 	"interview": {
 		"maxQuestions": 4,
 		"outputFolder": "interview",
 		"autoOpenBrowser": true,
-		"dashboard": true
+		"dashboard": true,
 	},
-	// ── Council: multi-model consensus, allowed models only ───────────────────
+
 	"council": {
 		"default_preset": "allowed",
 		"presets": {
@@ -155,33 +151,33 @@
 				"alpha": {
 					"model": [
 						{
-							"id": "opencode-go/muse-spark-1.3-contributor",
-							"variant": "high"
-						}
+							"id": "opencode/mimo-v2.6-flash-free",
+							"variant": "high",
+						},
 					],
-					"prompt": "Argue from first principles; optimise for correctness and long-term maintainability."
+					"prompt": "Argue from first principles; optimise for correctness and long-term maintainability.",
 				},
 				"beta": {
 					"model": [
 						{
-							"id": "opencode-go/muse-spark-1.3-contributor",
-							"variant": "high"
-						}
+							"id": "opencode/mimo-v2.6-flash-free",
+							"variant": "high",
+						},
 					],
-					"prompt": "Be the pragmatic implementer; optimise for the cheapest correct change and cite concrete evidence."
+					"prompt": "Be the pragmatic implementer; optimise for the cheapest correct change and cite concrete evidence.",
 				},
 				"gamma": {
 					"model": [
 						{
-							"id": "opencode-go/muse-spark-1.3-contributor",
-							"variant": "high"
-						}
+							"id": "opencode/mimo-v2.6-flash-free",
+							"variant": "high",
+						},
 					],
-					"prompt": "Be the adversarial reviewer; hunt for failure modes, edge cases, and hidden costs."
-				}
-			}
-		}
+					"prompt": "Be the adversarial reviewer; hunt for failure modes, edge cases, and hidden costs.",
+				},
+			},
+		},
 	},
 	"autoUpdate": true,
-	"compactSidebar": false
+	"compactSidebar": false,
 }
